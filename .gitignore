@@ -1,0 +1,10 @@
+# build 产物（push 到 GitHub 展示层）
+site/
+
+# opencode session/索引状态
+.omo/
+.codegraph/
+
+# OS
+.DS_Store
+Thumbs.db
