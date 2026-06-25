@@ -21,11 +21,12 @@
 | `docs/product-specs/SPEC.md` | 需求规格（source of truth） |
 | `docs/design-docs/DESIGN.md` | 技术设计：搜集工作流 / 状态管理 |
 | `docs/exec-plans/` | 实现计划（active / completed / tech-debt-tracker.md） |
-| `docs/references/` | 外部资料（大厂白名单等） |
-| `content/posts/` | 调研条目 Markdown（frontmatter 规范见 SPEC） |
-| `data/index.json` | 去重索引（已收录条目） |
+| `docs/references/` | 外部资料（vendor-whitelist.md 人读版） |
+| `content/posts/` | 调研条目 Markdown（frontmatter 规范见 `scripts/frontmatter.schema.json`） |
+| `data/index.json` | 去重索引（已收录条目，id/slug 与 post 一致） |
+| `data/vendors.yaml` | 大厂白名单（机器可读，gate_vendors 读取） |
 | `data/.last_run` | 上次搜集时间戳（滚动窗口起点） |
-| `scripts/` | 机械化强制脚本（待 SPEC 定后补） |
+| `scripts/` | 机械化强制：`frontmatter.schema.json` + gate_frontmatter/dedup/window/vendors/all.py |
 | `site/` | build 出的静态成品（push 到 GitHub） |
 
 ## 核心约束（不可违反）
@@ -35,6 +36,7 @@
 - **不分语言**：英文为质量软信号，不排除中文
 - **数据可信**：实际效果必须来自原文，摘不到写"未报告"，禁止补编
 - **范围**：端侧 agent 优先，端侧推理引擎次之纳入
+- **gate 必过**：产出 post + 更新 index 后、build/push 前，必须 `python scripts/gate_all.py` EXIT 0
 
 ## 信息源（四类，缺一则雷达跑空）
 学术论文 / 厂商技术博客 / GitHub releases / 产品大会发布（详见 SPEC 第一节）
@@ -44,15 +46,19 @@
 2. 读 `data/index.json` 取已收录集
 3. 四类信息源检索窗口内新增
 4. 按 SPEC 评分体系评估每条
-5. 纳入的写 `content/posts/<slug>.md`（frontmatter 见 SPEC）
-6. 更新 `data/index.json` + `data/.last_run`
-7. 本地 build → push 成品到 GitHub（展示层）
+5. 纳入的写 `content/posts/<slug>.md`（frontmatter 必须符合 `scripts/frontmatter.schema.json`）
+6. 更新 `data/index.json`（加 entry，id/slug 与 post 文件一致）
+7. **跑 `python scripts/gate_all.py`，必须 EXIT 0 才继续**；不过则修 post/index 后重跑
+8. gate 过 → 写 `data/.last_run` = now（ISO）→ 本地 build → push 成品到 GitHub
 
 ## 已知教训（免疫系统，每次 agent 出错在此加一条）
 <!-- 格式：[日期] 现象 → 规则。随运行积累。 -->
-（暂无，随运行积累）
+- [2026-06-25] frontmatter schema / gate 校验被误耦合到"网站选型" → 内容层 gate 不依赖渲染层，应先做，不捆绑等待
+- [2026-06-25] pyyaml 把 frontmatter `date: 2026-06-24` 解析成 datetime.date 对象 → jsonschema format 校验前需 normalize 回 ISO 字符串
+- [2026-06-25] Windows 环境 terminal 跑 `python` 会被 block → gate 脚本用 execute_code（subprocess）跑
 
-## 待补（避免过度设计，SPEC/选型定后再做）
-- `scripts/`：frontmatter 校验、过滤规则检查、去重检查、build（机械化强制）
+## 待补（避免过度设计，按需推进）
 - 熵管理 agent：定期扫过期 / 重复 / 死链 / frontmatter 漂移
 - 网站选型（Hugo / Astro / MkDocs）→ 决定 build 与 `site/` 结构
+- 各信息源检索适配器（arXiv API / 厂商博客 / GitHub releases / 大会议程）
+- ADR（docs/decisions/）：评分权重 / 窗口 / 白名单等决策的理由记录

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "edge_agent post frontmatter",
+  "description": "content/posts/*.md 顶部 YAML frontmatter 的字段规范。runtime 产出条目分析后由 harness 层映射为此结构。",
+  "type": "object",
+  "required": ["id", "slug", "title", "authors", "source_type", "date", "url", "score", "recommendation"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1, "description": "唯一标识，去重用（建议 vendor-date-slug）" },
+    "slug": { "type": "string", "minLength": 1, "description": "URL slug" },
+    "title": { "type": "string", "minLength": 1 },
+    "authors": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "affiliations": { "type": "array", "items": { "type": "string" }, "description": "作者机构（用于白名单匹配）" },
+    "source_type": { "type": "string", "enum": ["学术论文", "厂商博客", "GitHub", "产品发布"] },
+    "date": { "type": "string", "format": "date", "description": "YYYY-MM-DD" },
+    "url": { "type": "string", "format": "uri" },
+    "branches": { "type": "array", "items": { "type": "string" }, "description": "技术分支（README 第五节）" },
+    "vendors": { "type": "array", "items": { "type": "string" }, "description": "关联大厂 name（见 data/vendors.yaml）" },
+    "score": { "type": "integer", "minimum": 0, "maximum": 100, "description": "综合评分，应等于下 5 维之和" },
+    "score_relevance": { "type": "integer", "minimum": 0, "maximum": 35, "description": "主题契合度（35%）" },
+    "score_vendor": { "type": "integer", "minimum": 0, "maximum": 25, "description": "大厂关联度（25%）" },
+    "score_contribution": { "type": "integer", "minimum": 0, "maximum": 20, "description": "技术贡献度（20%）" },
+    "score_quality": { "type": "integer", "minimum": 0, "maximum": 15, "description": "信息质量（15%）" },
+    "score_recency": { "type": "integer", "minimum": 0, "maximum": 5, "description": "时效新鲜度（5%）" },
+    "recommendation": { "type": "string", "enum": ["纳入", "纳入待复审", "排除"] },
+    "review_hint": { "type": "string", "description": "人工复审重点方向" }
+  },
+  "additionalProperties": false
+}
