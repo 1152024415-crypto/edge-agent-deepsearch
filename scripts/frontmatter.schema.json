@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "edge_agent post frontmatter",
-  "description": "content/posts/*.md 顶部 YAML frontmatter 的字段规范。runtime 产出条目分析后由 harness 层映射为此结构。",
+  "description": "content/posts/*.md 顶部 YAML frontmatter 的字段规范。agent 产出条目分析后由 harness 层映射为此结构。",
   "type": "object",
   "required": ["id", "slug", "title", "authors", "source_type", "date", "url", "score", "recommendation"],
   "properties": {
@@ -22,7 +22,9 @@
     "score_quality": { "type": "integer", "minimum": 0, "maximum": 15, "description": "信息质量（15%）" },
     "score_recency": { "type": "integer", "minimum": 0, "maximum": 5, "description": "时效新鲜度（5%）" },
     "recommendation": { "type": "string", "enum": ["纳入", "纳入待复审", "排除"] },
-    "review_hint": { "type": "string", "description": "人工复审重点方向" }
+    "review_hint": { "type": "string", "description": "人工复审重点方向" },
+    "insight_person": { "type": "string", "description": "洞察人 / 负责分析的 agent 或人" },
+    "wiki_url": { "type": "string", "format": "uri", "description": "对应 wiki 页面链接" }
   },
   "additionalProperties": false
 }

@@ -1,6 +1,43 @@
 {
-  "entries": [],
-  "last_updated": null,
+  "entries": [
+    {
+      "id": "agentcpm-gui-20250617",
+      "slug": "agentcpm-gui-mobile-agent-rft",
+      "title": "AgentCPM-GUI：基于 MiniCPM-V 的端侧移动 GUI Agent（强化微调）",
+      "source_type": "学术论文",
+      "date": "2025-06-17",
+      "url": "https://arxiv.org/abs/2506.01391",
+      "score": 85,
+      "vendors": ["ModelBest"],
+      "branches": ["感知、记忆与规划", "核心概念与系统架构"],
+      "recommendation": "纳入"
+    },
+    {
+      "id": "apple-coreai-wwdc2026-20260609",
+      "slug": "apple-coreai-wwdc2026",
+      "title": "WWDC 2026：Apple Core AI 端侧 LLM 推理框架",
+      "source_type": "产品发布",
+      "date": "2026-06-09",
+      "url": "https://www.aimadetools.com/blog/wwdc-2026-ai-developer-recap/",
+      "score": 80,
+      "vendors": ["Apple"],
+      "branches": ["核心概念与系统架构", "模型轻量化与基础模型优化"],
+      "recommendation": "纳入"
+    },
+    {
+      "id": "qualcomm-nexa-snapdragon-20260315",
+      "slug": "qualcomm-nexa-snapdragon-hexagon",
+      "title": "Qualcomm：Nexa AI 端侧 Agent 在 Snapdragon X + Hexagon NPU 上本地运行",
+      "source_type": "厂商博客",
+      "date": "2026-03-15",
+      "url": "https://www.qualcomm.com/developer/blog/2026/03/run-nexa-ai-agents-locally-on-snapdragon-pc-with-hexagon-npu",
+      "score": 75,
+      "vendors": ["Qualcomm"],
+      "branches": ["运行时自适应与资源效率", "核心概念与系统架构"],
+      "recommendation": "纳入待复审"
+    }
+  ],
+  "last_updated": "2026-06-25T00:00:00",
   "schema_version": 1,
   "note": "去重索引。entries 每条: {id, slug, title, source_type, date, url, score, vendors, branches, recommendation}"
 }

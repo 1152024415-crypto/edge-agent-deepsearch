@@ -1,55 +1,72 @@
 # ARCHITECTURE.md — edge_agent 顶层领域地图
 
 ## 核心原则
-**搜集是 runtime，GitHub 只是展示。** 搜集逻辑永远在本地，GitHub 只是个看板。
+**搜索由 agent 执行，本仓负责规则、状态、内容、校验与展示。**
 
-## 两层环境分离
+本仓不是传统爬虫 / 采集适配器项目。Codex / Hermes 等 agent 读取 `README.md` 的提示词，使用自身搜索、浏览、阅读工具去找文章；本仓只保存规则、产出、去重状态、质量 gate 和静态展示结果。
 
-### Runtime 层（本地 `D:\proj\edge_agent`）
-agent 干活的地方，动态、运行时发生：
-- 搜集（四类信息源检索）
-- 过滤（硬门槛 gate + 评分体系）
-- 去重（`data/index.json`）
-- frontmatter 产出（`content/posts/`）
-- 状态管理（`index.json` / `.last_run`）
-- 本地 build 静态站
-- 整套 harness（AGENTS.md 免疫系统 / 机械化强制 / 熵管理）
+## 两类职责分离
 
-### 展示层（GitHub 仓库）
-纯看板，零逻辑：
-- 只接收 runtime build 好的静态成品
-- GitHub Pages 开启即展示
-- 不承担搜集 / 过滤 / 去重 / 状态（那些都在本地 runtime）
+### Agent 执行层（Codex / Hermes 等工具）
+动态发生在 agent 的一次运行中：
+- 读取 `README.md` / `AGENTS.md` / `SPEC.md`
+- 读取 `data/.last_run` 计算过去一周窗口
+- 读取 `data/index.json` 获取已收录集
+- 使用 agent 自身工具检索四类信息源：学术论文 / 厂商博客 / GitHub releases / 产品大会发布
+- 阅读原文，抽取可验证事实，禁止补编效果数据
+- 按评分体系筛选与打分
+- 写入 `content/posts/<slug>.md`，同步更新 `data/index.json`
+- 运行 gate，build `site/`，按需要 push 到 GitHub
+
+### 展示与记录层（本仓 + GitHub Pages）
+稳定保存在仓库中，可审计、可恢复：
+- 规则：`README.md` / `AGENTS.md` / `docs/product-specs/SPEC.md`
+- 架构与设计：`ARCHITECTURE.md` / `docs/design-docs/DESIGN.md`
+- 状态：`data/index.json` / `data/.last_run` / `data/vendors.yaml`
+- 内容：`content/posts/*.md`
+- 机械化强制：`scripts/gate_*.py` / `scripts/frontmatter.schema.json`
+- 展示构建：`scripts/build.py` 生成 `site/`
+- GitHub Pages：只展示 build 好的静态结果，不承担搜索、过滤、去重、状态判断
 
 ## 数据流
 
 ```
-[四类信息源: 学术论文 / 厂商博客 / GitHub / 产品发布]
-    │  runtime 搜集（每周，读 .last_run 算一周窗口）
+[README 搜集提示词 + SPEC 评分规则]
+    │
+    ▼
+[Codex / Hermes 等 agent]
+    │  读 .last_run + index.json
+    │  搜索四类信息源：论文 / 厂商博客 / GitHub releases / 产品发布
     ▼
 [候选条目] ──查 index.json 去重──▶ [新条目]
-    │  评分体系评估（SPEC 第六节）
+    │  阅读原文 + 按 SPEC 第六节评分
     ▼
-[纳入条目] ──▶ content/posts/<slug>.md（frontmatter）
-    │  更新 index.json + .last_run
+[纳入条目] ──▶ content/posts/<slug>.md（frontmatter + 正文）
+    │  更新 index.json
     ▼
-[本地 build] ──▶ site/（静态成品）
-    │  push
-    ▼
-[GitHub 展示层] ──▶ GitHub Pages
+[gate_all.py] ──▶ [build.py]
+    │              │
+    │              ▼
+    │           site/（静态成品）
+    │              │
+    ▼              ▼
+[修正 post/index]   [GitHub Pages 展示]
 ```
 
 ## 边界规则
-- 搜集 / 过滤 / 去重 / 状态逻辑永远在 runtime，不进 GitHub
-- GitHub 只放 `site/` 成品
-- 状态文件（`index.json` / `.last_run`）在本地 runtime，git 跟踪（可恢复、可审计）
+- 搜索能力来自 agent 工具，不默认在仓内实现固定 API 适配器
+- 本仓必须记录 agent 的内容产出与去重状态，不能只把进度留在对话里
+- GitHub Pages 只展示 `site/` 成品；展示层不做搜索、过滤、去重
+- `index.json` / `.last_run` 是项目内状态文件，随 agent 搜集更新并由 git 跟踪
+- `content/posts/` 是核心调研资产，每条一个 Markdown，frontmatter 必须过 schema
+- build/push 前必须跑 `python scripts/gate_all.py` 且 exit 0
 
 ## 状态与记忆边界
-- **Hermes memory**：只存项目指针（位置 / spec-driven / 长期约束），不存进度、不存已收录列表
-- **项目内状态文件**（`data/`）：易变、需精确跟踪（去重索引 / 时间戳），随每次更新变
-- **调研内容**（`content/`）：核心资产，每条一个 Markdown
-- **进度回顾**：跨 session "做到哪了"用 session_search，不存 memory
+- **Agent 工具记忆**：只存项目指针和长期约束，不存已收录列表、运行进度、临时判断
+- **项目内状态文件**（`data/`）：精确记录去重索引、时间窗口、vendor 白名单
+- **调研内容**（`content/`）：收录条目的事实与分析，必须可由原文追溯
+- **工作教训**（`AGENTS.md`）：每次 agent 犯错后追加防再犯规则
 
 ## 待定（影响 build / site 结构）
-- 网站选型：Hugo / Astro / MkDocs（未定）
-- 选型定后补 `scripts/` build 脚本和 `site/` 结构
+- 网站选型：沿用 `scripts/build.py` 极简 SSG，还是改 Hugo / Astro / MkDocs
+- 是否增加 agent 周更运行清单或提醒机制
