@@ -68,7 +68,7 @@
 8. publish 前主 agent 抽检 `is_major_vendor_official=true` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 9. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
 10. 服务器 upsert，`GET /api/papers` 刷新最新 run。
-11. （可选）起整理 agent，**prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文**，为每篇论文产 6 段 detail（研究背景与问题 / 贡献点 / 实现方法 / 实验与结果 / 对端侧 agent 的意义 / 局限与未来），逐条 `POST /api/paper-detail` 写入 DB。publish 后详情页先显示「整理中」，整理完成后刷新可见。
+11. （可选）起整理 agent，**prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文**，**逐篇整理 + 即时 POST `/api/paper-detail`**（动态增量推送）：每整理完一篇的 6 段 detail（研究背景与问题 / 贡献点 / 实现方法 / 实验与结果 / 对端侧 agent 的意义 / 局限与未来），立即 POST，不等全部整理完。publish 后详情页先显示「整理中」，每篇 POST 完页面实时从「整理中」变成 6 段内容。
 12. 更新 `data/.last_run` 时间戳为本次调研时间（ISO 8601，如 `2026-06-26T15:00:00+08:00`）。
 13. 本周错误沉淀：进 AGENTS 已知教训 + `docs/agent-guide/validation-rules.md` 规则 + `docs/agent-guide/research-prompt.md` 强化。不靠对话记忆，靠 repo。
 14. 跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py` 确认 harness 健康。
@@ -115,3 +115,5 @@
 - [2026-06-26] 主 agent 绕过 research-prompt.md 自写简化 prompt → 子 agent 没守标准 → 编造 404 链接。修复：发起子 agent 时 prompt 必须注入 research-prompt.md 全文，不许自写简化版。
 - [2026-06-26] 本周大厂官方内容稀疏时凑数，拿不确定链接充数。修复：找不到官方 URL 就丢弃，大厂不足就少收，不凑数。
 - [2026-06-26] 整理 agent 产出的 detail 含英文双引号会破坏 JSON 编码 → `docs/agent-guide/detail-prompt.md` 硬约束第 5 条：整段 detail 不许出现 `"` 字符，用「」或不加引号。
+- [2026-06-26] 调研 agent 标注 vendors/affiliation 只凭作者名推测，没附证据来源 → 用户质疑。修复：vendors/affiliation 标注必须有证据来源（OpenReview profile / Google Scholar / 论文 PDF 作者机构页），score_reason 里写明 affiliation 依据（如「Zhixiang Chi OpenReview profile 显示 Huawei Technologies Ltd，huawei.com 邮箱确认」），不许只凭名字猜。
+- [2026-06-26] 整理 agent 等全部整理完才统一推送 → 页面长时间停在「整理中」。修复：改成逐篇整理 + 即时 POST `/api/paper-detail`（动态增量推送），每篇整理完立即推送，页面实时刷新，不用等全部完成。`docs/agent-guide/detail-prompt.md` 输出方式已改。

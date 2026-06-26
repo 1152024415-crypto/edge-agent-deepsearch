@@ -20,6 +20,7 @@
    - `score_contribution`：创新度高 15-20；常见方法/工程整合 5-10
    - 最终排序靠 `score` 体现，调研 agent 判断质量给分
 8. **vendors 字段**：公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`）。
+9. **vendors/affiliation 必须有证据来源**：标注公司 affiliation 时，必须附证据（OpenReview author profile / Google Scholar 个人页 / 论文 PDF 机构署名），`score_reason` 写明依据（如「Zhixiang Chi OpenReview profile 显示 Huawei Technologies Ltd，huawei.com 邮箱确认」）。不许只凭作者名推测。
 
 # 先使用确定性代码进行关键词过滤：
 

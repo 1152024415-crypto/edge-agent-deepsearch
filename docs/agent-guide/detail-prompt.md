@@ -66,23 +66,36 @@
 
 注意这段没有论文腔，没有英文双引号，具体说了「新在哪」，不是「提出了一个框架」。
 
-# 输出格式
+# 输出方式：逐篇整理 + 即时推送
 
-整理 agent 输出一个 JSON 数组，每个元素对应一篇论文：
+整理 agent 不再等全部整理完再交 JSON。改成**逐篇整理 + 即时 POST**：每整理完一篇论文的 6 段 detail，立即用 bash（curl 或 python urllib）POST 到 `http://<server>/api/paper-detail`，不等全部整理完。
+
+这样页面能实时看到一篇篇详情页填上（从「整理中」变成 6 段内容），不用等全部完成。
+
+## 单篇 POST 格式
+
+每篇整理完，立即 POST，body：
 
 ```json
-[
-  {
-    "paper_id": "fresh-edge-agent-paper",
-    "detail": "## 研究背景与问题\n\n...\n\n## 贡献点\n\n...\n\n## 实现方法\n\n...\n\n## 实验与结果\n\n...\n\n## 对端侧 agent 的意义\n\n...\n\n## 局限与未来\n\n..."
-  }
-]
+{
+  "paper_id": "fresh-edge-agent-paper",
+  "detail": "## 研究背景与问题\n\n...\n\n## 贡献点\n\n...\n\n## 实现方法\n\n...\n\n## 实验与结果\n\n...\n\n## 对端侧 agent 的意义\n\n...\n\n## 局限与未来\n\n..."
+}
+```
+
+curl 示例（也可用 python urllib）：
+
+```bash
+curl -X POST http://<server>/api/paper-detail -H "Content-Type: application/json" -d '{"paper_id":"fresh-edge-agent-paper","detail":"## 研究背景与问题\n\n..."}'
 ```
 
 - `paper_id`：对应 research run 里的 `id` 字段，必须一致。
 - `detail`：6 段 markdown 纯文本，段落用 `## ` 标题分隔，段落间空行。不包含列表页的 abstract/effects/mechanism，是更深一层整理。
+- detail 值本身不许含英文双引号（见硬约束第 5 条）；JSON 结构的双引号不算。
 
-主 agent 拿到 JSON 后，逐条 `POST /api/paper-detail` 写入 DB，详情页读取展示。
+## 输出确认
+
+每篇 POST 完输出一行确认，如 `OK: fresh-edge-agent-paper posted`。POST 失败也输出一行，如 `FAIL: <paper_id> <原因>`，继续整理下一篇，不因单篇失败中断。全部完成后输出总结，如 `完成：8/8 篇推送`。
 
 # VERIFY
 

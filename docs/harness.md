@@ -16,7 +16,7 @@
   → validate: 结构+死链(自动拦)+7天窗口+5维加总
   → 主agent抽检大厂条目内容匹配(fetch URL对比标题摘要)
   → publish → 服务器upsert → 展示最新run(论文/博客tab)
-  → (可选)起整理agent(注入detail-prompt.md)产6段detail → POST /api/paper-detail → 详情页刷新
+  → (可选)起整理agent(注入detail-prompt.md)逐篇产6段detail → 即时POST /api/paper-detail → 详情页实时刷新
   → 错误沉淀: AGENTS教训+validate规则+research-prompt强化
   → 跑测试套件确认harness健康
 ```
@@ -35,8 +35,8 @@
 | 8 | 主 agent 抽检 `is_major_vendor_official=true` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
 | 9 | `python agent/publish_results.py --server <URL>` | 主 agent |
 | 10 | 服务器 upsert，`GET /api/papers` 刷新最新 run | 自动 |
-| 11 | （可选）起整理 agent，**prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文**，为每篇论文产 6 段 detail（研究背景与问题 / 贡献点 / 实现方法 / 实验与结果 / 对端侧 agent 的意义 / 局限与未来），逐条 `POST /api/paper-detail` 写入 DB | 主 agent |
-| 12 | 异步说明：publish 后列表页立即可见，详情页先显示「整理中」；整理 agent 完成后详情页刷新出 6 段内容 | 自动 |
+| 11 | （可选）起整理 agent，**prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文**，**逐篇整理 + 即时 POST `/api/paper-detail`**（动态增量推送）：每整理完一篇 6 段 detail 立即 POST，不等全部整理完 | 主 agent |
+| 12 | 异步说明：publish 后列表页立即可见，详情页先显示「整理中」；整理 agent 每篇 POST 完页面实时从「整理中」变 6 段内容，不用等全部完成 | 自动 |
 | 13 | 更新 `data/.last_run` 时间戳 | 主 agent |
 | 14 | 本周错误 → AGENTS 教训 + validate 规则 + research-prompt 强化 | 自进化 |
 | 15 | 跑 `tests/` + `app/gates/gate_all.py` 确认 harness 健康 | 自动 |
