@@ -49,6 +49,8 @@
 - **厂商特定检索式（示例）**：
   `("Apple Intelligence" OR "CoreAI" OR "Samsung Gauss" OR "Gemini Nano" OR "Phi-3" OR "Llama 3.2") AND ("on-device" OR "edge" OR "mobile" OR "embedded") AND ("agent" OR "optimization" OR "deployment")`
 
+  调研时覆盖所有厂商，不只大厂官方，也要搜中国互联网公司研究项目（快手 / 字节 / 腾讯 / 百度 / 美团 / 京东 / 拼多多 / 网易等，按 arXiv affiliation + GitHub org 搜）。每家厂商的官方动态来源、websearch 关键词、arXiv affiliation 搜法和重要页面见 `docs/references/vendor-research-guide.md`。
+
 - **评测与基准检索式**：
   `("AndroidWorld" OR "Mobile-Env" OR "AIoTBench" OR "MLPerf Tiny") AND ("agent" OR "GUI automation")`
 
