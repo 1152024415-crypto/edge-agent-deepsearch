@@ -1,0 +1,4 @@
+interface:
+  display_name: "Edge Agent Research Pipeline"
+  short_description: "Run the edge agent research publishing workflow."
+  default_prompt: "Use $edge-agent-research-pipeline to understand the edge_agent project and run the main-agent research-to-server publishing workflow."

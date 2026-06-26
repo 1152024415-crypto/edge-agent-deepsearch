@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""gate 1: 校验 content/posts/*.md 的 frontmatter 符合 frontmatter.schema.json。
+"""gate 1: 校验 content/papers/*.md 的 frontmatter 符合 frontmatter.schema.json。
 
 退出码 0=全部合规，1=有错误。
 """
@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gate_common as gc
 from jsonschema import Draft202012Validator
 
-SCHEMA_PATH = gc.ROOT / "scripts" / "frontmatter.schema.json"
+SCHEMA_PATH = gc.ROOT / "app" / "frontmatter.schema.json"
 schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 validator = Draft202012Validator(schema)
 

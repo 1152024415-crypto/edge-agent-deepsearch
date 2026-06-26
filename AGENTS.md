@@ -1,67 +1,117 @@
 # AGENTS.md — edge_agent 项目工作指引
 
-> 本文件是 agent 在此项目干活的"目录表 + 免疫系统"。
-> ~100 行，渐进式披露：深层规则见 `docs/` 下各文档，按需加载，不一次性塞满上下文。
-> **免疫系统**：每次 agent 犯错，在"已知教训"加一条防再犯（随错误增长，非写一次就忘）。
-> **仓库是唯一记录系统**：决策/spec/计划全在此 repo，不在对话/Slack/人脑。
+> 本文件是 agent 在此项目工作的目录表和免疫系统。
+> 仓库是唯一记录系统：流程、契约、教训都写进 repo，不靠对话记忆。
+
+## 必读项目 Skill
+
+新的 codeagent 进入本仓库后，先读取项目内 skill：
+
+```text
+.agents/skills/edge-agent-research-pipeline/SKILL.md
+```
+
+这个 skill 是本项目的工作入口，说明项目目标、主 agent / 子 agent 边界、research run 契约、校验发布命令和不可违反规则。后续维护时，`AGENTS.md` 和该 skill 必须保持一致。
 
 ## 项目一句话
-端侧 AI Agent 周报雷达展示与规则仓：Codex / Hermes 等 agent 读取 `README.md` 提示词，搜索过去一周端侧 agent / 推理动态，写入本仓内容与索引，再 build 成 GitHub Pages 展示。
 
-## 两类职责（详见 ARCHITECTURE.md）
-- **Agent 执行层**（Codex / Hermes 等工具）：读提示词、联网搜索、阅读原文、过滤评分、产出 post/index
-- **展示与记录层**（本仓 + GitHub Pages）：保存规则、状态、内容和 gate/build 产物；GitHub 网页只展示结果
+端侧 AI Agent 论文雷达：主 code agent 调度调研子 agent 搜索最近一周端侧 agent 相关论文，主 agent 校验后把结构化结果发布到服务器，网页从服务器刷新最新论文列表。
 
-> 本仓不是传统爬虫 / 采集适配器项目。除非另有明确决策，不在仓库里维护 arXiv / 博客 / GitHub release API 适配器；搜索动作由 agent 使用自身工具完成。
+## 架构边界
+
+项目按两大模块解耦 + 能力层：
+
+- **Agent 调研模块**（`agent/`）：research_run 校验库、validate CLI、publish 脚本。主 agent 调度子 agent 搜索论文，产出 `research_runs/*.json`，校验后发布。
+- **网页 App 模块**（`app/`）：server HTTP 路由、storage SQLite、page 展示页、build 静态 fallback、gates 内容校验。接收发布结果并展示。
+- **能力层**（`.agents/skills/` + `AGENTS.md`）：给 codeagent 的工作指引和 skill，新 codeagent 强入口。
+- 服务器不搜索论文，只接收校验过的 research run；搜索由 agent 工具完成。
 
 ## 目录地图
+
+两大模块解耦 + 能力层：
+
 | 路径 | 用途 |
 |---|---|
-| `README.md` | 项目入口 + 搜集提示词（agent 运行读） |
-| `AGENTS.md` | 本文件，根指引 |
-| `ARCHITECTURE.md` | 顶层领域地图 + 数据流 |
-| `docs/product-specs/SPEC.md` | 需求规格（source of truth） |
-| `docs/design-docs/DESIGN.md` | 技术设计：agent 搜集工作流 / 状态管理 |
-| `docs/exec-plans/` | 实现计划（active / completed / tech-debt-tracker.md） |
-| `docs/references/` | 外部资料（vendor-whitelist.md 人读版） |
-| `content/posts/` | 调研条目 Markdown（frontmatter 规范见 `scripts/frontmatter.schema.json`） |
-| `data/index.json` | 去重索引（已收录条目，id/slug 与 post 一致） |
-| `data/vendors.yaml` | 大厂白名单（机器可读，gate_vendors 读取） |
-| `data/.last_run` | 上次 agent 搜集时间戳（滚动窗口起点） |
-| `scripts/` | 机械化强制：`frontmatter.schema.json` + gate_frontmatter/dedup/window/vendors/all.py |
-| `site/` | build 出的静态成品（push 到 GitHub） |
+| `.agents/skills/edge-agent-research-pipeline/SKILL.md` | 【能力层】项目工作 skill，新 codeagent 优先读取 |
+| `AGENTS.md` | 【能力层】agent 总指引（本文件） |
+| `agent/` | 【模块1·调研 pipeline】research_run/validate/publish |
+| `agent/research_run.py` | research run 校验库 |
+| `agent/validate_research_run.py` | 发布前校验 CLI |
+| `agent/publish_results.py` | POST 到服务器 |
+| `app/` | 【模块2·网页/server】server/storage/page + 静态 fallback |
+| `app/server.py` | HTTP 路由和服务器入口 |
+| `app/storage.py` | SQLite 存储和 paper upsert/query |
+| `app/page.py` | 服务器展示页 HTML shell |
+| `app/build.py` | 静态 fallback build（生成 site/index.html） |
+| `app/gates/` | content/papers frontmatter 校验 gate |
+| `app/frontmatter.schema.json` | frontmatter 字段 schema |
+| `tests/` | 跨模块测试（test_research_pipeline, test_build） |
+| `research_runs/` | 子 agent 产出的 run JSON，默认不提交 |
+| `content/papers/` | 兼容旧静态 build 的本地 Markdown |
+| `site/` | 静态 fallback 产物，不提交 |
+| `data/` | index.json / vendors.yaml 共享数据 |
+| `docs/` | 文档（agent-guide / site / design-docs / plans / references） |
+| `README.md` | 人类入口和常用命令 |
+| `ARCHITECTURE.md` | 顶层架构和数据流 |
 
-## 核心约束（不可违反）
-- **时间窗口**：仅过去一周（agent 读 `data/.last_run` 算 cutoff）
-- **增量去重**：agent 搜集前先查 `data/index.json`，跳过已收录
-- **大厂优先**：评分加权（见 SPEC 第六节），非硬排除学生
-- **不分语言**：英文为质量软信号，不排除中文
-- **数据可信**：实际效果必须来自原文，摘不到写"未报告"，禁止补编
-- **范围**：端侧 agent 优先，端侧推理引擎次之纳入
-- **gate 必过**：产出 post + 更新 index 后、build/push 前，必须 `python scripts/gate_all.py` EXIT 0
+## 主 Agent 工作流
 
-## 信息源（四类，缺一则雷达跑空）
-学术论文 / 厂商技术博客 / GitHub releases / 产品大会发布（详见 SPEC 第一节）
+> 总览见 `docs/harness.md` 第 3 节每周调研主循环。本节是主 agent 每周硬步骤，和 harness 保持一致，不许跳步。
 
-## 工作流（agent 每次搜集）
-1. 读 `data/.last_run` 算一周 cutoff
-2. 读 `data/index.json` 取已收录集
-3. 用 Codex / Hermes 等 agent 自身搜索、浏览、阅读工具检索四类信息源的窗口内新增
-4. 按 SPEC 评分体系评估每条
-5. 纳入的写 `content/posts/<slug>.md`（frontmatter 必须符合 `scripts/frontmatter.schema.json`）
-6. 更新 `data/index.json`（加 entry，id/slug 与 post 文件一致）
-7. **跑 `python scripts/gate_all.py`，必须 EXIT 0 才继续**；不过则修 post/index 后重跑
-8. gate 过 → 写 `data/.last_run` = now（ISO）→ 本地 build → push 成品到 GitHub
+1. 读 `.agents/skills/edge-agent-research-pipeline/SKILL.md`、`docs/agent-guide/main-agent-workflow.md`、`docs/agent-guide/research-prompt.md`、`output-contract.md`、`validation-rules.md`。强入口，不许跳过。
+2. 检查 `data/.last_run`：读上次调研时间戳，距本次 ≥7 天才跑；<7 天提示"本周已调研"并停止。防重复跑、防拿旧 run 充本周。
+3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（大厂优先、官方域名白名单、7 天窗口、三方向分类、keywords、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
+4. 子 agent 搜索本周（过去 7 天）端侧 agent 论文 + 17 家大厂官方动态，产出易读版 `abstract`/`effects`/`mechanism` + 5 维打分 + `keywords` + `category` + `source_type` + `vendors`。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
+5. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`。
+6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：结构 + 7 天窗口 + 5 维加总 = score + HTTP 死链检查。校验失败自动拦。
+7. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
+8. publish 前主 agent 抽检 `is_major_vendor_official=true` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
+9. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
+10. 服务器 upsert，`GET /api/papers` 刷新最新 run。
+11. （可选）起整理 agent，**prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文**，为每篇论文产 6 段 detail（研究背景与问题 / 贡献点 / 实现方法 / 实验与结果 / 对端侧 agent 的意义 / 局限与未来），逐条 `POST /api/paper-detail` 写入 DB。publish 后详情页先显示「整理中」，整理完成后刷新可见。
+12. 更新 `data/.last_run` 时间戳为本次调研时间（ISO 8601，如 `2026-06-26T15:00:00+08:00`）。
+13. 本周错误沉淀：进 AGENTS 已知教训 + `docs/agent-guide/validation-rules.md` 规则 + `docs/agent-guide/research-prompt.md` 强化。不靠对话记忆，靠 repo。
+14. 跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py` 确认 harness 健康。
 
-## 已知教训（免疫系统，每次 agent 出错在此加一条）
-<!-- 格式：[日期] 现象 → 规则。随运行积累。 -->
-- [2026-06-25] frontmatter schema / gate 校验被误耦合到"网站选型" → 内容层 gate 不依赖渲染层，应先做，不捆绑等待
-- [2026-06-25] pyyaml 把 frontmatter `date: 2026-06-24` 解析成 datetime.date 对象 → jsonschema format 校验前需 normalize 回 ISO 字符串
-- [2026-06-25] Windows 环境 terminal 跑 `python` 会被 block → gate 脚本用 execute_code（subprocess）跑
-- [2026-06-25] 把本仓误解成"仓内 runtime 采集器项目" → 本仓是展示 / 规则 / 状态 / gate 仓，搜索由 Codex / Hermes 等外部 agent 按 README 执行
+## 调研策略（核心）
 
-## 待补（避免过度设计，按需推进）
-- 熵管理 agent：定期扫过期 / 重复 / 死链 / frontmatter 漂移
-- 网站选型（Hugo / Astro / MkDocs）→ 决定 build 与 `site/` 结构
-- agent 周更运行检查清单（读 README → 搜索 → 写 post/index → gate → build → push）
-- ADR（docs/decisions/）：评分权重 / 窗口 / 白名单等决策的理由记录
+这是让调研子 agent 在搜索时必须注意的策略：
+
+- **优先级（高→低）**：
+  1. 大厂官方动态（Apple/Google/Microsoft/OpenAI/Anthropic/Meta/Samsung/Huawei/Qualcomm/MediaTek/小米/OPPO/vivo/荣耀/Alibaba-Qwen/Mistral/面壁，官方博客/产品发布，`is_major_vendor_official: true`，排序最前）
+  2. **公司项目**（快手/字节/腾讯/百度/美团/京东/拼多多/网易等公司独立或主导的研究，arXiv 或顶会，affiliation 命中公司）。优先级非常高，排序仅低于大厂官方。
+  3. **公司+学校合作顶会项目**（公司联合高校发表顶会）
+  4. **学校顶会项目**（高校独立发表顶会顶刊）
+- **至少顶会门槛**：学校项目（无公司 affiliation）必须发表在顶会顶刊（NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / ACL / CVPR / ICCV / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN）。学校项目的纯 arXiv 预印本（非顶会）不收。公司项目 arXiv 或顶会均可。
+- **排除常见方法无明显创新**：纯前缀缓存+投机解码堆砌、普通量化/剪枝、常规 benchmark，除非有显著新意，否则不收。即使中了顶会也不要，或给低分。
+- **评分口径**（`score_vendor` / `score_contribution` 参考区间，质量判断由调研 agent 给分，不是代码硬排）：
+  - `score_vendor`：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
+  - `score_contribution`：创新度高 15-20；常见方法/工程整合 5-10
+- **vendors 字段**：公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`）。
+- **官方域名硬约束**：非论文条目必须命中官方域名（见 `docs/references/vendor-whitelist.md`），非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
+- **三方向分类**：每条必须归 `应用` / `框架` / `算法` 之一，页面按这三个 tab 分组展示。
+- **首页字段人类可读**：`abstract`/`effects`/`mechanism` 用中文短句给人看（这是什么/有什么结果/怎么做到的），详细技术分解放 wiki，不塞首页。
+- **keywords 必填**：每条 1-8 个中文优先关键词（如 `GUI智能体`/`记忆`/`工具调用`），页面用小框标签展示。
+
+## 不可违反
+
+- 服务器不负责搜索论文；搜索由 agent 使用自己的搜索、浏览、阅读工具完成。
+- 大厂官方技术博客 / 官方产品发布可收录且排序最前，但必须命中官方域名且 `is_major_vendor_official: true`；非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
+- 时间窗口是当前日期过去 7 天，不允许用旧 `.last_run` 放行过期样例。
+- 没有本周合格论文时显示空状态，不拿旧数据撑数量。
+- 凑数禁令：本周大厂官方不足就少收，不拿学术充大厂，不拿不确定链接凑数。
+- `paper_url` 必须和论文标题、摘要匹配。
+- `effects` 必须来自论文原文；没有报告写 `未报告`。
+- 发布前必须跑 `validate_research_run.py`。
+- 修改完成前至少跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py`。
+
+## 已知教训
+
+- [2026-06-25] 非官方博客/产品发布冒充论文会污染页面 → 只允许大厂官方技术博客/官方产品发布（官方域名 + `is_major_vendor_official: true`），其余非论文一律排除；普通论文仍要求 `source_type: 学术论文` + 权威论文链接。
+- [2026-06-25] 2025 年旧样例被展示成当前周报 → 时间窗口必须按当前日期过去 7 天硬校验，不能靠旧 `.last_run` 放行。
+- [2026-06-25] GitHub 静态页不是最终形态 → 最终展示由服务器 `GET /api/papers` 刷新；GitHub Pages 只保留 fallback。
+- [2026-06-25] 子 agent 和页面职责混淆 → 子 agent 只产出 research run JSON，主 agent 校验并发布，服务器只接收和展示。
+- [2026-06-25] 新 codeagent 只读散落文档容易漏流程 → 项目内 `.agents/skills/edge-agent-research-pipeline/SKILL.md` 是强入口，AGENTS 必须指向它。
+- [2026-06-26] 主 agent 绕过 research-prompt.md 自写简化 prompt → 子 agent 没守标准 → 编造 404 链接。修复：发起子 agent 时 prompt 必须注入 research-prompt.md 全文，不许自写简化版。
+- [2026-06-26] 本周大厂官方内容稀疏时凑数，拿不确定链接充数。修复：找不到官方 URL 就丢弃，大厂不足就少收，不凑数。
+- [2026-06-26] 整理 agent 产出的 detail 含英文双引号会破坏 JSON 编码 → `docs/agent-guide/detail-prompt.md` 硬约束第 5 条：整段 detail 不许出现 `"` 字符，用「」或不加引号。

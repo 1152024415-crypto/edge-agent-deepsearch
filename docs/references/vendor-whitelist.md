@@ -30,3 +30,24 @@
 
 ## 学术顶会顶刊（信息质量维度参考）
 NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / CVPR / ICCV / ACL / EMNLP / TPAMI / TNNLS / ToN
+
+## 官方来源域名（非论文收录硬约束）
+
+非论文条目只允许大厂官方技术博客或官方产品发布。候选 URL 必须命中以下官方域名或其子域名，不能使用新闻、社媒、GitHub release、论坛或二手解读。
+
+Apple: `apple.com`, `developer.apple.com`, `machinelearning.apple.com`
+Google: `google.com`, `blog.google`, `googleblog.com`, `android-developers.googleblog.com`, `ai.google.dev`
+Microsoft: `microsoft.com`, `azure.microsoft.com`, `techcommunity.microsoft.com`
+OpenAI: `openai.com`
+Anthropic: `anthropic.com`
+Meta: `meta.com`, `ai.meta.com`, `about.fb.com`
+Samsung: `samsung.com`, `research.samsung.com`
+Huawei: `huawei.com`
+Qualcomm: `qualcomm.com`
+MediaTek: `mediatek.com`
+Xiaomi: `mi.com`, `xiaomi.com`
+OPPO: `oppo.com`
+vivo: `vivo.com`
+Honor: `honor.com`
+Alibaba/Qwen: `alibabacloud.com`, `qwenlm.github.io`
+Mistral: `mistral.ai`

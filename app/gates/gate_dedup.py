@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""gate 2: index.json entries 与 content/posts/ 文件双向一一对应。
+"""gate 2: index.json entries 与 content/papers/ 文件双向一一对应。
 
 任一方向缺失即错误（index 有但无 post 文件 / post 有但 index 未收录）。
 退出码 0=一致，1=不一致。

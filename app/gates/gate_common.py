@@ -7,7 +7,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 _ERRORS = []
 
@@ -31,11 +31,16 @@ def read_index():
     return json.loads(p.read_text(encoding="utf-8"))
 
 
-def list_posts():
-    d = ROOT / "content" / "posts"
+def list_papers():
+    d = ROOT / "content" / "papers"
     if not d.exists():
         return []
     return sorted(d.glob("*.md"))
+
+
+def list_posts():
+    """Backward-compatible alias while older gate scripts are migrated."""
+    return list_papers()
 
 
 def read_vendors():

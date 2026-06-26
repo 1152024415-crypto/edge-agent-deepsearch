@@ -1,5 +1,14 @@
-# build 产物（push 到 GitHub 展示层）
-site/
+# build 产物
+/site/
+/server/*.sqlite
+/server/*.sqlite-*
+/app/*.sqlite
+/app/*.sqlite-*
+/research_runs/*.json
+
+# python
+__pycache__/
+*.pyc
 
 # opencode session/索引状态
 .omo/
