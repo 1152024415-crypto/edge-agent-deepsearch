@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mirror the local display server (http://127.0.0.1:8001) into a static site/.
+"""Mirror a running display server into a static site/.
 
 This produces a GitHub-Pages-deployable snapshot under ``site/``:
 
@@ -13,10 +13,12 @@ pages are already server-rendered HTML (app/server.py render_detail), so we
 just mirror them and fix the back link.
 
 Only this file is changed; app/page.py, app/server.py, app/storage.py are left
-untouched. Run while the server is up on 127.0.0.1:8001.
+untouched. Run while the server is up, e.g. ``python app/build.py --server
+http://127.0.0.1:8001``.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import shutil
@@ -24,7 +26,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-SERVER = "http://127.0.0.1:8001"
+DEFAULT_SERVER = "http://127.0.0.1:8001"
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 
@@ -66,30 +68,44 @@ def rewrite_detail(html: str) -> str:
     return html.replace('href="/"', 'href="../index.html"')
 
 
-def main() -> int:
-    if SITE.exists():
-        shutil.rmtree(SITE)
-    SITE.mkdir(parents=True, exist_ok=True)
-    (SITE / "paper").mkdir(parents=True, exist_ok=True)
+def mirror(server: str, site: Path = SITE) -> int:
+    """Mirror ``server`` (root + /api/papers + /paper/<id>) into ``site``."""
+    if site.exists():
+        shutil.rmtree(site)
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "paper").mkdir(parents=True, exist_ok=True)
 
-    print(f"[BUILD] mirroring {SERVER} -> {SITE}")
-    papers_payload = fetch_json(f"{SERVER}/api/papers")
+    print(f"[BUILD] mirroring {server} -> {site}")
+    papers_payload = fetch_json(f"{server}/api/papers")
     papers = list(papers_payload.get("papers") or [])
 
-    index_html = rewrite_index(fetch_text(f"{SERVER}/"), papers_payload)
-    (SITE / "index.html").write_text(index_html, encoding="utf-8")
+    index_html = rewrite_index(fetch_text(f"{server}/"), papers_payload)
+    (site / "index.html").write_text(index_html, encoding="utf-8")
     print(f"[BUILD] index.html ({len(papers)} papers inlined)")
 
     for p in papers:
         pid = str(p.get("id") or "")
         if not pid:
             continue
-        detail_html = rewrite_detail(fetch_text(f"{SERVER}/paper/{pid}"))
-        (SITE / "paper" / f"{pid}.html").write_text(detail_html, encoding="utf-8")
+        detail_html = rewrite_detail(fetch_text(f"{server}/paper/{pid}"))
+        (site / "paper" / f"{pid}.html").write_text(detail_html, encoding="utf-8")
         print(f"[BUILD] paper/{pid}.html")
 
-    print(f"[BUILD] done: index.html + {len(papers)} detail page(s) under {SITE}")
+    print(f"[BUILD] done: index.html + {len(papers)} detail page(s) under {site}")
     return 0
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Mirror a running display server into a static site/."
+    )
+    parser.add_argument(
+        "--server",
+        default=DEFAULT_SERVER,
+        help=f"Display server base URL (default: {DEFAULT_SERVER}).",
+    )
+    args = parser.parse_args(argv)
+    return mirror(args.server)
 
 
 if __name__ == "__main__":
