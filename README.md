@@ -1,5 +1,7 @@
 # edge_agent
 
+> 在线展示：https://1152024415-crypto.github.io/edge-agent-deepsearch/
+
 端侧 AI Agent 论文雷达。这个仓库不是传统爬虫项目，也不是只靠 GitHub Pages 展示的 demo；它的最终流程是 **主 code agent 调度调研子 agent，校验调研结果，然后把结果发布到服务器，网页从服务器刷新最新论文列表**。
 
 ## 快速开始：跑一次调研并展示
