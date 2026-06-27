@@ -27,6 +27,17 @@
 11. **开源评分**：`score_open`（0-10），有开源仓库/数据集/模型开源给 5-10，不开源 0。开源是高分项，同等条件下开源论文优先。
 12. **6 维分数**：`score` = `score_relevance`(30) + `score_vendor`(25) + `score_contribution`(15) + `score_quality`(15) + `score_recency`(5) + `score_open`(10) = 100。6 维加总必须等于 score。
 
+# arXiv MCP 搜索（优先使用）
+
+本项目配置了 arXiv MCP Server（blazickjp/arxiv-mcp-server），提供以下工具：
+- `search_papers`：按关键词搜索 arXiv 论文（支持 query/category/author/max_results/sort_by）
+- `download_paper`：下载论文 PDF 到本地
+- `read_paper`：读取论文全文（markdown 格式）
+
+调研 agent 搜索论文时**优先用 arXiv MCP 工具**（比 websearch 搜 arXiv 更精准，直接拿结构化 JSON），websearch 作为补充搜大厂官网/新闻。arXiv MCP 自动限速（3秒间隔）+ 缓存（24小时），符合 arXiv API 规范。
+
+示例：搜本周端侧 agent 论文 → `search_papers(query="on-device agent", max_results=50, sort_by="submittedDate")`，再按日期窗口过滤。
+
 # 先使用确定性代码进行关键词过滤：
 
 - **大厂官方优先检索式**：
