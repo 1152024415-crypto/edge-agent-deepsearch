@@ -7,42 +7,39 @@
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, "Segoe UI", "Microsoft YaHei", Arial, sans-serif; background: #f7f3ea; color: #202621; }
-    main { max-width: 1100px; margin: 0 auto; padding: 20px; }
-    h1 { margin: 0 0 4px; font-size: 26px; color: #202621; }
-    .muted { color: #627066; margin: 0 0 16px; font-size: 14px; }
-    .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 2px solid #cfc6b4; margin-bottom: 16px; }
-    .tab { padding: 8px 18px; border: none; background: transparent; color: #627066; font-size: 15px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; display: inline-flex; align-items: center; gap: 6px; }
-    .tab:hover { color: #8d3d30; }
-    .tab.active { color: #8d3d30; border-bottom-color: #8d3d30; }
-    .tab .count { display: inline-block; min-width: 18px; padding: 0 6px; background: #eee7da; color: #596258; border-radius: 9px; font-size: 11px; font-weight: 700; line-height: 16px; text-align: center; }
-    .tab.active .count { background: #8d3d30; color: #fffaf0; }
-    .cat-panel { display: none; }
-    .cat-panel.active { display: block; }
-    .card { background: #fffdf7; border: 1px solid #cfc6b4; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
-    .card-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
-    .score { font-weight: 700; color: #8d3d30; font-size: 20px; min-width: 30px; }
-    .vendor-badge { display: inline-block; padding: 2px 7px; border: 1px solid #8d3d30; color: #8d3d30; font-size: 11px; font-weight: 700; border-radius: 3px; }
-    .open-badge { display: inline-block; padding: 2px 7px; border: 1px solid #2e7d32; color: #2e7d32; font-size: 11px; font-weight: 700; border-radius: 3px; }
-    .vendor-tag { display: inline-block; padding: 3px 10px 3px 8px; background: #fffdf7; border-left: 3px solid #8d3d30; border-radius: 0 4px 4px 0; font-size: 12px; font-weight: 600; color: #8d3d30; }
-    .date { color: #627066; font-size: 13px; }
-    .title { font-weight: 700; font-size: 15px; color: #202621; text-decoration: none; }
+    main { max-width: 1100px; margin: 0 auto; padding: 18px; }
+    h1 { margin: 0 0 2px; font-size: 24px; color: #202621; }
+    .muted { color: #627066; margin: 0 0 12px; font-size: 13px; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+    .ftag { padding: 4px 11px; border: 1px solid #cfc6b4; background: #fffdf7; color: #596258; font-size: 12px; font-weight: 600; border-radius: 14px; cursor: pointer; line-height: 1.4; }
+    .ftag:hover { border-color: #8d3d30; color: #8d3d30; }
+    .ftag.active { background: #8d3d30; border-color: #8d3d30; color: #fffaf0; }
+    .card { background: #fffdf7; border: 1px solid #cfc6b4; border-radius: 7px; padding: 11px 14px; margin-bottom: 9px; }
+    .card-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 7px; }
+    .score { font-weight: 700; color: #8d3d30; font-size: 15px; min-width: 22px; }
+    .tier { display: inline-block; padding: 1px 6px; border: 1px solid #8d3d30; color: #8d3d30; font-size: 10px; font-weight: 700; border-radius: 3px; }
+    .tier.oss { border-color: #2e7d32; color: #2e7d32; }
+    .tier.company { border-color: #5a6b8d; color: #5a6b8d; }
+    .tier.school { border-color: #8a6d3b; color: #8a6d3b; }
+    .open-badge { display: inline-block; padding: 1px 6px; border: 1px solid #2e7d32; color: #2e7d32; font-size: 10px; font-weight: 700; border-radius: 3px; }
+    .date { color: #627066; font-size: 12px; }
+    .title { font-weight: 700; font-size: 14px; color: #202621; text-decoration: none; }
     .title:hover { color: #8d3d30; }
-    .keywords { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 4px; }
-    .kw { display: inline-block; padding: 2px 9px; background: #eee7da; border-radius: 11px; font-size: 12px; color: #596258; line-height: 1.6; }
-    .field { display: flex; margin-top: 8px; gap: 10px; }
-    .label { flex-shrink: 0; width: 84px; color: #627066; font-size: 13px; font-weight: 600; }
-    .text { color: #3f463f; font-size: 14px; line-height: 1.55; }
-    .score-reason { margin-top: 8px; color: #4c554e; font-size: 12px; line-height: 1.4; }
-    .score-dims { margin-top: 3px; color: #7a837a; font-size: 11px; }
-    .card-foot { display: flex; gap: 8px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
-    input { padding: 5px 8px; border: 1px solid #cfc6b4; background: #fffaf0; border-radius: 4px; font-size: 13px; color: #202621; }
-    input[name="insight_person"] { width: 130px; }
-    input[name="wiki_url"] { width: 200px; }
-    button { padding: 5px 14px; border: 1px solid #8d3d30; color: #8d3d30; background: #fffaf0; cursor: pointer; border-radius: 4px; font-size: 13px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 2px; }
+    .tag { display: inline-block; padding: 1px 8px; background: #eee7da; border-radius: 10px; font-size: 11px; color: #596258; line-height: 1.5; }
+    .field { display: flex; margin-top: 5px; gap: 8px; }
+    .label { flex-shrink: 0; width: 64px; color: #627066; font-size: 12px; font-weight: 600; }
+    .text { color: #3f463f; font-size: 13px; line-height: 1.5; }
+    .score-reason { margin-top: 6px; color: #4c554e; font-size: 11px; line-height: 1.4; }
+    .card-foot { display: flex; gap: 6px; margin-top: 9px; align-items: center; flex-wrap: wrap; }
+    input { padding: 4px 7px; border: 1px solid #cfc6b4; background: #fffaf0; border-radius: 4px; font-size: 12px; color: #202621; }
+    input[name="insight_person"] { width: 110px; }
+    input[name="wiki_url"] { width: 170px; }
+    button { padding: 4px 12px; border: 1px solid #8d3d30; color: #8d3d30; background: #fffaf0; cursor: pointer; border-radius: 4px; font-size: 12px; }
     button:hover { background: #8d3d30; color: #fffaf0; }
     .empty { color: #627066; font-style: italic; padding: 20px; text-align: center; }
     @media (max-width: 640px) {
-      .field { flex-direction: column; gap: 2px; }
+      .field { flex-direction: column; gap: 1px; }
       .label { width: auto; }
       input[name="insight_person"], input[name="wiki_url"] { width: 100%; }
     }
@@ -52,68 +49,79 @@
   <main>
     <h1>端侧 AI Agent 论文雷达</h1>
     <p class="muted" id="summary">正在读取服务器最新调研结果...</p>
-    <div class="tabs" id="tabs" role="tablist">
-      <button class="tab" data-tab="academic" role="tab">学术论文<span class="count" id="count-academic">0</span></button>
-      <button class="tab" data-tab="official" role="tab">官方动态<span class="count" id="count-official">0</span></button>
-    </div>
+    <div class="filter-bar" id="filter-bar"></div>
     <div id="papers"></div>
   </main>
-  <script>window.__PAPERS__ = {"papers": [{"id": "mediatek-dgx-spark-local-agents-2026", "run_id": "run-20260627-v5", "title": "Running AI Agents Locally on DGX Spark", "abstract": "联发科介绍如何在NVIDIA DGX Spark上本地运行AI代理，这款桌面级个人AI超算由联发科与NVIDIA联合设计的GB10 Grace Blackwell超级芯片驱动。", "effects": "DGX Spark支持最高1 PFLOP的FP4 AI性能，可流畅运行多个代理并发任务，开发者可从手机平板远程监控代理工作进度，重计算留在本地按需连接云端。", "mechanism": "GB10超级芯片结合联发科CPU性能与功耗效率与NVIDIA加速计算技术，20核CPU与Blackwell GPU共享128GB统一LPDDR5x内存，通过OpenClaw等平台管理代理，支持多节点并行推理。", "paper_url": "https://www.mediatek.com/tek-talk-blogs/running-ai-agents-locally-on-dgx-spark", "date": "2026-06-24", "score": 76, "score_relevance": 25, "score_vendor": 23, "score_contribution": 8, "score_quality": 12, "score_recency": 5, "score_open": 3, "score_reason": "联发科官方技术博客，直接讲述在边缘设备上本地运行AI代理的实践，与端侧agent主题高度契合。DGX Spark为商业产品但提及OpenClaw开源平台，score_open给3分。产品介绍类内容创新度中等。", "source_type": "官方技术博客", "is_major_vendor_official": true, "category": "应用", "keywords": ["联发科", "本地代理", "DGX Spark", "边缘推理", "端侧部署"], "insight_person": "", "wiki_url": "", "authors": "PD Rajput (MediaTek)", "vendors": "MediaTek", "venue": "MediaTek Tek Talk Blog", "recommendation": "纳入", "detail": "## 研究背景与问题\n\n现在 AI 正从「问一句答一句」的工具变成能主动干活的 agent，能盯收件箱、整理资讯、跑多步任务。但这些 agent 多数跑在云端，按 token 计费又慢又贵，还把隐私数据送上云。问题是能不能把 agent 跑在自己桌上，既要够快够强，又不能像机房那样吃电。这篇博客正是回答这个本地化痛点。\n\n## 贡献点\n\n两点。第一，把 NVIDIA DGX Spark 这个个人 AI 超算定位成跑本地 agent 的标准平台，配 GB10 Grace Blackwell Superchip，联发科和英伟达联合设计，单机 1 petaflop FP4 算力，插墙电即跑。第二，串起 OpenClaw、Hermes Agent、NemoClaw 一套本地 agent 生态，从搭助手、自适应学习到行为护栏打通，不止谈硬件，是把本地 agent 全链路铺出来。\n\n## 实现方法\n\n硬件上 GB10 把联发科的 CPU 性能与功耗控制和英伟达的加速计算合到一颗芯片，桌面机箱插电即用。软件侧 OpenClaw 用来搭和跑 agent，Hermes Agent 在本地长期记忆对话、按用户习惯自我调整，NemoClaw 给 agent 加行为护栏管数据怎么动、连哪些模型。多台 Spark 能并联做推理分摊，手机平板随时查看后台 agent 进度，重活留本地、要弹性再上云。\n\n## 实验与结果\n\n博客没报告具体 benchmark，只给了几个定性指标：单机最高 1 petaflop FP4 AI 性能，功耗低到能直接插家用墙电，可同时跑多个 agent，多机并联做推理共享。具体的时延、并发数、内存占用都没写。量化数据未报告。\n\n## 对端侧 agent 的意义\n\n直接面向端侧：DGX Spark 就是「桌面级端侧」，把云端 agent 那套搬回本地。对端侧工程师的用处一是验证「本地 agent 加本地模型」可行，证明插电压得住在桌面跑得动多 agent；二是 OpenClaw、Hermes、NemoClaw 这套框架思路可迁移，记忆、护栏、多机并联的设计给手机或边缘设备做本地 agent 都能借鉴；三是隐私和成本这条路径走通了，端侧落地同样要面对。\n\n## 局限与未来\n\n没给量化实验，怎么个快法、能并发多少 agent 全靠定性描述。GB10 是高端桌面超算，离真正的手机或 IoT 端侧还差很远，功耗和体积都不是消费级。OpenClaw、Hermes Agent、NemoClaw 是第三方生态，博客没讲联发科自己贡献了多少代码。作者点到了 always-on 智能计算融入日常，但没说怎么从桌面走到手机，隐私也只说本地更安全，没讲本地数据怎么管护。\n", "updated_at": "2026-06-27T03:23:32.334145+00:00"}, {"id": "qwen-code-weekly-voice-workflows-2026-06-25", "run_id": "run-20260627-v5", "title": "Qwen Code Weekly: Token Costs at a Glance, Voice Input, Save and Reuse Workflows", "abstract": "通义千问编程代理本周发布五个版本（v0.18.4至v0.19.2），新增语音输入、动态工作流保存复用、Token成本可视化等能力，超140个PR合并。", "effects": "语音输入支持按键和点击两种模式，转录可用qwen3-asr-flash批量或实时WebSocket流式；工作流可保存为斜杠命令跨项目复用；后台代理可在同会话内复活而无需重建上下文。", "mechanism": "语音通过原生麦克风N-API插件采集，批量模式用OpenAI兼容接口转录，实时模式用WebSocket流式PCM传输并显示部分文本；工作流保存为JS脚本到.qwen/workflows目录，支持项目级和用户级；旧转录按cleanupPeriodDays自动过期。", "paper_url": "https://qwenlm.github.io/qwen-code-docs/en/blog/weekly-update-2026-06-25/", "date": "2026-06-25", "score": 70, "score_relevance": 15, "score_vendor": 22, "score_contribution": 8, "score_quality": 12, "score_recency": 5, "score_open": 8, "score_reason": "Qwen官方技术博客（阿里云大厂）。Qwen Code为开源终端代理工具（GitHub开源），score_open给8分。相关度中等：编程代理工具非纯端侧部署，但Qwen模型广泛用于端侧场景且工具本身本地运行。增量更新创新度中等。", "source_type": "官方技术博客", "is_major_vendor_official": true, "category": "框架", "keywords": ["Qwen Code", "语音输入", "工作流", "开源代理", "工具调用"], "insight_person": "", "wiki_url": "", "authors": "Qwen Team (Alibaba)", "vendors": "Qwen", "venue": "qwenlm.github.io", "recommendation": "纳入", "detail": "## 研究背景与问题\n\nQwen Code 这周的周报。痛点很实在：以前在终端里写 prompt 全靠打字，长命令、复杂参数、中英混排又慢又容易打错；好不容易跑通一个 workflow，跑完就没了，下次想复用得重写一遍，中途断了也接不上；终端 UI 一堆圆角边框堆成墙，思考块没有专门展开键，扩展和 MCP 还得手改配置。这周就是冲着这几个日常难受的点修。\n\n## 贡献点\n\n这周发了 v0.18.4 到 v0.19.2 五个版本、140 多个 PR，主推三块。一是 /voice 语音输入，按住或点一下说话，转写用 qwen3-asr-flash，快模型顺手清掉口头语和错字。二是 Dynamic Workflows，跑完按 s 存成 slash 命令，断的能在同会话里接着跑。三是 UI 全面瘦身，边框去掉、完成的工具调用折成一行、Alt+T 专管思考块、/extensions 变成交互管理器、MCP 资源能浏览和 @ 补全。另外加了 Artifact 工具把模型输出变成可交互网页、Vision Bridge 让纯文本模型也能看图、/stats 看 token 成本。\n\n## 实现方法\n\n语音这块分两路：批量模式走 OpenAI 兼容的 chat/completions 加 input_audio 接口，实时模式走 WebSocket 流式 PCM 边说边出字，麦克风采集靠 @qwen-code/audio-capture 这个 N-API addon，Linux 没 addon 自动回退 arecord 或 SoX。转写完快模型只删口头语不改原话，超时就直接用原始转写。Workflow 复用是跑完存到 .qwen/workflows 下成 js 脚本，恢复靠 resumeFromRunId 从 JSONL 日志重放，从最长未变前缀续跑到第一个分叉点。Artifact 全部写本地文件用 file:// 打开，内容必须自包含不许外链 CSS/JS，单页 16MB 上限。\n\n## 实验与结果\n\n周报没跑 benchmark，只给了工程指标：这周合并 140 多个 PR、跨五个版本号；语音转写支持批量加实时两条路径；workflow 历史跨重启持久化、旧条目自动清理；子 agent 卡死看门狗自动重试 3 次；Artifact 单页上限 16MB。具体延迟、识别准确率、token 节省量都没量化。未报告具体数据。\n\n## 对端侧 agent 的意义\n\n这周几个点都能往端侧搬。语音输入这条路径最直接：ASR 加快模型清洗的流水线，换上端侧 ASR 和端侧小模型就能在手机或边缘设备上做免打字 agent 交互。Workflow 存盘加断点续跑，端侧 agent 长任务中断恢复是刚需，resumeFromRunId 这套从日志重放、按未变前缀续跑的思路端侧照搬。Artifact 全本地、自包含、走 file://，正好契合端侧不连外网、数据不出端的约束。Vision Bridge 给纯文本模型补视觉，端侧模型多是文本-only，这个桥接思路有用。\n\n## 局限与未来\n\n全是工程功能堆叠，没有评测证明这些改动真提升了效率或准确率。语音依赖云 ASR，离线场景没说怎么降级。Workflow 复用只在本会话能恢复，跨会话或跨设备没提。Artifact 16MB 上限和自包含约束意味着复杂可视化做不了。Vision Bridge 具体怎么把图喂给文本模型、是不是套了个视觉模型转描述，没讲透。未来端侧落地要把 ASR、快模型、日志重放都换成端侧实现，这周没给这条路径的基准。\n", "updated_at": "2026-06-27T03:24:38.670114+00:00"}, {"id": "qwen-code-weekly-agent-team-durable-loop-2026-06-18", "run_id": "run-20260627-v5", "title": "Qwen Code Weekly: Agent Team Parallel Collaboration, Durable /loop Survives Restart, /cd Switch Directory", "abstract": "通义千问编程代理本周发布四个版本（v0.18.0至v0.18.3），新增代理团队并行协作、持久化定时任务、会话内目录切换等能力，超100个PR合并。", "effects": "Agent Team模式让模型创建命名团队并行工作并交换消息共享任务列表；持久化/loop任务可跨重启恢复；Thinking折叠面板和MCP审批门控提升交互体验。", "mechanism": "团队模式下模型生成多个持久化队友（非一次性子代理），队友完成任务后可等待下一个任务；持久化任务按项目保存到~/.qwen/tmp目录的JSON文件，重启时自动恢复并执行一次追赶周期；/cd命令验证目录并迁移会话文件到新工作空间。", "paper_url": "https://qwenlm.github.io/qwen-code-docs/en/blog/weekly-update-2026-06-18/", "date": "2026-06-18", "score": 70, "score_relevance": 15, "score_vendor": 22, "score_contribution": 9, "score_quality": 12, "score_recency": 4, "score_open": 8, "score_reason": "Qwen官方技术博客（阿里云大厂）。Agent Team多代理并行协作架构对端侧多代理系统有参考价值。Qwen Code开源，score_open给8分。相关度中等：编程代理工具非纯端侧，但多代理协作和持久化任务调度对agent架构有启发。", "source_type": "官方技术博客", "is_major_vendor_official": true, "category": "框架", "keywords": ["多代理协作", "持久化任务", "Qwen Code", "开源代理", "代理调度"], "insight_person": "", "wiki_url": "", "authors": "Qwen Team (Alibaba)", "vendors": "Qwen", "venue": "qwenlm.github.io", "recommendation": "纳入", "detail": "## 研究背景与问题\n\n这周 Qwen Code 周报。要解的痛点有三个：以前 /fork 起的后台 agent 各干各的，互相不通气，结果得自己手动拼；/loop 的定时任务一旦重启就静默消失，「每小时查一次 PR」这种长任务根本靠不住；想换工作目录得退出 CLI 重启，多仓来回切很不方便。这周就冲这三块做。\n\n## 贡献点\n\n发了 v0.18.0 到 v0.18.3 四个版本、100 多个 PR。一是 Agent Team 模式，模型能建命名团队、起多个并行队友、互发消息、共享任务列表、最后领队汇总一份报告，关键是队友是常驻的不是跑完就消失。二是 Durable /loop，定时任务落盘到 ~/.qwen/tmp 下按项目 hash 存，重启自动恢复，漏掉的周期任务补跑一轮，一次性提醒重启后先确认再执行。三是 /cd 命令，会话内切目录不重启，会话文件自动迁移、上下文自动刷新。\n\n## 实现方法\n\nAgent Team 默认关，开 experimental.agentTeam 或设环境变量后模型拿到建队、发消息、增删共享任务的工具，Agent 工具加 name 参数起常驻队友而不是一次性子 agent，队友干完一项等下一项。Durable /loop 判断请求是否要持久化，要的就写 scheduled_tasks.json，不在工作区里不进 git，重启时恢复；同项目多会话只一个 holder 跑，holder 崩了秒级另一个接手；周期任务 7 天自动过期。/cd 先校验目录和信任确认，更新 workspace 根和 cwd 服务，把当前会话的 transcript、runtime、worktree 文件迁到新会话目录，再刷系统目录上下文。\n\n## 实验与结果\n\n周报没跑 benchmark，只给工程指标：四个版本、100 多 PR；持久化任务写盘路径是 ~/.qwen/tmp/<project-hash>/scheduled_tasks.json；多会话 holder 崩溃秒级接管；周期任务 7 天过期。具体 agent 协作能提多少效率、恢复成功率、切换延迟都没量化。未报告具体数据。\n\n## 对端侧 agent 的意义\n\n这几块对端侧很有借鉴价值。Agent Team 的常驻队友加消息共享，端侧多 agent 协作同样需要：手机上几个小 agent 并行各管一摊还能互通，比一次性 fork 省资源。Durable /loop 把任务落盘按项目存、重启恢复、漏跑补一轮、多 holder 接管，这套持久化和容错思路端侧长任务直接能用，端侧更容易断电重启。/cd 会话内切目录加文件迁移，端侧 agent 跨工作区切换场景能参考。\n\n## 局限与未来\n\n没评测证明 team 模式真比独立 fork 快或更准，多 agent 通信开销没量化。持久化任务只到文件级，跨设备同步没提，端侧多设备场景缺这块。/cd 迁移会话文件，但跨会话或跨设备的会话迁移没做。Agent Team 是 experimental 默认关，稳定性没说。未来端侧落地要把落盘存储换成端侧安全存储、把多 holder 接管适配到边缘多节点，这周没给这些路径的基准。\n", "updated_at": "2026-06-27T03:25:27.788344+00:00"}, {"id": "curator-on-device-llm-agent-memory-2026", "run_id": "run-20260627-v5", "title": "Forget to Improve: On-Device LLM-Agent Continual Learning via Budget-Curated Memory", "abstract": "提出CURATOR系统，用一个净价值每字节分数来管理端侧语言模型代理的经验记忆生命周期，在RAM和能耗预算约束下同时实现记忆裁剪、共享门控和信任门控。", "effects": "在Jetson真实异构测试床（两个机械臂节点和一个枢纽）上，内存减少2.7倍、上行链路减少2.4倍、注入攻击成功率从0.75降到0，任务准确率从0.528提升到0.605。能耗节省36到40个百分点。", "mechanism": "核心思想是让预算充当策展人：每条记忆条目按价值减去危害的每字节净分评分。KEEP决策在RAM和能耗预算下驱逐低价值字节；SHARE决策仅当价值超过上行链路成本时发送洞察；TRUST决策按来源门控对端条目。在事件边界驱动的压缩下实现亚线性上下文增长。", "paper_url": "https://arxiv.org/abs/2606.25115", "date": "2026-06-23", "score": 67, "score_relevance": 28, "score_vendor": 5, "score_contribution": 13, "score_quality": 13, "score_recency": 5, "score_open": 3, "score_reason": "高度相关：直接针对端侧LLM代理的持续学习和记忆管理，在真实Jetson测试床上验证。创新度高：首次提出净价值每字节的记忆治理统一框架，同时解决内存能耗上行链路和注入安全。作者机构未在arXiv元数据中明确标注，score_vendor保守给5分。论文提及代码将在接受后发布，score_open给3分。", "source_type": "学术论文", "is_major_vendor_official": false, "category": "算法", "keywords": ["端侧代理", "记忆管理", "持续学习", "安全隐私", "能耗优化"], "insight_person": "", "wiki_url": "", "authors": "Beining Wu; Zihao Ding; Jun Huang; Yanxiao Zhao", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "detail": "## 研究背景与问题\n\n端侧 LLM agent 想变聪明靠的不是改权重，而是把经验攒进可检索的记忆里。但这块记忆在端侧有三个硬约束：占 RAM 和电、要靠窄上行带宽跟同伴同步、还因为「agent 读什么就能写什么」变成投毒攻击面。已有工作各管一段：有的记忆无限膨胀不设预算，有的端侧只按成功与否留条目，投毒又被当成纯攻击问题而不是记忆治理问题。这篇就是要用一个统一尺子把这三件事一起管。\n\n## 贡献点\n\n核心是一个叫 Curator 的机制：给每条记忆算一个「每字节净价值」分数，价值减伤害按字节算，让预算本身当策展人。靠这一把尺子做三个决策：KEEP 在 RAM 和电预算下淘汰低净价值字节；SHARE 只当一条洞察的价值高过上行成本才往外发；TRUST 按来源可信度给同伴传来的条目把关。新在哪：不是各管一段，是一个净价值分数同时管保留、共享、信任三件事。\n\n## 实现方法\n\n思路是把记忆生命周期全压到一个净价值分数上。每条经验进来先打分：算它能给 agent 带来多少价值、又会造成多少伤害（比如被投毒的风险或陈旧误导），两者相减再除以字节数。KEEP 阶段预算吃紧就按这个分淘汰低价值字节，保住高净价值的。SHARE 阶段一条洞察要不要发给同伴，看净价值是否超过上行带宽成本。TRUST 阶段同伴传来的条目按来源 provenance 设信任门槛。整个过程不碰模型权重，纯靠记忆层治理。\n\n## 实验与结果\n\n在 LM-agent task-drift benchmark 和一个真实异构 Jetson 测试床（两个机械臂节点加一个 hub）上测的。关键数字：记忆占用降到 2.7 倍，上行带宽降到 2.4 倍，注入攻击成功率从 0.75 压到 0，被投毒或陈旧记忆污染的 case 准确率反而提升。而且这些收益是在不降准确率的前提下拿到的。\n\n## 对端侧 agent 的意义\n\n这篇几乎就是冲着端侧写的。RAM、电、窄上行、可写记忆被投毒——这四个正是端侧 agent 落地的真痛点。给端侧工程师可直接拿走的：一是净价值每字节这个统一度量，做记忆淘汰和共享决策时不用再分别设阈值；二是 SHARE 那条「价值超过上行成本才发」对带宽抠到极致的边缘协同特别有用；三是 TRUST 按 provenance 把关，端侧 agent 互相传记忆时防投毒有了具体抓手，不是空喊安全。\n\n## 局限与未来\n\n净价值分数怎么算价值、怎么算伤害，摘要没给出具体公式，可能依赖人工设计或额外模型，落地成本未知。只在 Jetson 加机械臂这个特定测试床验过，手机、IoT 等更受限设备没测。TRUST 按 provenance 把关，但 provenance 本身怎么可信地获取和防伪造没展开。遗忘可能丢掉长期低频但关键的经验，价值函数怎么权衡长短期待解。未来得看价值函数能不能端侧自己学出来。\n", "updated_at": "2026-06-27T03:26:30.553133+00:00"}, {"id": "scenic-edge-iot-command-generation-2026", "run_id": "run-20260627-v5", "title": "SCENIC: Semantic-Conditioned Edge-Aware Neural Framework for Structured IoT Command Generation", "abstract": "提出SCENIC端到端框架，面向边缘IoT设备的结构化命令生成任务，覆盖模型架构选择、数据生成、三元组损失微调、剪枝量化到部署导出的完整流程，使用亚0.2B规模Transformer骨干。", "effects": "最强密集解码器在Smart Home Instruct-Bench上达到99.0%的EM@1；剪枝INT8编码器-解码器导出保留91.0%的EM@1和99.0%的EM@5，模型大小减少25.38%；TensorRT在NVIDIA 2:4稀疏编码器上实现1.8倍编码器加速。", "mechanism": "将边缘IoT命令生成建模为多对一结构化输出任务，多条自然语言指令映射到同一规范命令串。采用三元组对比监督微调，对亚0.2B骨干进行剪枝和INT8量化，部署时编码器-解码器架构在高稀疏下保留更强性能。代码和实验制品开源。", "paper_url": "https://arxiv.org/abs/2606.22296", "date": "2026-06-21", "score": 63, "score_relevance": 22, "score_vendor": 5, "score_contribution": 11, "score_quality": 12, "score_recency": 5, "score_open": 8, "score_reason": "相关度较高：直接面向边缘IoT设备的命令生成，使用亚0.2B超小模型，与端侧agent的轻量化部署方向契合。创新度中等偏上：完整端到端流程含剪枝量化和硬件加速评测。代码和实验制品已开源（CC BY 4.0），score_open给8分。作者机构未明确标注，score_vendor保守给5分。", "source_type": "学术论文", "is_major_vendor_official": false, "category": "应用", "keywords": ["边缘IoT", "命令生成", "模型压缩", "量化", "智能家居"], "insight_person": "", "wiki_url": "", "authors": "Luke Ztz Hu; Hongbing Lang; Songping Mai", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "detail": "## 研究背景与问题\n\n边缘 IoT agent 被内存、隐私、通信延迟、反复推理成本四样卡着。现在智能家居助手要么靠 API 级命令接口，要么用云端大模型，都难直接部署到端侧设备上。这篇把边缘 IoT 命令生成当成一个多对一的结构化输出任务来解：多条自然语言指令映射到同一条规范命令串，好让智能家居的解析确定又省资源。痛点就是要在一个极小的端侧模型里，把「人说的话」稳定翻成「设备能认的命令」。\n\n## 贡献点\n\n提出 SCENIC，一个端到端框架，把从选模型架构、造 Smart Home Instruct 数据、三元组损失对比监督微调、剪枝量化、到面向部署的导出全串起来。新在两点：一是把命令生成显式建模成多对一结构化输出，多条说法归一条规范命令；二是评估了 sub-0.2B 量级的 transformer 主干，据作者说是边缘 IoT 结构化命令生成里研究过的最小语言模型主干之一。代码和实验产物开源。\n\n## 实现方法\n\n整条流水线分几步。先选架构，比 decoder-only 和 encoder-decoder 两种小 transformer。再造 Smart Home Instruct 数据集，把多条自然说法对齐到同一条规范命令串。然后用三元组对比损失做监督微调，让相似说法在表示空间里靠近、不同命令拉远。接着剪枝加量化，做面向部署的导出，重点看 encoder-decoder 路径在稀疏和 INT8 下的表现，再用 TensorRT 对 NVIDIA 2:4 稀疏 encoder 做推理 profiling 验证加速。\n\n## 实验与结果\n\n在 Smart Home Instruct-Bench 上测。最强 dense decoder-only 达到 99.0% 的 EM@1，encoder-decoder 在高稀疏下表现更稳。一个代表性剪枝 INT8 encoder-decoder 导出保住 91.0% 的 EM@1 和 99.0% 的 EM@5，同时模型体积小了 25.38%。TensorRT 对 NVIDIA 2:4 稀疏 encoder 的 profiling 显示 encoder 部件最多 1.8 倍加速。不过作者也明说硬件加速证据还停留在部件级，不是端到端整机。\n\n## 对端侧 agent 的意义\n\n直接面向端侧 IoT。给端侧工程师能拿走几样：一是 sub-0.2B 主干这个量级证明极小模型也能在结构化命令生成上做到很高准确率，对内存抠到极致的 IoT 设备是实锤参考；二是多对一建模加三元组对比损失这套，把「同义说法归一」做成监督信号，端侧命令解析的鲁棒性可直接借鉴；三是剪枝 INT8 加 2:4 稀疏这条压缩路径有具体数字，体积降四分之一、精度掉可控，端侧部署量化决策有据可依。\n\n## 局限与未来\n\n硬件加速只在部件级验证，encoder 加速 1.8 倍不等于整机端到端 1.8 倍，decoder 和整体推理瓶颈没说。只在 Smart Home Instruct-Bench 这一个自造基准上测，泛化到其他 IoT 域或更多设备协议未知。多对一映射依赖规范命令串预先存在，新设备或新协议接入成本没讨论。0.2B 虽小但仍是 transformer，最受限的微控制器类设备可能还跑不动，更激进的架构或蒸馏方向没涉及。\n", "updated_at": "2026-06-27T03:27:26.708831+00:00"}, {"id": "swarmx-tencent-agentic-scheduling-2026", "run_id": "run-20260627-v5", "title": "SwarmX: Agentic Scheduling for Low-Latency Agentic Systems", "abstract": "腾讯提出SwarmX，面向低延迟代理式应用的调度系统，通过调度感知的神经预测器捕捉提示词和设备运行时特征，为路由器和缩放器提供尾延迟感知决策，已在近千块GPU和百万核CPU的生产环境部署。", "effects": "在多代理代码生成、深度研究和多模态代理工作流上，尾延迟相比最优调度器降低最高61.5%，在相同SLO下吞吐量达到2倍。128块GPU测试床和大规模生产环境双重验证。", "mechanism": "SwarmX使用调度感知神经预测器捕获提示词、设备、运行时和目标模型特征，将分布预测暴露给路由器和缩放器做尾感知决策，集成到调度器-代理框架中与现有调度和模型服务基础设施对接。", "paper_url": "https://arxiv.org/abs/2606.21401", "date": "2026-06-19", "score": 59, "score_relevance": 15, "score_vendor": 16, "score_contribution": 12, "score_quality": 12, "score_recency": 4, "score_open": 0, "score_reason": "腾讯公司项目，arXiv论文PDF中作者邮箱为tencent.com（elonsu和sarlmolchen），affiliation证据明确。相关度中等：代理调度系统为云端基础设施，非纯端侧部署，但代理式系统编排对端侧多代理架构有间接参考。生产级部署创新度和质量较高。未提及开源。", "source_type": "学术论文", "is_major_vendor_official": false, "category": "框架", "keywords": ["代理调度", "低延迟", "腾讯", "多代理系统", "生产部署"], "insight_person": "", "wiki_url": "", "authors": "Yeqi Huang; Yanwei Ye; Guomin Chen; Wenhao Su; Bin Gong; Jialian Li; Zhan Lu; Yangshen Deng; Xuan Sun; Le Xu; Luo Mai", "vendors": "Tencent", "venue": "arXiv", "recommendation": "纳入", "detail": "## 研究背景与问题\n\nAgentic AI 应用把多次模型调用和工具执行串起来跑，给 GPU-CPU 集群的调度出了新难题：推理耗时和模型调用结构往往取决于 prompt 语义，传统调度器看不见这些就压不住尾延迟。云上 agent 服务要低延迟，但请求结构是动态的、跟语义绑定的，老的负载均衡和排队策略直接套不上。这篇就是要给这种语义驱动的 agentic 负载专门做调度。\n\n## 贡献点\n\n提出 SwarmX，给低延迟 agentic 应用做 agentic 调度的系统。核心创新是用调度专用的神经预测器，把 prompt、设备、runtime、目标模型这几路特征一起吃进去，输出分布式的耗时预测给路由和扩缩容做尾延迟感知决策；还配套了预测器训练和在线自适应机制。新在哪：不是给老调度器打补丁，而是把「语义感知的分布式预测」做成调度底座，再套进一个 scheduler-agent 框架，当通用基底去对接已有调度和模型服务设施。\n\n## 实现方法\n\n思路是用神经预测器把 agentic 请求的耗时提前估出来，而且是给分布不只是点估，路由和扩缩容就能盯着尾部分位做决策而不是均值。预测器输入四类特征：prompt 语义、目标设备、runtime 状态、目标模型，输出耗时的分布预测。配套有训练流程和在线自适应，让预测器跟着负载漂移自己更新。这些预测器和机制塞进一个 scheduler-agent 框架，作为通用底座去集成已有的调度器和模型服务基础设施，不是另起炉灶替换整套。\n\n## 实验与结果\n\n两部分评测：一是生产部署，近一千张 GPU 和一百万个 CPU 核；二是 128 张 GPU 测试床的受控实验。覆盖三类工作流：多 agent 代码生成、深度研究、多模态 agentic 流。关键数字：相比当时最强的调度器，尾延迟最多降 61.5%；在相同 SLO 下吞吐最高达到生产调度器的 2 倍。规模和负载都是真实生产级，不是纯模拟。\n\n## 对端侧 agent 的意义\n\n这篇本身是云端集群调度，但两个思路对端侧有迁移价值。一是「用神经预测器把请求耗时估成分布、按尾部分位做决策」这套，端侧多 agent 或多设备协同时同样面对耗时不确定和尾延迟，分布预测加尾感知的调度逻辑可借鉴。二是 prompt 语义、设备、runtime、目标模型四路特征融合做预测，端侧 agent 异构设备调度也缺这种语义感知的耗时估计。不过端侧资源远小于千卡集群，预测器本身要够轻，直接搬生产版不可行，需裁剪。\n\n## 局限与未来\n\n调度专用神经预测器自身的推理开销和延迟没在摘要里量化，预测器会不会成为新瓶颈未知。在线自适应怎么避免预测器被脏数据或攻击带偏没展开。只在云端集群验过，端侧或边缘异构场景没测，迁移成本待证。尾延迟降 61.5% 是相对 SOTA 的最好情况，平均收益和最差情况没给。scheduler-agent 框架对接已有设施的具体接入成本和兼容性边界没说清。未来端侧落地要把预测器瘦身，这周没给这条路径。\n", "updated_at": "2026-06-27T03:28:24.987383+00:00"}]};</script>
+  <script>window.__PAPERS__ = {"papers": [{"id": "mediatek-dgx-spark-local-agents-2026", "run_id": "run-20260627-real", "title": "Running AI Agents Locally on DGX Spark", "abstract": "联发科介绍在 NVIDIA DGX Spark 上本地运行 agentic AI 工作负载，从聊天提示走向自主本地 agent。", "effects": "未报告", "mechanism": "GB10 超级芯片 + OpenClaw 等平台管理本地 agent，重计算留本地按需连云。", "paper_url": "https://www.mediatek.com/tek-talk-blogs/running-ai-agents-locally-on-dgx-spark", "date": "2026-06-24", "score": 12, "score_relevance": 8, "score_contribution": 4, "score_reason": "明确本地运行 agent（relevance 8）。产品实践介绍（contribution 4）。MediaTek 官方域名。", "source_tier": "官方动态", "open_source": false, "tags": ["端侧agent", "端云协同", "NPU硬件"], "insight_person": "", "wiki_url": "", "authors": "MediaTek", "vendors": "MediaTek", "venue": "MediaTek Tek Talk Blog", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "nvidia-telecom-ai-agents-2026", "run_id": "run-20260627-real", "title": "NVIDIA Brings Trusted, 24/7 AI Agents to Telecom Operations", "abstract": "NVIDIA 面向电信网络运维推出 7x24 常驻可信 AI agent，强调边缘可靠性与自主性。", "effects": "未报告", "mechanism": "电信边缘的常驻 agent，结合可信运行时与边缘部署，支持网络运维自主决策。", "paper_url": "https://blogs.nvidia.com/blog/telecom-ai-agents-dtw-ignite-2026/", "date": "2026-06-22", "score": 12, "score_relevance": 7, "score_contribution": 5, "score_reason": "电信边缘常驻 agent（relevance 7）。行业落地框架（contribution 5）。NVIDIA 官方域名。", "source_tier": "官方动态", "open_source": false, "tags": ["端侧agent", "端云协同", "安全隐私"], "insight_person": "", "wiki_url": "", "authors": "NVIDIA", "vendors": "NVIDIA", "venue": "NVIDIA Blog", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "mediatek-genio-pro-5100-edge-vision-2026", "run_id": "run-20260627-real", "title": "MediaTek Genio Pro 5100: Powering Real-Time Vision Intelligence at the Edge", "abstract": "MediaTek Genio Pro 5100 IoT 平台为实时边缘 AI 视觉与自主决策提供高性能算力。", "effects": "未报告", "mechanism": "边缘 IoT SoC 集成 AI 算力，支持实时视觉智能与边缘自主决策。", "paper_url": "https://www.mediatek.com/tek-talk-blogs/mediatek-genio-pro-5100-powering-real-time-vision-intelligence-at-the-edge", "date": "2026-06-25", "score": 11, "score_relevance": 7, "score_contribution": 4, "score_reason": "边缘 IoT AI 平台官方发布（relevance 7）。产品发布，工程整合（contribution 4）。MediaTek 官方域名。", "source_tier": "官方动态", "open_source": false, "tags": ["NPU硬件", "端侧agent", "编译部署"], "insight_person": "", "wiki_url": "", "authors": "MediaTek", "vendors": "MediaTek", "venue": "MediaTek Tek Talk Blog", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "llamacpp-weekly-builds-2026-06-27", "run_id": "run-20260627-real", "title": "llama.cpp 本周构建（b9810–b9823）", "abstract": "端侧推理框架 llama.cpp 本周发布多个构建，含 OpenVINO 升级、Vulkan Intel Xe 优化、CUDA HIP 改进。", "effects": "未报告", "mechanism": "持续迭代端侧 CPU/GPU/NPU 后端：本周 OpenVINO 升 2026.2.1、Vulkan 加 Intel Xe-LPG Plus coopmat、CUDA 加 HIP/MUSA vendor 映射。", "paper_url": "https://github.com/ggml-org/llama.cpp/releases", "date": "2026-06-27", "score": 13, "score_relevance": 9, "score_contribution": 4, "score_reason": "端侧推理核心框架，本周活跃迭代（relevance 9）。增量 CI 构建单条创新度中等（contribution 4）。白名单大项目，github.com URL。", "source_tier": "开源大项目", "open_source": true, "tags": ["推理框架", "编译部署", "NPU硬件"], "insight_person": "", "wiki_url": "", "authors": "ggml-org", "vendors": "", "venue": "GitHub", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "enerinfer-energy-on-device-llm-2026", "run_id": "run-20260627-real", "title": "EnerInfer: Energy-Aware On-Device LLM Inference", "abstract": "首个联合管理端侧 LLM 推理能效、吞吐和热舒适的框架，用 NPU/DDR 频率松弛降能耗不损体验。", "effects": "手机、笔记本、开发板能效分别提升最高 65%、12%、24%，无 QoE 违背。", "mechanism": "模型结构感知预测替代逐模型 profiling，预测未见 LLM 在各 NPU/DDR 频率下吞吐和功耗，在线反馈排序选 QoE 满足的高效配置，并做有限时域热预测动态切换。", "paper_url": "https://arxiv.org/abs/2606.23001", "date": "2026-06-22", "score": 16, "score_relevance": 9, "score_contribution": 7, "score_reason": "明确端侧 LLM 推理能耗/热管理（relevance 9）。首个联合能效+吞吐+热舒适的端侧框架（contribution 7）。Huawei Central Software Institute + Hilbert Research Center Dresden，合作 SJTU（Haibo Chen）/TUM，arXiv HTML 署名确认。", "source_tier": "公司项目", "open_source": false, "tags": ["端侧agent", "能耗功耗", "NPU硬件"], "insight_person": "", "wiki_url": "", "authors": "Bohua Zou; Nian Liu; Binqi Sun; Haibo Chen et al.", "vendors": "Huawei", "venue": "arXiv", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "aohp-os-level-agent-harness-2026", "run_id": "run-20260627-real", "title": "AOHP: An Open-Source OS-Level Agent Harness for Personalized, Efficient and Secure Interaction", "abstract": "开源的 Android OS 级 agent 框架，把 agent 作为一等公民嵌入操作系统，降本增效并安全交互。", "effects": "未报告", "mechanism": "OS 级 agent harness，agent 直接调度系统资源与服务，非 GUI 自动化，强调效率与安全。", "paper_url": "https://arxiv.org/abs/2606.23449", "date": "2026-06-22", "score": 16, "score_relevance": 9, "score_contribution": 7, "score_reason": "明确端侧 OS 级 agent（relevance 9）。OS 级 harness 架构有创新，非 GUI 自动化（contribution 7）。清华（主力，Yunxin Liu/Ju Ren/Ya-Qin Zhang/Yuanchun Li）+北大+港大，ar5iv PDF 署名确认。", "source_tier": "学校预印本", "open_source": true, "tags": ["端侧agent", "工具调用", "安全隐私", "编译部署"], "insight_person": "", "wiki_url": "", "authors": "Yuanchun Li; Ju Ren; Yunxin Liu; Ya-Qin Zhang et al.", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "what-survives-compress-recursive-reasoner-edge-2026", "run_id": "run-20260627-real", "title": "What Survives When You Compress a Recursive Reasoner for the Edge?", "abstract": "研究把递归推理模型压缩到边缘设备后哪些能力会保留或丢失，校准 INT4 可塞进 4MB 微控制器、INT8 适配 8MB SoC。", "effects": "INT4 压到 4MB 微控制器、INT8 适配 8MB SoC，FLOPs 减 6 倍。", "mechanism": "校准式 INT4/INT8 量化，针对递归推理模型的边缘部署适配，分析不同压缩等级下推理能力的存留边界。", "paper_url": "https://arxiv.org/abs/2606.26488", "date": "2026-06-25", "score": 15, "score_relevance": 9, "score_contribution": 6, "score_reason": "明确边缘/微控制器部署（relevance 9）。递归推理模型压缩边界分析有创新（contribution 6）。CMU + ML Collective（Virginia Smith），arXiv HTML 署名确认。", "source_tier": "学校预印本", "open_source": false, "tags": ["端侧agent", "量化", "编译部署", "小模型"], "insight_person": "", "wiki_url": "", "authors": "Pearse Jim; Steven Kolawole; Opegbemi Matthias Busoye et al.", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "flexserve-mobile-llm-serving-2026", "run_id": "run-20260627-real", "title": "FlexServe: A Fast and Secure LLM Serving System for Mobile Devices with Flexible Resource Isolation", "abstract": "面向手机的快速安全 LLM 服务系统，用灵活资源隔离在移动设备上跑 LLM 服务。", "effects": "未报告", "mechanism": "灵活资源隔离机制在移动设备上服务 LLM，兼顾性能与安全。", "paper_url": "https://arxiv.org/abs/2606.23370", "date": "2026-06-22", "score": 15, "score_relevance": 9, "score_contribution": 6, "score_reason": "明确移动设备 LLM 服务（relevance 9）。资源隔离机制有创新（contribution 6）。上海交大 IPADS（并行与分布式系统所），@sjtu.edu.cn 邮箱确认。", "source_tier": "学校预印本", "open_source": false, "tags": ["端侧agent", "推理框架", "安全隐私"], "insight_person": "", "wiki_url": "", "authors": "Yinpeng Wu; Yitong Chen; Lixiang Wang et al.", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}, {"id": "rope-aware-kvcache-quantization-2026", "run_id": "run-20260627-real", "title": "RoPE-Aware Bit Allocation for KV-Cache Quantization", "abstract": "RoPE 感知的 KV cache 量化位分配，按位置重要性给不同比特，面向端侧推理量化部署。", "effects": "未报告", "mechanism": "利用 RoPE 位置信息指导 KV cache 各维度量化位分配，降低端侧推理显存带宽瓶颈。", "paper_url": "https://arxiv.org/abs/2606.24033", "date": "2026-06-23", "score": 14, "score_relevance": 8, "score_contribution": 6, "score_reason": "KV cache 量化面向端侧推理（relevance 8）。RoPE 感知位分配有创新（contribution 6）。HKUST（Jiaya Jia 通讯）+CUHK，合作 Xiaomi MiMo，arXiv HTML 署名确认。", "source_tier": "学校预印本", "open_source": false, "tags": ["KV cache", "量化", "端侧agent"], "insight_person": "", "wiki_url": "", "authors": "Jiaya Jia et al. (HKUST)", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "detail": null, "updated_at": "2026-06-27T09:42:59.256377+00:00"}]};</script>
     <script>
+    let ALL = [];
+    let ACTIVE_TAGS = new Set();
+
     async function loadPapers() {
       const data = window.__PAPERS__;
-      const all = data.papers || [];
-      // 按 source_type 分两组；tab 内保持 API 返回顺序（storage 已按 is_major_vendor_official DESC, score DESC 排）
-      const academic = all.filter((p) => p.source_type === "学术论文");
-      const official = all.filter((p) => p.source_type === "官方技术博客" || p.source_type === "官方产品发布");
-      const groups = [
-        { id: "academic", papers: academic },
-        { id: "official", papers: official }
-      ];
-      const defaultIdx = groups.findIndex((g) => g.papers.length > 0);
-      const activeIdx = defaultIdx === -1 ? 0 : defaultIdx;
-
-      document.querySelector("#count-academic").textContent = String(academic.length);
-      document.querySelector("#count-official").textContent = String(official.length);
-      document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", i === activeIdx));
-
-      document.querySelector("#papers").innerHTML = groups.map((g, i) =>
-        `<div class="cat-panel${i === activeIdx ? " active" : ""}" data-panel="${g.id}" role="tabpanel">${
-          g.papers.map(renderCard).join("") || '<p class="empty">本周无此方向内容</p>'
-        }</div>`
-      ).join("");
-
-      document.querySelector("#summary").textContent = `${all.length} 条内容 · 官方大厂优先 · 来自服务器最新调研结果`;
+      ALL = data.papers || [];
+      renderFilterBar();
+      renderPapers();
+      document.querySelector("#summary").textContent =
+        `${ALL.length} 条内容 · 按标签筛选 · 来自服务器最新调研结果`;
     }
 
-    document.querySelector("#tabs").addEventListener("click", (event) => {
-      const btn = event.target.closest(".tab");
+    function allTags() {
+      const set = new Set();
+      ALL.forEach((p) => (p.tags || []).forEach((t) => set.add(t)));
+      return [...set].sort();
+    }
+
+    function renderFilterBar() {
+      const bar = document.querySelector("#filter-bar");
+      bar.innerHTML = allTags().map((t) => {
+        const active = ACTIVE_TAGS.has(t) ? " active" : "";
+        return `<button class="ftag${active}" data-tag="${escapeAttr(t)}">${escapeHtml(t)}</button>`;
+      }).join("");
+    }
+
+    function visiblePapers() {
+      if (ACTIVE_TAGS.size === 0) return ALL;
+      return ALL.filter((p) => (p.tags || []).some((t) => ACTIVE_TAGS.has(t)));
+    }
+
+    function renderPapers() {
+      const list = visiblePapers();
+      document.querySelector("#papers").innerHTML = list.length
+        ? list.map(renderCard).join("")
+        : '<p class="empty">无匹配内容</p>';
+    }
+
+    document.querySelector("#filter-bar").addEventListener("click", (event) => {
+      const btn = event.target.closest(".ftag");
       if (!btn) return;
-      const id = btn.dataset.tab;
-      document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === id));
-      document.querySelectorAll(".cat-panel").forEach((p) => p.classList.toggle("active", p.dataset.panel === id));
+      const tag = btn.dataset.tag;
+      if (ACTIVE_TAGS.has(tag)) ACTIVE_TAGS.delete(tag); else ACTIVE_TAGS.add(tag);
+      renderFilterBar();
+      renderPapers();
     });
 
+    function tierClass(tier) {
+      return { "官方动态": "", "开源大项目": " oss", "公司项目": " company", "学校顶会": " school", "学校预印本": " school" }[tier] || "";
+    }
+
     function renderCard(p) {
-      const kws = (p.keywords || []).map((k) => `<span class="kw">${escapeHtml(k)}</span>`).join("");
-      const vendorsRaw = (p.vendors || '').trim();
-      const official = vendorsRaw ? `<span class="vendor-tag">${escapeHtml(vendorsRaw)}</span>` : (p.is_major_vendor_official ? `<span class="vendor-badge">官方大厂</span>` : '');
-      const openBadge = (p.score_open || 0) > 0 ? `<span class="open-badge">开源</span>` : '';
+      const tags = (p.tags || []).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("");
+      const openBadge = p.open_source ? `<span class="open-badge">开源</span>` : '';
       return `
       <div class="card" data-id="${escapeAttr(p.id)}">
         <div class="card-head">
           <span class="score">${p.score}</span>
-          ${official}
+          <span class="tier${tierClass(p.source_tier)}">${escapeHtml(p.source_tier || '')}</span>
           ${openBadge}
           <span class="date">${p.date}</span>
           <a class="title" href="paper/${escapeAttr(p.id)}.html">${escapeHtml(p.title)}</a>
         </div>
-        <div class="keywords">${kws}</div>
-        <div class="field"><span class="label">论文摘要</span><span class="text">${escapeHtml(p.abstract)}</span></div>
-        <div class="field"><span class="label">论文效果</span><span class="text">${escapeHtml(p.effects)}</span></div>
-        <div class="field"><span class="label">工作原理</span><span class="text">${escapeHtml(p.mechanism)}</span></div>
+        <div class="tags">${tags}</div>
+        <div class="field"><span class="label">这是什么</span><span class="text">${escapeHtml(p.abstract)}</span></div>
+        <div class="field"><span class="label">有什么结果</span><span class="text">${escapeHtml(p.effects)}</span></div>
+        <div class="field"><span class="label">怎么做到</span><span class="text">${escapeHtml(p.mechanism)}</span></div>
         <div class="score-reason">评分依据：${escapeHtml(p.score_reason || "")}</div>
-        <div class="score-dims">契合${p.score_relevance ?? ''}·厂商${p.score_vendor ?? ''}·贡献${p.score_contribution ?? ''}·质量${p.score_quality ?? ''}·时效${p.score_recency ?? ''}·开源${p.score_open ?? ''}</div>
         <div class="card-foot">
           <input name="insight_person" value="${escapeAttr(p.insight_person || "")}" placeholder="洞察人">
           <input name="wiki_url" value="${escapeAttr(p.wiki_url || "")}" placeholder="wiki 链接">
