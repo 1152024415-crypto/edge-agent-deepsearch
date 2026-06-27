@@ -38,6 +38,15 @@
 
 示例：搜本周端侧 agent 论文 → `search_papers(query="on-device agent", max_results=50, sort_by="submittedDate")`，再按日期窗口过滤。
 
+# HuggingFace Daily Papers MCP（补充搜源）
+
+本项目配置了 HuggingFace Daily Papers MCP（huggingface-daily-paper-mcp），提供以下工具：
+- `get_today_papers`：获取今天 HF 社区精选论文（社区投票热门，质量比 arXiv 全量高）
+- `get_yesterday_papers`：获取昨天的精选论文
+- `get_papers_by_date`：按日期获取精选论文（参数 date=YYYY-MM-DD）
+
+调研 agent 搜索论文时，**arXiv MCP 搜全量 + HuggingFace Daily Papers MCP 搜社区精选热门**，两者互补。HF Daily Papers 是社区投票筛选的热门论文，质量更高，适合优先筛选。websearch 补充搜大厂官网。
+
 # 先使用确定性代码进行关键词过滤：
 
 - **大厂官方优先检索式**：

@@ -95,6 +95,7 @@
 - **首页字段人类可读**：`abstract`/`effects`/`mechanism` 用中文短句给人看（这是什么/有什么结果/怎么做到的），详细技术分解放 wiki，不塞首页。
 - **keywords 必填**：每条 1-8 个中文优先关键词（如 `GUI智能体`/`记忆`/`工具调用`），页面用小框标签展示。
 - **arXiv MCP 搜索**：调研 agent 搜索论文优先用 arXiv MCP 工具（`search_papers`/`download_paper`/`read_paper`），比 websearch 更精准。配置见 `~/.config/opencode/opencode.json` 的 `mcp.arxiv`。websearch 作为补充搜大厂官网。
+- **HuggingFace Daily Papers MCP**：调研 agent 用 HF Daily Papers MCP（`get_today_papers`/`get_papers_by_date`）获取社区精选热门论文，和 arXiv MCP 互补。配置见 `~/.config/opencode/opencode.json` 的 `mcp.huggingface`。
 
 ## 不可违反
 

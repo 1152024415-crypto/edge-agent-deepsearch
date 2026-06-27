@@ -114,6 +114,7 @@ Invoke-RestMethod -Uri http://127.0.0.1:8000/api/papers
 - No padding: if this week's major-vendor official content is thin, collect fewer items. Do not pass academic papers off as major-vendor official, and do not pad with uncertain links.
 - When spawning the detail agent, the prompt must inject the full text of `docs/agent-guide/detail-prompt.md`. The main agent must not write its own simplified prompt. Detail output must not contain English double quotes; they break JSON encoding.
 - 调研 agent 搜索论文优先用 arXiv MCP（`search_papers`），websearch 补充大厂官网。
+- 调研 agent 用 HuggingFace Daily Papers MCP（`get_today_papers`）获取社区精选论文，和 arXiv MCP 互补。
 - The full weekly loop lives in `docs/harness.md` section 3; this skill is the entry point, harness is the overview.
 
 ## Verification Before Completion
