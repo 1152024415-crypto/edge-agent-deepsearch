@@ -5,7 +5,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
+import subprocess
 import sys
+import tempfile
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -20,6 +24,120 @@ if str(SCRIPTS) not in sys.path:
 import research_run
 from app import storage
 from app.page import INDEX_HTML
+
+DEPLOY_SERVER = "http://127.0.0.1:8001"
+DEPLOY_DEBOUNCE_SECONDS = 10.0
+
+_deploy_timer: threading.Timer | None = None
+_deploy_lock = threading.Lock()
+_deploy_running = False
+
+
+def _deploy_to_ghpages() -> None:
+    """Build site/ via build.py then push to gh-pages via a temp worktree.
+
+    Runs in a background thread. Failures print a warning and never raise.
+    The temp worktree keeps the master working tree untouched (no checkout
+    switching on the main repo).
+    """
+    try:
+        build = subprocess.run(
+            [sys.executable, str(ROOT / "app" / "build.py"),
+             "--server", DEPLOY_SERVER],
+            cwd=str(ROOT), capture_output=True, text=True, timeout=60,
+        )
+        if build.returncode != 0:
+            print(f"[DEPLOY] build.py failed: {build.stderr.strip()}", flush=True)
+            return
+        site_dir = ROOT / "site"
+        if not site_dir.exists():
+            print("[DEPLOY] site/ missing after build", flush=True)
+            return
+        subprocess.run(
+            ["git", "fetch", "origin", "gh-pages"],
+            cwd=str(ROOT), capture_output=True, text=True, timeout=30,
+        )
+        with tempfile.TemporaryDirectory(prefix="gh-pages-deploy-") as tmp:
+            tmp_path = Path(tmp)
+            wt = subprocess.run(
+                ["git", "worktree", "add", "--detach",
+                 str(tmp_path), "origin/gh-pages"],
+                cwd=str(ROOT), capture_output=True, text=True, timeout=30,
+            )
+            if wt.returncode != 0:
+                print(f"[DEPLOY] worktree add failed: {wt.stderr.strip()}", flush=True)
+                return
+            try:
+                for item in tmp_path.iterdir():
+                    if item.name == ".git":
+                        continue
+                    if item.is_dir():
+                        shutil.rmtree(item)
+                    else:
+                        item.unlink()
+                for item in site_dir.iterdir():
+                    target = tmp_path / item.name
+                    if item.is_dir():
+                        shutil.copytree(item, target)
+                    else:
+                        shutil.copy2(item, target)
+                subprocess.run(
+                    ["git", "add", "-A"], cwd=str(tmp_path),
+                    capture_output=True, text=True, timeout=30,
+                )
+                diff = subprocess.run(
+                    ["git", "diff", "--cached", "--quiet"],
+                    cwd=str(tmp_path), capture_output=True, text=True, timeout=30,
+                )
+                if diff.returncode == 0:
+                    print("[DEPLOY] no changes to push", flush=True)
+                    return
+                subprocess.run(
+                    ["git", "commit", "-m",
+                     "auto deploy: refresh GitHub Pages snapshot"],
+                    cwd=str(tmp_path), capture_output=True, text=True, timeout=30,
+                )
+                push = subprocess.run(
+                    ["git", "push", "origin", "HEAD:gh-pages"],
+                    cwd=str(tmp_path), capture_output=True, text=True, timeout=60,
+                )
+                if push.returncode != 0:
+                    print(f"[DEPLOY] push failed: {push.stderr.strip()}", flush=True)
+                else:
+                    print("[DEPLOY] pushed site/ to gh-pages", flush=True)
+            finally:
+                subprocess.run(
+                    ["git", "worktree", "remove", "--force", str(tmp_path)],
+                    cwd=str(ROOT), capture_output=True, text=True, timeout=30,
+                )
+    except Exception as exc:
+        print(f"[DEPLOY] warning: {exc}", flush=True)
+
+
+def _run_deploy() -> None:
+    """Guard: skip if a previous deploy is still running."""
+    global _deploy_running
+    with _deploy_lock:
+        if _deploy_running:
+            print("[DEPLOY] previous deploy still running, skipping", flush=True)
+            return
+        _deploy_running = True
+    try:
+        _deploy_to_ghpages()
+    finally:
+        with _deploy_lock:
+            _deploy_running = False
+
+
+def _trigger_deploy() -> None:
+    """Debounced trigger: deploy runs DEPLOY_DEBOUNCE_SECONDS after last call."""
+    global _deploy_timer
+    with _deploy_lock:
+        if _deploy_timer is not None:
+            _deploy_timer.cancel()
+        _deploy_timer = threading.Timer(DEPLOY_DEBOUNCE_SECONDS, _run_deploy)
+        _deploy_timer.daemon = True
+        _deploy_timer.start()
 
 
 class ResearchServer(ThreadingHTTPServer):
@@ -94,12 +212,14 @@ class Handler(BaseHTTPRequestHandler):
             payload = self.read_json()
             if parsed.path == "/api/research-runs":
                 self.send_json(200, storage.upsert_run(self.server.db_path, payload))
+                _trigger_deploy()
                 return
             if parsed.path == "/api/insights":
                 self.send_json(200, storage.update_insight(self.server.db_path, payload))
                 return
             if parsed.path == "/api/paper-detail":
                 self.send_json(200, storage.update_detail(self.server.db_path, payload))
+                _trigger_deploy()
                 return
             self.send_json(404, {"ok": False, "error": "not found"})
         except (json.JSONDecodeError, research_run.ValidationError) as exc:
