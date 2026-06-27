@@ -31,15 +31,17 @@ REQUIRED_PAPER_FIELDS = (
     "score_contribution",
     "score_quality",
     "score_recency",
+    "score_open",
 )
 
-# 5 维评分: 字段名 -> 满分。score 必须等于 5 维之和。
+# 6 维评分: 字段名 -> 满分。score 必须等于 6 维之和。
 SCORE_DIMENSIONS = (
-    ("score_relevance", 35),
+    ("score_relevance", 30),
     ("score_vendor", 25),
-    ("score_contribution", 20),
+    ("score_contribution", 15),
     ("score_quality", 15),
     ("score_recency", 5),
+    ("score_open", 10),
 )
 
 ACADEMIC_SOURCE_TYPE = "学术论文"
@@ -261,7 +263,7 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str]) -> dict:
         dim_total += value
     if dim_total != score:
         raise ValidationError(
-            f"{paper_id}: score {score} must equal sum of 5 dimensions ({dim_total})"
+            f"{paper_id}: score {score} must equal sum of 6 dimensions ({dim_total})"
         )
 
     paper_url = validate_url(text_value(paper.get("paper_url")), "paper_url", paper_id)
@@ -303,6 +305,7 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str]) -> dict:
         "score_contribution": score_dims["score_contribution"],
         "score_quality": score_dims["score_quality"],
         "score_recency": score_dims["score_recency"],
+        "score_open": score_dims["score_open"],
         "insight_person": text_value(paper.get("insight_person")),
         "wiki_url": wiki_url,
         "authors": authors,

@@ -21,17 +21,19 @@ TODAY = date(2026, 6, 25)
 
 
 def _score_dims(score):
-    """Return a legal 5-dim breakdown summing to ``score`` (relevance/vendor/contribution/quality/recency)."""
+    """Return a legal 6-dim breakdown summing to ``score`` (relevance/vendor/contribution/quality/recency/open)."""
     rec = min(5, max(0, score))
     rem = score - rec
-    rel = min(35, rem)
+    op = min(10, max(0, rem))
+    rem -= op
+    rel = min(30, rem)
     rem -= rel
     ven = min(25, rem)
     rem -= ven
-    con = min(20, rem)
+    con = min(15, rem)
     rem -= con
     qua = min(15, rem)
-    return rel, ven, con, qua, rec
+    return rel, ven, con, qua, rec, op
 
 
 def valid_paper(**overrides):
@@ -53,12 +55,13 @@ def valid_paper(**overrides):
         "wiki_url": "",
     }
     paper.update(overrides)
-    rel, ven, con, qua, rec = _score_dims(paper["score"])
+    rel, ven, con, qua, rec, op = _score_dims(paper["score"])
     paper.setdefault("score_relevance", rel)
     paper.setdefault("score_vendor", ven)
     paper.setdefault("score_contribution", con)
     paper.setdefault("score_quality", qua)
     paper.setdefault("score_recency", rec)
+    paper.setdefault("score_open", op)
     return paper
 
 

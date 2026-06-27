@@ -32,6 +32,7 @@ PAPER_COLUMNS = (
     "score_contribution",
     "score_quality",
     "score_recency",
+    "score_open",
     "score_reason",
     "source_type",
     "is_major_vendor_official",
@@ -88,6 +89,7 @@ def init_db(db_path: Path) -> None:
                     score_contribution INTEGER,
                     score_quality INTEGER,
                     score_recency INTEGER,
+                    score_open INTEGER,
                     score_reason TEXT,
                     source_type TEXT NOT NULL,
                     is_major_vendor_official INTEGER NOT NULL DEFAULT 0,
@@ -105,7 +107,7 @@ def init_db(db_path: Path) -> None:
                 """
             )
             columns = {row["name"] for row in conn.execute("PRAGMA table_info(papers)").fetchall()}
-            for field in ("score_relevance", "score_vendor", "score_contribution", "score_quality", "score_recency"):
+            for field in ("score_relevance", "score_vendor", "score_contribution", "score_quality", "score_recency", "score_open"):
                 if field not in columns:
                     conn.execute(f"ALTER TABLE papers ADD COLUMN {field} INTEGER")
             if "score_reason" not in columns:
@@ -144,13 +146,13 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                     INSERT INTO papers (
                         id, run_id, title, abstract, effects, mechanism, paper_url, date, score,
                         score_relevance, score_vendor, score_contribution, score_quality, score_recency,
-                        score_reason, source_type, is_major_vendor_official, insight_person,
+                        score_open, score_reason, source_type, is_major_vendor_official, insight_person,
                         category, keywords, wiki_url, authors, vendors, venue, recommendation, updated_at
                     )
                     VALUES (
                         :id, :run_id, :title, :abstract, :effects, :mechanism, :paper_url, :date,
                         :score, :score_relevance, :score_vendor, :score_contribution, :score_quality,
-                        :score_recency, :score_reason, :source_type, :is_major_vendor_official,
+                        :score_recency, :score_open, :score_reason, :source_type, :is_major_vendor_official,
                         :insight_person, :category, :keywords, :wiki_url, :authors, :vendors, :venue,
                         :recommendation, :updated_at
                     )
@@ -168,6 +170,7 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                         score_contribution = excluded.score_contribution,
                         score_quality = excluded.score_quality,
                         score_recency = excluded.score_recency,
+                        score_open = excluded.score_open,
                         score_reason = excluded.score_reason,
                         source_type = excluded.source_type,
                         is_major_vendor_official = excluded.is_major_vendor_official,

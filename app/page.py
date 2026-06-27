@@ -24,6 +24,7 @@ INDEX_HTML = """<!doctype html>
     .card-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
     .score { font-weight: 700; color: #8d3d30; font-size: 20px; min-width: 30px; }
     .vendor-badge { display: inline-block; padding: 2px 7px; border: 1px solid #8d3d30; color: #8d3d30; font-size: 11px; font-weight: 700; border-radius: 3px; }
+    .open-badge { display: inline-block; padding: 2px 7px; border: 1px solid #2e7d32; color: #2e7d32; font-size: 11px; font-weight: 700; border-radius: 3px; }
     .vendor-tag { display: inline-block; padding: 3px 10px 3px 8px; background: #fffdf7; border-left: 3px solid #8d3d30; border-radius: 0 4px 4px 0; font-size: 12px; font-weight: 600; color: #8d3d30; }
     .date { color: #627066; font-size: 13px; }
     .title { font-weight: 700; font-size: 15px; color: #202621; text-decoration: none; }
@@ -99,11 +100,13 @@ INDEX_HTML = """<!doctype html>
       const kws = (p.keywords || []).map((k) => `<span class="kw">${escapeHtml(k)}</span>`).join("");
       const vendorsRaw = (p.vendors || '').trim();
       const official = vendorsRaw ? `<span class="vendor-tag">${escapeHtml(vendorsRaw)}</span>` : (p.is_major_vendor_official ? `<span class="vendor-badge">官方大厂</span>` : '');
+      const openBadge = (p.score_open || 0) > 0 ? `<span class="open-badge">开源</span>` : '';
       return `
       <div class="card" data-id="${escapeAttr(p.id)}">
         <div class="card-head">
           <span class="score">${p.score}</span>
           ${official}
+          ${openBadge}
           <span class="date">${p.date}</span>
           <a class="title" href="/paper/${escapeAttr(p.id)}">${escapeHtml(p.title)}</a>
         </div>
@@ -112,7 +115,7 @@ INDEX_HTML = """<!doctype html>
         <div class="field"><span class="label">论文效果</span><span class="text">${escapeHtml(p.effects)}</span></div>
         <div class="field"><span class="label">工作原理</span><span class="text">${escapeHtml(p.mechanism)}</span></div>
         <div class="score-reason">评分依据：${escapeHtml(p.score_reason || "")}</div>
-        <div class="score-dims">契合${p.score_relevance ?? ''}·厂商${p.score_vendor ?? ''}·贡献${p.score_contribution ?? ''}·质量${p.score_quality ?? ''}·时效${p.score_recency ?? ''}</div>
+        <div class="score-dims">契合${p.score_relevance ?? ''}·厂商${p.score_vendor ?? ''}·贡献${p.score_contribution ?? ''}·质量${p.score_quality ?? ''}·时效${p.score_recency ?? ''}·开源${p.score_open ?? ''}</div>
         <div class="card-foot">
           <input name="insight_person" value="${escapeAttr(p.insight_person || "")}" placeholder="洞察人">
           <input name="wiki_url" value="${escapeAttr(p.wiki_url || "")}" placeholder="wiki 链接">

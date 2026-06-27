@@ -29,12 +29,13 @@ research_runs/<run_id>.json
 | `mechanism` | string | agent 大白话整理版，给人看。回答「怎么做到的」，用普通话解释核心方法，不写论文式长句 |
 | `paper_url` | string | 论文原文或权威论文页 URL |
 | `date` | string | `YYYY-MM-DD`，必须在当前日期过去 7 天内 |
-| `score` | integer | 0 到 100，必须等于 5 维之和 |
-| `score_relevance` | integer | 0-35，主题契合度 |
+| `score` | integer | 0 到 100，必须等于 6 维之和 |
+| `score_relevance` | integer | 0-30，主题契合度 |
 | `score_vendor` | integer | 0-25，大厂关联度。参考口径：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8 |
-| `score_contribution` | integer | 0-20，技术贡献度。参考口径：创新度高 15-20；常见方法/工程整合 5-10 |
+| `score_contribution` | integer | 0-15，技术贡献度。参考口径：创新度高 12-15；常见方法/工程整合 5-10 |
 | `score_quality` | integer | 0-15，信息质量 |
 | `score_recency` | integer | 0-5，时效新鲜度 |
+| `score_open` | integer | 0-10，开源评分。有开源仓库/数据集/模型开源 5-10，不开源 0 |
 | `score_reason` | string | 分数依据，说明高分/低分来自哪些维度 |
 | `source_type` | string | `学术论文` / `官方技术博客` / `官方产品发布` |
 | `is_major_vendor_official` | boolean | 大厂官方来源置为 `true`，会排序优先 |

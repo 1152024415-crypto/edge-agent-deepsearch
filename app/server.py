@@ -155,6 +155,15 @@ def render_detail(paper: dict) -> str:
     detail_raw = paper.get("detail") or ""
     detail_html = _detail_to_html(detail_raw) if detail_raw.strip() else '<em>整理中，由后台 agent 生成后刷新可见</em>'
     official = '<span class="vendor-badge">官方大厂</span>' if paper.get("is_major_vendor_official") else ''
+    open_badge = '<span class="open-badge">开源</span>' if (paper.get("score_open") or 0) > 0 else ''
+    score_dims = (
+        f'<div class="score-dims">契合{_esc(paper.get("score_relevance"))}'
+        f'·厂商{_esc(paper.get("score_vendor"))}'
+        f'·贡献{_esc(paper.get("score_contribution"))}'
+        f'·质量{_esc(paper.get("score_quality"))}'
+        f'·时效{_esc(paper.get("score_recency"))}'
+        f'·开源{_esc(paper.get("score_open"))}</div>'
+    )
     vendors_raw = (paper.get("vendors") or "").strip()
     vendors_tag = f'<span class="vendor-tag">{_esc(vendors_raw)}</span>' if vendors_raw else ''
     kw_inner = f'<div class="keywords">{kws}</div>' if kws else ''
@@ -162,11 +171,12 @@ def render_detail(paper: dict) -> str:
     return f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{_esc(paper.get("title"))}</title>
 <style>
-*{{box-sizing:border-box}} body{{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",Arial,sans-serif;background:#f7f3ea;color:#202621}} main{{max-width:820px;margin:0 auto;padding:20px}} a{{color:#8d3d30}} .back{{display:inline-block;margin-bottom:12px;text-decoration:none}} h1{{font-size:22px;margin:0 0 8px}} .meta{{color:#627066;font-size:13px;margin-bottom:12px}} .score{{font-weight:700;color:#8d3d30;font-size:18px}} .vendor-badge{{display:inline-block;padding:2px 7px;border:1px solid #8d3d30;color:#8d3d30;font-size:11px;font-weight:700;border-radius:3px}} .tags{{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 14px}} .vendor-tag{{display:inline-block;padding:3px 10px 3px 8px;background:#fffdf7;border-left:3px solid #8d3d30;border-radius:0 4px 4px 0;font-size:12px;font-weight:600;color:#8d3d30}} .keywords{{display:flex;flex-wrap:wrap;gap:5px}} .kw{{display:inline-block;padding:2px 9px;background:#eee7da;border-radius:11px;font-size:12px;color:#596258}} h2{{font-size:17px;margin:18px 0 8px;color:#202621}} .detail{{background:#fffdf7;border:1px solid #cfc6b4;border-radius:8px;padding:16px 18px;color:#3f463f;font-size:14px;line-height:1.7}} .d-h{{font-weight:700;font-size:15px;color:#202621;margin:16px 0 6px;padding-left:10px;border-left:3px solid #8d3d30}} .d-h:first-child{{margin-top:0}} .d-p{{margin:0 0 10px}} .d-p:last-child{{margin-bottom:0}} .source{{margin-top:16px}} .source a{{display:inline-block;padding:6px 14px;border:1px solid #8d3d30;border-radius:4px;text-decoration:none;font-size:13px}}
+*{{box-sizing:border-box}} body{{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",Arial,sans-serif;background:#f7f3ea;color:#202621}} main{{max-width:820px;margin:0 auto;padding:20px}} a{{color:#8d3d30}} .back{{display:inline-block;margin-bottom:12px;text-decoration:none}} h1{{font-size:22px;margin:0 0 8px}} .meta{{color:#627066;font-size:13px;margin-bottom:12px}} .score{{font-weight:700;color:#8d3d30;font-size:18px}} .vendor-badge{{display:inline-block;padding:2px 7px;border:1px solid #8d3d30;color:#8d3d30;font-size:11px;font-weight:700;border-radius:3px}} .open-badge{{display:inline-block;padding:2px 7px;border:1px solid #2e7d32;color:#2e7d32;font-size:11px;font-weight:700;border-radius:3px}} .score-dims{{color:#7a837a;font-size:12px;margin:6px 0 0}} .tags{{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 14px}} .vendor-tag{{display:inline-block;padding:3px 10px 3px 8px;background:#fffdf7;border-left:3px solid #8d3d30;border-radius:0 4px 4px 0;font-size:12px;font-weight:600;color:#8d3d30}} .keywords{{display:flex;flex-wrap:wrap;gap:5px}} .kw{{display:inline-block;padding:2px 9px;background:#eee7da;border-radius:11px;font-size:12px;color:#596258}} h2{{font-size:17px;margin:18px 0 8px;color:#202621}} .detail{{background:#fffdf7;border:1px solid #cfc6b4;border-radius:8px;padding:16px 18px;color:#3f463f;font-size:14px;line-height:1.7}} .d-h{{font-weight:700;font-size:15px;color:#202621;margin:16px 0 6px;padding-left:10px;border-left:3px solid #8d3d30}} .d-h:first-child{{margin-top:0}} .d-p{{margin:0 0 10px}} .d-p:last-child{{margin-bottom:0}} .source{{margin-top:16px}} .source a{{display:inline-block;padding:6px 14px;border:1px solid #8d3d30;border-radius:4px;text-decoration:none;font-size:13px}}
 </style></head><body><main>
 <a class="back" href="/">← 返回雷达</a>
 <h1>{_esc(paper.get("title"))}</h1>
-<div class="meta"><span class="score">{_esc(paper.get("score"))}</span> {official} {_esc(paper.get("date"))} · {_esc(paper.get("source_type"))}</div>
+<div class="meta"><span class="score">{_esc(paper.get("score"))}</span> {official} {open_badge} {_esc(paper.get("date"))} · {_esc(paper.get("source_type"))}</div>
+{score_dims}
 {tags_block}
 <h2>深度整理</h2>
 <div class="detail">{detail_html}</div>

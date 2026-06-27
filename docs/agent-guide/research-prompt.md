@@ -15,12 +15,17 @@
    4. **学校顶会项目**（高校独立发表顶会顶刊）
 5. **至少顶会门槛**：学校项目（无公司 affiliation）必须发表在顶会顶刊：NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / ACL / CVPR / ICCV / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN。学校项目的纯 arXiv 预印本（非顶会）不收。公司项目 arXiv 或顶会均可。
 6. **排除常见方法无明显创新**：纯前缀缓存+投机解码堆砌、普通量化/剪枝、常规 benchmark，除非有显著新意，否则不收。这种论文即使中了顶会也不要，或给低分。
-7. **评分口径**（给 `score_vendor` / `score_contribution` 的参考区间，质量判断由调研 agent 给分，不是代码硬排）：
-   - `score_vendor`：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
-   - `score_contribution`：创新度高 15-20；常见方法/工程整合 5-10
-   - 最终排序靠 `score` 体现，调研 agent 判断质量给分
+7. **评分口径**（6 维，质量判断由调研 agent 给分，不是代码硬排）：
+    - `score_vendor`（0-25）：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
+    - `score_contribution`（0-15）：创新度高 12-15；常见方法/工程整合 5-10
+    - `score_open`（0-10）：有开源仓库/数据集/模型开源 5-10；不开源 0
+    - `score_relevance`(0-30) / `score_quality`(0-15) / `score_recency`(0-5) 按主题契合度/信息质量/时效给
+    - 6 维加总 = score（0-100），最终排序靠 score 体现
 8. **vendors 字段**：公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`）。
 9. **vendors/affiliation 必须有证据来源**：标注公司 affiliation 时，必须附证据（OpenReview author profile / Google Scholar 个人页 / 论文 PDF 机构署名），`score_reason` 写明依据（如「Zhixiang Chi OpenReview profile 显示 Huawei Technologies Ltd，huawei.com 邮箱确认」）。不许只凭作者名推测。
+10. **过滤 GUI agent**：纯 GUI agent 操作类（手机/桌面 GUI 自动化、屏幕点击操作、屏幕解析）不收，除非有显著非 GUI 创新（如 CLI 范式、系统架构、推理优化、部署能力）。端侧 GUI 自动化方向已饱和，过滤掉。保留非 GUI 的端侧 agent（推理优化/部署/记忆/工具调用/系统架构/安全/能耗）。
+11. **开源评分**：`score_open`（0-10），有开源仓库/数据集/模型开源给 5-10，不开源 0。开源是高分项，同等条件下开源论文优先。
+12. **6 维分数**：`score` = `score_relevance`(30) + `score_vendor`(25) + `score_contribution`(15) + `score_quality`(15) + `score_recency`(5) + `score_open`(10) = 100。6 维加总必须等于 score。
 
 # 先使用确定性代码进行关键词过滤：
 
