@@ -12,11 +12,11 @@
 
 2. **查时间窗口**：读 `data/.last_run` 里的上次调研时间戳。距本次 ≥7 天才跑；不到 7 天就提示"本周已调研"然后停。防重复跑、防拿旧 run 充本周。
 
-3. **发起调研子 agent**：prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束（大厂优先、官方域名白名单、7 天窗口、三方向分类、keywords、不凑数、大白话整理）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏标准，编造 404 链接。
+3. **发起调研子 agent**：prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束（大厂优先、官方域名白名单、14 天窗口、三方向分类、keywords、不凑数、大白话整理）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏标准，编造 404 链接。
 
 4. **保存产出**：子 agent 输出 10 到 20 篇结构化论文 JSON，主 agent 存成 `research_runs/run-YYYYMMDD-HHMMSS.json`。子 agent 只产 JSON，不改代码、网页、服务器。
 
-5. **校验**：跑 `python agent/validate_research_run.py research_runs/<run_id>.json`。校验结构 + 7 天窗口 + 6 维加总 = score + HTTP 死链检查，404 和不可达自动拦。validate 失败就修正或丢弃条目，**不许凑数**，找不到官方 URL 就丢，大厂不足就少收。
+5. **校验**：跑 `python agent/validate_research_run.py research_runs/<run_id>.json`。校验结构 + 14 天窗口 + 6 维加总 = score + HTTP 死链检查，404 和不可达自动拦。validate 失败就修正或丢弃条目，**不许凑数**，找不到官方 URL 就丢，大厂不足就少收。
 
 6. **抽检大厂条目**：publish 前，fetch 每个 `is_major_vendor_official=true` 的 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 
@@ -106,7 +106,7 @@ python agent/publish_results.py research_runs/run-20260625-120000.json --server 
 ## 核心约束
 
 - 页面展示的必须是真论文，不允许把厂商博客、产品发布、GitHub release 伪装成论文。
-- 论文必须是当前日期过去 7 天窗口内的新内容。
+- 论文必须是当前日期过去 14 天窗口内的新内容。
 - `paper_url` 必须指向论文原文或权威论文页，标题和摘要必须匹配。
 - `effects` 必须来自论文原文；没有报告就写 `未报告`。
 - 服务器只接收和展示结果，不负责搜索论文；搜索由 agent 工具完成。

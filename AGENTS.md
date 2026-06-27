@@ -15,7 +15,7 @@
 
 ## 项目一句话
 
-端侧 AI Agent 论文雷达：主 code agent 调度调研子 agent 搜索最近一周端侧 agent 相关论文，主 agent 校验后把结构化结果发布到服务器，网页从服务器刷新最新论文列表。
+端侧 AI Agent 论文雷达：主 code agent 调度调研子 agent 搜索最近两周端侧 agent 相关论文，主 agent 校验后把结构化结果发布到服务器，网页从服务器刷新最新论文列表。
 
 ## 架构边界
 
@@ -60,10 +60,10 @@
 
 1. 读 `.agents/skills/edge-agent-research-pipeline/SKILL.md`、`docs/agent-guide/main-agent-workflow.md`、`docs/agent-guide/research-prompt.md`、`output-contract.md`、`validation-rules.md`。强入口，不许跳过。
 2. 检查 `data/.last_run`：读上次调研时间戳，距本次 ≥7 天才跑；<7 天提示"本周已调研"并停止。防重复跑、防拿旧 run 充本周。
-3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（大厂优先、官方域名白名单、7 天窗口、三方向分类、keywords、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
-4. 子 agent 搜索本周（过去 7 天）端侧 agent 论文 + 17 家大厂官方动态，产出易读版 `abstract`/`effects`/`mechanism` + 6 维打分 + `keywords` + `category` + `source_type` + `vendors`。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
+3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（大厂优先、官方域名白名单、14 天窗口、三方向分类、keywords、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
+4. 子 agent 搜索本周（过去 14 天）端侧 agent 论文 + 17 家大厂官方动态，产出易读版 `abstract`/`effects`/`mechanism` + 6 维打分 + `keywords` + `category` + `source_type` + `vendors`。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
 5. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`。
-6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：结构 + 7 天窗口 + 6 维加总 = score + HTTP 死链检查。校验失败自动拦。
+6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：结构 + 14 天窗口 + 6 维加总 = score + HTTP 死链检查。校验失败自动拦。
 7. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
 8. publish 前主 agent 抽检 `is_major_vendor_official=true` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 9. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
@@ -99,7 +99,7 @@
 
 - 服务器不负责搜索论文；搜索由 agent 使用自己的搜索、浏览、阅读工具完成。
 - 大厂官方技术博客 / 官方产品发布可收录且排序最前，但必须命中官方域名且 `is_major_vendor_official: true`；非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
-- 时间窗口是当前日期过去 7 天，不允许用旧 `.last_run` 放行过期样例。
+- 时间窗口是当前日期过去 14 天，不允许用旧 `.last_run` 放行过期样例。
 - 没有本周合格论文时显示空状态，不拿旧数据撑数量。
 - 凑数禁令：本周大厂官方不足就少收，不拿学术充大厂，不拿不确定链接凑数。
 - `paper_url` 必须和论文标题、摘要匹配。
@@ -110,7 +110,7 @@
 ## 已知教训
 
 - [2026-06-25] 非官方博客/产品发布冒充论文会污染页面 → 只允许大厂官方技术博客/官方产品发布（官方域名 + `is_major_vendor_official: true`），其余非论文一律排除；普通论文仍要求 `source_type: 学术论文` + 权威论文链接。
-- [2026-06-25] 2025 年旧样例被展示成当前周报 → 时间窗口必须按当前日期过去 7 天硬校验，不能靠旧 `.last_run` 放行。
+- [2026-06-25] 2025 年旧样例被展示成当前周报 → 时间窗口必须按当前日期过去 14 天硬校验，不能靠旧 `.last_run` 放行。
 - [2026-06-25] GitHub 静态页不是最终形态 → 最终展示由服务器 `GET /api/papers` 刷新；GitHub Pages 只保留 fallback。
 - [2026-06-25] 子 agent 和页面职责混淆 → 子 agent 只产出 research run JSON，主 agent 校验并发布，服务器只接收和展示。
 - [2026-06-25] 新 codeagent 只读散落文档容易漏流程 → 项目内 `.agents/skills/edge-agent-research-pipeline/SKILL.md` 是强入口，AGENTS 必须指向它。

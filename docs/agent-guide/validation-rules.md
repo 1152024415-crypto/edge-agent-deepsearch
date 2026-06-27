@@ -9,7 +9,7 @@
 3. 官方大厂条目排序优先于普通论文。
 4. `paper_url` 必须指向论文原文、权威论文页或官方来源页。
 5. 标题、摘要、链接必须对应同一篇论文或同一条官方动态。
-6. `date` 必须在当前日期过去 7 天内。
+6. `date` 必须在当前日期过去 14 天内。
 7. `effects` 必须来自论文原文或官方来源；没有报告就写 `未报告`。
 8. 非官方博客、新闻、社媒、二手解读不能进入 `research_runs/*.json` 的 `papers[]`。
 9. `category` 必须是 `应用` / `框架` / `算法` 之一。
@@ -66,7 +66,7 @@
 python agent/validate_research_run.py research_runs/<run_id>.json
 ```
 
-自动校验覆盖：必填字段、`source_type`/`category` 枚举、`date` 7 天窗口、`score`=6 维之和、官方源必须 `is_major_vendor_official=true` + 官方域名白名单、`keywords` 1-8 中文、**`paper_url` HTTP 死链检查**（HEAD 404/不可达 fail，HEAD 不支持 fallback GET，单 URL 超时 5 秒，离线 warning 跳过）。
+自动校验覆盖：必填字段、`source_type`/`category` 枚举、`date` 14 天窗口、`score`=6 维之和、官方源必须 `is_major_vendor_official=true` + 官方域名白名单、`keywords` 1-8 中文、**`paper_url` HTTP 死链检查**（HEAD 404/不可达 fail，HEAD 不支持 fallback GET，单 URL 超时 5 秒，离线 warning 跳过）。
 
 ### 大厂条目内容抽检（半自动）
 
@@ -83,7 +83,7 @@ python agent/validate_research_run.py research_runs/<run_id>.json
 - 不是论文：删除该条。
 - 链接不匹配 / 内容对不上题：删除或重新核验。
 - 死链：删除或换权威链接。
-- 超出一周窗口：删除。
+- 超出两周窗口：删除。
 - 字段缺失：要求子 agent 补全。
 - 效果缺失：保留时必须写 `未报告`。
 

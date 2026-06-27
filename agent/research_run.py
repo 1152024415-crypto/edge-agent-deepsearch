@@ -239,7 +239,7 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str]) -> dict:
     except ValueError as exc:
         raise ValidationError(f"{paper_id}: invalid date {paper.get('date')!r}") from exc
 
-    cutoff = today - timedelta(days=7)
+    cutoff = today - timedelta(days=14)
     if paper_date < cutoff or paper_date > today:
         raise ValidationError(f"{paper_id}: date {paper_date} outside window [{cutoff} .. {today}]")
 

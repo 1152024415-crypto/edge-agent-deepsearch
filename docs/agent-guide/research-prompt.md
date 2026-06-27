@@ -7,13 +7,13 @@
 
 1. **abstract / effects / mechanism 必须用大白话中文整理版**：不搬论文摘要原文，用给人看的短句重写。`abstract` 回答「这是什么」，`effects` 回答「有什么结果」，`mechanism` 回答「怎么做到的」。每段 1-2 句，避免论文腔，详细技术分解放 wiki，不塞首页字段。
 2. **找不到官方 URL 就丢弃该条**：不许拼凑、推测或编造 URL。论文必须命中允许的论文链接域名，大厂官方条目必须命中官方域名白名单。链接拿不准的条目直接丢弃，不进入 `papers[]`。
-3. **本周大厂官方不足就少收**：不拿学术充大厂，不拿不确定链接凑数。凑够 10 到 20 篇不是目标，真实可读才是目标。本周无合格大厂动态就只发学术，无合格学术就显示空状态，不拿旧数据撑数量。
+3. **大厂官方要多搜**：不只搜 17 家设备/模型厂，也要搜中国互联网公司（快手/字节/腾讯/百度/美团/京东/拼多多/网易）的官方技术博客、GitHub、arXiv affiliation。大厂官方动态是重点，要主动深搜各厂商官网博客（见 vendor-research-guide.md 全部 URL）。时间窗口放宽到**过去 14 天**（2 周），多搜源多收。
 4. **优先级（高→低）**：
    1. 大厂官方动态（17 家设备/模型厂官方博客/产品发布，`is_major_vendor_official=true`）
    2. **公司项目**（快手/字节/腾讯/百度/美团/京东/拼多多/网易等公司独立或主导的研究，arXiv 或顶会，affiliation 命中公司）。优先级非常高，排序仅低于大厂官方。
    3. **公司+学校合作顶会项目**（公司联合高校发表顶会）
    4. **学校顶会项目**（高校独立发表顶会顶刊）
-5. **至少顶会门槛**：学校项目（无公司 affiliation）必须发表在顶会顶刊：NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / ACL / CVPR / ICCV / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN。学校项目的纯 arXiv 预印本（非顶会）不收。公司项目 arXiv 或顶会均可。
+5. **至少顶会门槛 + 中美名校限制**：学校项目（无公司 affiliation）必须同时满足：(a) 发表在顶会顶刊（NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / ACL / CVPR / ICCV / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN）；(b) 作者来自**中美名校**（中国：清华/北大/上交/浙大/中科大/复旦/南大/港中文/港科大/港大/中科院；美国：MIT/Stanford/CMU/Berkeley/Princeton/Yale/Cornell/UIUC/UCSD/UCLA/Georgia Tech/Columbia）。其他地区学校或非名校的纯 arXiv 预印本不收。公司项目不限学校，arXiv 或顶会均可。
 6. **排除常见方法无明显创新**：纯前缀缓存+投机解码堆砌、普通量化/剪枝、常规 benchmark，除非有显著新意，否则不收。这种论文即使中了顶会也不要，或给低分。
 7. **评分口径**（6 维，质量判断由调研 agent 给分，不是代码硬排）：
     - `score_vendor`（0-25）：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
@@ -56,6 +56,22 @@
   `("Apple Intelligence" OR "CoreAI" OR "Samsung Gauss" OR "Gemini Nano" OR "Phi-3" OR "Llama 3.2") AND ("on-device" OR "edge" OR "mobile" OR "embedded") AND ("agent" OR "optimization" OR "deployment")`
 
   调研时覆盖所有厂商，不只大厂官方，也要搜中国互联网公司研究项目（快手 / 字节 / 腾讯 / 百度 / 美团 / 京东 / 拼多多 / 网易等，按 arXiv affiliation + GitHub org 搜）。每家厂商的官方动态来源、websearch 关键词、arXiv affiliation 搜法和重要页面见 `docs/references/vendor-research-guide.md`。
+
+- **厂商官方博客 URL（已验证可读，直接 fetch 这些地址找本周动态）**：
+  - Apple: `machinelearning.apple.com`（ML 研究博客，AFM 系列发布在此）
+  - Google: `blog.google`（官方博客，Gemma/Gemini 发布在此）、`ai.google.dev`（开发者博客）
+  - NVIDIA: `blogs.nvidia.com`（官方博客，Jetson/edge AI 在此）、`developer.nvidia.com`（开发者资源）
+  - Meta: `ai.meta.com/blog`（Meta AI 博客，ExecuTorch/Llama 在此）
+  - Samsung: `research.samsung.com`（三星研究院博客，6G/AI agent 在此）
+  - Qualcomm: `qualcomm.com/news/releases`（新闻稿）、`qualcomm.com/news/onq`（技术博客）
+  - MediaTek: `mediatek.com/tek-talk-blogs`（技术博客，DGX Spark/端侧 AI 在此）
+  - OpenAI: `openai.com/index`（研究博客，agent/deep research 在此）
+  - Anthropic: `anthropic.com/news`（新闻博客，Claude agent 在此）
+  - Microsoft: `techcommunity.microsoft.com`（技术社区，Foundry/Windows AI 在此）
+  - Qwen: `qwenlm.github.io`（Qwen 官方博客，Qwen Code/模型在此）
+  - Mistral: `mistral.ai/news`（新闻博客，Vibe/Ministral 在此）
+
+  以上 URL 均经验证可访问且有 2026 年内容。调研 agent 应直接 fetch/websearch 这些地址找本周（过去 14 天）大厂官方动态。更详细的调研方法（websearch 关键词 / arXiv affiliation / GitHub org）见 `docs/references/vendor-research-guide.md`。
 
 - **评测与基准检索式**：
   `("AndroidWorld" OR "Mobile-Env" OR "AIoTBench" OR "MLPerf Tiny") AND ("agent" OR "GUI automation")`
