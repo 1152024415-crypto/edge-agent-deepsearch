@@ -61,9 +61,9 @@
 1. 读 `.agents/skills/edge-agent-research-pipeline/SKILL.md`、`docs/agent-guide/main-agent-workflow.md`、`docs/agent-guide/research-prompt.md`、`output-contract.md`、`validation-rules.md`。强入口，不许跳过。
 2. 检查 `data/.last_run`：读上次调研时间戳，距本次 ≥7 天才跑；<7 天提示"本周已调研"并停止。防重复跑、防拿旧 run 充本周。
 3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（大厂优先、官方域名白名单、7 天窗口、三方向分类、keywords、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
-4. 子 agent 搜索本周（过去 7 天）端侧 agent 论文 + 17 家大厂官方动态，产出易读版 `abstract`/`effects`/`mechanism` + 5 维打分 + `keywords` + `category` + `source_type` + `vendors`。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
+4. 子 agent 搜索本周（过去 7 天）端侧 agent 论文 + 17 家大厂官方动态，产出易读版 `abstract`/`effects`/`mechanism` + 6 维打分 + `keywords` + `category` + `source_type` + `vendors`。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
 5. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`。
-6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：结构 + 7 天窗口 + 5 维加总 = score + HTTP 死链检查。校验失败自动拦。
+6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：结构 + 7 天窗口 + 6 维加总 = score + HTTP 死链检查。校验失败自动拦。
 7. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
 8. publish 前主 agent 抽检 `is_major_vendor_official=true` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 9. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
@@ -84,9 +84,11 @@
   4. **学校顶会项目**（高校独立发表顶会顶刊）
 - **至少顶会门槛**：学校项目（无公司 affiliation）必须发表在顶会顶刊（NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / ACL / CVPR / ICCV / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN）。学校项目的纯 arXiv 预印本（非顶会）不收。公司项目 arXiv 或顶会均可。
 - **排除常见方法无明显创新**：纯前缀缓存+投机解码堆砌、普通量化/剪枝、常规 benchmark，除非有显著新意，否则不收。即使中了顶会也不要，或给低分。
-- **评分口径**（`score_vendor` / `score_contribution` 参考区间，质量判断由调研 agent 给分，不是代码硬排）：
-  - `score_vendor`：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
-  - `score_contribution`：创新度高 15-20；常见方法/工程整合 5-10
+- **评分口径**（6 维，质量判断由调研 agent 给分，不是代码硬排）：
+  - `score_vendor`（0-25）：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
+  - `score_contribution`（0-15）：创新度高 12-15；常见方法/工程整合 5-10
+  - `score_open`（0-10）：有开源仓库/数据集/模型开源 5-10；不开源 0
+  - 6 维上限：`score_relevance`(30) + `score_vendor`(25) + `score_contribution`(15) + `score_quality`(15) + `score_recency`(5) + `score_open`(10) = 100，`score` = 6 维加总
 - **vendors 字段**：公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`）。
 - **官方域名硬约束**：非论文条目必须命中官方域名（见 `docs/references/vendor-whitelist.md`），非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
 - **三方向分类**：每条必须归 `应用` / `框架` / `算法` 之一，页面按这三个 tab 分组展示。

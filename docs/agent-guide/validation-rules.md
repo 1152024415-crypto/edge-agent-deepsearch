@@ -22,10 +22,12 @@
 
 ## 评分口径参考
 
-`score_vendor` / `score_contribution` 的参考区间，质量判断由调研 agent 给分，不是代码硬排。最终排序靠 `score` 体现：
+6 维的参考区间，质量判断由调研 agent 给分，不是代码硬排。最终排序靠 `score` 体现：
 
-- `score_vendor`：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
-- `score_contribution`：创新度高 15-20；常见方法/工程整合 5-10
+- `score_vendor`（0-25）：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
+- `score_contribution`（0-15）：创新度高 12-15；常见方法/工程整合 5-10
+- `score_open`（0-10）：有开源仓库/数据集/模型开源 5-10；不开源 0
+- 6 维上限：`score_relevance`(30) + `score_vendor`(25) + `score_contribution`(15) + `score_quality`(15) + `score_recency`(5) + `score_open`(10) = 100，`score` = 6 维加总
 
 ## 三个方向分类口径
 
@@ -64,7 +66,7 @@
 python agent/validate_research_run.py research_runs/<run_id>.json
 ```
 
-自动校验覆盖：必填字段、`source_type`/`category` 枚举、`date` 7 天窗口、`score`=5 维之和、官方源必须 `is_major_vendor_official=true` + 官方域名白名单、`keywords` 1-8 中文、**`paper_url` HTTP 死链检查**（HEAD 404/不可达 fail，HEAD 不支持 fallback GET，单 URL 超时 5 秒，离线 warning 跳过）。
+自动校验覆盖：必填字段、`source_type`/`category` 枚举、`date` 7 天窗口、`score`=6 维之和、官方源必须 `is_major_vendor_official=true` + 官方域名白名单、`keywords` 1-8 中文、**`paper_url` HTTP 死链检查**（HEAD 404/不可达 fail，HEAD 不支持 fallback GET，单 URL 超时 5 秒，离线 warning 跳过）。
 
 ### 大厂条目内容抽检（半自动）
 

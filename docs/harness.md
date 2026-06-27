@@ -13,7 +13,7 @@
   → 主agent读AGENTS/SKILL/research-prompt(强入口)
   → 发起调研子agent(prompt必须注入research-prompt.md全文+硬约束)
   → 子agent产出 research_runs/run-<week>.json
-  → validate: 结构+死链(自动拦)+7天窗口+5维加总
+  → validate: 结构+死链(自动拦)+7天窗口+6维加总
   → 主agent抽检大厂条目内容匹配(fetch URL对比标题摘要)
   → publish → 服务器upsert → 展示最新run(论文/博客tab)
   → (可选)起整理agent(注入detail-prompt.md)逐篇产6段detail → 即时POST /api/paper-detail → 详情页实时刷新
@@ -28,9 +28,9 @@
 | 1 | 主 agent 读 AGENTS/SKILL/research-prompt/output-contract/validation-rules | 强入口 |
 | 2 | 检查 `data/.last_run`，距上次 ≥7 天才跑 | 自动 gate |
 | 3 | 发起调研子 agent，**prompt 必须注入 research-prompt.md 全文 + 硬约束**（不许自写简化版） | 流程强制 |
-| 4 | 子 agent 搜索本周论文+大厂官方，产出易读版 abstract/effects/mechanism + 5维 + keywords + category + source_type + vendors | agent |
+| 4 | 子 agent 搜索本周论文+大厂官方，产出易读版 abstract/effects/mechanism + 6维 + keywords + category + source_type + vendors | agent |
 | 5 | 保存 `research_runs/run-YYYYMMDD-HHMMSS.json` | 主 agent |
-| 6 | `python agent/validate_research_run.py`：结构 + 7天窗口 + 5维加总=score + **HTTP 死链检查** | **自动拦** |
+| 6 | `python agent/validate_research_run.py`：结构 + 7天窗口 + 6维加总=score + **HTTP 死链检查** | **自动拦** |
 | 7 | validate 失败：修正或丢弃，**不许凑数** | 流程 |
 | 8 | 主 agent 抽检 `is_major_vendor_official=true` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
 | 9 | `python agent/publish_results.py --server <URL>` | 主 agent |
@@ -83,7 +83,7 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 ## 8. 校验规则
 
 **自动校验**（`agent/research_run.py`，发布前必跑）：
-- 必填字段、source_type/category 枚举、date 7 天窗口、score=5维之和、官方源必须 is_major_vendor_official=true + 官方域名白名单、keywords 1-8 中文
+- 必填字段、source_type/category 枚举、date 7 天窗口、score=6维之和、官方源必须 is_major_vendor_official=true + 官方域名白名单、keywords 1-8 中文
 - **死链检查**：每个 paper_url 发 HTTP HEAD，404/不可达 fail；HEAD 不支持 fallback GET 取状态码；每 URL 超时 5s；**离线/断网 warning 跳过**（不 fail，标记"死链未检"）
 
 **半自动抽检**（主 agent publish 前对大厂条目）：

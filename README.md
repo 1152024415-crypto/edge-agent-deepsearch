@@ -16,7 +16,7 @@
 
 4. **保存产出**：子 agent 输出 10 到 20 篇结构化论文 JSON，主 agent 存成 `research_runs/run-YYYYMMDD-HHMMSS.json`。子 agent 只产 JSON，不改代码、网页、服务器。
 
-5. **校验**：跑 `python agent/validate_research_run.py research_runs/<run_id>.json`。校验结构 + 7 天窗口 + 5 维加总 = score + HTTP 死链检查，404 和不可达自动拦。validate 失败就修正或丢弃条目，**不许凑数**，找不到官方 URL 就丢，大厂不足就少收。
+5. **校验**：跑 `python agent/validate_research_run.py research_runs/<run_id>.json`。校验结构 + 7 天窗口 + 6 维加总 = score + HTTP 死链检查，404 和不可达自动拦。validate 失败就修正或丢弃条目，**不许凑数**，找不到官方 URL 就丢，大厂不足就少收。
 
 6. **抽检大厂条目**：publish 前，fetch 每个 `is_major_vendor_official=true` 的 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 
