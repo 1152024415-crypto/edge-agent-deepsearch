@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>PersistentKV: Page-Aware Decode Scheduling for Long-Context LLM Serving on Commodity GPUs</h1>
-<div class="meta"><span class="score">10</span> <span class="tier school">学校预印本</span>  2026-06-25 · Muhammad Ahmed / arXiv</div>
+<div class="meta"><span class="score">15</span> <span class="tier school">学校预印本</span>  2026-06-25 · Muhammad Ahmed / arXiv</div>
 <div class="tags"><span class="tag">方向:KV cache</span><span class="tag">硬件:GPU</span><span class="tag">应用:长上下文推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">Autoregressive large language model (LLM) serving is increasingly limited by key-value (KV) cache movement rather than dense matrix multiplication.</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">PersistentKV 针对 GQA 长上下文 decode 做页感知调度,按 KV 头组分派工作、复用 K/V tile,自适应选 FlashInfer 或自家内核。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">RTX 3060 FP16 上,校正策略在 B8 多种负载提升同步吞吐 1.063-1.265x,B1 桶形负载提升 1.399x,且规避回归点。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补</div>
+<div class="score-reason">评分依据：消费级 GPU 上的 serving 调度,有端侧/边缘部署色彩,工程细致。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.26666" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

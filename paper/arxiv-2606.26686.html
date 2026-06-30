@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Do Safety Guardrails Need to Reason? LeanGuard: A Fast and Light Approach for Robust Moderation</h1>
-<div class="meta"><span class="score">12</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-06-25 · Dongbin Na / arXiv</div>
+<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-06-25 · Dongbin Na / arXiv</div>
 <div class="tags"><span class="tag">方向:评测基准</span><span class="tag">方向:端侧agent</span><span class="tag">应用:机器人</span><span class="tag">应用:长上下文推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">In order to screen a prompt or a response, the recent guardrail methods generate a chain-of-thought (CoT) before they issue a verdict.</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">LeanGuard 质疑安全护栏要不要推理,用 395M 双向编码器单次前向做审核,去掉 CoT 后准确率不降反更鲁棒,可端侧跑。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">395M 标签编码器平均 F1 82.90,匹配大推理护栏;推理算力约降 100x;标签噪声下更稳。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补</div>
+<div class="score-reason">评分依据：明确端侧/具身机器人护栏,单次前向 100x 省算力,反向结论有说服力</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.26686" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

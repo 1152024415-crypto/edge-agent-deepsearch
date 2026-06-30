@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>A Natively Blocked, Device-Resident Algebraic Multigrid GPU Path in PETSc</h1>
-<div class="meta"><span class="score">10</span> <span class="tier school">学校预印本</span>  2026-06-23 · Mark F. Adams / arXiv</div>
+<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span>  2026-06-23 · Mark F. Adams / arXiv</div>
 <div class="tags"><span class="tag">方向:剪枝稀疏</span><span class="tag">方向:记忆</span><span class="tag">硬件:GPU</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">Smoothed-aggregation algebraic multigrid (AMG) is widely used for the linear systems arising from finite-element discretizations of vector PDEs such as elastici…</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">给 PETSc 加一种原生分块、设备驻留的代数多重网格 GPU 路径,处理弹性力学矩形块结构,全程不展开成标量。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">A100 上 3D 弹性,128^3 网格 cuSPARSE OOM 而分块可装下;27 GPU 上 V-cycle 快 1.24x、SpMV 1.42x、粗算子 1.80x,64 GPU 达 2.27x。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补</div>
+<div class="score-reason">评分依据：GPU 设备驻留 HPC 求解器,非端侧 AI,但设备驻留优化有工程价值。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.24748" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

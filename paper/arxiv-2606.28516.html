@@ -7,9 +7,9 @@
 <h1>CLEAR-MoE: Shared-Basis Expert Extraction from Frozen Vision Transformers via Calibration-Driven Layer Selection</h1>
 <div class="meta"><span class="score">10</span> <span class="tier school">学校预印本</span>  2026-06-26 · Md Irtiza Hossain, Humaira Ayesha, Junaid Ahmed Sifat / arXiv</div>
 <div class="tags"><span class="tag">方向:剪枝稀疏</span><span class="tag">方向:记忆</span><span class="tag">方向:MoE</span><span class="tag">方向:评测基准</span><span class="tag">方向:云端serving</span><span class="tag">硬件:GPU</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">We present CLEAR-MoE, a four-phase post-training pipeline that converts a frozen pretrained Vision Transformer (ViT) into a sparse Mixture-of-Experts (MoE) mode…</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">把冻结的视觉Transformer后训练转成稀疏MoE,不动主干权重,用共享SVD基+残差专家+路由器。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">DeiT-Small保留99.9%精度(86.70%);但GTX 960上FFN慢1.3-1.7倍;5个ViT主干精度差≤0.10pp。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补</div>
+<div class="score-reason">评分依据：后训练稀疏化但实测变慢且未面向端侧;消融充分但贡献偏经验</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.28516" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

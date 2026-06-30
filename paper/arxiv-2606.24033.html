@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>RoPE-Aware Bit Allocation for KV-Cache Quantization</h1>
-<div class="meta"><span class="score">10</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-06-23 · Fengfeng Liang, Yuechen Zhang, Jiaya Jia / arXiv</div>
+<div class="meta"><span class="score">17</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-06-23 · Fengfeng Liang, Yuechen Zhang, Jiaya Jia / arXiv</div>
 <div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:KV cache</span><span class="tag">方向:蒸馏</span><span class="tag">方向:高效注意力</span><span class="tag">方向:记忆</span><span class="tag">方向:能耗功耗</span><span class="tag">硬件:GPU</span><span class="tag">模型:Llama</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">Existing low-bit KV-cache quantizers often treat each cached key as a flat vector.</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">Block-GTQ 按 RoPE 频率块能量给 KV cache 量化分配比特,高能量块多给位,低比特下更好保留注意力 logit。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">10 模型上 2/3 b/dim K-only 量化层 MAE 降 32-80%,367/367 层全胜;Llama-3.1-8B NIAH 70.6→97.4;H800 上 K3V3 压缩 3.24x、128K 快 1.34x、峰值内存 56.31→19.85GB。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补</div>
+<div class="score-reason">评分依据：KV cache 量化直击端侧长上下文内存瓶颈,数字全面且亮眼,贡献高。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.24033" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>
