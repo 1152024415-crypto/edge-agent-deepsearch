@@ -60,7 +60,14 @@
     .ftag.active[data-dim=模型]{background:var(--model);color:#fff;border-color:var(--model)}
 
     /* tier bands */
-    section.band{margin-bottom:20px}
+    section.band{margin-bottom:20px;scroll-margin-top:54px}
+    /* sticky section tabs */
+    .tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;flex-wrap:wrap;padding:8px 0 8px;margin-bottom:14px;border-bottom:1px solid var(--rule)}
+    .tab{font-family:"IBM Plex Mono",monospace;font-size:11px;padding:4px 11px;border:1px solid var(--rule);border-radius:14px;background:var(--panel);color:var(--muted);cursor:pointer;line-height:1.5}
+    .tab b{color:var(--ink);font-weight:600;margin-left:5px}
+    .tab:hover{border-color:var(--ink);color:var(--ink)}
+    .tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .tab.active b{color:#fff}
     .band-head{display:flex;align-items:center;gap:8px;margin:0 0 6px;padding:0 0 4px;border-bottom:1px solid var(--rule);cursor:pointer;user-select:none}
     .band-head:hover .band-title{color:var(--amber)}
     .fold{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);transition:transform .15s;display:inline-block;width:10px}
@@ -130,6 +137,7 @@
         </div>
       </div>
     </header>
+    <div class="tabs" id="tabs"></div>
     <section class="weekly" id="weekly"></section>
     <div class="filter" id="filter"></div>
     <div id="papers"></div>
@@ -145,6 +153,7 @@
       const data = window.__PAPERS__;
       ALL=data.papers||[];
       renderFilter(); renderPapers();
+      attachSpy();
       document.querySelector("#summary").innerHTML=`<b>${ALL.length}</b> signals · 7-day window · <b>${range()}</b>`;
     }
     async function loadWeekly(){
@@ -218,11 +227,23 @@
 
     function renderPapers(){
       const l=visible(),el=document.querySelector("#papers");
-      if(!l.length){el.innerHTML='<div class="empty">no signal — 调整筛选或搜索</div>';return;}
+      if(!l.length){el.innerHTML='<div class="empty">no signal — 调整筛选或搜索</div>';renderTabs({});return;}
       const g={};l.forEach(p=>{(g[p.source_tier]=g[p.source_tier]||[]).push(p)});
-      el.innerHTML=TIER.filter(([t])=>g[t]).map(([t,c])=>
-        `<section class="band"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:${c}"></span><span class="band-title">${t}</span><span class="band-count">${g[t].length}</span></div>`+
-        `<div class="band-body">`+g[t].map(renderRow).join("")+`</div></section>`).join("");
+      const COLLAPSE=25;  // sections with more rows than this start collapsed
+      el.innerHTML=TIER.filter(([t])=>g[t]).map(([t,c])=>{
+        const cl=g[t].length>COLLAPSE?' collapsed':'';
+        return `<section class="band${cl}" id="band-${escapeAttr(t)}"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:${c}"></span><span class="band-title">${t}</span><span class="band-count">${g[t].length}</span>${g[t].length>COLLAPSE?'<span class="band-meta">点击展开</span>':''}</div>`+
+        `<div class="band-body">`+g[t].map(renderRow).join("")+`</div></section>`;
+      }).join("");
+      renderTabs(g);
+    }
+
+    function renderTabs(g){
+      g=g||{};
+      const tabs=TIER.filter(([t])=>g[t]).map(([t,c])=>`<button class="tab" data-target="band-${escapeAttr(t)}">${t}<b>${g[t].length}</b></button>`);
+      const tn=(window.__TRENDING__&&window.__TRENDING__.items)?window.__TRENDING__.items.length:(window.__TRENDING__||[]).length;
+      if(tn) tabs.push(`<button class="tab" data-target="band-trending">GitHub Trending<b>${tn}</b></button>`);
+      document.querySelector("#tabs").innerHTML=tabs.join("");
     }
 
     function renderTrendingRow(r){
@@ -238,19 +259,33 @@
     function renderTrending(list){
       const el=document.querySelector("#trending");
       if(!list||!list.length){el.innerHTML="";return;}
-      el.innerHTML=`<section class="band"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:var(--slate)"></span><span class="band-title">GitHub Trending · 本周 Top ${list.length}</span><span class="band-count">${list.length}</span><span class="band-meta">unfiltered · github.com/trending</span></div>`+
+      el.innerHTML=`<section class="band" id="band-trending"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:var(--slate)"></span><span class="band-title">GitHub Trending · 本周 Top ${list.length}</span><span class="band-count">${list.length}</span><span class="band-meta">unfiltered · github.com/trending</span></div>`+
         `<div class="band-body">`+list.map(renderTrendingRow).join("")+`</div></section>`;
     }
     async function loadTrending(){
       let data = window.__TRENDING__ || null;
       if(!data){try{const r=await fetch("/api/trending");data=await r.json();}catch(e){return;}}
       renderTrending(data.items||data||[]);
+      attachSpy();
     }
 
     document.querySelector("#filter").addEventListener("click",e=>{const b=e.target.closest(".ftag");if(!b)return;const t=b.dataset.tag;ACTIVE.has(t)?ACTIVE.delete(t):ACTIVE.add(t);renderFilter();renderPapers();});
     document.querySelector("#search").addEventListener("input",e=>{Q=e.target.value.trim();renderPapers();});
     document.querySelector("#sort-score").addEventListener("click",()=>{SORT="score";document.querySelector("#sort-score").classList.add("on");document.querySelector("#sort-date").classList.remove("on");renderPapers();});
     document.querySelector("#sort-date").addEventListener("click",()=>{SORT="date";document.querySelector("#sort-date").classList.add("on");document.querySelector("#sort-score").classList.remove("on");renderPapers();});
+
+    // sticky tab bar: click → expand + scroll to section
+    document.querySelector("#tabs").addEventListener("click",e=>{
+      const b=e.target.closest(".tab");if(!b)return;
+      const tgt=document.getElementById(b.dataset.target);if(!tgt)return;
+      tgt.classList.remove("collapsed");
+      tgt.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+    // scroll-spy: highlight the tab of the section currently in view
+    const spy=new IntersectionObserver((ents)=>{
+      ents.forEach(en=>{if(en.isIntersecting){const id=en.target.id;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.target===id));}});
+    },{rootMargin:"-45% 0px -50% 0px"});
+    function attachSpy(){document.querySelectorAll("section.band[id]").forEach(s=>spy.observe(s));}
 
     function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
     function escapeAttr(v){return escapeHtml(v).replace(/`/g,"&#96;");}
