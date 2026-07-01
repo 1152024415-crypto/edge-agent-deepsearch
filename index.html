@@ -242,7 +242,7 @@
       g=g||{};
       const tabs=TIER.filter(([t])=>g[t]).map(([t,c])=>`<button class="tab" data-target="band-${escapeAttr(t)}">${t}<b>${g[t].length}</b></button>`);
       const tn=(window.__TRENDING__&&window.__TRENDING__.items)?window.__TRENDING__.items.length:(window.__TRENDING__||[]).length;
-      if(tn) tabs.push(`<button class="tab" data-target="band-trending">GitHub Trending<b>${tn}</b></button>`);
+      if(tn) tabs.push(`<button class="tab" data-target="band-trending">GitHub 热榜<b>${tn}</b></button>`);
       document.querySelector("#tabs").innerHTML=tabs.join("");
     }
 
@@ -259,7 +259,7 @@
     function renderTrending(list){
       const el=document.querySelector("#trending");
       if(!list||!list.length){el.innerHTML="";return;}
-      el.innerHTML=`<section class="band" id="band-trending"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:var(--slate)"></span><span class="band-title">GitHub Trending · 本周 Top ${list.length}</span><span class="band-count">${list.length}</span><span class="band-meta">unfiltered · github.com/trending</span></div>`+
+      el.innerHTML=`<section class="band" id="band-trending"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:var(--slate)"></span><span class="band-title">GitHub 热榜 · 本周 Top ${list.length}</span><span class="band-count">${list.length}</span><span class="band-meta">未筛选 · github.com/trending</span></div>`+
         `<div class="band-body">`+list.map(renderTrendingRow).join("")+`</div></section>`;
     }
     async function loadTrending(){
