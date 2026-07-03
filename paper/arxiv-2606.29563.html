@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Coverage-Driven KV Cache Eviction for Efficient and Improved Inference of LLM</h1>
-<div class="meta"><span class="score">14</span> <span class="tier school">学校预印本</span>  2026-06-28 · Shuvendu Roy, Mengyao Zhai, Hossein Hajimirsadeghi et al. / arXiv</div>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-06-28 · Shuvendu Roy, Mengyao Zhai, Hossein Hajimirsadeghi et al. / arXiv</div>
 <div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:剪枝稀疏</span><span class="tag">方向:记忆</span><span class="tag">方向:评测基准</span><span class="tag">应用:长上下文推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">提出 K-VEC,一种按 token 覆盖率来驱逐 KV cache 的策略,跨头跨层保留 token,减少长上下文性能下降。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">在 16 个 LongBench 子任务上,同驱逐率下比现有方法最高提升 10.35 分。</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">K-VEC 是覆盖感知的 KV cache 驱逐策略,优先保留 token 覆盖率,引入跨头与跨层覆盖模块,理论证明覆盖率影响互信息从而影响预测精度。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">16 个 LongBench 子集上同驱逐率与内存约束下最高 +10.35 点。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：KV cache 压缩利于资源受限部署,有具体增益但未显式端侧。</div>
+<div class="score-reason">评分依据：KV cache 技术栈非显式端侧;覆盖率感知+跨头跨层,创新较高。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.29563" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

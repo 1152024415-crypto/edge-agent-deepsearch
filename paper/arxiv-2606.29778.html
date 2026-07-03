@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Mandol: An Agglomerative Agent Memory System for Long-Term Conversations</h1>
-<div class="meta"><span class="score">14</span> <span class="tier school">学校预印本</span>  2026-06-29 · Yuhan Zhang, Zhiyuan Guo, Ziheng Zeng et al. / arXiv</div>
+<div class="meta"><span class="score">10</span> <span class="tier school">学校预印本</span>  2026-06-29 · Yuhan Zhang, Zhiyuan Guo, Ziheng Zeng et al. / arXiv</div>
 <div class="tags"><span class="tag">方向:记忆</span><span class="tag">方向:评测基准</span><span class="tag">方向:端侧agent</span><span class="tag">应用:RAG</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">做了一套统一的 agent 长期对话记忆系统,把键值、向量、图结构融合成原生语义图,检索不依赖 LLM。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">在 LoCoMo、LongMemEval 上整体准确率最佳;10 QPS 下检索快 5.4x、插入快 4.8x,消费级硬件仍低延迟。</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">Mandol 把碎片化记忆统一为记忆原生架构:层次语义图+SemanticMap/Graph 融合 KV/向量/图,检索时无需 LLM 介入,带查询自适应路由与 token 预算控制。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在 LoCoMo 与 LongMemEval 上总体精度最佳;10 QPS 下检索 5.4 倍、插入 4.8 倍加速,消费级硬件低延迟。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：消费级硬件低延迟有端侧色彩,但核心是 agent 记忆系统非显式端侧部署。</div>
+<div class="score-reason">评分依据：agent 记忆系统,消费级硬件可跑;统一架构与免 LLM 检索有创新。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.29778" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

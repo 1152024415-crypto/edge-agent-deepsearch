@@ -7,9 +7,9 @@
 <h1>Beyond Uniform Experts: Cost-Aware Expert Execution for Efficient Multi-Device MoE Inference</h1>
 <div class="meta"><span class="score">14</span> <span class="tier school">学校预印本</span>  2026-06-29 · Hui Zang, Pengfei Xia, Hong Liu et al. / arXiv</div>
 <div class="tags"><span class="tag">方向:剪枝稀疏</span><span class="tag">方向:记忆</span><span class="tag">方向:MoE</span><span class="tag">方向:端云协同</span><span class="tag">方向:评测基准</span><span class="tag">方向:端侧agent</span><span class="tag">模型:DeepSeek</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">多设备MoE推理的代价感知调度,按token重要性+硬件开销裁掉低价值高成本专家,再低开销补偿。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">671B DeepSeek-R1端到端延迟降8-18%,精度下降不到1%。</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">CAEE 是硬件引导的运行时框架,用轻量校准成本模型估计硬件开销,选择剪掉低重要高成本专家并用低开销补偿重分配,避免额外数据移动。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在 671B DeepSeek-R1 上端到端推理延迟降 8-18%,覆盖专家卸载和多设备端上执行,精度下降小于 1%。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：含on-device多设备场景但主体是671B大模型;代价感知专家裁剪+补偿机制有创新</div>
+<div class="score-reason">评分依据：多设备 MoE 推理含端上执行,成本感知剪枝有新意。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.29982" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

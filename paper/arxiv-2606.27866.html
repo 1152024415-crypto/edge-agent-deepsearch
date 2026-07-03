@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>FlexMoE: One-for-All Nested Intra-Expert Pruning for MoE Language Models</h1>
-<div class="meta"><span class="score">15</span> <span class="tier school">学校预印本</span>  2026-06-26 · Fan Mo, Yuxuan Han, Geng Zhang et al. / arXiv</div>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-06-26 · Fan Mo, Yuxuan Han, Geng Zhang et al. / arXiv</div>
 <div class="tags"><span class="tag">方向:剪枝稀疏</span><span class="tag">方向:记忆</span><span class="tag">方向:MoE</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">FlexMoE：把大MoE模型转成不同预算下可部署的嵌套子网络族，按通道重要性排序让每个expert学离散剪枝动作，一次训练导出多预算。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">Qwen2-57B-A14B剪50%路由expert参数保留约99.8%性能（无微调）；支持在线预算切换</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">FlexMoE 把预训练 MoE LLM 转成嵌套可部署子网络族:按重要性排专家 FFN 通道、每专家学离散剪枝动作,一次训练导出多预算子网,支持在线预算切换。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">Qwen2-57B-A14B 上剪 50% 路由专家参数仍保留约 99.8% 性能(不微调);真实显存降低、吞吐提升。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：MoE压缩部署相关；嵌套多预算子网络思路新颖，效果强</div>
+<div class="score-reason">评分依据：MoE 压缩可服务多预算端侧部署;嵌套子网+在线切换有创新。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.27866" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

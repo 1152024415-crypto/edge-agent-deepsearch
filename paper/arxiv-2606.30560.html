@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>TraceLab: Characterizing Coding Agent Workloads for LLM Serving</h1>
-<div class="meta"><span class="score">9</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-06-29 · Kan Zhu, Mathew Jacob, Chenxi Ma et al. / arXiv</div>
+<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-06-29 · Kan Zhu, Mathew Jacob, Chenxi Ma et al. / arXiv</div>
 <div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:工具调用</span><span class="tag">方向:评测基准</span><span class="tag">方向:端侧agent</span><span class="tag">应用:代码</span><span class="tag">应用:长上下文推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">发布了约4300个编程智能体会话的真实trace（35万步LLM调用、43万次工具调用），分析编程agent负载的长上下文、短输出、长尾工具调用等特征。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">采集约4300个会话、35万LLM步、43万工具调用；prefix cache命中率高但不完美</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">采集并发布约4300个编码agent会话、35万LLM步骤和43万工具调用的trace，分析编码agent工作负载特征：长自主循环、长上下文短输出、重尾工具调用、高但不完美的前缀缓存命中率。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">指出降低工具调用开销、append长度感知prefill、语义感知工具延迟预测和KV缓存管理等优化机会，并发布数据集与流水线。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：云端LLM serving负载分析，非端侧；贡献为数据集与特征分析，工程性工作</div>
+<div class="score-reason">评分依据：LLM服务负载分析，非端侧；首批真实编码agent trace数据集有创新。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.30560" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>
