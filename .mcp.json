@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "arxiv": {
+      "command": "cmd",
+      "args": ["/c", "uvx", "arxiv-mcp-server"]
+    },
+    "huggingface": {
+      "command": "cmd",
+      "args": ["/c", "uvx", "huggingface-daily-paper-mcp"]
+    },
+    "github": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    }
+  }
+}

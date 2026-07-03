@@ -15,7 +15,7 @@ SCHEMA_PATH = gc.ROOT / "app" / "frontmatter.schema.json"
 schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 validator = Draft202012Validator(schema)
 
-DIM_KEYS = ("score_relevance", "score_vendor", "score_contribution", "score_quality", "score_recency", "score_open")
+DIM_KEYS = ("score_relevance", "score_contribution")
 
 from datetime import date as _date, datetime as _dt
 

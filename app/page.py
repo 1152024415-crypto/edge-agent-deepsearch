@@ -1,155 +1,300 @@
-"""Server-rendered shell for the paper radar page."""
+"""Server-rendered shell for the paper radar page (signal-monitor terminal aesthetic)."""
 
 INDEX_HTML = """<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>端侧 AI Agent 论文雷达</title>
+  <title>RADAR · 端侧 AI Agent 信号</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, "Segoe UI", "Microsoft YaHei", Arial, sans-serif; background: #f7f3ea; color: #202621; }
-    main { max-width: 1100px; margin: 0 auto; padding: 20px; }
-    h1 { margin: 0 0 4px; font-size: 26px; color: #202621; }
-    .muted { color: #627066; margin: 0 0 16px; font-size: 14px; }
-    .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 2px solid #cfc6b4; margin-bottom: 16px; }
-    .tab { padding: 8px 18px; border: none; background: transparent; color: #627066; font-size: 15px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; display: inline-flex; align-items: center; gap: 6px; }
-    .tab:hover { color: #8d3d30; }
-    .tab.active { color: #8d3d30; border-bottom-color: #8d3d30; }
-    .tab .count { display: inline-block; min-width: 18px; padding: 0 6px; background: #eee7da; color: #596258; border-radius: 9px; font-size: 11px; font-weight: 700; line-height: 16px; text-align: center; }
-    .tab.active .count { background: #8d3d30; color: #fffaf0; }
-    .cat-panel { display: none; }
-    .cat-panel.active { display: block; }
-    .card { background: #fffdf7; border: 1px solid #cfc6b4; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
-    .card-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
-    .score { font-weight: 700; color: #8d3d30; font-size: 20px; min-width: 30px; }
-    .vendor-badge { display: inline-block; padding: 2px 7px; border: 1px solid #8d3d30; color: #8d3d30; font-size: 11px; font-weight: 700; border-radius: 3px; }
-    .open-badge { display: inline-block; padding: 2px 7px; border: 1px solid #2e7d32; color: #2e7d32; font-size: 11px; font-weight: 700; border-radius: 3px; }
-    .vendor-tag { display: inline-block; padding: 3px 10px 3px 8px; background: #fffdf7; border-left: 3px solid #8d3d30; border-radius: 0 4px 4px 0; font-size: 12px; font-weight: 600; color: #8d3d30; }
-    .date { color: #627066; font-size: 13px; }
-    .title { font-weight: 700; font-size: 15px; color: #202621; text-decoration: none; }
-    .title:hover { color: #8d3d30; }
-    .keywords { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 4px; }
-    .kw { display: inline-block; padding: 2px 9px; background: #eee7da; border-radius: 11px; font-size: 12px; color: #596258; line-height: 1.6; }
-    .field { display: flex; margin-top: 8px; gap: 10px; }
-    .label { flex-shrink: 0; width: 84px; color: #627066; font-size: 13px; font-weight: 600; }
-    .text { color: #3f463f; font-size: 14px; line-height: 1.55; }
-    .score-reason { margin-top: 8px; color: #4c554e; font-size: 12px; line-height: 1.4; }
-    .score-dims { margin-top: 3px; color: #7a837a; font-size: 11px; }
-    .card-foot { display: flex; gap: 8px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
-    input { padding: 5px 8px; border: 1px solid #cfc6b4; background: #fffaf0; border-radius: 4px; font-size: 13px; color: #202621; }
-    input[name="insight_person"] { width: 130px; }
-    input[name="wiki_url"] { width: 200px; }
-    button { padding: 5px 14px; border: 1px solid #8d3d30; color: #8d3d30; background: #fffaf0; cursor: pointer; border-radius: 4px; font-size: 13px; }
-    button:hover { background: #8d3d30; color: #fffaf0; }
-    .empty { color: #627066; font-style: italic; padding: 20px; text-align: center; }
-    @media (max-width: 640px) {
-      .field { flex-direction: column; gap: 2px; }
-      .label { width: auto; }
-      input[name="insight_person"], input[name="wiki_url"] { width: 100%; }
+    *{box-sizing:border-box}
+    :root{
+      --bg:#eef1f3; --panel:#ffffff; --ink:#0b1a24; --muted:#5a6b78; --faint:#8a99a6;
+      --rule:#d4dae0; --hair:#e3e8ec;
+      --amber:#c2410c; --green:#15803d; --blue:#1d4ed8; --purple:#6d28d9; --slate:#64748b;
+      --fx:#c2410c; --app:#15803d; --hw:#1d4ed8; --model:#6d28d9;
     }
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans","PingFang SC","Noto Sans SC",system-ui,sans-serif;font-size:14px;line-height:1.5}
+    main{max-width:1100px;margin:0 auto;padding:20px 22px 80px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+    /* scope header */
+    .scope{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:14px 16px 0;margin-bottom:14px;overflow:hidden}
+    .scope-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    h1{margin:0;font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:600;letter-spacing:2px;color:var(--ink)}
+    h1 .sub{font-family:"IBM Plex Sans",sans-serif;font-weight:500;font-size:13px;color:var(--muted);letter-spacing:0;margin-left:8px}
+    .scope-stats{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted)}
+    .scope-stats b{color:var(--ink);font-weight:600}
+    .sweep{height:2px;margin:12px -16px 0;background:linear-gradient(90deg,transparent 0%,var(--hair) 20%,var(--hair) 80%,transparent 100%);position:relative;overflow:hidden}
+    .sweep::after{content:"";position:absolute;inset:0;width:30%;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:sweep 3.2s linear infinite}
+    @keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
+    @media(prefers-reduced-motion:reduce){.sweep::after{animation:none;opacity:.5}}
+    .controls{display:flex;gap:10px;align-items:center;padding:10px 0 12px;flex-wrap:wrap}
+    .search{flex:1;min-width:180px;padding:6px 10px;border:1px solid var(--rule);border-radius:4px;background:#fbfcfd;font-family:"IBM Plex Sans",sans-serif;font-size:13px;color:var(--ink)}
+    .search:focus{outline:none;border-color:var(--ink)}
+    .sort{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);display:flex;gap:4px;align-items:center}
+    .sort button{border:1px solid var(--rule);background:#fbfcfd;color:var(--muted);font-family:inherit;font-size:11px;padding:3px 8px;border-radius:3px;cursor:pointer}
+    .sort button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+    /* weekly highlights */
+    .weekly{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--amber);border-radius:6px;padding:14px 16px;margin-bottom:16px}
+    .weekly-title{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
+    .weekly-ov{font-size:13px;color:var(--ink);line-height:1.6;margin-bottom:8px}
+    .weekly-hl{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--hair)}
+    .weekly-hl:first-of-type{border-top:none}
+    .weekly-num{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--amber);font-weight:600;min-width:16px}
+    .weekly-topic{font-weight:600;font-size:13px;color:var(--ink);text-decoration:none}
+    .weekly-topic:hover{color:var(--amber)}
+    .weekly-why{color:var(--muted);font-size:12px;line-height:1.45}
+    /* filter */
+    .filter{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:10px 12px;margin-bottom:16px}
+    .dim-group{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:5px}
+    .dim-group:last-child{margin-bottom:0}
+    .dim-label{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);min-width:34px;text-transform:uppercase;letter-spacing:.5px}
+    .ftag{padding:2px 8px;border:1px solid var(--rule);background:#fbfcfd;color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:11px;border-radius:3px;cursor:pointer;line-height:1.5}
+    .ftag:hover{border-color:var(--ink);color:var(--ink)}
+    .ftag.active[data-dim=方向]{background:var(--fx);color:#fff;border-color:var(--fx)}
+    .ftag.active[data-dim=应用]{background:var(--app);color:#fff;border-color:var(--app)}
+    .ftag.active[data-dim=硬件]{background:var(--hw);color:#fff;border-color:var(--hw)}
+    .ftag.active[data-dim=模型]{background:var(--model);color:#fff;border-color:var(--model)}
+
+    /* tier bands */
+    section.band{margin-bottom:20px;scroll-margin-top:54px}
+    /* sticky section tabs */
+    .tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;flex-wrap:wrap;padding:8px 0 8px;margin-bottom:14px;border-bottom:1px solid var(--rule)}
+    .tab{font-family:"IBM Plex Mono",monospace;font-size:11px;padding:4px 11px;border:1px solid var(--rule);border-radius:14px;background:var(--panel);color:var(--muted);cursor:pointer;line-height:1.5}
+    .tab b{color:var(--ink);font-weight:600;margin-left:5px}
+    .tab:hover{border-color:var(--ink);color:var(--ink)}
+    .tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .tab.active b{color:#fff}
+    .band-head{display:flex;align-items:center;gap:8px;margin:0 0 6px;padding:0 0 4px;border-bottom:1px solid var(--rule);cursor:pointer;user-select:none}
+    .band-head:hover .band-title{color:var(--amber)}
+    .fold{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);transition:transform .15s;display:inline-block;width:10px}
+    .band.collapsed .fold{transform:rotate(-90deg)}
+    .band.collapsed .band-body{display:none}
+    .band-body{}
+    .band-bar{width:3px;height:14px;border-radius:1px}
+    .band-title{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+    .band-count{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint)}
+    .band-meta{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);margin-left:auto}
+
+    /* signal row */
+    .row{display:flex;align-items:baseline;gap:10px;padding:9px 12px;background:var(--panel);border:1px solid var(--hair);border-radius:5px;margin-bottom:6px;text-decoration:none;color:var(--ink);transition:border-color .12s,transform .06s}
+    .row:hover{border-color:var(--rule);transform:translateX(2px)}
+    .row.hi{border-left:3px solid var(--amber);padding-left:10px}
+    .sig{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:34px;flex-shrink:0}
+    .sig-n{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--ink)}
+    .sig-n.hi{color:var(--amber)}
+    .sig-bars{display:flex;gap:1.5px;align-items:flex-end;height:9px}
+    .sig-bars i{width:3px;height:9px;background:var(--hair);border-radius:1px}
+    .sig-bars i.on{background:var(--ink)}
+    .sig-bars i.on.hi{background:var(--amber)}
+    .tier{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);flex-shrink:0}
+    .date{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);flex-shrink:0}
+    .open{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--green);font-weight:600;flex-shrink:0}
+    .ttl{font-weight:600;font-size:13.5px;flex:1;min-width:160px}
+    .row:hover .ttl{color:var(--amber)}
+    .tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+    .tag{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:2px;line-height:1.5}
+    .tag[data-dim=方向]{color:var(--fx);background:#fbeae3}
+    .tag[data-dim=应用]{color:var(--app);background:#e3f0e8}
+    .tag[data-dim=硬件]{color:var(--hw);background:#e3ecf8}
+    .tag[data-dim=模型]{color:var(--model);background:#eee6f7}
+    .abs{color:var(--muted);font-size:12px;line-height:1.5;margin-top:4px}
+    .empty{color:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:30px;text-align:center}
+
+    /* detail overlay (rendered from inlined data — no server fetch, so a stale
+       cached index never 404s when clicking a paper) */
+    .overlay{position:fixed;inset:0;background:rgba(11,26,36,.45);backdrop-filter:blur(2px);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+    .overlay.hidden{display:none}
+    .card{background:var(--panel);border:1px solid var(--rule);border-radius:8px;max-width:720px;width:100%;padding:20px 22px;box-shadow:0 8px 30px rgba(11,26,36,.18)}
+    .card-close{float:right;cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--faint);border:1px solid var(--rule);border-radius:4px;padding:2px 9px;background:#fbfcfd}
+    .card-close:hover{color:var(--ink);border-color:var(--ink)}
+    .card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin:4px 0 10px}
+    .card h2{margin:0 0 8px;font-size:17px;font-weight:700;line-height:1.35}
+    .card .abs{margin:10px 0;color:var(--ink);font-size:13px}
+    .card .field{margin:8px 0;font-size:12.5px;line-height:1.55}
+    .card .field b{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-right:6px}
+    .card .src{display:inline-block;margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--amber);text-decoration:none;border:1px solid var(--amber);border-radius:4px;padding:5px 10px}
+    .card .src:hover{background:var(--amber);color:#fff}
+    @media(max-width:640px){.row{flex-wrap:wrap}.ttl{min-width:100%}}
   </style>
 </head>
 <body>
   <main>
-    <h1>端侧 AI Agent 论文雷达</h1>
-    <p class="muted" id="summary">正在读取服务器最新调研结果...</p>
-    <div class="tabs" id="tabs" role="tablist">
-      <button class="tab" data-tab="academic" role="tab">学术论文<span class="count" id="count-academic">0</span></button>
-      <button class="tab" data-tab="official" role="tab">官方动态<span class="count" id="count-official">0</span></button>
-    </div>
+    <header class="scope">
+      <div class="scope-top">
+        <h1>RADAR<span class="sub">端侧 AI Agent 信号周报</span></h1>
+        <div class="scope-stats" id="summary">scanning…</div>
+      </div>
+      <div class="sweep"></div>
+      <div class="controls">
+        <input class="search" id="search" placeholder="搜索标题 / 关键词…" autocomplete="off">
+        <div class="sort">sort
+          <button id="sort-score" class="on">score</button>
+          <button id="sort-date">date</button>
+        </div>
+      </div>
+    </header>
+    <div class="tabs" id="tabs"></div>
+    <section class="weekly" id="weekly"></section>
+    <div class="filter" id="filter"></div>
     <div id="papers"></div>
+    <div id="trending"></div>
+    <div id="overlay" class="overlay hidden" onclick="if(event.target===this)closeDetail()"></div>
   </main>
   <script>
-    async function loadPapers() {
+    let ALL=[], ACTIVE=new Set(), Q="", SORT="score";
+    const TIER=[["官方动态","--amber"],["开源大项目","--green"],["公司项目","--blue"],["学校顶会","--purple"],["学校预印本","--slate"]];
+
+    async function loadPapers(){
       const res = await fetch("/api/papers");
       const data = await res.json();
-      const all = data.papers || [];
-      // 按 source_type 分两组；tab 内保持 API 返回顺序（storage 已按 is_major_vendor_official DESC, score DESC 排）
-      const academic = all.filter((p) => p.source_type === "学术论文");
-      const official = all.filter((p) => p.source_type === "官方技术博客" || p.source_type === "官方产品发布");
-      const groups = [
-        { id: "academic", papers: academic },
-        { id: "official", papers: official }
-      ];
-      const defaultIdx = groups.findIndex((g) => g.papers.length > 0);
-      const activeIdx = defaultIdx === -1 ? 0 : defaultIdx;
+      ALL=data.papers||[];
+      renderFilter(); renderPapers();
+      attachSpy();
+      document.querySelector("#summary").innerHTML=`<b>${ALL.length}</b> signals · 7-day window · <b>${range()}</b>`;
+    }
+    async function loadWeekly(){
+      const wr = await fetch("/api/weekly");
+      const w = await wr.json();
+      const el=document.querySelector("#weekly");
+      if(!w||!w.highlights||!w.highlights.length){el.innerHTML="";return;}
+      el.innerHTML=`<div class="weekly-title">本周热点 · weekly signals</div>`+
+        (w.overview?`<div class="weekly-ov">${escapeHtml(w.overview)}</div>`:"")+
+        w.highlights.map((h,i)=>{const href=h.url?escapeAttr(h.url):`/paper/${escapeAttr(h.paper_id)}`;const tgt=h.url?` target="_blank" rel="noopener"`:"";return `<div class="weekly-hl"><span class="weekly-num">${i+1}</span><a class="weekly-topic" href="${href}"${tgt}>${escapeHtml(h.topic)}</a><span class="weekly-why">— ${escapeHtml(h.why)}</span></div>`;}).join("");
+    }
+    function range(){const d=ALL.map(p=>p.date).sort();return d.length?`${d[0]} → ${d[d.length-1]}`:'';}
 
-      document.querySelector("#count-academic").textContent = String(academic.length);
-      document.querySelector("#count-official").textContent = String(official.length);
-      document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", i === activeIdx));
+    function allTags(){const s=new Set();ALL.forEach(p=>(p.tags||[]).forEach(t=>s.add(t)));return[...s];}
+    const dim=t=>t.split(":")[0], val=t=>t.split(":")[1]||t;
 
-      document.querySelector("#papers").innerHTML = groups.map((g, i) =>
-        `<div class="cat-panel${i === activeIdx ? " active" : ""}" data-panel="${g.id}" role="tabpanel">${
-          g.papers.map(renderCard).join("") || '<p class="empty">本周无此方向内容</p>'
-        }</div>`
-      ).join("");
-
-      document.querySelector("#summary").textContent = `${all.length} 条内容 · 官方大厂优先 · 来自服务器最新调研结果`;
+    function renderFilter(){
+      const bd={};allTags().forEach(t=>{const d=dim(t);(bd[d]=bd[d]||[]).push(t)});
+      document.querySelector("#filter").innerHTML=["方向","应用","硬件","模型"].filter(d=>bd[d]).map(d=>
+        `<div class="dim-group"><span class="dim-label">${d}</span>`+
+        bd[d].map(t=>`<button class="ftag${ACTIVE.has(t)?" active":""}" data-tag="${escapeAttr(t)}" data-dim="${d}">${escapeHtml(val(t))}</button>`).join("")+
+        `</div>`).join("");
     }
 
-    document.querySelector("#tabs").addEventListener("click", (event) => {
-      const btn = event.target.closest(".tab");
-      if (!btn) return;
-      const id = btn.dataset.tab;
-      document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === id));
-      document.querySelectorAll(".cat-panel").forEach((p) => p.classList.toggle("active", p.dataset.panel === id));
-    });
+    function visible(){
+      let l=ALL.filter(p=>ACTIVE.size===0||(p.tags||[]).some(t=>ACTIVE.has(t)));
+      if(Q){const q=Q.toLowerCase();l=l.filter(p=>(p.title+p.abstract+(p.tags||[]).join()+p.vendors).toLowerCase().includes(q));}
+      l.sort((a,b)=>SORT==="score"?b.score-a.score||b.date.localeCompare(a.date):b.date.localeCompare(a.date));
+      return l;
+    }
+    function sigBars(s){const n=Math.min(5,Math.max(1,Math.ceil(s/4)));const hi=s>=14;let r="";for(let i=0;i<5;i++)r+=`<i class="${i<n?'on':''} ${hi?'hi':''}"></i>`;return r;}
 
-    function renderCard(p) {
-      const kws = (p.keywords || []).map((k) => `<span class="kw">${escapeHtml(k)}</span>`).join("");
-      const vendorsRaw = (p.vendors || '').trim();
-      const official = vendorsRaw ? `<span class="vendor-tag">${escapeHtml(vendorsRaw)}</span>` : (p.is_major_vendor_official ? `<span class="vendor-badge">官方大厂</span>` : '');
-      const openBadge = (p.score_open || 0) > 0 ? `<span class="open-badge">开源</span>` : '';
-      return `
-      <div class="card" data-id="${escapeAttr(p.id)}">
-        <div class="card-head">
-          <span class="score">${p.score}</span>
-          ${official}
-          ${openBadge}
-          <span class="date">${p.date}</span>
-          <a class="title" href="/paper/${escapeAttr(p.id)}">${escapeHtml(p.title)}</a>
-        </div>
-        <div class="keywords">${kws}</div>
-        <div class="field"><span class="label">论文摘要</span><span class="text">${escapeHtml(p.abstract)}</span></div>
-        <div class="field"><span class="label">论文效果</span><span class="text">${escapeHtml(p.effects)}</span></div>
-        <div class="field"><span class="label">工作原理</span><span class="text">${escapeHtml(p.mechanism)}</span></div>
-        <div class="score-reason">评分依据：${escapeHtml(p.score_reason || "")}</div>
-        <div class="score-dims">契合${p.score_relevance ?? ''}·厂商${p.score_vendor ?? ''}·贡献${p.score_contribution ?? ''}·质量${p.score_quality ?? ''}·时效${p.score_recency ?? ''}·开源${p.score_open ?? ''}</div>
-        <div class="card-foot">
-          <input name="insight_person" value="${escapeAttr(p.insight_person || "")}" placeholder="洞察人">
-          <input name="wiki_url" value="${escapeAttr(p.wiki_url || "")}" placeholder="wiki 链接">
-          <button type="button" data-action="save">保存</button>
-        </div>
+    function renderRow(p){
+      const hi=p.score>=14;
+      const tags=(p.tags||[]).map(t=>`<span class="tag" data-dim="${dim(t)}">${escapeHtml(val(t))}</span>`).join("");
+      return`<a class="row${hi?' hi':''}" href="/paper/${escapeAttr(p.id)}" onclick="openDetail('${escapeAttr(p.id)}');return false;">
+        <span class="sig"><span class="sig-n${hi?' hi':''}">${p.score}</span><span class="sig-bars">${sigBars(p.score)}</span></span>
+        <span class="tier">${escapeHtml(p.source_tier||'')}</span>
+        ${p.open_source?'<span class="open">OSS</span>':''}
+        <span class="date">${p.date}</span>
+        <span class="ttl">${escapeHtml(p.title)}</span>
+        ${tags?`<span class="tags">${tags}</span>`:''}
+        <span class="abs">${escapeHtml(p.abstract||'')}</span>
+      </a>`;
+    }
+
+    function openDetail(id){
+      const p=ALL.find(x=>x.id===id);
+      const ov=document.querySelector("#overlay");
+      if(!p){ov.classList.add("hidden");return;}
+      const tags=(p.tags||[]).map(t=>`<span class="tag" data-dim="${dim(t)}">${escapeHtml(val(t))}</span>`).join("");
+      const hi=p.score>=14;
+      ov.innerHTML=`<div class="card">
+        <span class="card-close" onclick="closeDetail()">esc ✕</span>
+        <div class="card-meta"><span class="band-bar" style="display:inline-block;width:3px;height:12px;background:var(--ink)"></span><span class="tier">${escapeHtml(p.source_tier||'')}</span>${p.open_source?'<span class="open">OSS</span>':''}<span class="date">${p.date}</span><span>score ${p.score}</span><span>(${p.score_relevance||0}+${p.score_contribution||0})</span></div>
+        <h2>${escapeHtml(p.title)}</h2>
+        ${tags?`<div class="tags">${tags}</div>`:''}
+        <div class="abs">${escapeHtml(p.abstract||'')}</div>
+        ${p.effects?`<div class="field"><b>effects</b>${escapeHtml(p.effects)}</div>`:''}
+        ${p.mechanism?`<div class="field"><b>mechanism</b>${escapeHtml(p.mechanism)}</div>`:''}
+        ${p.score_reason?`<div class="field"><b>评分依据</b>${escapeHtml(p.score_reason)}</div>`:''}
+        ${p.authors?`<div class="field"><b>authors</b>${escapeHtml(p.authors)}</div>`:''}
+        ${p.vendors?`<div class="field"><b>vendors</b>${escapeHtml(p.vendors)}</div>`:''}
+        ${p.venue?`<div class="field"><b>venue</b>${escapeHtml(p.venue)}</div>`:''}
+        ${p.paper_url?`<a class="src" href="${escapeAttr(p.paper_url)}" target="_blank" rel="noopener">原文 ↗ ${escapeHtml(p.paper_url.replace(/^https?:\/\//,'').split('/')[0])}</a>`:''}
       </div>`;
+      ov.classList.remove("hidden");
+      document.body.style.overflow="hidden";
+    }
+    function closeDetail(){const ov=document.querySelector("#overlay");ov.classList.add("hidden");ov.innerHTML="";document.body.style.overflow="";}
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDetail();});
+
+    function renderPapers(){
+      const l=visible(),el=document.querySelector("#papers");
+      if(!l.length){el.innerHTML='<div class="empty">no signal — 调整筛选或搜索</div>';renderTabs({});return;}
+      const g={};l.forEach(p=>{(g[p.source_tier]=g[p.source_tier]||[]).push(p)});
+      const COLLAPSE=25;  // sections with more rows than this start collapsed
+      el.innerHTML=TIER.filter(([t])=>g[t]).map(([t,c])=>{
+        const cl=g[t].length>COLLAPSE?' collapsed':'';
+        return `<section class="band${cl}" id="band-${escapeAttr(t)}"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:${c}"></span><span class="band-title">${t}</span><span class="band-count">${g[t].length}</span>${g[t].length>COLLAPSE?'<span class="band-meta">点击展开</span>':''}</div>`+
+        `<div class="band-body">`+g[t].map(renderRow).join("")+`</div></section>`;
+      }).join("");
+      renderTabs(g);
     }
 
-    function escapeHtml(value) {
-      return String(value || "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
-    }
-    function escapeAttr(value) {
-      return escapeHtml(value).replace(/`/g, "&#96;");
+    function renderTabs(g){
+      g=g||{};
+      const tabs=TIER.filter(([t])=>g[t]).map(([t,c])=>`<button class="tab" data-target="band-${escapeAttr(t)}">${t}<b>${g[t].length}</b></button>`);
+      const tn=(window.__TRENDING__&&window.__TRENDING__.items)?window.__TRENDING__.items.length:(window.__TRENDING__||[]).length;
+      if(tn) tabs.push(`<button class="tab" data-target="band-trending">GitHub 热榜<b>${tn}</b></button>`);
+      document.querySelector("#tabs").innerHTML=tabs.join("");
     }
 
-    document.addEventListener("click", async (event) => {
-      const button = event.target.closest('[data-action="save"]');
-      if (!button) return;
-      const card = button.closest(".card");
-      await fetch("/api/insights", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          paper_id: card.dataset.id,
-          insight_person: card.querySelector('[name="insight_person"]').value,
-          wiki_url: card.querySelector('[name="wiki_url"]').value
-        })
-      });
-      button.textContent = "已保存";
+    function renderTrendingRow(r){
+      return`<a class="row" href="${escapeAttr(r.url)}" target="_blank" rel="noopener">
+        <span class="sig"><span class="sig-n">${r.rank}</span><span class="sig-bars">${sigBars(parseInt((r.week||'0').replace(/,/g,''))/2000)}</span></span>
+        <span class="tier">trending</span>
+        <span class="date">+${escapeHtml(r.week||'')}/wk</span>
+        <span class="ttl">${escapeHtml(r.repo)}</span>
+        <span class="abs">${escapeHtml(r.desc||'')}</span>
+        <span class="open">${escapeHtml(r.total||'')}★</span>
+      </a>`;
+    }
+    function renderTrending(list){
+      const el=document.querySelector("#trending");
+      if(!list||!list.length){el.innerHTML="";return;}
+      el.innerHTML=`<section class="band" id="band-trending"><div class="band-head" onclick="this.parentElement.classList.toggle('collapsed')"><span class="fold">▾</span><span class="band-bar" style="background:var(--slate)"></span><span class="band-title">GitHub 热榜 · 本周 Top ${list.length}</span><span class="band-count">${list.length}</span><span class="band-meta">未筛选 · github.com/trending</span></div>`+
+        `<div class="band-body">`+list.map(renderTrendingRow).join("")+`</div></section>`;
+    }
+    async function loadTrending(){
+      let data = window.__TRENDING__ || null;
+      if(!data){try{const r=await fetch("/api/trending");data=await r.json();}catch(e){return;}}
+      renderTrending(data.items||data||[]);
+      attachSpy();
+    }
+
+    document.querySelector("#filter").addEventListener("click",e=>{const b=e.target.closest(".ftag");if(!b)return;const t=b.dataset.tag;ACTIVE.has(t)?ACTIVE.delete(t):ACTIVE.add(t);renderFilter();renderPapers();});
+    document.querySelector("#search").addEventListener("input",e=>{Q=e.target.value.trim();renderPapers();});
+    document.querySelector("#sort-score").addEventListener("click",()=>{SORT="score";document.querySelector("#sort-score").classList.add("on");document.querySelector("#sort-date").classList.remove("on");renderPapers();});
+    document.querySelector("#sort-date").addEventListener("click",()=>{SORT="date";document.querySelector("#sort-date").classList.add("on");document.querySelector("#sort-score").classList.remove("on");renderPapers();});
+
+    // sticky tab bar: click → expand + scroll to section
+    document.querySelector("#tabs").addEventListener("click",e=>{
+      const b=e.target.closest(".tab");if(!b)return;
+      const tgt=document.getElementById(b.dataset.target);if(!tgt)return;
+      tgt.classList.remove("collapsed");
+      tgt.scrollIntoView({behavior:"smooth",block:"start"});
     });
+    // scroll-spy: highlight the tab of the section currently in view
+    const spy=new IntersectionObserver((ents)=>{
+      ents.forEach(en=>{if(en.isIntersecting){const id=en.target.id;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.target===id));}});
+    },{rootMargin:"-45% 0px -50% 0px"});
+    function attachSpy(){document.querySelectorAll("section.band[id]").forEach(s=>spy.observe(s));}
 
-    loadPapers().catch((error) => {
-      document.querySelector("#summary").textContent = `读取失败：${error}`;
-    });
+    function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+    function escapeAttr(v){return escapeHtml(v).replace(/`/g,"&#96;");}
+    loadPapers().catch(e=>{document.querySelector("#summary").textContent=`读取失败：${e}`;});
+    loadWeekly().catch(()=>{});
+    loadTrending().catch(()=>{});
   </script>
 </body>
 </html>

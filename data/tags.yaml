@@ -1,0 +1,72 @@
+# 标签词表（机器可读版，4 维）— agent/research_run.py validate 加载
+# 人读版在 docs/references/tag-taxonomy.md；两边同步以本文件为准。
+# tags 字段格式：`维度:值`，例如 ["方向:量化","硬件:NPU","模型:Llama"]。1-8 个，多维度。
+# 方向/应用/硬件 为受控词表（必须命中）；模型 为半自由（starter 列表，新模型可提议后加入）。
+# 公司不进 tags，用 vendors 字段。
+
+方向:
+  - 端侧agent
+  - 推理框架
+  - KV cache
+  - 量化
+  - 剪枝稀疏
+  - 投机解码
+  - 蒸馏
+  - 高效注意力
+  - 高效推理
+  - 稀疏注意力
+  - 调度服务
+  - 云端serving
+  - 记忆
+  - 工具调用
+  - 规划推理
+  - 多模态
+  - 模型架构
+  - MoE
+  - 端云协同
+  - 能耗功耗
+  - 编译部署
+  - 评测基准
+  - 安全隐私
+  - 联邦学习
+  - 测试时自适应
+  - 端侧训练
+
+应用:
+  - OCR
+  - 语音
+  - RAG
+  - 关系抽取
+  - fault-detection
+  - IoT命令
+  - 代码
+  - 长上下文推理
+  - 视频
+  - 机器人
+  - 安全
+
+硬件:
+  - NPU
+  - GPU
+  - CPU
+  - DSP
+  - Jetson
+  - 手机
+  - MCU
+  - DGX
+  - H100
+  - Snapdragon
+  - Apple-Silicon
+  - Ascend
+
+模型:
+  - Llama
+  - Qwen
+  - DeepSeek
+  - BitNet
+  - Phi
+  - MiniCPM
+  - Gemma
+  - SmolLM
+  - Mistral
+  - GPT

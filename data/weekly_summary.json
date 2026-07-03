@@ -1,0 +1,80 @@
+{
+"overview": "本周端侧 AI 技术动态(06-26~07-03):edge AI 板卡/整机(Jetson Orin AI Box、99 TOPS CMI211、Renesas RA8P1 Titan Mini)、端侧 AI 芯片(Amazon 自研 Echo/Fire TV 芯片、DeepX 日本扩张)、端侧模型与引擎(Liquid AI LFM2.5-230M 全引擎支持)、edge AI 平台实测(EdgeCortix USAF 飞行)——端侧 AI 从芯片到整机到部署持续落地。",
+"highlights": [
+{
+"url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNQmVjNVRYYTZRaUFfYUR0RXdEeGFJMUFzVWpycHloeEliWFFSYnRzRUxudk5wT09IVVJqLWhRemtPdzBXNFZTMTdWclVnVVE4Z2QydFhTYXpYNjRvNFhPV3piMDNKVHN0cW4xbFRpU2dFWFRiMWFRM3pQeWY1ODEtLXlnQXBGNHlrd1NDaG93alZ5aU5lVjZMZFJYZk9KZHZsR2liYg?oc=5",
+"topic": "Mekotronics 发布 Jetson Orin AI Box(edge 应用)（07-03）",
+"why": "NVIDIA Jetson 端侧模组做成整机的 edge AI box,面向边缘部署"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQZW41VGlvRUFZV3lrLU1qd2x4Wm95aUFDMl9yNTdWb1RQalZzNGtLZFNhWjctZEQzRkxMdFFLbEFVdU54bE5Cbl9jeUt2RFFNNkhwZHlvUlBQSk1VWnd4cllwdE96c3lTT1hIWEp3V204U282UHNlSTVucU9qVVQwV3NkLTVtc2htdmg2MGtFVGljejNIYktGdDNzYXlVWjU1bVdCa24zUnJKVUlDbXVISFN4bUJzU3picndLZQ?oc=5",
+"topic": "DeepX × Koshida 扩张日本 edge AI 市场（07-03）",
+"why": "DeepX 端侧 AI 芯片借 Koshida 渠道铺日本市场"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNYmxVOS1NRVpNTnVMQ2k0Tk85RENseGNOTS1MYkJPbUI1RXBwdkg5d245VFFUODBBMWNLeHVrU2ZqQTU2X0FVbVd5QVhseW1OXzhiUEEwWnhSTUpkMFUyTFp0b0U1dEcwMGVyT1NZbFRkNVhzbzFiMHpMZlVaVDE1VVR1U2JyeERTQ1VzT25tVG9LdjJQekRyRXNQbHJ3dG1IS1NQQW00R1hZb0l5SnlFaXNZMk1FSHpyVUgyLWNZQjIyZ9IBygFBVV95cUxPajZDTVRsWGV4bWF3bDkyY3cxR0l5elJ6eGxkT2VUUmVQZHBFc3ZBMFhoNU9SbXJzRzlNeU9ENmF5eG94SmprSUw4WGpTek5XWTNKd3l6WllfdVQwV3NHZEUyYnl6b1luUG5IQnRhZUFHYU1OcDQ5M0xYWmo3c3JVRW9oVGgtaDVDWGYxcWdMMWFWUzFkdFU4SHZ5YUVwQWEtNmc3S1ZkWVJMRHREcWJLTWgxckxzYVZqRjFHNXFNRUUtclE5VGtsUG1B?oc=5",
+"topic": "Titan Mini:Renesas RA8P1 小型 Edge AI 板（07-02）",
+"why": "基于 Renesas RA8P1 的更小型 edge AI 开发板,跑 RT-Thread RTOS"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQQ1Zpc2t6cndIS0VwTU02Wi13Z2w3dmRwYzR6VXZ0a1BtR1VSRjZyTjV6dVdic0VYcEQ2TGxPNm1EYmVVVGJraVFRcmVCeHNocVVPcXNNWW5aMDQ4cE5nRHFzbnhBZ2lvZnB3bzZneS1BbWk2cENsZ1pldEJHY3lpaE0wZHI3bXZs?oc=5",
+"topic": "DSP 普及给 edge AI 的三点启示（07-02）",
+"why": "从 DSP 历史看 edge AI 的普及路径与瓶颈"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQRVF6MWxERzd1UTVQRDlIMUJ1dkw2RV9yQXhPR2tyRUc3YWUyS3J6VGJXbTNuUDJTbm1zSU9QZFhjeEpuMDkxQktGQTFUa1M4RERKRE5QLTJyV29IQXFoaGhNQUJiYXJGc0pNRlZzWl8zMjFnV0tnekU1bGdNNXZ3TGFhZXhlSjRlYUYxLXRhUDUxTGYweHY0SnVsR0lEcUZLY3FULQ?oc=5",
+"topic": "EdgeCortix edge AI 平台通过美国空军飞行测试（07-02）",
+"why": "EdgeCortix 端侧 AI 平台在 USAF 飞行演习中实测验证"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOLVVvUUtfNVJFaUR3bmcwbmVad09tdXNvNS00dkVLd0RzRmZYcWdJQ2xzdnJZem4ySXIxQVFTOFp0S1pqb3pWWWtURmx0NnFra2tSVl8xeUllV3VDVGdhQVhyWFUyRnROeVBtWkplVEFTLXZkM3ZUbnRhaDJsQ1FZNzRXUlFLY2h1d2hteFFsYm9NSE8yTDBiMnlMSVg2czlwc1R2Q2RGdmJxSVU?oc=5",
+"topic": "CMI211-1005:可扩展 99 TOPS edge AI 计算机（07-02）",
+"why": "最高 99 TOPS 的可扩展 edge AI 工业计算机"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPN0JjbzdJMGNmZ2JKbm5FUF9DZGdoeW81empkQnNISFU0ZTd5Tm5wNnpFWDVXUjVyWnNWYzhLS0NoNFloZ2hPNTJvUzJUemJRUUV1VXdrUTVtQXpqSHVsLVNTbDhHSnNDa08waFkwRS1wb0dCNjJmNW1WMXl2MkotTHBfdW5URmY0WllrZWZGSzBMcGs2N2ZabVB3UElNV3VrZXB4S2lGMU44SnJkN0hJQUowcXdGZ1Y3?oc=5",
+"topic": "Amazon 自研端侧 AI 芯片给 Echo/Fire TV（07-02）",
+"why": "Amazon 为 Echo/Fire TV 开发自研 on-device AI 芯片,端侧推理下沉"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOZmNIb3E4TEpsNnF0RzFlQUJFWS1tQmVpdERUWjdEWXkyNUE3NlJWV0k3QVVNaW9ZRE0zaVZ3Y2d3d25Tb3ZYSHctaHVmcHRyTUgyTVpjdE1VLWVfSHNQNnMzSHZYbks2eGc4SzQ1UDlVd3BEUFFWbDJiUmdrbUtjRmVoNjZOTGRxWXRsc01PYnN1VVI4UEpiUDB6V2o?oc=5",
+"topic": "7 个将驱动下一台手机的 on-device AI 功能（07-02）",
+"why": "盘点驱动手机换代的 7 项端侧 AI 功能"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPMlNJdnBmOE02Q2M2RlJxbVdKZFhEbHlzTTlMZmZSVF9MUnE3X09XdzZvTkFFN0tieWdxdzNRRURuSGJqTGpVck1kOHNaeURPbm50V3VXeTRVaVlHY0JKWjBxRUtOUHhSejU0MjVpSDFidV9KSkg4YnZSOEhBYXV6UTFablM2c3pBWmlRY3ZNX0ZrQ3NfNFk3Q3QyTVlsR2wybkptQ1RYc0dabW5QMXFMcVJ5a0dDMVM1N2hNUkJlMXR1eF82NkhLN0loUUlsVnBsSkRFR2F3dw?oc=5",
+"topic": "Liquid AI LFM2.5-230M 上架:llama.cpp/MLX/vLLM/SGLang/ONNX 全支持（06-28）",
+"why": "Liquid AI 230M 模型同时适配五大推理引擎,端侧部署友好"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxNUm1VQ3VCOFVwd2xSenZJRGc2YTFSTUdCWTBpMWtYSUVGRGNLS1lTRlRFTkhQUk9OV1FwTTl6SGtUd0ZIS2toUG1ES0xSVHR5ZHE0dWI1RER0S0Q4RzJBOGRuWnlyQWhxMXhhQmFmM1luSFZzMV8xTXdBazcwV3dkR3YwT0lKVkxzSWxDbWZvanlSYlRFUFZtVXBJRWVoU3dwUVcwcmJ4c09hVDdfcEQ5Z0dGTmhILXFuTGpwVW5fS0dUV2wyeEVKOXhFd2ktb2cyaXFZ?oc=5",
+"topic": "DEEPX × Sixfab:树莓派 AI HAT(edge AI)（06-28）",
+"why": "给树莓派加 AI HAT,把 edge AI 推到创客/边缘设备层"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNbmlnWkpabUJub0Y2d05IOGJJRjdFcFB2amI0VEZ2aVdZc0xrdmQ0TndZcHRmVmw4OUxhOXRNRmpISlpkRkVVZUVGbzk2QnJZRWV1WkprTk9ZZ2pYVXZ2cERJdjkxemxyRjlfSm1KRF9oMzNnNjUtQURGQUJmVlp0cGJ4MTJtLXRyNkdITUtVRXJvVGVVZWJhWjR2VHctMFlu?oc=5",
+"topic": "Nota 举办 on-device AI 优化赛（06-29）",
+"why": "韩国 Nota 办端侧 AI 模型优化比赛,扩开发者生态"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9kTUl5RVRjOWg1TXNiTVFQeUY1dXhtWk9fOVhhdlMyaHZIb1ZONkNzRzdKMktBcC16YmhoYm03TGRTQ3k0SzBxM012WXN4OHRneGN6alVmWHJocFZmWjlHcWR0MzM?oc=5",
+"topic": "端侧 AI 时代:基板更忙(K-产业)（06-29）",
+"why": "端侧 AI 推理让芯片基板(substrate)需求暴增,韩国产业视角"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQdW84SnM0LTVTYUF0bnZKTjNUYk02b3J5N05iUzNhTGpabTVBUk1YLTJqWUxQQ29GcDVIaXNWQ2JwczZKTWFQemV1TndrOFBkZXNINTZVS3Iwc3VhdS1QSHpxaTE5UUZNeXRtdWlHc3JfTzl0Wkl3RlNxLTUxSHEzc3FuVXBwYnEtSFk4YkJoTVBfLW5qck02b3pUeFlyVjB5clM0SEFGRmFodU9Kd0FRZ0FLSGFiOEUtYVlLSkEzdw?oc=5",
+"topic": "Avnet 新加坡:聚合生态扩 edge AI（06-30）",
+"why": "Avnet 在新加坡聚合 edge AI 生态,规模化边缘部署"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPcElFWVJnMks3UDloUnVXZlE3QWJPbnB3cUs3MzVpSGpsNm9xcG9xbTJRY0NTWDVxcG9WdFRCNndKZXd1NDFXWUNfcUo4NTZSOXE0UWMxTFM4ZUJXNXZBY0FkTzJxRUh3N3liTTk3WGJUVnNsSUdFd2xTR1A3TVE5ZUJJcVRJcHVXNmlEbHB3LVA1Vjk3dWhlYVo3UnhFRFdRMUlFTjVR?oc=5",
+"topic": "edge AI 时代的闪存性能推进（06-26）",
+"why": "端侧 AI 推理对闪存带宽/功耗的新要求与推进"
+},
+{
+"url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPWDZqbFBMQ2NkS1FhYnhtbHZnVnBldy16OUh6ZUhuSzJ0WTFXcHBMYUtsYk1PclhfdEQycGJfNmlJZkN5RlI2ZmI0cHlLVXZVWFN1c0FzdmlCZ2JJeXVsM2ZyYnZia1J0Q2pZbkVHZkxvdFlPZ1g5S01qM0Rrb2kwaWJEODVfNXBqWDFUTHVWdDB5R3YtMFVpb2hjRUZIRk5xV0cydVl3aGUxYzRtalNCZ2hRMHlLYUlwbGZkUjdLMA?oc=5",
+"topic": "ASRock 工业推出 AI Pathfinder 简化 edge AI 选型（07-01）",
+"why": "ASRock 工业出 AI Pathfinder 工具简化 edge AI 系统选型"
+}
+]
+}

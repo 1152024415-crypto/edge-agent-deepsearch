@@ -6,8 +6,8 @@
 
 Returns papers from the latest accepted research run only. Historical runs may stay in SQLite for audit/debugging, but the display page must not mix old runs into the current radar.
 
-返回当前服务器中可展示的论文/官方动态列表。官方大厂条目固定排序优先；同优先级内默认按分数降序。
-前端按 `category` 分成 `应用` / `框架` / `算法` 三个 tab；每条内容的 `keywords` 用小标签展示。
+返回当前服务器中可展示的论文/官方动态/开源大项目列表。排序按 `source_tier` 优先级（官方动态 > 开源大项目 > 公司项目 > 学校顶会 > 学校预印本）+ `score` 降序。
+前端按标签 chip 多选筛选展示（多标签，一个工作可挂多个 tag）；`source_tier` 用 badge 标注。
 
 Query:
 
@@ -28,12 +28,13 @@ Response:
       "mechanism": "how it works",
       "paper_url": "https://arxiv.org/abs/2606.12345",
       "date": "2026-06-24",
-      "score": 92,
+      "score": 14,
+      "score_relevance": 9,
+      "score_contribution": 5,
       "score_reason": "主题直接命中端侧 agent，报告了明确 benchmark 提升。",
-      "source_type": "学术论文",
-      "is_major_vendor_official": false,
-      "category": "应用",
-      "keywords": ["GUI智能体", "端侧部署", "评测基准"],
+      "source_tier": "学校顶会",
+      "open_source": false,
+      "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
       "insight_person": "",
       "wiki_url": "",
       "authors": "",
@@ -41,6 +42,25 @@ Response:
       "venue": "",
       "recommendation": "纳入",
       "updated_at": "2026-06-25T04:00:00+00:00"
+    }
+  ]
+}
+```
+
+## GET /api/weekly
+
+返回本周热点综述，数据来自 `data/weekly_summary.json`。
+
+Response:
+
+```json
+{
+  "overview": "本周端侧 agent 雷达综述一句话。",
+  "highlights": [
+    {
+      "paper_id": "fresh-edge-agent-paper",
+      "topic": "端侧 VLM 量化部署",
+      "why": "首次在手机 NPU 上跑通 4-bit VLM，延迟 < 100ms。"
     }
   ]
 }
@@ -65,12 +85,13 @@ Request:
       "mechanism": "how it works",
       "paper_url": "https://arxiv.org/abs/2606.12345",
       "date": "2026-06-24",
-      "score": 92,
+      "score": 14,
+      "score_relevance": 9,
+      "score_contribution": 5,
       "score_reason": "主题直接命中端侧 agent，报告了明确 benchmark 提升。",
-      "source_type": "学术论文",
-      "is_major_vendor_official": false,
-      "category": "应用",
-      "keywords": ["GUI智能体", "端侧部署", "评测基准"],
+      "source_tier": "学校顶会",
+      "open_source": false,
+      "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
       "insight_person": "",
       "wiki_url": ""
     }

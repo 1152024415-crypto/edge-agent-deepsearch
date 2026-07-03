@@ -30,6 +30,16 @@
 | `app/storage.py` | SQLite 存储 |
 | `app/page.py` | 页面 shell |
 
+## References
+
+| 文件 | 用途 |
+|---|---|
+| `docs/references/mcp-setup.md` | MCP 配置和工具用法（arXiv/HF/GitHub）+ 项目级 `.mcp.json` |
+| `docs/references/tag-taxonomy.md` | 标签词表人读版（机器版 `data/tags.yaml`） |
+| `docs/references/big-projects-whitelist.md` | 开源大项目白名单 |
+| `docs/references/vendor-research-guide.md` | 厂商调研方法（官方 URL / affiliation 搜法） |
+| `docs/references/vendor-whitelist.md` | 官方域名白名单人读版 |
+
 ## Plans And Debt
 
 | 文件 | 用途 |

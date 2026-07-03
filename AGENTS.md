@@ -15,7 +15,7 @@
 
 ## 项目一句话
 
-端侧 AI Agent 论文雷达：主 code agent 调度调研子 agent 搜索最近两周端侧 agent 相关论文，主 agent 校验后把结构化结果发布到服务器，网页从服务器刷新最新论文列表。
+端侧 AI Agent 论文雷达：主 code agent 调度调研子 agent 搜索最近一周端侧 agent 相关论文，主 agent 校验后把结构化结果发布到服务器，网页从服务器刷新最新论文列表。
 
 ## 架构边界
 
@@ -60,15 +60,15 @@
 
 1. 读 `.agents/skills/edge-agent-research-pipeline/SKILL.md`、`docs/agent-guide/main-agent-workflow.md`、`docs/agent-guide/research-prompt.md`、`output-contract.md`、`validation-rules.md`。强入口，不许跳过。
 2. 检查 `data/.last_run`：读上次调研时间戳，距本次 ≥7 天才跑；<7 天提示"本周已调研"并停止。防重复跑、防拿旧 run 充本周。
-3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（大厂优先、官方域名白名单、14 天窗口、三方向分类、keywords、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
-4. 子 agent 搜索本周（过去 14 天）端侧 agent 论文 + 17 家大厂官方动态，产出易读版 `abstract`/`effects`/`mechanism` + 6 维打分 + `keywords` + `category` + `source_type` + `vendors`。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
+3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（B 档边界、官方域名白名单、7 天窗口、多标签 tags、source_tier、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
+4. 子 agent 用 arXiv MCP + HF Daily Papers MCP + GitHub MCP + websearch 广搜集本周（过去 7 天）端侧 agent 论文 + 18 家大厂官方动态 + 开源大项目 release，产出易读版 `abstract`/`effects`/`mechanism` + 2 维打分 + `tags` + `source_tier` + `open_source` + `vendors`。arXiv date 取自元数据。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
 5. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`。
-6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：结构 + 14 天窗口 + 6 维加总 = score + HTTP 死链检查。校验失败自动拦。
+6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：结构 + 7 天窗口 + 2 维加总 = score + source_tier/tags 校验 + HTTP 死链检查 + arXiv date 核对 + 跨 run 去重 warning。校验失败自动拦。
 7. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
-8. publish 前主 agent 抽检 `is_major_vendor_official=true` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
+8. publish 前主 agent 抽检 `source_tier=官方动态` 和 `source_tier=开源大项目` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 9. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
 10. 服务器 upsert，`GET /api/papers` 刷新最新 run。
-11. （可选）起整理 agent，**prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文**，**逐篇整理 + 即时 POST `/api/paper-detail`**（动态增量推送）：每整理完一篇的 6 段 detail（研究背景与问题 / 贡献点 / 实现方法 / 实验与结果 / 对端侧 agent 的意义 / 局限与未来），立即 POST，不等全部整理完。publish 后详情页先显示「整理中」，每篇 POST 完页面实时从「整理中」变成 6 段内容。
+11. 详情页展示短摘要 + tags + 原文链接（不再有 6 段深度整理；整理 agent 已停用，`detail-prompt.md` 已删）。publish 后列表页和详情页立即可见。
 12. 更新 `data/.last_run` 时间戳为本次调研时间（ISO 8601，如 `2026-06-26T15:00:00+08:00`）。
 13. 本周错误沉淀：进 AGENTS 已知教训 + `docs/agent-guide/validation-rules.md` 规则 + `docs/agent-guide/research-prompt.md` 强化。不靠对话记忆，靠 repo。
 14. 跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py` 确认 harness 健康。
@@ -77,31 +77,34 @@
 
 这是让调研子 agent 在搜索时必须注意的策略：
 
+- **分层调研系统**：调研分 4 层（MCP大量搜集 → 主agent筛选 → 主agent评分 → 自动发布），详见 `docs/harness.md` 分层调研系统设计。三个 MCP 数据源：arXiv MCP（全量搜）/ HF Daily Papers MCP（社区精选）/ GitHub MCP（开源动态，端侧优先）。主 agent 亲自筛选+评分，不全交给子 agent。不设硬数量目标，有多少合格收多少。
+
 - **优先级（高→低）**：
-  1. 大厂官方动态（Apple/Google/Microsoft/OpenAI/Anthropic/Meta/Samsung/Huawei/Qualcomm/MediaTek/小米/OPPO/vivo/荣耀/Alibaba-Qwen/Mistral/面壁，官方博客/产品发布，`is_major_vendor_official: true`，排序最前）
+  1. 大厂官方动态（Apple/Google/Microsoft/OpenAI/Anthropic/Meta/NVIDIA/Samsung/Huawei/Qualcomm/MediaTek/小米/OPPO/vivo/荣耀/Alibaba-Qwen/Mistral/面壁，官方博客/产品发布，`source_tier=官方动态`，命中官方域名，排序最前）
   2. **公司项目**（快手/字节/腾讯/百度/美团/京东/拼多多/网易等公司独立或主导的研究，arXiv 或顶会，affiliation 命中公司）。优先级非常高，排序仅低于大厂官方。
   3. **公司+学校合作顶会项目**（公司联合高校发表顶会）
   4. **学校顶会项目**（高校独立发表顶会顶刊）
-- **至少顶会门槛**：学校项目（无公司 affiliation）必须发表在顶会顶刊（NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / ACL / CVPR / ICCV / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN）。学校项目的纯 arXiv 预印本（非顶会）不收。公司项目 arXiv 或顶会均可。
+- **学校项目门槛**：`学校顶会` 必须发表在顶会顶刊（NeurIPS/ICML/ICLR/MobiSys/SenSys/ASPLOS/ACL/CVPR/ICCV/EMNLP/AAAI/IJCAI/TPAMI/TNNLS/ToN）+ 任何正规大学（不再卡中美名校）。任何大学的 arXiv 预印本（非顶会但强相关）收为 `学校预印本`。公司项目 arXiv 或顶会均可。
 - **排除常见方法无明显创新**：纯前缀缓存+投机解码堆砌、普通量化/剪枝、常规 benchmark，除非有显著新意，否则不收。即使中了顶会也不要，或给低分。
-- **评分口径**（6 维，质量判断由调研 agent 给分，不是代码硬排）：
-  - `score_vendor`（0-25）：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8
-  - `score_contribution`（0-15）：创新度高 12-15；常见方法/工程整合 5-10
-  - `score_open`（0-10）：有开源仓库/数据集/模型开源 5-10；不开源 0
-  - 6 维上限：`score_relevance`(30) + `score_vendor`(25) + `score_contribution`(15) + `score_quality`(15) + `score_recency`(5) + `score_open`(10) = 100，`score` = 6 维加总
-- **vendors 字段**：公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`）。
+- **评分口径**（2 维，质量判断由调研 agent 给分，不是代码硬排）：
+  - `score_relevance`（0-10）：明确端侧部署 8-10；可迁移且作者提到端侧场景 4-7；纯云端无端侧考量 0-3 或排除
+  - `score_contribution`（0-10）：创新度高 7-10；常见方法/工程整合 3-6
+  - `score` = 2 维之和（0-20），排序靠 `source_tier` 优先级 + `score`
+- **source_tier**（来源 facet，替代旧 source_type + is_major_vendor_official）：`官方动态`（18 家大厂官方博客/产品发布，含 NVIDIA，命中官方域名，排序最前）/ `开源大项目`（白名单大项目 release，github.com URL）/ `公司项目`（affiliation 命中公司，vendors 必填）/ `学校顶会`（任何大学顶会顶刊）/ `学校预印本`（任何大学 arXiv 预印本，排序最低，保证新鲜端侧工作不漏）
+- **open_source**：bool facet（有开源仓库/数据集/模型 true），不打分，同等条件开源优先
+- **vendors 字段**：公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`）。当前 run 的 affiliation 核实 defer：未识别公司的论文一律标 `学校预印本`，公司论文待识别。
 - **官方域名硬约束**：非论文条目必须命中官方域名（见 `docs/references/vendor-whitelist.md`），非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
-- **三方向分类**：每条必须归 `应用` / `框架` / `算法` 之一，页面按这三个 tab 分组展示。
+- **多标签 tags**：每条 1-8 个标签，格式 `维度:值`（4 维：方向/应用/硬件/模型，如 `方向:端侧agent`/`硬件:NPU`/`模型:Llama`），取自 `data/tags.yaml` 词表（人读版 `docs/references/tag-taxonomy.md`），多标签，一个工作可挂多个（如「端侧 VLM 量化部署」挂 `方向:端侧agent`+`方向:多模态`+`方向:量化`+`方向:编译部署`）。页面按 4 维 faceted 筛选展示，不是非此即彼。方向/应用/硬件为受控词表，模型为半自由。词表外标签先加进 `data/tags.yaml` 再用。
 - **首页字段人类可读**：`abstract`/`effects`/`mechanism` 用中文短句给人看（这是什么/有什么结果/怎么做到的），详细技术分解放 wiki，不塞首页。
-- **keywords 必填**：每条 1-8 个中文优先关键词（如 `GUI智能体`/`记忆`/`工具调用`），页面用小框标签展示。
-- **arXiv MCP 搜索**：调研 agent 搜索论文优先用 arXiv MCP 工具（`search_papers`/`download_paper`/`read_paper`），比 websearch 更精准。配置见 `~/.config/opencode/opencode.json` 的 `mcp.arxiv`。websearch 作为补充搜大厂官网。
-- **HuggingFace Daily Papers MCP**：调研 agent 用 HF Daily Papers MCP（`get_today_papers`/`get_papers_by_date`）获取社区精选热门论文，和 arXiv MCP 互补。配置见 `~/.config/opencode/opencode.json` 的 `mcp.huggingface`。
+- **keywords 已并入 tags**：原 keywords 字段取消，统一用 `tags`（受控词表）。
+- **MCP 配置**：arXiv MCP / HuggingFace Daily Papers MCP / GitHub MCP 已沉淀为项目级 `.mcp.json`，配置和工具用法见 `docs/references/mcp-setup.md`。调研 agent 搜集优先用 MCP（arXiv 全量搜 / HF 社区精选 / GitHub 大项目 release），websearch 补充搜大厂官网。
+- **开源大项目白名单**：GitHub MCP 只收 `docs/references/big-projects-whitelist.md` 内业界认可大项目（vLLM/SGLang/llama.cpp/ExecuTorch/ADK/TensorRT 等），非白名单小仓不收。
 
 ## 不可违反
 
 - 服务器不负责搜索论文；搜索由 agent 使用自己的搜索、浏览、阅读工具完成。
-- 大厂官方技术博客 / 官方产品发布可收录且排序最前，但必须命中官方域名且 `is_major_vendor_official: true`；非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
-- 时间窗口是当前日期过去 14 天，不允许用旧 `.last_run` 放行过期样例。
+- 大厂官方技术博客 / 官方产品发布可收录且排序最前（`source_tier=官方动态`），但必须命中官方域名；开源大项目 release 用 `source_tier=开源大项目` + github.com URL + 白名单（`docs/references/big-projects-whitelist.md`）。非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
+- 时间窗口是当前日期过去 7 天，不允许用旧 `.last_run` 放行过期样例。
 - 没有本周合格论文时显示空状态，不拿旧数据撑数量。
 - 凑数禁令：本周大厂官方不足就少收，不拿学术充大厂，不拿不确定链接凑数。
 - `paper_url` 必须和论文标题、摘要匹配。
@@ -111,13 +114,19 @@
 
 ## 已知教训
 
-- [2026-06-25] 非官方博客/产品发布冒充论文会污染页面 → 只允许大厂官方技术博客/官方产品发布（官方域名 + `is_major_vendor_official: true`），其余非论文一律排除；普通论文仍要求 `source_type: 学术论文` + 权威论文链接。
-- [2026-06-25] 2025 年旧样例被展示成当前周报 → 时间窗口必须按当前日期过去 14 天硬校验，不能靠旧 `.last_run` 放行。
+- [2026-06-25] 非官方博客/产品发布冒充论文会污染页面 → 只允许大厂官方技术博客/官方产品发布（`source_tier=官方动态` + 官方域名），其余非论文一律排除；普通论文用 `source_tier=学校顶会/公司项目` + 权威论文链接。
+- [2026-06-25] 2025 年旧样例被展示成当前周报 → 时间窗口必须按当前日期过去 7 天硬校验，不能靠旧 `.last_run` 放行。
 - [2026-06-25] GitHub 静态页不是最终形态 → 最终展示由服务器 `GET /api/papers` 刷新；GitHub Pages 只保留 fallback。
 - [2026-06-25] 子 agent 和页面职责混淆 → 子 agent 只产出 research run JSON，主 agent 校验并发布，服务器只接收和展示。
 - [2026-06-25] 新 codeagent 只读散落文档容易漏流程 → 项目内 `.agents/skills/edge-agent-research-pipeline/SKILL.md` 是强入口，AGENTS 必须指向它。
 - [2026-06-26] 主 agent 绕过 research-prompt.md 自写简化 prompt → 子 agent 没守标准 → 编造 404 链接。修复：发起子 agent 时 prompt 必须注入 research-prompt.md 全文，不许自写简化版。
 - [2026-06-26] 本周大厂官方内容稀疏时凑数，拿不确定链接充数。修复：找不到官方 URL 就丢弃，大厂不足就少收，不凑数。
-- [2026-06-26] 整理 agent 产出的 detail 含英文双引号会破坏 JSON 编码 → `docs/agent-guide/detail-prompt.md` 硬约束第 5 条：整段 detail 不许出现 `"` 字符，用「」或不加引号。
+- [2026-06-26] 整理 agent 产出的 detail 含英文双引号会破坏 JSON 编码（方案 B 已停用整理 agent，不再产 detail，此条归档）。
 - [2026-06-26] 调研 agent 标注 vendors/affiliation 只凭作者名推测，没附证据来源 → 用户质疑。修复：vendors/affiliation 标注必须有证据来源（OpenReview profile / Google Scholar / 论文 PDF 作者机构页），score_reason 里写明 affiliation 依据（如「Zhixiang Chi OpenReview profile 显示 Huawei Technologies Ltd，huawei.com 邮箱确认」），不许只凭名字猜。
-- [2026-06-26] 整理 agent 等全部整理完才统一推送 → 页面长时间停在「整理中」。修复：改成逐篇整理 + 即时 POST `/api/paper-detail`（动态增量推送），每篇整理完立即推送，页面实时刷新，不用等全部完成。`docs/agent-guide/detail-prompt.md` 输出方式已改。
+- [2026-06-26] 整理 agent 等全部整理完才统一推送 → 页面长时间停在「整理中」（方案 B 已停用整理 agent，详情页改短摘要+标签+链接，无「整理中」状态，此条归档）。
+- [2026-06-27] 6 维评分表演性太强（relevance 没口径、vendor 按出身加权、维度重叠、跨 run date 漂移）→ 改方案 B：2 维（relevance+contribution，0-20）+ source_tier facet + open_source bool + 多标签 tags。取消 6 段 detail 整理 agent（`detail-prompt.md` 删除）。新增 arXiv date 核对 + 跨 run 去重，根治「旧论文改日期充本周」。
+- [2026-06-27] 强入口文档过时（SKILL/output-contract 写 7天/5维，代码当时是 14天/6维）→ 新 agent 照强入口跑必和 validate 冲突。修复：强入口全量同步到代码实际口径。
+- [2026-06-27] MCP 配置只在用户级 opencode.json，Claude Code runtime 接不上 → 沉淀为项目级 `.mcp.json` + `docs/references/mcp-setup.md`，任何 agent 进来都能配。Windows 上 `command:"uvx"` 不走 shell PATH，用 `cmd /c uvx` 包一层。
+- [2026-06-27] 14 天窗口太宽混入旧内容 → 改 7 天（一周）。硬数量目标（400-500/30-50/10-20）不切实际且诱导凑数 → 改"有多少合格收多少，列表轻量罗列可以多收"。开源大项目白名单不分主次 → 标注端侧推理/端侧agent（ADK/nanoagent）优先，vLLM/TensorRT 次要。query 写死不灵活 → 加自适应（返回少就放宽换词）。
+- [2026-07-03] 部署后只 curl 解析数量 + 跑 tests 就宣布"验证通过"，结果 weekly 是自动糊的噪声（商业/传闻/药物 + 通用 why）质量回归没发现，chrome-devtools 残留标签导致只显 75 篇也没发现——是用户逼着 chromedev 验收才查出。修复：**每次 publish/deploy 后必做渲染验证**（见 harness.md §5 渲染验证）——chrome-devtools 加载线上页 ignoreCache 硬刷新，查 DOM 渲染（row 数/折叠/标签栏）+ **读内容质量**（weekly topic/why、论文摘要真的看不是数条数；weekly 手挑手写不许自动构建）+ console error。curl 对 ≠ 渲染对，tests 过 ≠ 页面好。chrome-devtools profile 锁不是借口，`taskkill //F //IM chrome.exe` 杀掉重连。
+- [2026-07-03] 教训/工作流硬规则放 ~/.claude 本地记忆（换机器没了、别人看不到、不进 git）违反"仓库是唯一记录系统"原则 → 改：项目硬规则一律写进 repo（AGENTS 教训段 / harness 校验段 / SKILL），本地记忆只留个人偏好。

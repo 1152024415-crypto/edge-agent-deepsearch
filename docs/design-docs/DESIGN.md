@@ -21,7 +21,7 @@ main code agent -> research subagent -> research_runs/*.json -> validate -> publ
 
 ### 2. Research Run
 
-调研结果保存在 `research_runs/<run_id>.json`。这是子 agent 和主 agent 之间的交接格式。
+调研结果保存在 `research_runs/<run_id>.json`。这是子 agent 和主 agent 之间的交接格式。**完整字段以 `docs/agent-guide/output-contract.md` 为准**（方案 B：2 维评分 + 多标签 tags + source_tier + open_source），本节只列核心字段。
 
 主字段：
 
@@ -31,8 +31,9 @@ main code agent -> research subagent -> research_runs/*.json -> validate -> publ
 - `mechanism`
 - `paper_url`
 - `date`
-- `score`
-- `source_type`
+- `score`（= score_relevance + score_contribution，0-20）
+- `source_tier`（官方动态 / 开源大项目 / 公司项目 / 学校顶会 / 学校预印本）
+- `tags`（1-8，取自 data/tags.yaml）
 - `insight_person`
 - `wiki_url`
 
@@ -47,7 +48,7 @@ main code agent -> research subagent -> research_runs/*.json -> validate -> publ
 - 必须是真实论文。
 - 必须是当前日期过去 7 天。
 - `paper_url` 必须是 http(s) URL。
-- `score` 必须是 0 到 100。
+- `score` 必须是 0 到 20。
 - `id` 不能重复。
 - 必填字段不能为空。
 

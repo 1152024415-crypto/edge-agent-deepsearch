@@ -1,0 +1,162 @@
+[
+  {
+    "rank": 1,
+    "repo": "xbtlin/ai-berkshire",
+    "url": "https://github.com/xbtlin/ai-berkshire",
+    "total": "8,808",
+    "week": "6,989",
+    "desc": "AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built for Claude Code / Codex. 4 masters' methodologies + multi-agent adversarial analysis."
+  },
+  {
+    "rank": 2,
+    "repo": "simplex-chat/simplex-chat",
+    "url": "https://github.com/simplex-chat/simplex-chat",
+    "total": "17,688",
+    "week": "6,376",
+    "desc": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!"
+  },
+  {
+    "rank": 3,
+    "repo": "ripienaar/free-for-dev",
+    "url": "https://github.com/ripienaar/free-for-dev",
+    "total": "127,884",
+    "week": "4,416",
+    "desc": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev"
+  },
+  {
+    "rank": 4,
+    "repo": "DeusData/codebase-memory-mcp",
+    "url": "https://github.com/DeusData/codebase-memory-mcp",
+    "total": "24,915",
+    "week": "9,873",
+    "desc": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies."
+  },
+  {
+    "rank": 5,
+    "repo": "kunchenguid/no-mistakes",
+    "url": "https://github.com/kunchenguid/no-mistakes",
+    "total": "4,961",
+    "week": "2,091",
+    "desc": "git push no-mistakes"
+  },
+  {
+    "rank": 6,
+    "repo": "google-labs-code/design.md",
+    "url": "https://github.com/google-labs-code/design.md",
+    "total": "24,455",
+    "week": "6,240",
+    "desc": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system."
+  },
+  {
+    "rank": 7,
+    "repo": "calesthio/OpenMontage",
+    "url": "https://github.com/calesthio/OpenMontage",
+    "total": "31,903",
+    "week": "10,199",
+    "desc": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio."
+  },
+  {
+    "rank": 8,
+    "repo": "Robbyant/lingbot-map",
+    "url": "https://github.com/Robbyant/lingbot-map",
+    "total": "9,443",
+    "week": "2,012",
+    "desc": "A feed-forward 3D foundation model for reconstructing scenes from streaming data"
+  },
+  {
+    "rank": 9,
+    "repo": "usestrix/strix",
+    "url": "https://github.com/usestrix/strix",
+    "total": "32,766",
+    "week": "4,743",
+    "desc": "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities."
+  },
+  {
+    "rank": 10,
+    "repo": "JCodesMore/ai-website-cloner-template",
+    "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+    "total": "25,032",
+    "week": "4,843",
+    "desc": "Clone any website with one command using AI coding agents"
+  },
+  {
+    "rank": 11,
+    "repo": "mauriceboe/TREK",
+    "url": "https://github.com/mauriceboe/TREK",
+    "total": "8,946",
+    "week": "2,676",
+    "desc": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support, SSO, budgets, packing lists, and more."
+  },
+  {
+    "rank": 12,
+    "repo": "topoteretes/cognee",
+    "url": "https://github.com/topoteretes/cognee",
+    "total": "26,674",
+    "week": "4,531",
+    "desc": "Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine."
+  },
+  {
+    "rank": 13,
+    "repo": "stablyai/orca",
+    "url": "https://github.com/stablyai/orca",
+    "total": "11,190",
+    "week": "3,574",
+    "desc": "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop and mobile."
+  },
+  {
+    "rank": 14,
+    "repo": "msitarzewski/agency-agents",
+    "url": "https://github.com/msitarzewski/agency-agents",
+    "total": "125,798",
+    "week": "9,484",
+    "desc": "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables."
+  },
+  {
+    "rank": 15,
+    "repo": "interviewstreet/hiring-agent",
+    "url": "https://github.com/interviewstreet/hiring-agent",
+    "total": "4,433",
+    "week": "1,689",
+    "desc": "AI agent to evaluate and score resumes."
+  },
+  {
+    "rank": 16,
+    "repo": "Panniantong/Agent-Reach",
+    "url": "https://github.com/Panniantong/Agent-Reach",
+    "total": "49,318",
+    "week": "8,265",
+    "desc": "Give your AI agent eyes to see the entire internet. Read &amp; search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees."
+  },
+  {
+    "rank": 17,
+    "repo": "browser-use/video-use",
+    "url": "https://github.com/browser-use/video-use",
+    "total": "13,957",
+    "week": "3,389",
+    "desc": "Edit videos with coding agents"
+  },
+  {
+    "rank": 18,
+    "repo": "alibaba/page-agent",
+    "url": "https://github.com/alibaba/page-agent",
+    "total": "21,706",
+    "week": "1,451",
+    "desc": "JavaScript in-page GUI agent. Control web interfaces with natural language."
+  },
+  {
+    "rank": 19,
+    "repo": "diegosouzapw/OmniRoute",
+    "url": "https://github.com/diegosouzapw/OmniRoute",
+    "total": "10,377",
+    "week": "3,197",
+    "desc": "Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline &amp; Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA."
+  },
+  {
+    "rank": 20,
+    "repo": "ogulcancelik/herdr",
+    "url": "https://github.com/ogulcancelik/herdr",
+    "total": "10,281",
+    "week": "2,721",
+    "desc": "agent multiplexer that lives in your terminal."
+  }
+]

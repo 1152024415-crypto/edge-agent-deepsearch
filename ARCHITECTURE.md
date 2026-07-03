@@ -43,7 +43,7 @@ flowchart LR
 ## 服务器 API
 
 - `GET /`：展示页。
-- `GET /api/papers`：返回论文列表，默认按分数降序。
+- `GET /api/papers`：返回论文列表，默认按 source_tier 优先级 + score 降序。
 - `POST /api/research-runs`：接收主 agent 发布的批量调研结果。
 - `POST /api/insights`：更新洞察人和 wiki 链接。
 

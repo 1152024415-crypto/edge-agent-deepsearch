@@ -43,6 +43,9 @@ def main(argv=None) -> int:
         print(f"[ERROR] {exc}", file=sys.stderr)
         return 1
 
+    # Record this run's paper ids so the next validate can flag re-dumped papers.
+    research_run.write_last_run_ids(payload["run_id"], [p["id"] for p in payload["papers"]])
+
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 

@@ -19,7 +19,7 @@ arXiv 自身搜索只匹配标题和摘要，不直接按作者 affiliation 过�
 ### 官方动态识别（非论文条目硬约束）
 
 - 只认 `vendor-whitelist.md` 列出的官方域名及其子域名。
-- 官方技术博客 / 官方产品发布可收录，排序最前，但必须 `is_major_vendor_official: true`。
+- 官方技术博客 / 官方产品发布可收录，`source_tier=官方动态`，排序最前，必须命中官方域名。
 - 新闻站、社媒、第三方解读、GitHub release notes、公众号搬运一律排除。
 
 ---
@@ -62,7 +62,7 @@ arXiv 自身搜索只匹配标题和摘要，不直接按作者 affiliation 过�
 
 ## 中国互联网公司研究项目（8 家）
 
-> 这 8 家优先级仅低于大厂官方，按 `score_vendor` 15-20 区间给分。多数没有独立官方研究门户，**主力靠 arXiv affiliation + GitHub org 搜法**。`vendors` 字段必填公司英文名。
+> 这 8 家优先级仅低于大厂官方，`source_tier=公司项目`（排序低于官方动态和开源大项目）。多数没有独立官方研究门户，**主力靠 arXiv affiliation + GitHub org 搜法**。`vendors` 字段必填公司英文名，并在 `score_reason` 附 affiliation 证据来源。
 
 | 公司 | 官方动态来源 | websearch 关键词 | arXiv affiliation | GitHub org / 重要项目 |
 |---|---|---|---|---|

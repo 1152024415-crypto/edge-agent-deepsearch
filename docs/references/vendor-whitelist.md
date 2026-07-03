@@ -1,6 +1,6 @@
 # 大厂白名单（affiliation 判定）
 
-> 供评分体系"大厂关联度"维度使用。作者 affiliation 命中以下即计大厂分。
+> 供 `source_tier=官方动态` 官方域名校验 + 公司 affiliation 识别使用。当前评分为 2 维（relevance + contribution，0-20），无"大厂关联度"维度。作者 affiliation 命中以下即标 `公司项目`（vendors 必填）。
 > **随发现新厂商 / 机构追加**（免疫系统：漏判一次就补一条标识）。
 
 ## 设备厂商
@@ -24,12 +24,13 @@
 | OpenAI | OpenAI |
 | Anthropic | Anthropic / Haiku |
 | Meta | Meta / Meta AI / FAIR / Llama |
+| NVIDIA | NVIDIA / nv / TensorRT / TensorRT-LLM / Jetson / DGX |
 | Mistral | Mistral / Ministral |
 | 面壁智能 | ModelBest / 面壁 / MiniCPM |
 | Qwen | Alibaba / 阿里云 / Qwen / Mobile-Agent |
 
 ## 学术顶会顶刊（信息质量维度参考）
-NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / CVPR / ICCV / ACL / EMNLP / TPAMI / TNNLS / ToN
+NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / CVPR / ICCV / ACL / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN
 
 ## 官方来源域名（非论文收录硬约束）
 
@@ -41,6 +42,7 @@ Microsoft: `microsoft.com`, `azure.microsoft.com`, `techcommunity.microsoft.com`
 OpenAI: `openai.com`
 Anthropic: `anthropic.com`
 Meta: `meta.com`, `ai.meta.com`, `about.fb.com`
+NVIDIA: `nvidia.com`, `blogs.nvidia.com`, `developer.nvidia.com`
 Samsung: `samsung.com`, `research.samsung.com`
 Huawei: `huawei.com`
 Qualcomm: `qualcomm.com`

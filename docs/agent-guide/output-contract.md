@@ -16,31 +16,26 @@ research_runs/<run_id>.json
 }
 ```
 
-## 单篇论文字段
+## 单篇条目字段
 
-每个 `papers[]` 必须包含：
+每个 `papers[]` 必须包含（方案 B：2 维评分 + 多标签 + source_tier）：
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
 | `id` | string | 稳定唯一 id，建议小写 kebab-case |
-| `title` | string | 论文标题 |
-| `abstract` | string | agent 大白话整理版，给人看。回答「这是什么」，用中文短句重写，不搬论文摘要原文 |
-| `effects` | string | agent 大白话整理版，给人看。回答「有什么结果」，只写最关键结果；必须来自原文，没有报告写 `未报告` |
-| `mechanism` | string | agent 大白话整理版，给人看。回答「怎么做到的」，用普通话解释核心方法，不写论文式长句 |
-| `paper_url` | string | 论文原文或权威论文页 URL |
-| `date` | string | `YYYY-MM-DD`，必须在当前日期过去 7 天内 |
-| `score` | integer | 0 到 100，必须等于 6 维之和 |
-| `score_relevance` | integer | 0-30，主题契合度 |
-| `score_vendor` | integer | 0-25，大厂关联度。参考口径：大厂官方 20-25；公司项目 15-20；公司+学校合作顶会 10-15；学校顶会 5-10；纯学术无公司 3-8 |
-| `score_contribution` | integer | 0-15，技术贡献度。参考口径：创新度高 12-15；常见方法/工程整合 5-10 |
-| `score_quality` | integer | 0-15，信息质量 |
-| `score_recency` | integer | 0-5，时效新鲜度 |
-| `score_open` | integer | 0-10，开源评分。有开源仓库/数据集/模型开源 5-10，不开源 0 |
-| `score_reason` | string | 分数依据，说明高分/低分来自哪些维度 |
-| `source_type` | string | `学术论文` / `官方技术博客` / `官方产品发布` |
-| `is_major_vendor_official` | boolean | 大厂官方来源置为 `true`，会排序优先 |
-| `category` | string | 三个方向之一：`应用` / `框架` / `算法` |
-| `keywords` | string[] | 1-8 个中文优先关键词，例如 `GUI智能体`、`记忆`、`工具调用` |
+| `title` | string | 论文/动态标题 |
+| `abstract` | string | agent 大白话整理版。回答「这是什么」，中文短句重写，不搬原文 |
+| `effects` | string | agent 大白话整理版。回答「有什么结果」，只写最关键结果；必须来自原文，没有报告写 `未报告` |
+| `mechanism` | string | agent 大白话整理版。回答「怎么做到的」，普通话解释核心方法 |
+| `paper_url` | string | 论文原文 / 权威论文页 / 官方来源页 / github 仓 URL |
+| `date` | string | `YYYY-MM-DD`，必须在当前日期过去 7 天内。**arXiv 条目的 date 必须取自 arXiv 元数据的提交日**，validate 会核对，不许 agent 自填或为塞进窗口改日期 |
+| `score` | integer | 0 到 20，必须等于 `score_relevance + score_contribution` |
+| `score_relevance` | integer | 0-10 端侧契合度。口径：明确端侧部署 8-10 / 可迁移且作者提到端侧场景 4-7 / 纯云端无端侧考量 0-3 或直接排除 |
+| `score_contribution` | integer | 0-10 创新贡献。口径：创新度高 7-10 / 常见方法或工程整合 3-6 |
+| `score_reason` | string | 分数依据 + affiliation 证据来源（OpenReview/Scholar/PDF 机构页），中文优先 |
+| `source_tier` | string | 来源 facet：`官方动态` / `公司项目` / `学校顶会` / `学校预印本` / `开源大项目` |
+| `open_source` | boolean | 是否开源（仓库/数据集/模型开源）。facet，不打分 |
+| `tags` | string[] | 1-8 个标签，必须取自 `data/tags.yaml` 词表（人读版 `docs/references/tag-taxonomy.md`）。多标签，一个工作可挂多个 |
 | `insight_person` | string | 可为空 |
 | `wiki_url` | string | 可为空 |
 
@@ -48,11 +43,18 @@ research_runs/<run_id>.json
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
-| `detail` | string | 整理 agent 产出的 6 段深度整理（研究背景与问题 / 贡献点 / 实现方法 / 实验与结果 / 对端侧 agent 的意义 / 局限与未来），markdown 纯文本。列表页不显示，详情页主体。整理规则见 `docs/agent-guide/detail-prompt.md` |
 | `authors` | string | 作者 |
-| `vendors` | string | 机构/厂商。公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`） |
+| `vendors` | string | 机构/厂商。`source_tier=公司项目` 必填公司英文名（如 `Kuaishou` / `ByteDance` / `Tencent`），并附证据来源写在 `score_reason`。当前 run 的 affiliation 核实 defer：未识别公司的论文一律标 `学校预印本`，公司论文待识别 |
 | `venue` | string | arXiv / OpenReview / ACL / CVF 等 |
 | `recommendation` | string | 默认 `纳入` |
+
+## source_tier 口径
+
+- `官方动态`：18 家设备/模型大厂官方技术博客或官方产品发布。`paper_url` 必须命中官方域名白名单（见 `docs/references/vendor-whitelist.md`）。排序最前。
+- `开源大项目`：业界认可的开源大项目重大 release/更新（见 `docs/references/big-projects-whitelist.md`，如 vLLM/SGLang/llama.cpp/ExecuTorch/ADK/TensorRT 等）。`paper_url` 必须是 `github.com` 仓地址。非白名单小仓不收。
+- `公司项目`：快手/字节/腾讯/百度/美团/京东/拼多多/网易等公司独立或主导的研究（arXiv 或顶会，affiliation 命中公司）。`vendors` 必填。
+- `学校顶会`：任何高校独立发表的顶会顶刊（NeurIPS/ICML/ICLR/MobiSys/SenSys/ASPLOS/ACL/CVPR/ICCV/EMNLP/AAAI/IJCAI/TPAMI/TNNLS/ToN）。不再卡中美名校——任何正规大学都收。
+- `学校预印本`：任何大学作者发的 arXiv 预印本（非顶会但主题强相关）。新鲜端侧工作多先上 arXiv，这一档保证雷达不漏最新真东西；排序最低。
 
 ## 示例
 
@@ -62,23 +64,23 @@ research_runs/<run_id>.json
   "generated_at": "2026-06-25T12:00:00+08:00",
   "papers": [
     {
-      "id": "fresh-edge-agent-paper",
-      "title": "Fresh Edge Agent Paper",
-      "abstract": "A real paper abstract about edge-side agent execution.",
-      "effects": "Reports 23% latency reduction on an on-device benchmark.",
-      "mechanism": "Uses a planner-executor loop with compressed local memory.",
-      "paper_url": "https://arxiv.org/abs/2606.12345",
-      "date": "2026-06-24",
-      "score": 92,
-      "score_reason": "主题直接命中端侧 agent，报告了明确 benchmark 提升。",
-      "source_type": "学术论文",
-      "is_major_vendor_official": false,
-      "category": "应用",
-      "keywords": ["GUI智能体", "端侧部署", "评测基准"],
+      "id": "curator-on-device-memory-2026",
+      "title": "Forget to Improve: On-Device LLM-Agent Continual Learning via Budget-Curated Memory",
+      "abstract": "用一个「每字节净价值」分数管理端侧 agent 的经验记忆生命周期，在 RAM 和能耗预算下做裁剪、共享和信任门控。",
+      "effects": "Jetson 测试床上内存减 2.7 倍、上行链路减 2.4 倍，注入攻击成功率从 0.75 降到 0，任务准确率从 0.528 升到 0.605。",
+      "mechanism": "每条记忆按价值减危害的每字节净分评分，KEEP/SHARE/TRUST 三个决策分别在 RAM、上行链路、来源维度门控，实现亚线性上下文增长。",
+      "paper_url": "https://arxiv.org/abs/2606.25115",
+      "date": "2026-06-23",
+      "score": 14,
+      "score_relevance": 9,
+      "score_contribution": 5,
+      "score_reason": "明确端侧 LLM agent 记忆管理，Jetson 真机验证（relevance 9）。净价值每字节框架有创新但属记忆治理细分（contribution 5）。作者机构 arXiv 元数据未明确标注，vendors 空。",
+      "source_tier": "学校顶会",
+      "open_source": false,
+      "tags": ["方向:端侧agent", "方向:记忆", "方向:能耗功耗", "方向:安全隐私"],
       "insight_person": "",
       "wiki_url": "",
-      "authors": "Author A; Author B",
-      "vendors": "Example Lab",
+      "authors": "Beining Wu; Zihao Ding; Jun Huang; Yanxiao Zhao",
       "venue": "arXiv",
       "recommendation": "纳入"
     }
@@ -88,23 +90,13 @@ research_runs/<run_id>.json
 
 ## 首页可读性要求
 
-`abstract`、`effects`、`mechanism` 是首页展示字段，必须由 agent 用大白话中文整理，写给人看，不复制论文原文：
+`abstract`、`effects`、`mechanism` 是首页展示字段，必须由 agent 用大白话中文整理，写给人看，不复制原文：
 
-- `abstract` 页面显示为「这是什么」：一句话说明这条内容解决什么问题，用普通话重写，不搬摘要原文。
-- `effects` 页面显示为「有什么结果」：只写最关键结果；必须来自原文，没有量化结果写 `未报告`，不许编造或推测。
-- `mechanism` 页面显示为「怎么做到的」：用普通话解释核心方法，不写论文式长句，不堆术语。
-- 详细技术分解、公式、长段对比放到 wiki，不塞进首页字段。
-- `score_reason` 必须中文优先，解释为什么高分或为什么待复审。
-- 三字段都禁止粘贴论文 abstract 原文或官方通稿原文；首页是给人读的，不是给搜索引擎抓的。
-
-## detail 字段（详情页深度整理）
-
-`detail` 是可选字段，由主 agent 在 publish 后起整理 agent 单独产出，不进入 research run JSON，而是通过 `POST /api/paper-detail` 写入 DB。
-
-- **内容**：6 段 markdown 纯文本，段落用 `## ` 标题分隔：研究背景与问题 / 贡献点 / 实现方法 / 实验与结果 / 对端侧 agent 的意义 / 局限与未来。
-- **定位**：列表页展示 `abstract`/`effects`/`mechanism` 短句，详情页主体是 `detail` 6 段。两者不重复，detail 是更深一层整理。
-- **产出规则**：整理 agent 的 prompt 模板和硬约束见 `docs/agent-guide/detail-prompt.md`。主 agent 起整理 agent 时必须注入该文件全文，不许自写简化版。
-- **异步**：publish 后列表页立即可见，详情页先显示「整理中」；整理 agent 完成 `POST /api/paper-detail` 后，详情页刷新出 6 段内容。
+- `abstract` 页面显示为「这是什么」：一句话说明这条内容解决什么问题。
+- `effects` 页面显示为「有什么结果」：只写最关键结果；没有量化结果写 `未报告`，不许编造或推测。
+- `mechanism` 页面显示为「怎么做到的」：普通话解释核心方法，不堆术语。
+- `score_reason` 必须中文优先，解释为什么这个分 + affiliation 证据来源。
+- 三字段都禁止粘贴论文 abstract 原文或官方通稿原文。
 
 ## 校验
 
@@ -114,4 +106,4 @@ research_runs/<run_id>.json
 python agent/validate_research_run.py research_runs/<run_id>.json
 ```
 
-校验失败时不能发布。
+校验内容：必填字段、`source_tier` 枚举、`tags` 词表、`date` 7 天窗口、`score`=2 维之和、`source_tier=官方动态` 官方域名、`source_tier=开源大项目` github URL、`source_tier=公司项目` vendors 非空、**paper_url HTTP 死链检查**、**arXiv URL 提交日核对**（防 date 漂移）、**跨 run 去重 warning**（命中上次 run 的 id 提醒，不 fail）。校验失败不能发布。

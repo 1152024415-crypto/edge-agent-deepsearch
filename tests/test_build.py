@@ -13,7 +13,7 @@ import sys
 import tempfile
 import threading
 import unittest
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from unittest import mock
 
@@ -25,23 +25,15 @@ import publish_results
 import research_run
 from app import server as server_app
 
-TODAY = date(2026, 6, 25)
+TODAY = date.today()
+YESTERDAY = (TODAY - timedelta(days=1)).isoformat()
 
 
 def _score_dims(score):
-    """Legal 6-dim breakdown summing to ``score``."""
-    rec = min(5, max(0, score))
-    rem = score - rec
-    op = min(10, max(0, rem))
-    rem -= op
-    rel = min(30, rem)
-    rem -= rel
-    ven = min(25, rem)
-    rem -= ven
-    con = min(15, rem)
-    rem -= con
-    qua = min(15, rem)
-    return rel, ven, con, qua, rec, op
+    """Legal 2-dim breakdown summing to ``score`` (relevance + contribution, each 0-10)."""
+    rel = min(10, max(0, score))
+    con = max(0, score - rel)
+    return rel, con
 
 
 def valid_paper(**overrides):
@@ -51,25 +43,20 @@ def valid_paper(**overrides):
         "abstract": "A real paper abstract about edge-side agent execution.",
         "effects": "Reports 23% latency reduction on an on-device benchmark.",
         "mechanism": "Uses a planner-executor loop with compressed local memory.",
-        "paper_url": "https://arxiv.org/abs/2606.12345",
-        "date": "2026-06-24",
-        "score": 92,
+        "paper_url": "https://openreview.net/forum?id=fresh-edge-agent-paper",
+        "date": YESTERDAY,
+        "score": 14,
         "score_reason": "Strong edge-agent relevance with reported benchmark effect.",
-        "source_type": "学术论文",
-        "is_major_vendor_official": False,
-        "category": "应用",
-        "keywords": ["GUI智能体", "端侧部署", "评测基准"],
+        "source_tier": "学校顶会",
+        "open_source": False,
+        "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
         "insight_person": "",
         "wiki_url": "",
     }
     paper.update(overrides)
-    rel, ven, con, qua, rec, op = _score_dims(paper["score"])
+    rel, con = _score_dims(paper["score"])
     paper.setdefault("score_relevance", rel)
-    paper.setdefault("score_vendor", ven)
     paper.setdefault("score_contribution", con)
-    paper.setdefault("score_quality", qua)
-    paper.setdefault("score_recency", rec)
-    paper.setdefault("score_open", op)
     return paper
 
 

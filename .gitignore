@@ -17,3 +17,15 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code 本地配置（含 secrets/session/memory，不提交）
+.claude/settings.local.json
+.claude/*.local.json
+/.claude/
+
+# 采集/精修中间产物（每周重生成，不提交；arxiv 采集脚本 _arxiv_collect.py 等保留）
+/data/_*.json
+/data/_*.log
+/data/_*.txt
+/data/.last_run
+/data/.last_run_papers.json

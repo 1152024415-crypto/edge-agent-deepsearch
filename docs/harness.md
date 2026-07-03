@@ -4,7 +4,7 @@
 
 ## 1. 目标
 
-端侧 AI Agent 论文雷达：**每周调研一次**本周（过去 14 天）端侧 agent 论文 + 17 家大厂官方动态，校验后发布，网页持久展示最新结果。Harness 保证循环持续正确运作 + 自进化（错误沉淀，下次自动拦），不靠对话记忆。
+端侧 AI Agent 论文雷达：**每周调研一次**本周（过去 7 天）端侧 agent 论文 + 18 家大厂官方动态，校验后发布，网页持久展示最新结果。Harness 保证循环持续正确运作 + 自进化（错误沉淀，下次自动拦），不靠对话记忆。
 
 ## 2. 整体架构
 
@@ -13,10 +13,10 @@
   → 主agent读AGENTS/SKILL/research-prompt(强入口)
   → 发起调研子agent(prompt必须注入research-prompt.md全文+硬约束)
   → 子agent产出 research_runs/run-<week>.json
-  → validate: 结构+死链(自动拦)+14天窗口+6维加总
-  → 主agent抽检大厂条目内容匹配(fetch URL对比标题摘要)
-  → publish → 服务器upsert → 展示最新run(论文/博客tab)
-  → (可选)起整理agent(注入detail-prompt.md)逐篇产6段detail → 即时POST /api/paper-detail → 详情页实时刷新
+  → validate: 结构+死链(自动拦)+7天窗口+2维加总+arXiv date核对+跨run去重
+  → 主agent抽检官方动态/开源大项目条目内容匹配(fetch URL对比标题摘要)
+  → publish → 服务器upsert → 展示最新run(标签筛选)
+  → 详情页: 短摘要+标签+原文链接(无6段整理,整理agent已停用)
   → 错误沉淀: AGENTS教训+validate规则+research-prompt强化
   → 跑测试套件确认harness健康
 ```
@@ -28,15 +28,15 @@
 | 1 | 主 agent 读 AGENTS/SKILL/research-prompt/output-contract/validation-rules | 强入口 |
 | 2 | 检查 `data/.last_run`，距上次 ≥7 天才跑 | 自动 gate |
 | 3 | 发起调研子 agent，**prompt 必须注入 research-prompt.md 全文 + 硬约束**（不许自写简化版） | 流程强制 |
-| 4 | 子 agent 搜索本周论文+大厂官方，产出易读版 abstract/effects/mechanism + 6维 + keywords + category + source_type + vendors | agent |
+| 4 | 子 agent 用 MCP+websearch 广搜集本周论文+大厂官方+开源大项目，产出易读版 abstract/effects/mechanism + 2维 + tags + source_tier + open_source + vendors（arXiv date 取自元数据） | agent |
 | 5 | 保存 `research_runs/run-YYYYMMDD-HHMMSS.json` | 主 agent |
-| 6 | `python agent/validate_research_run.py`：结构 + 14天窗口 + 6维加总=score + **HTTP 死链检查** | **自动拦** |
+| 6 | `python agent/validate_research_run.py`：结构 + 7天窗口 + 2维加总=score + source_tier/tags + **HTTP 死链检查** + **arXiv date 核对** + 跨run去重warning | **自动拦** |
 | 7 | validate 失败：修正或丢弃，**不许凑数** | 流程 |
-| 8 | 主 agent 抽检 `is_major_vendor_official=true` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
+| 8 | 主 agent 抽检 `source_tier=官方动态` 和 `开源大项目` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
 | 9 | `python agent/publish_results.py --server <URL>` | 主 agent |
 | 10 | 服务器 upsert，`GET /api/papers` 刷新最新 run | 自动 |
-| 11 | （可选）起整理 agent，**prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文**，**逐篇整理 + 即时 POST `/api/paper-detail`**（动态增量推送）：每整理完一篇 6 段 detail 立即 POST，不等全部整理完 | 主 agent |
-| 12 | 异步说明：publish 后列表页立即可见，详情页先显示「整理中」；整理 agent 每篇 POST 完页面实时从「整理中」变 6 段内容，不用等全部完成 | 自动 |
+| 11 | 详情页展示短摘要 + tags + 原文链接（整理 agent 已停用，无 6 段 detail，无「整理中」状态） | 自动 |
+| 12 | publish 后列表页和详情页立即可见；页面按标签筛选，source_tier 优先 + score 排序 | 自动 |
 | 13 | 更新 `data/.last_run` 时间戳 | 主 agent |
 | 14 | 本周错误 → AGENTS 教训 + validate 规则 + research-prompt 强化 | 自进化 |
 | 15 | 跑 `tests/` + `app/gates/gate_all.py` 确认 harness 健康 | 自动 |
@@ -45,8 +45,8 @@
 
 - 服务器持续跑 `app/server.py`（本地 systemd/PM2 或远端部署）
 - `GET /api/papers` 只返回最新 run（`storage.list_papers` 按 `received_at DESC` 取最新 run_id）
-- **论文/博客 tab**：`app/page.py` 按 `source_type` 分两 tab——学术论文 / 官方动态（官方技术博客+官方产品发布合并）。tab 内大厂官方按 `is_major_vendor_official DESC` 排前
-- **详情页** `/paper/<id>`：展示深度整理 `detail` + 原文链接
+- **标签筛选**：`app/page.py` 按标签 chip 多选筛选展示（多标签，一个工作可挂多个标签），不再分论文/博客两 tab。排序按 `source_tier` 优先级（官方动态>开源大项目>公司项目>学校顶会>学校预印本）+ `score DESC`
+- **详情页** `/paper/<id>`：展示短摘要（abstract/effects/mechanism）+ tags + 原文链接，无 6 段深度整理（整理 agent 已停用）
 - **静态 fallback** `app/build.py` 生成 `site/index.html`，服务器挂时兜底
 - **空状态**：本周无合格内容显示空，不拿旧数据撑
 
@@ -63,6 +63,7 @@
 **闭环验证（分层）**：
 - **快验证**（每次改 harness 后）：跑 `tests/test_research_pipeline.py` + `test_build` + `app/gates/gate_all.py`，确认代码层规则生效
 - **慢验证**（新策略上线时）：跑一次真调研，确认死链拦、research-prompt 用、易读版产出、不凑数
+- **渲染验证**（每次 publish/deploy 后必做，不只 curl+tests）：用 chrome-devtools 加载线上页（profile 被锁就 `taskkill //F //IM chrome.exe` 杀掉重连），`ignoreCache` 硬刷新，三查：(1) DOM 渲染对——`#papers .row` 数、band 折叠态、标签栏、weekly/trending 渲染条数；(2) 读内容质量——weekly 的 topic/why、论文中文摘要/分数真的看内容不是数条数（weekly 不许自动构建糊弄，手挑+写具体 why）；(3) `list_console_messages` 查 error/404。curl 解析对 ≠ 渲染对，tests 过 ≠ 页面好。
 
 ## 6. 调度
 
@@ -76,18 +77,20 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 
 - **主 agent（codeagent）**：读文档、发起子 agent、validate、抽检、publish、沉淀错误。不自己写调研 prompt（必须用 research-prompt.md）
 - **调研子 agent**：用 research-prompt 搜索，只产出 run JSON。不改代码/服务器/页面
-- **整理子 agent（可选）**：为 paper 产 `detail` 6 段深度整理。prompt 必须注入 `docs/agent-guide/detail-prompt.md` 全文。可选，非每周必跑
+- **整理子 agent**：已停用（方案 B）。详情页改短摘要+tags+原文链接，不再产 6 段 detail
 - **服务器**：只接收校验过的 run，存储展示。**不搜索论文**
 - **凑数禁令**：本周大厂官方不足就少收，不拿学术充大厂，不拿不确定链接凑数
 
 ## 8. 校验规则
 
 **自动校验**（`agent/research_run.py`，发布前必跑）：
-- 必填字段、source_type/category 枚举、date 14 天窗口、score=6维之和、官方源必须 is_major_vendor_official=true + 官方域名白名单、keywords 1-8 中文
-- **死链检查**：每个 paper_url 发 HTTP HEAD，404/不可达 fail；HEAD 不支持 fallback GET 取状态码；每 URL 超时 5s；**离线/断网 warning 跳过**（不 fail，标记"死链未检"）
+- 必填字段、source_tier 枚举、tags 词表（data/tags.yaml）、date 7 天窗口、score=2维之和、`source_tier=官方动态` 必须官方域名、`source_tier=开源大项目` 必须 github.com URL、`source_tier=公司项目` vendors 非空
+- **死链检查**：每个 paper_url 发 HTTP HEAD，HEAD 失败 fallback GET；超时/网络不可达记 alive + warning 不 fail；只有 404 才 fail；每 URL 超时 5s
+- **arXiv date 核对**：paper_url 是 arXiv 时查 arXiv API 取真实提交日，与 JSON date 不一致 fail（防旧论文改日期充本周）；离线 warning 跳过
+- **跨 run 去重**：读 data/.last_run_papers.json，命中上次 run 的 id 给 warning（不 fail，相邻两周窗口有合法重叠）
 
-**半自动抽检**（主 agent publish 前对大厂条目）：
-- fetch 每个 `is_major_vendor_official=true` 的 URL，核验页面内容与标题摘要对应（URL 能开 ≠ 内容对题）
+**半自动抽检**（主 agent publish 前对官方动态/开源大项目条目）：
+- fetch 每个 `source_tier=官方动态` 和 `source_tier=开源大项目` 的 URL，核验页面内容与标题摘要对应（URL 能开 ≠ 内容对题）
 - 可用 `agent/verify_links.py` 辅助（fetch 大厂 URL 返回页面摘要供核验）
 
 ## 9. 数据管理
@@ -104,3 +107,102 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 2. "大白话整理""不凑数"是软约束：没法 100% 自动校验。死链拦假 URL，拦不住"真 URL 弱相关充大厂"——靠 research-prompt + 教训 + 内容抽检兜
 3. 内容匹配抽检半自动：URL 能开 ≠ 内容对题，靠主 agent fetch 抽检
 4. 死链检查误判风险：某些站对 bot 返 403。HEAD fallback GET + 官方域名白名单降低误判，离线时 warning 跳过
+
+## 11. 分层调研系统设计
+
+调研不是一次性全交给子 agent，而是分 4 层：大量搜集 → 主 agent 筛选 → 主 agent 评分 → 自动发布。
+
+### 流程总览
+
+```
+第一层 子agent(MCP搜集)      第二层 主agent(筛选)        第三层 主agent(评分)       第四层 自动(发布)
+┌─────────────────────┐     ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│ arXiv MCP 8轮×100   │     │ 1.日期过滤7天    │     │ 2维评分           │     │ validate(死链+   │
+│ HF Daily 7天×20    │ ─→ │ 2.关键词粗筛      │ ─→ │ vendors附证据     │ ─→ │ arXiv date+      │
+│ GitHub trending+    │     │ 3.过滤GUI agent   │     │ abstract/effects  │     │ 7天+2维+tags)   │
+│   release           │     │ 4.过滤常见方法    │     │ /mechanism重写    │     │ publish          │
+│ 大厂blog 12家fetch  │     │ 5.affiliation粗筛 │     │ 2维加总=score     │     │ hook自动gh-pages │
+└─────────────────────┘     │ 6.死链检查        │     │ tags+source_tier  │     │ 列表+详情        │
+                            │ 7.去重            │     └──────────────────┘     └──────────────────┘
+        尽量广搜集          └──────────────────┘              全量发布
+                                    筛后候选
+```
+
+### 第一层：大量搜集（子 agent，用 MCP 工具，尽量广搜集，不设硬目标）
+
+**三个 MCP 数据源**：
+
+#### arXiv MCP（`arxiv-mcp-server`，工具 `search_papers`）
+- 全量结构化搜索 arXiv，比 websearch 搜 arXiv 精准 10 倍
+- 8 轮搜索，每轮 100 条：
+  1. `"on-device agent"` — 核心词
+  2. `"edge computing agent"` — 边缘计算
+  3. `"mobile LLM inference"` — 端侧推理
+  4. `"NPU agent"` — NPU 加速
+  5. `"agent memory edge"` — 端侧记忆
+  6. `"tool use edge device"` — 工具调用
+  7. `"federated agent"` — 联邦 agent
+  8. `"quantization agent mobile"` — 量化+agent
+- `max_results=100, sort_by="submittedDate"`，`date_from`=7天前，`categories=[cs.AI,cs.LG,cs.CL,cs.RO]`
+- **自适应**：某 query 返回过少就放宽/换词（去引号、换同义词、扩 category），不死守固定 query
+- 结果：去重后约 200-300（视窗口内实际产出，不设硬目标）
+
+#### HuggingFace Daily Papers MCP（`huggingface-daily-paper-mcp`，工具 `get_papers_by_date`）
+- 社区投票精选热门论文，质量比 arXiv 全量高
+- 过去 7 天每天调一次 `get_papers_by_date(date=YYYY-MM-DD)`
+- 每天 ~20 篇，7 天 = ~140 候选
+- 筛选：标题/摘要含端侧关键词 + votes > 10 优先
+- 和 arXiv MCP 互补：HF 精选（质量高覆盖窄）+ arXiv 全量（覆盖广噪音多）
+
+#### GitHub MCP（搜 trending repos + 最新 release，端侧优先）
+- 搜 trending：`edge agent / on-device LLM / mobile AI / NPU` 相关 repos
+- 搜 release：**端侧优先** ExecuTorch / llama.cpp / MLC-LLM / Google ADK / nanoagent；vLLM / SGLang / TensorRT 等通用框架次要（有端侧相关更新才收）
+- 筛选：在 `big-projects-whitelist.md` 白名单内 + 最近 7 天有 release + 主题相关
+- 结果：5-10 个开源框架/项目更新
+
+**大厂 blog（webfetch 12 家厂商博客 URL）**
+- Apple machinelearning.apple.com / Google blog.google / NVIDIA blogs.nvidia.com / Meta ai.meta.com / Samsung research.samsung.com / Qualcomm qualcomm.com/news / MediaTek mediatek.com/tek-talk-blogs / OpenAI openai.com/index / Anthropic anthropic.com/news / Microsoft techcommunity.microsoft.com / Qwen qwenlm.github.io / Mistral mistral.ai/news
+- 直接 fetch 找过去 7 天动态
+- 结果：10-20 条大厂官方动态
+
+**第一层汇总**：arXiv + HF + GitHub + 大厂 blog 去重后视窗口内实际产出，不设硬数量目标（列表轻量罗列，可以多收）。
+
+### 第二层：主 agent 筛选（不交给子 agent）
+
+主 agent 拿到候选后，亲自筛选：
+1. **日期过滤**：保留过去 7 天
+2. **标题+摘要粗筛**：含端侧关键词（on-device/edge/mobile/embedded + agent）
+3. **过滤 GUI agent**：纯 GUI 操作类（屏幕点击/GUI自动化）→ 删，除非非 GUI 创新
+4. **过滤常见方法**：纯前缀缓存+投机解码/普通量化剪枝 → 删，除非显著新意
+5. **affiliation 粗筛**：
+   - 作者含快手/字节/腾讯/百度等 → 标记公司项目
+   - 任何正规大学（清华/北大/上交/浙大/MIT/Stanford/CMU/Berkeley 等，不限中美名校）→ 标记学校项目（顶会→学校顶会，arXiv预印本→学校预印本）
+   - 无机构署名 + 非顶会 → 删
+6. **死链检查**：HTTP HEAD/GET 验证 URL 可访问
+7. **去重**（含跨 run）
+
+结果：筛后候选（不设硬目标，合格都留）
+
+### 第三层：主 agent 评分（不交给子 agent）
+
+主 agent 对筛后候选逐篇评分：
+- 2 维评分（relevance 0-10 + contribution 0-10 = score 0-20）
+- source_tier（官方动态/开源大项目/公司项目/学校顶会/学校预印本）+ open_source bool
+- tags 1-8 个（取自 data/tags.yaml 词表，多标签）
+- vendors 附证据（OpenReview/Google Scholar/arXiv PDF 机构页）
+- abstract/effects/mechanism 用大白话中文重写（轻量，1-2 句，不写详细分析）
+- 2 维加总 = score
+
+结果：全量发布为 research run JSON（有多少收多少，不凑数也不设上限）
+
+### 第四层：自动发布（无整理 agent）
+
+1. validate（2维+死链+arXiv date+7天窗口+tags）+ publish（hook 自动 gh-pages 列表+详情）
+2. 整理 agent 已停用（方案 B）：详情页展示短摘要+tags+原文链接，无 6 段 detail
+
+### 关键设计原则
+
+- **主 agent 参与筛选+评分**：不全交给子 agent，质量可控
+- **子 agent 只做搜集（量大）**：搜集是体力活；评分打标由主 agent 亲自做；整理 agent 已停用
+- **三个 MCP 互补**：arXiv 全量 + HF 精选 + GitHub 开源动态（配置见 `docs/references/mcp-setup.md`，项目级 `.mcp.json`）
+- **量大**：尽量广搜集 → 筛后全量发布（不设硬目标，可以多收），不是从 6-9 篇里选

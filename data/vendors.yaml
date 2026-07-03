@@ -35,6 +35,8 @@ model_vendors:
     aliases: [Meta, Meta AI, FAIR, Llama]
   - name: Mistral
     aliases: [Mistral, Ministral]
+  - name: NVIDIA
+    aliases: [NVIDIA, NVIDIA Research, Jetson, TensorRT, NIM]
   - name: ModelBest
     aliases: [ModelBest, 面壁, 面壁智能, MiniCPM]
   - name: Qwen

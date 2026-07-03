@@ -28,16 +28,11 @@ PAPER_COLUMNS = (
     "date",
     "score",
     "score_relevance",
-    "score_vendor",
     "score_contribution",
-    "score_quality",
-    "score_recency",
-    "score_open",
     "score_reason",
-    "source_type",
-    "is_major_vendor_official",
-    "category",
-    "keywords",
+    "source_tier",
+    "open_source",
+    "tags",
     "insight_person",
     "wiki_url",
     "authors",
@@ -46,6 +41,13 @@ PAPER_COLUMNS = (
     "recommendation",
     "detail",
     "updated_at",
+)
+
+# source_tier 排序优先级（数字小排前）：官方动态 > 开源大项目 > 公司项目 > 学校顶会 > 学校预印本
+TIER_CASE = (
+    "CASE source_tier "
+    "WHEN '官方动态' THEN 0 WHEN '开源大项目' THEN 1 "
+    "WHEN '公司项目' THEN 2 WHEN '学校顶会' THEN 3 WHEN '学校预印本' THEN 4 ELSE 9 END"
 )
 
 
@@ -85,16 +87,11 @@ def init_db(db_path: Path) -> None:
                     date TEXT NOT NULL,
                     score INTEGER NOT NULL,
                     score_relevance INTEGER,
-                    score_vendor INTEGER,
                     score_contribution INTEGER,
-                    score_quality INTEGER,
-                    score_recency INTEGER,
-                    score_open INTEGER,
                     score_reason TEXT,
-                    source_type TEXT NOT NULL,
-                    is_major_vendor_official INTEGER NOT NULL DEFAULT 0,
-                    category TEXT,
-                    keywords TEXT,
+                    source_tier TEXT NOT NULL,
+                    open_source INTEGER NOT NULL DEFAULT 0,
+                    tags TEXT,
                     insight_person TEXT,
                     wiki_url TEXT,
                     authors TEXT,
@@ -107,23 +104,24 @@ def init_db(db_path: Path) -> None:
                 """
             )
             columns = {row["name"] for row in conn.execute("PRAGMA table_info(papers)").fetchall()}
-            for field in ("score_relevance", "score_vendor", "score_contribution", "score_quality", "score_recency", "score_open"):
+            # New-schema columns added to legacy DBs that still carry old score_* columns.
+            for field in ("score_relevance", "score_contribution", "score_reason"):
                 if field not in columns:
                     conn.execute(f"ALTER TABLE papers ADD COLUMN {field} INTEGER")
-            if "score_reason" not in columns:
-                conn.execute("ALTER TABLE papers ADD COLUMN score_reason TEXT")
-            if "is_major_vendor_official" not in columns:
-                conn.execute("ALTER TABLE papers ADD COLUMN is_major_vendor_official INTEGER NOT NULL DEFAULT 0")
-            if "category" not in columns:
-                conn.execute("ALTER TABLE papers ADD COLUMN category TEXT")
-            if "keywords" not in columns:
-                conn.execute("ALTER TABLE papers ADD COLUMN keywords TEXT")
+            if "source_tier" not in columns:
+                conn.execute("ALTER TABLE papers ADD COLUMN source_tier TEXT")
+            if "open_source" not in columns:
+                conn.execute("ALTER TABLE papers ADD COLUMN open_source INTEGER NOT NULL DEFAULT 0")
+            if "tags" not in columns:
+                conn.execute("ALTER TABLE papers ADD COLUMN tags TEXT")
             if "detail" not in columns:
                 conn.execute("ALTER TABLE papers ADD COLUMN detail TEXT")
+            if "recommendation" not in columns:
+                conn.execute("ALTER TABLE papers ADD COLUMN recommendation TEXT")
 
 
 def upsert_run(db_path: Path, payload: dict) -> dict:
-    normalized = research_run.validate_payload(payload)
+    normalized = research_run.validate_payload(payload, skip_network=True)
     timestamp = now_iso()
     with closing(connect(db_path)) as conn:
         with conn:
@@ -139,21 +137,20 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
             )
             for paper in normalized["papers"]:
                 values = {**paper, "run_id": normalized["run_id"], "updated_at": timestamp}
-                values["is_major_vendor_official"] = int(bool(values.get("is_major_vendor_official")))
-                values["keywords"] = json.dumps(values.get("keywords", []), ensure_ascii=False)
+                values["open_source"] = int(bool(values.get("open_source")))
+                values["tags"] = json.dumps(values.get("tags", []), ensure_ascii=False)
                 conn.execute(
                     """
                     INSERT INTO papers (
                         id, run_id, title, abstract, effects, mechanism, paper_url, date, score,
-                        score_relevance, score_vendor, score_contribution, score_quality, score_recency,
-                        score_open, score_reason, source_type, is_major_vendor_official, insight_person,
-                        category, keywords, wiki_url, authors, vendors, venue, recommendation, updated_at
+                        score_relevance, score_contribution, score_reason, source_tier, open_source,
+                        tags, insight_person, wiki_url, authors, vendors, venue, recommendation,
+                        updated_at
                     )
                     VALUES (
                         :id, :run_id, :title, :abstract, :effects, :mechanism, :paper_url, :date,
-                        :score, :score_relevance, :score_vendor, :score_contribution, :score_quality,
-                        :score_recency, :score_open, :score_reason, :source_type, :is_major_vendor_official,
-                        :insight_person, :category, :keywords, :wiki_url, :authors, :vendors, :venue,
+                        :score, :score_relevance, :score_contribution, :score_reason, :source_tier,
+                        :open_source, :tags, :insight_person, :wiki_url, :authors, :vendors, :venue,
                         :recommendation, :updated_at
                     )
                     ON CONFLICT(id) DO UPDATE SET
@@ -166,16 +163,13 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                         date = excluded.date,
                         score = excluded.score,
                         score_relevance = excluded.score_relevance,
-                        score_vendor = excluded.score_vendor,
                         score_contribution = excluded.score_contribution,
-                        score_quality = excluded.score_quality,
-                        score_recency = excluded.score_recency,
-                        score_open = excluded.score_open,
                         score_reason = excluded.score_reason,
-                        source_type = excluded.source_type,
-                        is_major_vendor_official = excluded.is_major_vendor_official,
-                        category = excluded.category,
-                        keywords = excluded.keywords,
+                        source_tier = excluded.source_tier,
+                        open_source = excluded.open_source,
+                        tags = excluded.tags,
+                        insight_person = excluded.insight_person,
+                        wiki_url = excluded.wiki_url,
                         authors = excluded.authors,
                         vendors = excluded.vendors,
                         venue = excluded.venue,
@@ -187,11 +181,21 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
     return {"ok": True, "run_id": normalized["run_id"], "accepted": len(normalized["papers"])}
 
 
+def _attach_row(paper: dict) -> dict:
+    paper["open_source"] = bool(paper.get("open_source"))
+    try:
+        tags = json.loads(paper.get("tags") or "[]")
+    except json.JSONDecodeError:
+        tags = []
+    paper["tags"] = tags if isinstance(tags, list) else []
+    return paper
+
+
 def list_papers(db_path: Path, sort: str = "score") -> list[dict]:
     order_by = (
-        "is_major_vendor_official DESC, score DESC, date DESC, title ASC"
+        f"{TIER_CASE} ASC, score DESC, date DESC, title ASC"
         if sort != "date"
-        else "is_major_vendor_official DESC, date DESC, score DESC, title ASC"
+        else f"{TIER_CASE} ASC, date DESC, score DESC, title ASC"
     )
     with closing(connect(db_path)) as conn:
         latest_run = conn.execute(
@@ -208,15 +212,7 @@ def list_papers(db_path: Path, sort: str = "score") -> list[dict]:
             f"SELECT {', '.join(PAPER_COLUMNS)} FROM papers WHERE run_id = ? ORDER BY {order_by}",
             (latest_run["run_id"],),
         ).fetchall()
-    papers = [dict(row) for row in rows]
-    for paper in papers:
-        paper["is_major_vendor_official"] = bool(paper.get("is_major_vendor_official"))
-        try:
-            keywords = json.loads(paper.get("keywords") or "[]")
-        except json.JSONDecodeError:
-            keywords = []
-        paper["keywords"] = keywords if isinstance(keywords, list) else []
-    return papers
+    return [_attach_row(dict(row)) for row in rows]
 
 
 def update_insight(db_path: Path, payload: dict) -> dict:
@@ -251,14 +247,7 @@ def get_paper(db_path: Path, paper_id: str) -> dict | None:
         ).fetchone()
     if row is None:
         return None
-    paper = dict(row)
-    paper["is_major_vendor_official"] = bool(paper.get("is_major_vendor_official"))
-    try:
-        keywords = json.loads(paper.get("keywords") or "[]")
-    except json.JSONDecodeError:
-        keywords = []
-    paper["keywords"] = keywords if isinstance(keywords, list) else []
-    return paper
+    return _attach_row(dict(row))
 
 
 def update_detail(db_path: Path, payload: dict) -> dict:

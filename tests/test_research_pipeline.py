@@ -4,7 +4,7 @@ import sys
 import tempfile
 import threading
 import unittest
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from unittest import mock
 from urllib import request
@@ -17,23 +17,15 @@ import research_run
 from app import server as server_app
 
 
-TODAY = date(2026, 6, 25)
+TODAY = date.today()
+YESTERDAY = (TODAY - timedelta(days=1)).isoformat()
 
 
 def _score_dims(score):
-    """Return a legal 6-dim breakdown summing to ``score`` (relevance/vendor/contribution/quality/recency/open)."""
-    rec = min(5, max(0, score))
-    rem = score - rec
-    op = min(10, max(0, rem))
-    rem -= op
-    rel = min(30, rem)
-    rem -= rel
-    ven = min(25, rem)
-    rem -= ven
-    con = min(15, rem)
-    rem -= con
-    qua = min(15, rem)
-    return rel, ven, con, qua, rec, op
+    """Return a legal 2-dim breakdown summing to ``score`` (relevance + contribution, each 0-10)."""
+    rel = min(10, max(0, score))
+    con = max(0, score - rel)
+    return rel, con
 
 
 def valid_paper(**overrides):
@@ -43,25 +35,20 @@ def valid_paper(**overrides):
         "abstract": "A real paper abstract about edge-side agent execution.",
         "effects": "Reports 23% latency reduction on an on-device benchmark.",
         "mechanism": "Uses a planner-executor loop with compressed local memory.",
-        "paper_url": "https://arxiv.org/abs/2606.12345",
-        "date": "2026-06-24",
-        "score": 92,
+        "paper_url": "https://openreview.net/forum?id=fresh-edge-agent-paper",
+        "date": YESTERDAY,
+        "score": 14,
         "score_reason": "Strong edge-agent relevance with reported benchmark effect.",
-        "source_type": "学术论文",
-        "is_major_vendor_official": False,
-        "category": "应用",
-        "keywords": ["GUI智能体", "端侧部署", "评测基准"],
+        "source_tier": "学校顶会",
+        "open_source": False,
+        "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
         "insight_person": "",
         "wiki_url": "",
     }
     paper.update(overrides)
-    rel, ven, con, qua, rec, op = _score_dims(paper["score"])
+    rel, con = _score_dims(paper["score"])
     paper.setdefault("score_relevance", rel)
-    paper.setdefault("score_vendor", ven)
     paper.setdefault("score_contribution", con)
-    paper.setdefault("score_quality", qua)
-    paper.setdefault("score_recency", rec)
-    paper.setdefault("score_open", op)
     return paper
 
 
@@ -94,9 +81,9 @@ class ResearchRunValidationTests(unittest.TestCase):
         self.assertEqual(normalized["run_id"], "run-20260625-120000")
         self.assertEqual(len(normalized["papers"]), 1)
         self.assertEqual(normalized["papers"][0]["id"], "fresh-edge-agent-paper")
-        self.assertEqual(normalized["papers"][0]["paper_url"], "https://arxiv.org/abs/2606.12345")
-        self.assertEqual(normalized["papers"][0]["category"], "应用")
-        self.assertEqual(normalized["papers"][0]["keywords"], ["GUI智能体", "端侧部署", "评测基准"])
+        self.assertEqual(normalized["papers"][0]["paper_url"], "https://openreview.net/forum?id=fresh-edge-agent-paper")
+        self.assertEqual(normalized["papers"][0]["source_tier"], "学校顶会")
+        self.assertEqual(normalized["papers"][0]["tags"], ["方向:端侧agent", "方向:记忆", "方向:评测基准"])
 
     def test_rejects_old_papers_for_current_week(self):
         path = write_json(run_payload(valid_paper(date="2025-06-17")))
@@ -106,39 +93,38 @@ class ResearchRunValidationTests(unittest.TestCase):
 
         self.assertIn("outside window", str(ctx.exception))
 
-    def test_rejects_non_paper_sources(self):
-        path = write_json(run_payload(valid_paper(source_type="厂商博客")))
+    def test_rejects_invalid_source_tier(self):
+        path = write_json(run_payload(valid_paper(source_tier="厂商博客")))
 
         with self.assertRaises(research_run.ValidationError) as ctx:
             research_run.load_and_validate(path, today=TODAY)
 
-        self.assertIn("source_type", str(ctx.exception))
+        self.assertIn("source_tier", str(ctx.exception))
 
-    def test_rejects_invalid_category(self):
-        path = write_json(run_payload(valid_paper(category="产品")))
-
-        with self.assertRaises(research_run.ValidationError) as ctx:
-            research_run.load_and_validate(path, today=TODAY)
-
-        self.assertIn("category", str(ctx.exception))
-
-    def test_rejects_empty_keywords(self):
-        path = write_json(run_payload(valid_paper(keywords=[])))
+    def test_rejects_tag_not_in_taxonomy(self):
+        path = write_json(run_payload(valid_paper(tags=["方向:不存在"])))
 
         with self.assertRaises(research_run.ValidationError) as ctx:
             research_run.load_and_validate(path, today=TODAY)
 
-        self.assertIn("keywords", str(ctx.exception))
+        self.assertIn("not in taxonomy", str(ctx.exception))
 
-    def test_accepts_official_major_vendor_blog(self):
+    def test_rejects_empty_tags(self):
+        path = write_json(run_payload(valid_paper(tags=[])))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("tags", str(ctx.exception))
+
+    def test_accepts_official_tier_blog(self):
         path = write_json(
             run_payload(
                 valid_paper(
-                    source_type="官方技术博客",
+                    source_tier="官方动态",
                     paper_url="https://openai.com/research/example",
-                    is_major_vendor_official=True,
                     vendors="OpenAI",
-                    score=99,
+                    score=12,
                     score_reason="Official major vendor source with direct edge-agent relevance.",
                 )
             )
@@ -146,16 +132,14 @@ class ResearchRunValidationTests(unittest.TestCase):
 
         normalized = research_run.load_and_validate(path, today=TODAY)
 
-        self.assertTrue(normalized["papers"][0]["is_major_vendor_official"])
-        self.assertEqual(normalized["papers"][0]["source_type"], "官方技术博客")
+        self.assertEqual(normalized["papers"][0]["source_tier"], "官方动态")
 
     def test_rejects_unofficial_vendor_blog(self):
         path = write_json(
             run_payload(
                 valid_paper(
-                    source_type="官方技术博客",
+                    source_tier="官方动态",
                     paper_url="https://example.com/openai-analysis",
-                    is_major_vendor_official=True,
                     vendors="OpenAI",
                 )
             )
@@ -164,7 +148,28 @@ class ResearchRunValidationTests(unittest.TestCase):
         with self.assertRaises(research_run.ValidationError) as ctx:
             research_run.load_and_validate(path, today=TODAY)
 
-        self.assertIn("official vendor URL", str(ctx.exception))
+        self.assertIn("official vendor domain URL", str(ctx.exception))
+
+    def test_company_tier_requires_vendors(self):
+        path = write_json(run_payload(valid_paper(source_tier="公司项目", vendors="")))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("requires non-empty vendors", str(ctx.exception))
+
+    def test_oss_tier_requires_github_url(self):
+        path = write_json(run_payload(valid_paper(source_tier="开源大项目", paper_url="https://example.com/repo")))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("github.com", str(ctx.exception))
+
+    def test_accepts_school_preprint_tier(self):
+        path = write_json(run_payload(valid_paper(source_tier="学校预印本")))
+        normalized = research_run.load_and_validate(path, today=TODAY)
+        self.assertEqual(normalized["papers"][0]["source_tier"], "学校预印本")
 
 
 class DeadLinkValidationTests(unittest.TestCase):
@@ -227,7 +232,7 @@ class ServerApiTests(unittest.TestCase):
             thread.start()
             try:
                 base_url = f"http://127.0.0.1:{httpd.server_port}"
-                payload = research_run.validate_payload(run_payload(valid_paper(score=88)), today=TODAY)
+                payload = research_run.validate_payload(run_payload(valid_paper(score=14)), today=TODAY)
 
                 publish_result = publish_results.publish_payload(base_url, payload)
                 with request.urlopen(f"{base_url}/api/papers", timeout=5) as resp:
@@ -240,9 +245,9 @@ class ServerApiTests(unittest.TestCase):
         self.assertEqual(publish_result["accepted"], 1)
         self.assertEqual(len(papers_result["papers"]), 1)
         self.assertEqual(papers_result["papers"][0]["id"], "fresh-edge-agent-paper")
-        self.assertEqual(papers_result["papers"][0]["score"], 88)
-        self.assertEqual(papers_result["papers"][0]["category"], "应用")
-        self.assertEqual(papers_result["papers"][0]["keywords"], ["GUI智能体", "端侧部署", "评测基准"])
+        self.assertEqual(papers_result["papers"][0]["score"], 14)
+        self.assertEqual(papers_result["papers"][0]["source_tier"], "学校顶会")
+        self.assertEqual(papers_result["papers"][0]["tags"], ["方向:端侧agent", "方向:记忆", "方向:评测基准"])
 
     def test_server_lists_only_latest_research_run(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -253,14 +258,14 @@ class ServerApiTests(unittest.TestCase):
                 base_url = f"http://127.0.0.1:{httpd.server_port}"
                 old_payload = research_run.validate_payload(
                     {
-                        **run_payload(valid_paper(id="old-paper", title="Old Paper", score=70)),
+                        **run_payload(valid_paper(id="old-paper", title="Old Paper", score=10)),
                         "run_id": "run-20260625-old",
                     },
                     today=TODAY,
                 )
                 new_payload = research_run.validate_payload(
                     {
-                        **run_payload(valid_paper(id="new-paper", title="New Paper", score=90)),
+                        **run_payload(valid_paper(id="new-paper", title="New Paper", score=16)),
                         "run_id": "run-20260625-new",
                     },
                     today=TODAY,
@@ -277,7 +282,7 @@ class ServerApiTests(unittest.TestCase):
 
         self.assertEqual([paper["id"] for paper in papers_result["papers"]], ["new-paper"])
 
-    def test_server_sorts_official_major_vendor_items_first(self):
+    def test_server_sorts_official_tier_first(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             httpd = server_app.create_server(("127.0.0.1", 0), Path(tmpdir) / "papers.sqlite")
             thread = threading.Thread(target=httpd.serve_forever, daemon=True)
@@ -286,15 +291,14 @@ class ServerApiTests(unittest.TestCase):
                 base_url = f"http://127.0.0.1:{httpd.server_port}"
                 payload = research_run.validate_payload(
                     run_payload(
-                        valid_paper(id="academic-high-score", score=99),
+                        valid_paper(id="academic-high-score", score=16),
                         valid_paper(
                             id="official-vendor-lower-score",
                             title="Official Vendor Update",
-                            source_type="官方技术博客",
+                            source_tier="官方动态",
                             paper_url="https://openai.com/research/example",
-                            is_major_vendor_official=True,
                             vendors="OpenAI",
-                            score=80,
+                            score=10,
                             score_reason="Official major vendor source.",
                         ),
                     ),
@@ -310,7 +314,7 @@ class ServerApiTests(unittest.TestCase):
                 httpd.server_close()
 
         self.assertEqual(papers_result["papers"][0]["id"], "official-vendor-lower-score")
-        self.assertTrue(papers_result["papers"][0]["is_major_vendor_official"])
+        self.assertEqual(papers_result["papers"][0]["source_tier"], "官方动态")
 
 
 if __name__ == "__main__":
