@@ -35,7 +35,6 @@
     .note-link.active{background:#fbeae3;color:var(--amber);font-weight:600}
     .art{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:22px 28px;min-height:60vh}
     .art:empty::before{content:"选一篇笔记 →";color:var(--faint);font-family:"IBM Plex Mono",monospace}
-    /* markdown prose */
     .art h1{font-family:"IBM Plex Sans",sans-serif;font-size:22px;letter-spacing:0;margin:0 0 6px;border-bottom:1px solid var(--rule);padding-bottom:8px}
     .art h2{font-size:17px;margin:26px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--hair)}
     .art h3{font-size:14.5px;margin:18px 0 6px;color:var(--ink)}
@@ -76,62 +75,59 @@
       const el = document.querySelector('#side');
       if(!NOTES.length){el.innerHTML='<div class="side-title">无笔记</div>';return;}
       el.innerHTML = '<div class="side-title">collections</div>' + NOTES.map(c =>
-        `<div class="coll">
-           <div class="coll-name">${esc(c.name)}</div>
-           ${c.desc?`<div class="coll-desc">${esc(c.desc)}</div>`:''}
-           ${(c.notes||[]).map(n=>`<div class="note-link" data-slug="${esc(c.slug)}" data-file="${escAttr(n.file)}" data-title="${esc(n.title)}">${esc(n.title)}</div>`).join('')}
-         </div>`).join('') +
+        '<div class="coll">' +
+           '<div class="coll-name">' + esc(c.name) + '</div>' +
+           (c.desc ? '<div class="coll-desc">' + esc(c.desc) + '</div>' : '') +
+           (c.notes||[]).map(n => '<div class="note-link" data-slug="' + esc(c.slug) + '" data-file="' + escAttr(n.file) + '" data-title="' + esc(n.title) + '">' + esc(n.title) + '</div>').join('') +
+         '</div>').join('') +
         '<div class="nb-foot">markdown · client-rendered</div>';
-      el.addEventListener('click',e=>{
-        const b=e.target.closest('.note-link'); if(!b)return;
-        location.hash = `${b.dataset.slug}/${b.dataset.file}`;
+      el.addEventListener('click', function(e){
+        var b = e.target.closest('.note-link'); if(!b) return;
+        location.hash = b.dataset.slug + '/' + b.dataset.file;
       });
     }
 
-    async function selectNote(slug, file){
-      const link = document.querySelector(`.note-link[data-slug="${cssEsc(slug)}"][data-file="${cssEsc(file)}"]`);
-      document.querySelectorAll('.note-link.active').forEach(n=>n.classList.remove('active'));
+    function selectNote(slug, file){
+      var link = document.querySelector('.note-link[data-slug="' + slug + '"][data-file="' + file + '"]');
+      document.querySelectorAll('.note-link.active').forEach(function(n){n.classList.remove('active');});
       if(link) link.classList.add('active');
-      const art = document.querySelector('#art');
+      var art = document.querySelector('#art');
       art.innerHTML = '<div style="color:var(--faint);font-family:IBM Plex Mono,monospace">loading…</div>';
-      const url = `notes/${encodeURIComponent(slug)}/${encodeURIComponent(file)}`;
-      try{
-        const res = await fetch(url);
-        if(!res.ok){art.innerHTML = `<p>加载失败 (${res.status})：${esc(url)}</p>`;return;}
-        const md = await res.text();
-        const html = marked.parse(md);
+      var url = 'notes/' + encodeURIComponent(slug) + '/' + encodeURIComponent(file);
+      fetch(url).then(function(res){
+        if(!res.ok){art.innerHTML = '<p>加载失败 (' + res.status + ')：' + esc(url) + '</p>';return null;}
+        return res.text();
+      }).then(function(md){
+        if(md == null) return;
+        var html = marked.parse(md);
         art.innerHTML = html;
-        // rewrite relative image src -> notes/<slug>/<basename>
-        art.querySelectorAll('img').forEach(img=>{
-          const s=img.getAttribute('src');
-          if(s && !/^(https?:|\/|data:)/.test(s)) img.src = `notes/${slug}/${s.split('/').pop()}`;
-        });
-        // rewrite relative anchor hrefs that point to local md/images? leave as-is.
+        var imgs = art.querySelectorAll('img');
+        for(var i=0;i<imgs.length;i++){
+          var s = imgs[i].getAttribute('src');
+          if(s && !/^(https?:|\/|data:)/.test(s)) imgs[i].src = 'notes/' + slug + '/' + s.split('/').pop();
+        }
         window.scrollTo(0,0);
-        CURRENT = {slug,file};
-      }catch(e){art.innerHTML = `<p>加载出错：${esc(String(e))}</p>`;}
+        CURRENT = {slug:slug, file:file};
+      }).catch(function(e){art.innerHTML = '<p>加载出错：' + esc(String(e)) + '</p>';});
     }
 
     function route(){
-      const h = location.hash.slice(1); // slug/file
-      if(!h){ // default first note
-        if(NOTES[0] && NOTES[0].notes && NOTES[0].notes[0])
-          selectNote(NOTES[0].slug, NOTES[0].notes[0].file);
+      var h = location.hash.slice(1);
+      if(!h){
+        if(NOTES[0] && NOTES[0].notes && NOTES[0].notes[0]) selectNote(NOTES[0].slug, NOTES[0].notes[0].file);
         return;
       }
-      const idx = h.indexOf('/');
-      if(idx<0) return;
-      const slug = h.slice(0,idx), file = h.slice(idx+1);
-      selectNote(slug, file);
+      var idx = h.indexOf('/');
+      if(idx < 0) return;
+      selectNote(h.slice(0, idx), h.slice(idx + 1));
     }
 
-    function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-    function escAttr(v){return esc(v).replace(/`/g,'&#96;');}
-    function cssEsc(v){return String(v).replace(/["\]/g,'\$&');}
+    function esc(v){v = String(v==null?'':v); return v.replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function escAttr(v){return esc(v).replace(/`/g, '&#96;');}
 
     renderSide();
     route();
-    window.addEventListener('hashchange',route);
+    window.addEventListener('hashchange', route);
   </script>
 </body>
 </html>
