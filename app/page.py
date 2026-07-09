@@ -28,6 +28,10 @@ INDEX_HTML = """<!doctype html>
     h1 .sub{font-family:"IBM Plex Sans",sans-serif;font-weight:500;font-size:13px;color:var(--muted);letter-spacing:0;margin-left:8px}
     .scope-stats{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted)}
     .scope-stats b{color:var(--ink);font-weight:600}
+    .nav-link{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:3px 9px;text-decoration:none;white-space:nowrap}
+    .nav-link:hover{background:var(--amber);color:#fff}
+    .week-switch{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:3px 6px;background:#fbfcfd;cursor:pointer}
+    .week-switch:hover{border-color:var(--ink)}
     .sweep{height:2px;margin:12px -16px 0;background:linear-gradient(90deg,transparent 0%,var(--hair) 20%,var(--hair) 80%,transparent 100%);position:relative;overflow:hidden}
     .sweep::after{content:"";position:absolute;inset:0;width:30%;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:sweep 3.2s linear infinite}
     @keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
@@ -129,6 +133,8 @@ INDEX_HTML = """<!doctype html>
       <div class="scope-top">
         <h1>RADAR<span class="sub">端侧 AI Agent 信号周报</span></h1>
         <div class="scope-stats" id="summary">scanning…</div>
+        <a class="nav-link" href="notes.html">调研笔记 ↗</a>
+        <select class="week-switch" id="week-switch" title="切换周"></select>
       </div>
       <div class="sweep"></div>
       <div class="controls">
@@ -292,6 +298,18 @@ INDEX_HTML = """<!doctype html>
 
     function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
     function escapeAttr(v){return escapeHtml(v).replace(/`/g,"&#96;");}
+    function renderWeekSwitch(){
+      const ws=window.__WEEKS__||[];
+      const sel=document.querySelector('#week-switch');
+      if(!ws.length){sel.style.display='none';return;}
+      const mine=window.__WEEK_LABEL__||null;
+      sel.innerHTML=ws.map(w=>{
+        const isMine=(w.current&&mine===null)||(w.label===mine);
+        return `<option value="${escapeAttr(w.href)}"${isMine?' selected':''}>${w.current?'本周 · ':''}${escapeHtml(w.title)}</option>`;
+      }).join('');
+    }
+    document.querySelector('#week-switch').addEventListener('change',e=>{if(e.target.value&&e.target.value!==location.pathname)location.href=e.target.value;});
+    renderWeekSwitch();
     loadPapers().catch(e=>{document.querySelector("#summary").textContent=`读取失败：${e}`;});
     loadWeekly().catch(()=>{});
     loadTrending().catch(()=>{});

@@ -166,6 +166,27 @@ class RenderPageTest(unittest.TestCase):
         self.assertIn('href="../paper/abc.html"', out)
         self.assertIn('href="../paper/${escapeAttr(p.id)}.html"', out)
 
+    def test_render_page_rewrites_notes_html_link_for_static_subdir(self):
+        html = '<a href="notes.html">调研笔记</a>'
+        out = build_app.render_page(html, [], {"overview": ""}, {"items": []}, [],
+                                    week_label=None, weeks_base="../", runtime=False)
+        self.assertIn('href="../notes.html"', out)
+        self.assertNotIn('href="notes.html"', out)
+        # runtime keeps notes.html as-is (no rewrite)
+        out_rt = build_app.render_page(html, [], {"overview": ""}, {"items": []}, [],
+                                       week_label=None, weeks_base="../", runtime=True)
+        self.assertIn('href="notes.html"', out_rt)
+
+
+class PageSwitcherTest(unittest.TestCase):
+    def test_index_html_has_switcher_select_and_js(self):
+        from app.page import INDEX_HTML
+        self.assertIn('id="week-switch"', INDEX_HTML)
+        self.assertIn("renderWeekSwitch", INDEX_HTML)
+        # reads the inlined globals
+        self.assertIn("window.__WEEKS__", INDEX_HTML)
+        self.assertIn("window.__WEEK_LABEL__", INDEX_HTML)
+
 
 class WeekArchiveBuildTest(unittest.TestCase):
     def setUp(self):

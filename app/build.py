@@ -83,6 +83,7 @@ def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, r
     # /paper/<id> links so they hit the live detail route.
     if not runtime:
         html = re.sub(r'href="/paper/([^"]+)"', r'href="' + weeks_base + r'paper/\1.html"', html)
+        html = re.sub(r'href="notes\.html"', f'href="{weeks_base}notes.html"', html)
     return html
 
 
