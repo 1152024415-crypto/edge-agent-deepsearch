@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Hawk: Harnessing Hardware-Aware Knowledge for High-Performance NPU Kernel Generation</h1>
-<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span>  2026-07-02 · Junyi Wen, Ruiyan Zhuang, Yongjia Xu et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:剪枝稀疏</span><span class="tag">方向:蒸馏</span><span class="tag">方向:记忆</span><span class="tag">方向:评测基准</span><span class="tag">硬件:NPU</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">Hawk 是免训练框架,用硬件感知知识合成、瓶颈感知检索与效果驱动蒸馏,让 LLM 为 NPU 自动生成可高性能执行的内核。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">在真实 NPU 工作负载上生成准确率从 49.4% 提升到 80.0%,执行速度最高 2.2 倍于 SOTA。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：面向 NPU 内核生成,端侧硬件栈;免训练框架与三模块设计创新度高。</div>
+<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span>  2026-07-02 · Junyi Wen; Ruiyan Zhuang; Yongjia Xu; Pengtu Li; Rui Zou; Hongyi Chen; Chingman Wan; Puxu Yang / arXiv</div>
+<div class="tags"><span class="tag">方向:编译部署</span><span class="tag">硬件:NPU</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">用 LLM 做高性能 NPU kernel 生成的 training-free 框架，弥补硬件先验缺失。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">真实 NPU 工作负载上生成准确率从 49.4% 提到 80.0%，执行速度最多比 SOTA 快 2.2 倍。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">三模块：运行时知识合成（Triple-Part 可执行知识表示耦合错误上下文与可执行语义）；瓶颈感知检索（2D 检索投到正交语法与硬件语义空间）；效果驱动知识蒸馏（LLM 语义仲裁按执行反馈剪错除冗）。</span></div>
+<div class="score-reason">评分依据：明确 NPU kernel 生成（relevance 9）。硬件感知知识+2D 检索+执行反馈蒸馏有高创新（contribution 7）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01590" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

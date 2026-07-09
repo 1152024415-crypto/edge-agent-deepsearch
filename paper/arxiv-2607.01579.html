@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>OmniPilot: An Uncertainty-Aware LLM Inference Advisor for Heterogeneous GPU Clusters</h1>
-<div class="meta"><span class="score">8</span> <span class="tier school">学校预印本</span>  2026-07-02 · D. Balamurugan, Thomas W. Bush / arXiv</div>
-<div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:KV cache</span><span class="tag">方向:评测基准</span><span class="tag">方向:云端serving</span><span class="tag">硬件:GPU</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">OmniPilot 是异构 GPU 集群上的 LLM 推理启动顾问,用保形校准分位数成本模型加 OOD 弃权层预测配置成本并排序。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">460 次基准上吞吐预测 MAPE 6.2%、top-1 准确率 95%、效用遗憾 0.003;OOD 弃权层成功标记全部 5 个低置信点。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：云端 GPU 集群配置顾问,非端侧。</div>
+<div class="meta"><span class="score">9</span> <span class="tier school">学校预印本</span>  2026-07-02 · D. Balamurugan; Thomas W. Bush / arXiv</div>
+<div class="tags"><span class="tag">方向:云端serving</span><span class="tag">方向:调度服务</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">异构 GPU 集群上 LLM serving 的不确定性感知启动顾问，预测配置代价并 abstain。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">A100/H100/H200 四种精度 460 次基准上吞吐 MAPE 6.2%、log 空间 R²=0.92；top-1 准确率 95%、平均效用遗憾 0.003；OOD holdout 上 abstention 层成功标记全部 5 个低置信点。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">用共形校准分位数代价模型（八项 serving 目标）配 OOD abstention 层，按校准到操作者偏好的经济效用度量排序配置。</span></div>
+<div class="score-reason">评分依据：云端异构 GPU serving 配置顾问（relevance 4，云端serving）。共形校准+OOD abstention 有创新（contribution 5）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01579" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>SAB-LVLM: Significance-Aware Binarization for Large Vision-Language Models</h1>
-<div class="meta"><span class="score">14</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-07-02 · Qi Lyu, Jiahua Dong, Baichen Liu et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:记忆</span><span class="tag">方向:多模态</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">SAB-LVLM 针对大型视觉语言模型做显著性感知二值化,用空间显著性图区分单模态与跨模态激活权重,在约 1-bit 压缩下优于已有二值化 PTQ 方法。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">约 1-bit 压缩约束下优于现有 binary PTQ 方法;未报告具体精度数字。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：二值化(量化)面向资源受限设备;跨层跨模态显著性图+交替更新,创新较高。</div>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-07-02 · Qi Lyu; Jiahua Dong; Baichen Liu; Xudong Wang; Mingfei Han; Yulun Zhang; Fahad Shahbaz Khan; Salman Khan / arXiv</div>
+<div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:多模态</span><span class="tag">方向:高效推理</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">为大型视觉语言模型做显著度感知的二值化，按层与模态区分权重重要性。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在约 1bit 压缩约束下优于现有二值 PTQ 方法。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">为文本与视觉输入构建 Hessian 矩阵，提出空间显著度图区分单模态与跨模态激活的全精度权重，再用模态引导整合得显著度二值化图，作为误差再加权项并入二值化目标，交替显著度加权更新。</span></div>
+<div class="score-reason">评分依据：二值化面向资源受限设备 VLM 部署（relevance 7）。显著度感知跨模态二值化有创新（contribution 6）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01876" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

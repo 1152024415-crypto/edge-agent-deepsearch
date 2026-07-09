@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Do Newer Lightweight CNNs Perform Better Under Resource Constraints? A Controlled Multigenerational Study of Architecture, Initialization, Training Budget, and Efficiency</h1>
-<div class="meta"><span class="score">12</span> <span class="tier school">学校预印本</span>  2026-07-02 · Tasnim Shahriar / arXiv</div>
-<div class="tags"><span class="tag">方向:记忆</span><span class="tag">方向:评测基准</span><span class="tag">方向:端侧agent</span><span class="tag">硬件:GPU</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">在统一协议下对比九个轻量 CNN 在 CIFAR/Tiny-ImageNet 上的精度、参数量、GMACs、CPU/L4 延迟与显存,研究新旧架构在资源约束下的真实表现。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">EfficientNetV2-S 精度最高;EfficientNet-B0 在三个数据集上均位于 Pareto 前沿;MobileNetV3-Small GMAC 最低且 CPU 最快;新架构收益是选择性而非普遍的。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：轻量 CNN 资源约束研究,端侧技术栈;属受控对比研究,创新有限。</div>
+<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span>  2026-07-02 · Tasnim Shahriar / arXiv</div>
+<div class="tags"><span class="tag">方向:高效推理</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">在受控协议下比较九款轻量 CNN 在资源约束下的架构/初始化/训练预算/效率。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">EfficientNetV2-S 在 CIFAR-10/100 最优（97.57%/86.98%），RepViT-M1.0 在 Tiny ImageNet 领先（79.87%）；EfficientNet-B0 出现在所有 Pareto 前沿；L4 与 CPU 上延迟排名差异显著。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">在 CIFAR-10/100/Tiny ImageNet 上统一评测九款轻量 CNN 的 top-1/F1/参数/GMAC/batch-1 延迟（L4 与 AMD CPU）/峰值 CUDA 内存，给 Pareto 前沿。</span></div>
+<div class="score-reason">评分依据：资源约束下轻量 CNN 部署评测（relevance 7）。受控比较研究无新方法（contribution 4）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01984" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

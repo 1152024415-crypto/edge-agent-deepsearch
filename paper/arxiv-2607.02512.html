@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Program-as-Weights: A Programming Paradigm for Fuzzy Functions</h1>
-<div class="meta"><span class="score">17</span> <span class="tier school">学校预印本</span>  2026-07-02 · Wentao Zhang, Liliana Hotsko, Woojeong Kim et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:记忆</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">把自然语言描述的模糊函数(如日志告警、JSON修复、意图排序)编译成可在本地执行的小型神经网络适配器,让基础模型从每次都解题变成一次性生成可复用的小工具。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">0.6B Qwen3 解释器执行 PAW 程序性能匹配直接调用 Qwen3-32B,显存约 1/50,MacBook M3 上 30 tokens/s。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：明确本地/离线/MacBook M3 端侧执行;新范式,4B 编译器+FuzzyBench 10M 数据集,小模型逼近大模型。</div>
+<div class="meta"><span class="score">15</span> <span class="tier school">学校预印本</span> <span class="open-badge">开源</span> 2026-07-02 · Wentao Zhang; Liliana Hotsko; Woojeong Kim; Pengyu Nie; Stuart Shieber; Yuntian Deng / arXiv</div>
+<div class="tags"><span class="tag">方向:端侧agent</span><span class="tag">方向:高效推理</span><span class="tag">模型:Qwen</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">把自然语言规范编译成可本地执行的小型神经 artifact 的 fuzzy-function 编程范式。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">0.6B Qwen3 解释器执行 PAW 程序匹配 Qwen3-32B 直接提示，推理内存仅约 1/50，MacBook M3 上 30 tok/s；并发布 10M 例 FuzzyBench。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">4B 编译器在 FuzzyBench 上训练，为冻结轻量解释器产出参数高效 adapter；把基础模型从每输入解题器变成工具构建器，每次函数定义调用一次产小可复用 artifact，后续调用便宜且离线。</span></div>
+<div class="score-reason">评分依据：明确本地执行 0.6B Qwen + MacBook 真机（relevance 8）。fuzzy-function 编程范式+编译成 adapter 有高创新（contribution 7）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.02512" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

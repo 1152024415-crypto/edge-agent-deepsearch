@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>MxGLUT: A Reconfigurable LUT-Centric Broadcast Dataflow Accelerator for Mixed-Precision GEMM</h1>
-<div class="meta"><span class="score">17</span> <span class="tier school">学校预印本</span>  2026-07-02 · Weiyu Zhou, Chen Ding, Mingyuan Liu et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:能耗功耗</span><span class="tag">模型:Llama</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">提出MxGLUT，基于LUT的可重构广播数据流加速器，用统一LUT机制同时承载FP8-INT4和FP8-FP8 GEMM，无需专用FP乘法器，并用RLB数据流适配prefill与decode两阶段。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">28nm@200MHz下乘法器面积最多降56.92%、功耗最多降77.07%/78.35%，面积效率0.492 TFLOPS/mm²、能效11.58 TFLOPS/W；Llama族上prefill/decode最多2.16x/1.49x加速，困惑度最多升1.70%。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：LLM推理专用LUT加速器硬件，端侧边缘AI硬件；统一LUT机制与数据流创新度高。</div>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-07-02 · Weiyu Zhou; Chen Ding; Mingyuan Liu; Liangyu Gan; Yukun Feng; Hao Jia; Haoming Chu; Lirong Zheng / arXiv</div>
+<div class="tags"><span class="tag">方向:编译部署</span><span class="tag">方向:高效推理</span><span class="tag">硬件:CIM</span><span class="tag">模型:Llama</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">基于 LUT 的可重构广播数据流混合精度 GEMM 加速器，统一 FP8-INT4 与 FP8-FP8 计算。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">28nm 200MHz 综合下乘法器面积最多降 56.92%，FP8-INT4/FP8-FP8 功耗降 77.07%/78.35%；Llama 系列上 prefill/decode 延迟加速最多 2.16x/1.49x，困惑度最多升 1.70%。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">统一 LUT 执行框架下用 MxLPE 同时组织 FP8-INT4 与 FP8-FP8 GEMM，无需专用 FP 乘法器；RLB 数据流在 prefill 局部化部分和累加、在 decode 利用权重复用。</span></div>
+<div class="score-reason">评分依据：LLM 推理混合精度硬件加速器（relevance 7）。统一 LUT 机制+RLB 数据流有创新（contribution 6）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01607" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

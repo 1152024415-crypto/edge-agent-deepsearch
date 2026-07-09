@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Lynx: Progressive Speculative Quantization for accelerating KV Transfer in Long-Context Inference</h1>
-<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span>  2026-07-02 · Wenchen Han, Gingfung Matthew Yeung, Marco Barletta et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:KV cache</span><span class="tag">应用:RAG</span><span class="tag">应用:长上下文推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">Lynx 把 KV 缓存按高位/低位拆成两路流,先传高位锚点流即可开始解码,剩余精度流并发传输再验证,降低长上下文推理首 token 延迟。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">TTFT 与 4-bit 量化相当但精度匹配 BF16;比 8-bit 量化 TTFT 提升最高 1.43 倍,精度比 SOTA 提升最高 5.1%。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：数据中心长上下文推理服务,非端侧;渐进式 KV 传输思路创新。</div>
+<div class="meta"><span class="score">12</span> <span class="tier school">学校预印本</span>  2026-07-02 · Wenchen Han; Gingfung Matthew Yeung; Marco Barletta; William Toner; Amory Hoste; Adam Barker / arXiv</div>
+<div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:量化</span><span class="tag">方向:云端serving</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">把 KV cache 分成优先级流渐进传输的量化方案，加速长上下文 disaggregated 推理的 KV 迁移。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">TTFT 与激进 4bit KV 量化相当但精度匹配 BF16；比标准 8bit KV 量化 TTFT 提升最多 1.43 倍，精度比 SOTA 提升最多 5.1%。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">把 KV cache 分成高位 Anchor 流与低位 Residual 流；Anchor 到达即开始投机解码，Residual 并发传输后做验证保证等价于高精度解码。</span></div>
+<div class="score-reason">评分依据：云端 disaggregated serving 的 KV 迁移（relevance 6，云端serving）。渐进分流投机解码有创新（contribution 6）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01831" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>PARTREP: Learning What to Repeat for Decoder-only LLMs</h1>
-<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span>  2026-07-02 · Andikawati P Widjaja, Yongjun Kim, Hyounghun Kim et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:评测基准</span><span class="tag">应用:长上下文推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">PartRep 只选择信息量最大的 prompt token 重复一次,而非整段重复,以小幅代价缓解因果注意力信息不对称、提升解码器 LLM 推理。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">在 8 个基准、3 个模型族上保留大部分全重复增益,仅用 59.4% KV 缓存和 79.0% prefill FLOPs。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：KV 缓存与 prefill 成本优化,可服务于资源受限部署;选择性重复方法较新颖。</div>
+<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span>  2026-07-02 · Andikawati P Widjaja; Yongjun Kim; Hyounghun Kim; Jaeho Lee / arXiv</div>
+<div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:高效推理</span><span class="tag">模型:Qwen</span><span class="tag">模型:Llama</span><span class="tag">模型:Gemma</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">为 decoder-only LLM 选择性重复最有信息量的 prompt token，而非整段重复，降低 KV 成本。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在八个基准（含 MMLU/GSM8K/RULER）三种模型族上保留全重复大部分增益，KV cache 仅用 59.4%、prefill FLOPs 仅用 79.0%。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">用 token 负对数似然作选择信号（难预测 token 更需后位重复），训轻量 gate 从早期层隐状态预测高 NLL token，在 prefill 中途早退出做选择。</span></div>
+<div class="score-reason">评分依据：KV cache 成本降低属端侧技术栈但非显式端侧（relevance 6）。选择性 token 重复+轻量 gate 早退出有创新（contribution 5）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01792" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

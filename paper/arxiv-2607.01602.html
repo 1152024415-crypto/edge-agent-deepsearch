@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>ProWAFT: A ROMA-LPD Instance for Workload-Aware and Dynamic Fault Tolerance in FPGA-Based CNN Accelerators</h1>
-<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span>  2026-07-02 · Xinxin Chen, Haoran Qiao, Yiming Guo et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:能耗功耗</span><span class="tag">方向:评测基准</span><span class="tag">方向:端侧agent</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">ProWAFT 是 FPGA 上 CNN 加速器的主动负载感知容错框架,用部分重配置按工作负载关键性选择性施加 TMR,在延迟/能耗/可靠性风险上做联合优化。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">ZCU104 上 ResNet-18/MobileNetV2/EfficientNet-Lite 500 任务轨迹下,复合成本低于静态 TMR 和反应式重配置,任务成功率和高吞吐近基线。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：明确 network edge FPGA 加速器;主动部分重配置容错,创新较高。</div>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-07-02 · Xinxin Chen; Haoran Qiao; Yiming Guo; Kecheng Luo; Siyuan Feng; Jingwen Ma / arXiv</div>
+<div class="tags"><span class="tag">方向:编译部署</span><span class="tag">硬件:FPGA</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">面向 FPGA CNN 加速器的负载感知动态容错框架，用部分重配置选择性 TMR。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在 ZCU104 六重配区、500 任务 trace（ResNet-18/MobileNetV2/EfficientNet-Lite）与时变 SEU 注入下，复合代价低于静态 TMR 与反应式恢复，任务成功率高、吞吐近基线。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">ProWAFT 量化负载关键性、建模故障传播与重配开销，选择最小化延迟/能耗/可靠性风险复合目标的配置，跨重配分区选择性施 TMR。</span></div>
+<div class="score-reason">评分依据：明确边缘 FPGA CNN 加速器容错（relevance 8）。负载感知选择性 TMR 有工程创新（contribution 5）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01602" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>3DLS: A 3D Logic-Stacked Architecture for Disaggregated LLM Serving</h1>
-<div class="meta"><span class="score">9</span> <span class="tier school">学校预印本</span>  2026-07-02 · Jaehun Lee, In-Jun Jung, Joo-Young Kim / arXiv</div>
-<div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:云端serving</span><span class="tag">应用:长上下文推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">3DLS 是逻辑-逻辑 3D 堆叠芯片架构,把 KV 缓存传输走垂直互连、解码侧张量并行集合走横向互连,分离流量类避免争用。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">相比平面基线吞吐达 1.49x、端到端延迟降 60.2%;相比优先级管理基线吞吐 1.17x、延迟降 31.4%。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：云端芯片级 LLM serving 硬件架构,与端侧无关。</div>
+<div class="meta"><span class="score">10</span> <span class="tier school">学校预印本</span>  2026-07-02 · Jaehun Lee; In-Jun Jung; Joo-Young Kim / arXiv</div>
+<div class="tags"><span class="tag">方向:云端serving</span><span class="tag">硬件:GPU</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">为 disaggregated LLM serving 设计的 logic-on-logic 3D 堆叠 chiplet 架构，隔离 KV 迁移与 TP 集体通信流量。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">相对共享 fabric 平面基线吞吐最多 1.49x、端到端延迟降 60.2%；相对负载感知优先级管理平面基线吞吐 1.17x、延迟降 31.4%。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">3DLS 用垂直互连走 KV cache 迁移，保留 decode 侧 TP 集体通信在横向 D2D fabric，物理隔离两类流量。</span></div>
+<div class="score-reason">评分依据：云端 chiplet serving 架构（relevance 4，云端serving）。3D 堆叠物理流量隔离有创新（contribution 6）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01617" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

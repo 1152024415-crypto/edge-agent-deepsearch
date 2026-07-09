@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>VisionAId: An Offline-First Multimodal Android Assistant for People with Visual Impairment, Featuring Personalized Object Retrieval</h1>
-<div class="meta"><span class="score">17</span> <span class="tier school">学校预印本</span>  2026-07-02 · Cristian-Gabriel Florea, Stelian Spînu / arXiv</div>
-<div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:多模态</span><span class="tag">方向:端侧agent</span><span class="tag">硬件:手机</span><span class="tag">应用:语音</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">一款离线优先的安卓视觉辅助 App,集成六个端侧深度学习模型,帮助视障人士避障、找物、识脸和辨钞。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">INT8 量化把深度估计延迟从约 1200ms 降到约 491ms;钞票检测 mAP@50 达 0.986;3 米内深度误差小于 1cm。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：明确端侧安卓 App,六模型全程 ONNX Runtime 本地推理;贡献为完整端侧系统与少样本个人物品检索。</div>
+<div class="meta"><span class="score">14</span> <span class="tier school">学校预印本</span>  2026-07-02 · Cristian-Gabriel Florea; Stelian Spînu / arXiv</div>
+<div class="tags"><span class="tag">方向:端侧agent</span><span class="tag">方向:多模态</span><span class="tag">硬件:手机</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">离线优先的多模态 Android 视觉辅助应用，把手机变成实时视觉助手。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">Samsung Galaxy S21 Ultra 上 INT8 量化把深度延迟从约 1200ms 降到约 491ms；自定义钞票检测器 mAP@50 达 0.986；度量深度 3m 内误差 &lt;1cm。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">集成六个 on-device 模型（度量深度、实例分割、视觉/人脸嵌入、人脸检测、钞票检测）经 ONNX Runtime 跑；可选云端 LLM 仅做场景叙述；含 few-shot 个人物体定位管线，反馈多模态（语音/振动/AR）。</span></div>
+<div class="score-reason">评分依据：明确 on-device Android 全离线多模态部署（relevance 9）。六模型集成+few-shot 个人物体定位属工程整合（contribution 5）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.02371" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Spec-AUF: Accept-Until-Fail Training under Train-Inference Misalignment for Masked Block Drafters</h1>
-<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-07-02 · Tianjian Yang, Meng Li / arXiv</div>
-<div class="tags"><span class="tag">方向:投机解码</span><span class="tag">方向:评测基准</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">针对推测解码中块级drafter训练全块损失与推理只保留接受前缀的失配问题，提出AUF方法，把交叉熵监督只保留到drafter首次预测失败处，无需辅助目标或改推理流程。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">在Qwen3-8B上把DFlash平均发出长度从2.40提到2.61，Domino双分支头从2.56提到2.68，六个基准全面提升。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：推测解码加速LLM推理，可服务端侧推理加速；目标函数失配分析有创新。</div>
+<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span>  2026-07-02 · Tianjian Yang; Meng Li / arXiv</div>
+<div class="tags"><span class="tag">方向:投机解码</span><span class="tag">模型:Qwen</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">为 masked block drafter 设计的 accept-until-fail 训练目标，纠正训练-推理失配。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在 Qwen3-8B 的 DFlash drafter 上把六个基准平均 emitted length τ 从 2.40 提到 2.61（每项均提升），并迁移到 Domino 双分支头（2.56→2.68）。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">AUF 是对 CE 支持的单点 detach 修改：只在 drafter 首个预测失败前保留交叉熵支持，无需辅助目标、验证器 rollout 或改推理管线与正确性契约。</span></div>
+<div class="score-reason">评分依据：投机解码 drafter 训练属端侧技术栈但非显式端侧（relevance 6）。accept-until-fail 支持截断有创新（contribution 5）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01893" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

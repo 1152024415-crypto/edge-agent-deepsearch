@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Approximate Attention Weighting for Sustainable FPGA-Based Vision Transformer Inference</h1>
-<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span>  2026-07-02 · Muhammad Usman, Shujaat Khan, Dorit Merhof / arXiv</div>
-<div class="tags"><span class="tag">方向:能耗功耗</span><span class="tag">方向:评测基准</span><span class="tag">方向:端侧agent</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">提出用于FPGA上ViT推理的无BRAM近似注意力加权单元，用16段分段线性函数近似softmax中的自然指数，全部用分布式LUT实现，保留预训练注意力温度无需重新校准。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">在Xilinx Zynq-7020上注意力行核用1444 LUTs、77 DSP、零BRAM，硬件精确仿真与精确softmax相比绝对Top-1差距在0.20%以内。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：明确小FPGA边缘ViT推理加速，端侧属性强；近似softmax硬件设计有创新。</div>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-07-02 · Muhammad Usman; Muhammad Akmal Shafique; Shujaat Khan; Dorit Merhof / arXiv</div>
+<div class="tags"><span class="tag">方向:高效推理</span><span class="tag">方向:高效注意力</span><span class="tag">硬件:FPGA</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">面向小 FPGA 上 ViT 推理的无 BRAM 近似注意力加权单元。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">Xilinx Zynq-7020 上注意力行核用 1444 LUT、77 DSP、无 BRAM，硬件精确仿真下 ViT 系列 top-1 绝对差仅 0.20%。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">用 16 段分段线性函数在分布式 LUT 上近似 softmax 中的自然指数，无需 BRAM 查找表，保留预训练注意力温度避免重标定。</span></div>
+<div class="score-reason">评分依据：明确小 FPGA 边缘 ViT 推理（relevance 8）。BRAM-free 自然指数近似有工程创新（contribution 5）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01798" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

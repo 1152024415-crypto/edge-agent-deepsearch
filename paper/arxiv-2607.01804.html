@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>VLA-Corrector: Lightweight Detect-and-Correct Inference for Adaptive Action Horizon</h1>
-<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-07-02 · Yi Pan, Miao Pan, Qi Lu et al. / arXiv</div>
-<div class="tags"><span class="tag">方向:多模态</span><span class="tag">应用:机器人</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">VLA-Corrector 给动作分块的 VLA 策略加了个轻量潜空间视觉监视器,检测到视觉偏差就截断旧动作并在线梯度引导重规划,实现自适应动作时长。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">无需改骨干权重即可接入不同 VLA,缓解长时接触密集任务中的误差累积;具体成功率数值未报告。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
-<div class="score-reason">评分依据：轻量化的端侧机器人闭环纠正框架,但创新属组合式。</div>
+<div class="meta"><span class="score">11</span> <span class="tier school">学校预印本</span>  2026-07-02 · Yi Pan; Miao Pan; Qi Lu; Jiaming Huang; Man Zhang; Siteng Huang; Xin Li; Jie Zhang / arXiv</div>
+<div class="tags"><span class="tag">方向:高效推理</span><span class="tag">应用:机器人</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">为 action-chunked VLA 策略设计的轻量 detect-and-correct 推理框架，自适应动作时域。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">未报告量化结果（仿真中显著提升长程接触丰富任务鲁棒性）。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">VLA-Corrector 引入 Latent-space Vision Monitor 持续比较预测与实际视觉特征演化做在线偏差检测；检测到持续偏差即触发截断、丢弃陈旧动作，用 Online Gradient Guidance 做纠正重规划，不改主干权重。</span></div>
+<div class="score-reason">评分依据：轻量 VLA 纠正属端侧技术栈但偏机器人（relevance 6）。事件触发自适应时域+在线梯度纠正有创新（contribution 5）。vendors 空。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.01804" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>
