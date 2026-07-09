@@ -50,6 +50,7 @@
   - GPU
   - CPU
   - DSP
+  - FPGA
   - Jetson
   - 手机
   - MCU
@@ -58,6 +59,7 @@
   - Snapdragon
   - Apple-Silicon
   - Ascend
+  - CIM
 
 模型:
   - Llama
