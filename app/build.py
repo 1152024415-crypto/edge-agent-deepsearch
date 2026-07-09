@@ -79,7 +79,10 @@ def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, r
     )
     html = html.replace("<script>", inline + "\n    <script>", 1)
     # rewrite /paper/<id> links (incl. JS template-literal form) to relative
-    html = re.sub(r'href="/paper/([^"]+)"', r'href="' + weeks_base + r'paper/\1.html"', html)
+    # static paths — but only for static builds; runtime pages keep absolute
+    # /paper/<id> links so they hit the live detail route.
+    if not runtime:
+        html = re.sub(r'href="/paper/([^"]+)"', r'href="' + weeks_base + r'paper/\1.html"', html)
     return html
 
 

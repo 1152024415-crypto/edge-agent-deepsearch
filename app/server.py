@@ -23,6 +23,8 @@ if str(SCRIPTS) not in sys.path:
 
 import research_run
 from app import storage
+from app import weeks as weeks_mod
+from app import build as build_app
 from app.page import INDEX_HTML
 
 DEPLOY_SERVER = "http://127.0.0.1:8001"
@@ -189,7 +191,16 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         if parsed.path == "/":
-            self.send_html(INDEX_HTML)
+            manifest = weeks_mod.attach_hrefs(
+                weeks_mod.read_manifest(), weeks_base="", runtime=True)
+            html = INDEX_HTML.replace(
+                "<script>",
+                '<script>window.__WEEKS__ = '
+                + json.dumps(manifest, ensure_ascii=False)
+                + ';window.__WEEK_LABEL__ = null;'
+                + 'window.__WEEKS_BASE__ = "";</script>\n    <script>',
+                1)
+            self.send_html(html)
             return
         if parsed.path == "/api/papers":
             params = parse_qs(parsed.query)
@@ -209,6 +220,22 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(200, {"items": json.loads(tp.read_text(encoding="utf-8"))})
             else:
                 self.send_json(200, {"items": []})
+            return
+        if parsed.path == "/api/weeks":
+            self.send_json(200, {"weeks": weeks_mod.read_manifest()})
+            return
+        if parsed.path.startswith("/week/"):
+            label = parsed.path.rsplit("/", 1)[-1]
+            rec = weeks_mod.read_archive(label)
+            if rec is None:
+                self.send_json(404, {"ok": False, "error": f"week {label} not found"})
+                return
+            manifest = weeks_mod.attach_hrefs(
+                weeks_mod.read_manifest(), weeks_base="", runtime=True)
+            page = build_app.render_page(
+                INDEX_HTML, rec["papers"], rec["weekly"], rec["trending"],
+                manifest, week_label=label, weeks_base="", runtime=True)
+            self.send_html(page)
             return
         if parsed.path.startswith("/paper/"):
             paper_id = parsed.path.rsplit("/", 1)[-1]
