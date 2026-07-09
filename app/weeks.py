@@ -37,3 +37,70 @@ def parse_week_meta(overview: str, fallback_iso: str) -> dict:
     end = f"{year}-{em}-{ed}"
     title = f"{sm}-{sd}~{em}-{ed}"
     return {"label": start, "title": title, "range": {"start": start, "end": end}}
+
+
+def archive_path(label: str) -> Path:
+    return WEEKS_DIR / f"{label}.json"
+
+
+def read_archive(label: str) -> dict | None:
+    p = archive_path(label)
+    if not p.exists():
+        return None
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def write_archive(meta: dict, papers: list, weekly: dict, trending: dict) -> None:
+    WEEKS_DIR.mkdir(parents=True, exist_ok=True)
+    rec = {
+        "label": meta["label"],
+        "title": meta["title"],
+        "range": meta["range"],
+        "papers": papers,
+        "weekly": weekly,
+        "trending": trending,
+    }
+    archive_path(meta["label"]).write_text(
+        json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def build_manifest(current_label: str) -> list[dict]:
+    """Scan data/weeks/*.json, sort by range.start desc, mark current; persist."""
+    WEEKS_DIR.mkdir(parents=True, exist_ok=True)
+    entries = []
+    for p in sorted(WEEKS_DIR.glob("*.json")):
+        if p.name == "manifest.json":
+            continue
+        try:
+            rec = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        entries.append({
+            "label": rec["label"],
+            "title": rec.get("title") or rec["label"],
+            "range": rec.get("range") or {"start": rec["label"], "end": rec["label"]},
+            "current": rec["label"] == current_label,
+        })
+    entries.sort(key=lambda e: e["range"]["start"], reverse=True)
+    (WEEKS_DIR / "manifest.json").write_text(
+        json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
+    return entries
+
+
+def read_manifest() -> list[dict]:
+    p = WEEKS_DIR / "manifest.json"
+    if not p.exists():
+        return []
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def attach_hrefs(manifest: list[dict], weeks_base: str, runtime: bool) -> list[dict]:
+    """Add an `href` to each manifest entry for the switcher to navigate to."""
+    out = []
+    for e in manifest:
+        if runtime:
+            href = "/" if e.get("current") else f"/week/{e['label']}"
+        else:
+            href = weeks_base + "index.html" if e.get("current") else f"{weeks_base}week/{e['label']}.html"
+        out.append({**e, "href": href})
+    return out
