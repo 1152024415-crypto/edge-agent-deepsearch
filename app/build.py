@@ -83,30 +83,19 @@ def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, r
     return html
 
 
-def rewrite_index(html, papers_payload, weekly_payload, trending_payload=None):
-    """Backward-compat wrapper; mirror() is rewritten in Task 5 to call render_page directly."""
-    return render_page(
-        html,
-        list((papers_payload or {}).get("papers") or []) if isinstance(papers_payload, dict) else list(papers_payload or []),
-        weekly_payload or {"overview": "", "highlights": []},
-        trending_payload or {"items": []},
-        [],  # weeks (no switcher data until Task 5 wires it)
-        week_label=None, weeks_base="", runtime=False,
-    )
-
-
 def rewrite_detail(html: str) -> str:
     """Fix the back link so detail pages return to the static index."""
     return html.replace('href="/"', 'href="../index.html"')
 
 
 def mirror(server: str, site: Path = SITE) -> int:
-    """Mirror ``server`` (root + /api/papers + /paper/<id>) into ``site``."""
+    """Mirror server into site/: write current-week archive + manifest, render
+    index.html (current) and site/week/<label>.html (each past week)."""
     # NOTE: we intentionally do NOT rmtree the site — the paper/ archive is
     # preserved so that users still viewing last week's cached index (whose
     # links point at last week's paper ids) don't get 404s after this week's
     # deploy. New paper pages overwrite same-id pages; old ones persist as
-    # an archive. Only index.html is overwritten each build.
+    # an archive. index.html is overwritten each build.
     site.mkdir(parents=True, exist_ok=True)
     (site / "paper").mkdir(parents=True, exist_ok=True)
 
@@ -122,19 +111,75 @@ def mirror(server: str, site: Path = SITE) -> int:
     except Exception:
         trending_payload = {"items": []}
 
-    index_html = rewrite_index(fetch_text(f"{server}/"), papers_payload, weekly_payload, trending_payload)
-    (site / "index.html").write_text(index_html, encoding="utf-8")
-    print(f"[BUILD] index.html ({len(papers)} papers inlined)")
+    import datetime
+    fallback_iso = datetime.date.today().isoformat()
+    meta = weeks_mod.parse_week_meta(weekly_payload.get("overview", ""), fallback_iso)
+    current_label = meta["label"]
 
+    # 1) archive current week + manifest
+    weeks_mod.write_archive(meta, papers, weekly_payload, trending_payload)
+    manifest = weeks_mod.build_manifest(current_label)
+
+    # Fetch the server-rendered index shell once; reused for index + past weeks.
+    index_template = fetch_text(f"{server}/")
+
+    # 2) render site/index.html (current) — weeks_base="" (root)
+    index_html = render_page(
+        index_template,
+        papers, weekly_payload, trending_payload,
+        weeks_mod.attach_hrefs(manifest, weeks_base="", runtime=False),
+        week_label=None, weeks_base="", runtime=False,
+    )
+    (site / "index.html").write_text(index_html, encoding="utf-8")
+    print(f"[BUILD] index.html ({len(papers)} papers, week={current_label})")
+
+    # 3) render site/week/<label>.html for every PAST week
+    for entry in manifest:
+        if entry["current"]:
+            continue
+        rec = weeks_mod.read_archive(entry["label"])
+        if not rec:
+            continue
+        (site / "week").mkdir(parents=True, exist_ok=True)
+        page = render_page(
+            index_template,
+            rec["papers"], rec["weekly"], rec["trending"],
+            weeks_mod.attach_hrefs(manifest, weeks_base="../", runtime=False),
+            week_label=entry["label"], weeks_base="../", runtime=False,
+        )
+        (site / "week" / f"{entry['label']}.html").write_text(page, encoding="utf-8")
+        print(f"[BUILD] week/{entry['label']}.html")
+
+    # 4) detail pages (unchanged from before)
     for p in papers:
         pid = str(p.get("id") or "")
         if not pid:
             continue
         detail_html = rewrite_detail(fetch_text(f"{server}/paper/{pid}"))
         (site / "paper" / f"{pid}.html").write_text(detail_html, encoding="utf-8")
-        print(f"[BUILD] paper/{pid}.html")
 
-    print(f"[BUILD] done: index.html + {len(papers)} detail page(s) under {site}")
+    print(f"[BUILD] done: index.html + {len(papers)} detail + "
+          f"{sum(1 for e in manifest if not e['current'])} week archive page(s)")
+    return 0
+
+
+def backfill(site: Path = SITE) -> int:
+    """One-time: extract the inlined payloads from an existing site/index.html
+    into data/weeks/<label>.json so the first new-week build has a past week to render.
+    """
+    idx = site / "index.html"
+    if not idx.exists():
+        print("[BACKFILL] no site/index.html to backfill from — nothing to do")
+        return 0
+    html = idx.read_text(encoding="utf-8")
+    payloads = weeks_mod.extract_payloads_from_html(html)
+    import datetime
+    fallback_iso = datetime.date.today().isoformat()
+    meta = weeks_mod.parse_week_meta(
+        payloads["weekly"].get("overview", ""), fallback_iso)
+    weeks_mod.write_archive(meta, payloads["papers"], payloads["weekly"], payloads["trending"])
+    weeks_mod.build_manifest(meta["label"])
+    print(f"[BACKFILL] wrote data/weeks/{meta['label']}.json from existing index.html")
     return 0
 
 
@@ -147,7 +192,14 @@ def main(argv=None) -> int:
         default=DEFAULT_SERVER,
         help=f"Display server base URL (default: {DEFAULT_SERVER}).",
     )
+    parser.add_argument(
+        "--backfill",
+        action="store_true",
+        help="Backfill data/weeks/ from an existing site/index.html (one-time).",
+    )
     args = parser.parse_args(argv)
+    if args.backfill:
+        return backfill()
     return mirror(args.server)
 
 

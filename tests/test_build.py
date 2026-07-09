@@ -25,6 +25,7 @@ import publish_results
 import research_run
 from app import build as build_app
 from app import server as server_app
+from app import weeks as weeks_mod
 
 TODAY = date.today()
 YESTERDAY = (TODAY - timedelta(days=1)).isoformat()
@@ -91,6 +92,11 @@ class MirrorBuildTest(unittest.TestCase):
             shutil.rmtree(self.site_dir)
         self.addCleanup(self._cleanup_site)
 
+        self.weeks_dir = ROOT / "data" / "weeks"
+        if self.weeks_dir.exists():
+            shutil.rmtree(self.weeks_dir)
+        self.addCleanup(self._cleanup_weeks)
+
     def _stop_server(self):
         self.httpd.shutdown()
         self.thread.join(timeout=5)
@@ -99,6 +105,10 @@ class MirrorBuildTest(unittest.TestCase):
     def _cleanup_site(self):
         if self.site_dir.exists():
             shutil.rmtree(self.site_dir)
+
+    def _cleanup_weeks(self):
+        if (ROOT / "data" / "weeks").exists():
+            shutil.rmtree(ROOT / "data" / "weeks")
 
     def test_build_mirrors_server_to_static_site(self):
         # Publish one validated paper to the running test server.
@@ -155,6 +165,56 @@ class RenderPageTest(unittest.TestCase):
         # paper links prefixed with ../
         self.assertIn('href="../paper/abc.html"', out)
         self.assertIn('href="../paper/${escapeAttr(p.id)}.html"', out)
+
+
+class WeekArchiveBuildTest(unittest.TestCase):
+    def setUp(self):
+        self.site_dir = ROOT / "site"
+        self.weeks_dir = ROOT / "data" / "weeks"
+        if self.site_dir.exists():
+            shutil.rmtree(self.site_dir)
+        if self.weeks_dir.exists():
+            shutil.rmtree(self.weeks_dir)
+        self.addCleanup(self._cleanup)
+
+    def _cleanup(self):
+        if self.site_dir.exists():
+            shutil.rmtree(self.site_dir)
+        if self.weeks_dir.exists():
+            shutil.rmtree(self.weeks_dir)
+
+    def _seed_index(self, overview):
+        """Stand in for an existing built index.html with inlined payloads."""
+        html = (
+            '<html><head></head><body>'
+            f'<script>window.__PAPERS__ = [{{"id":"p1","title":"T","date":"2026-06-28"}}];'
+            f'window.__WEEKLY__ = {{"overview":"{overview}","highlights":[]}};'
+            f'window.__TRENDING__ = {{"items":[]}};</script>'
+            '</body></html>'
+        )
+        self.site_dir.mkdir(parents=True, exist_ok=True)
+        (self.site_dir / "index.html").write_text(html, encoding="utf-8")
+
+    def test_backfill_creates_archive_from_existing_index(self):
+        self._seed_index("本周端侧动态(06-26~07-03)：...")
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "app" / "build.py"), "--backfill"],
+            cwd=ROOT, capture_output=True, text=True, timeout=60,
+        )
+        self.assertEqual(result.returncode, 0, msg=f"{result.stdout}\n{result.stderr}")
+        a = weeks_mod.read_archive("2026-06-26")
+        self.assertIsNotNone(a)
+        self.assertEqual(a["papers"], [{"id": "p1", "title": "T", "date": "2026-06-28"}])
+        self.assertEqual(a["weekly"]["overview"], "本周端侧动态(06-26~07-03)：...")
+
+    def test_backfill_missing_index_is_noop(self):
+        # no site/index.html -> backfill prints warning, returns 0, no archive
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "app" / "build.py"), "--backfill"],
+            cwd=ROOT, capture_output=True, text=True, timeout=60,
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(weeks_mod.read_manifest(), [])
 
 
 if __name__ == "__main__":
