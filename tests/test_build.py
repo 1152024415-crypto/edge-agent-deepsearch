@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT / "agent"))  # for research_run / publish_results
 
 import publish_results
 import research_run
+from app import build as build_app
 from app import server as server_app
 
 TODAY = date.today()
@@ -131,6 +132,29 @@ class MirrorBuildTest(unittest.TestCase):
         detail_html = detail_path.read_text(encoding="utf-8")
         self.assertIn("Fresh Edge Agent Paper", detail_html)
         self.assertIn('href="../index.html"', detail_html)
+
+
+class RenderPageTest(unittest.TestCase):
+    def test_render_page_inlines_weeks_and_label_and_prefixes_paper_links(self):
+        html = (
+            '<html><head></head><body>'
+            '<script>const res=await fetch("/api/papers");const data=await res.json();'
+            'const wr=await fetch("/api/weekly");const w=await wr.json();</script>'
+            '<a href="/paper/abc">x</a><a href="/paper/${escapeAttr(p.id)}">y</a>'
+            '</body></html>'
+        )
+        weeks = [{"label": "2026-06-26", "title": "06-26~07-03", "current": False, "href": "../week/2026-06-26.html"}]
+        out = build_app.render_page(html, [{"id": "abc"}], {"overview": ""}, {"items": []},
+                                    weeks, week_label="2026-06-26", weeks_base="../", runtime=False)
+        self.assertIn("window.__PAPERS__", out)
+        self.assertIn("window.__WEEKS__", out)
+        self.assertIn('"2026-06-26"', out)  # week_label inlined
+        self.assertIn('window.__WEEKS_BASE__="../"', out)
+        # fetch rewritten to globals
+        self.assertNotIn('fetch("/api/papers")', out)
+        # paper links prefixed with ../
+        self.assertIn('href="../paper/abc.html"', out)
+        self.assertIn('href="../paper/${escapeAttr(p.id)}.html"', out)
 
 
 if __name__ == "__main__":

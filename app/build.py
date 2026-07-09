@@ -30,6 +30,9 @@ DEFAULT_SERVER = "http://127.0.0.1:8001"
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 
+sys.path.insert(0, str(ROOT))
+from app import weeks as weeks_mod  # noqa: E402  (weeks is also a param name)
+
 
 def fetch_text(url: str) -> str:
     with urllib.request.urlopen(url, timeout=30) as resp:
@@ -40,37 +43,56 @@ def fetch_json(url: str):
     return json.loads(fetch_text(url))
 
 
-def rewrite_index(html: str, papers_payload, weekly_payload, trending_payload=None) -> str:
-    """Inline papers + weekly + trending data and rewrite /paper/<id> links to relative paths."""
-    # 1) Inline the payloads as globals; replace the runtime fetch +
-    #    json parse with a read of that global so the list renders without API.
+def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, runtime):
+    """Inline all payloads + switcher globals into page.py's HTML, rewrite fetches
+    to read globals, and rewrite /paper/<id> links to relative {weeks_base}paper/<id>.html.
+
+    ``weeks`` already carries per-entry ``href`` (see app.weeks.attach_hrefs).
+    ``week_label`` is this page's label, or None for the current-week page.
+    """
     inline = (
-        '<script>window.__PAPERS__ = '
-        + json.dumps(papers_payload, ensure_ascii=False)
-        + ';window.__WEEKLY__ = '
-        + json.dumps(weekly_payload, ensure_ascii=False)
-        + ';window.__TRENDING__ = '
-        + json.dumps(trending_payload or {"items": []}, ensure_ascii=False)
+        '<script>window.__PAPERS__='
+        + json.dumps(papers, ensure_ascii=False)
+        + ';window.__WEEKLY__='
+        + json.dumps(weekly, ensure_ascii=False)
+        + ';window.__TRENDING__='
+        + json.dumps(trending, ensure_ascii=False)
+        + ';window.__WEEKS__='
+        + json.dumps(weeks, ensure_ascii=False)
+        + ';window.__WEEK_LABEL__='
+        + json.dumps(week_label, ensure_ascii=False)
+        + ';window.__WEEKS_BASE__='
+        + json.dumps(weeks_base, ensure_ascii=False)
         + ';</script>'
     )
     html = re.sub(
-        r'const\s+res\s*=\s*await\s+fetch\("/api/papers"\)\s*;\s*'
-        r'const\s+data\s*=\s*await\s+res\.json\(\)\s*;',
+        r'const\s+res\s*=\s*await\s*fetch\("/api/papers"\)\s*;\s*'
+        r'const\s+data\s*=\s*await\s*res\.json\(\)\s*;',
         'const data = window.__PAPERS__;',
         html,
     )
     html = re.sub(
-        r'const\s+wr\s*=\s*await\s+fetch\("/api/weekly"\)\s*;\s*'
+        r'const\s+wr\s*=\s*await\s*fetch\("/api/weekly"\)\s*;\s*'
         r'const\s+w\s*=\s*await\s+wr\.json\(\)\s*;',
         'const w = window.__WEEKLY__;',
         html,
     )
-    # Inject the inline data script just before the page's first <script>.
     html = html.replace("<script>", inline + "\n    <script>", 1)
-    # 2) Rewrite /paper/<id> links (including the JS template literal form
-    #    href="/paper/${escapeAttr(p.id)}") to relative paper/<id>.html.
-    html = re.sub(r'href="/paper/([^"]+)"', r'href="paper/\1.html"', html)
+    # rewrite /paper/<id> links (incl. JS template-literal form) to relative
+    html = re.sub(r'href="/paper/([^"]+)"', r'href="' + weeks_base + r'paper/\1.html"', html)
     return html
+
+
+def rewrite_index(html, papers_payload, weekly_payload, trending_payload=None):
+    """Backward-compat wrapper; mirror() is rewritten in Task 5 to call render_page directly."""
+    return render_page(
+        html,
+        list((papers_payload or {}).get("papers") or []) if isinstance(papers_payload, dict) else list(papers_payload or []),
+        weekly_payload or {"overview": "", "highlights": []},
+        trending_payload or {"items": []},
+        [],  # weeks (no switcher data until Task 5 wires it)
+        week_label=None, weeks_base="", runtime=False,
+    )
 
 
 def rewrite_detail(html: str) -> str:
