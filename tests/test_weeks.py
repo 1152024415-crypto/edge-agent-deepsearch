@@ -121,6 +121,17 @@ class ExtractPayloadsTest(unittest.TestCase):
         self.assertEqual(out["weekly"], {"overview": "", "highlights": []})
         self.assertEqual(out["trending"], {"items": []})
 
+    def test_papers_with_semicolon_bracket_in_string(self):
+        # A paper whose title contains "];" must not truncate the PAPERS capture.
+        html = (
+            '<script>window.__PAPERS__ = [{"id":"p1","title":"a];b"}];'
+            'window.__WEEKLY__ = {"overview":"ov","highlights":[]};'
+            'window.__TRENDING__ = {"items":[]};</script>'
+        )
+        out = weeks.extract_payloads_from_html(html)
+        self.assertEqual(out["papers"], [{"id": "p1", "title": "a];b"}])
+        self.assertEqual(out["weekly"]["overview"], "ov")
+
 
 if __name__ == "__main__":
     unittest.main()

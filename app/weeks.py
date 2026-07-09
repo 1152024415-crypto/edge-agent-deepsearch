@@ -106,7 +106,7 @@ def attach_hrefs(manifest: list[dict], weeks_base: str, runtime: bool) -> list[d
     return out
 
 
-_PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(\[.*?\]);", re.S)
+_PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(\[.*?\]);\s*window\.__WEEKLY__", re.S)
 _WEEKLY_RE = re.compile(r"window\.__WEEKLY__\s*=\s*(\{.*?\});\s*window\.__TRENDING__", re.S)
 _TRENDING_RE = re.compile(r"window\.__TRENDING__\s*=\s*(\{.*?\});</script>", re.S)
 
