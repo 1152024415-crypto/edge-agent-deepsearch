@@ -104,3 +104,25 @@ def attach_hrefs(manifest: list[dict], weeks_base: str, runtime: bool) -> list[d
             href = weeks_base + "index.html" if e.get("current") else f"{weeks_base}week/{e['label']}.html"
         out.append({**e, "href": href})
     return out
+
+
+_PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(\[.*?\]);", re.S)
+_WEEKLY_RE = re.compile(r"window\.__WEEKLY__\s*=\s*(\{.*?\});\s*window\.__TRENDING__", re.S)
+_TRENDING_RE = re.compile(r"window\.__TRENDING__\s*=\s*(\{.*?\});</script>", re.S)
+
+
+def extract_payloads_from_html(html: str) -> dict:
+    """Pull the three inlined payloads back out of a built index.html (for backfill)."""
+    def grab(rx, default):
+        m = rx.search(html)
+        if not m:
+            return default
+        try:
+            return json.loads(m.group(1))
+        except Exception:
+            return default
+    return {
+        "papers": grab(_PAPERS_RE, []),
+        "weekly": grab(_WEEKLY_RE, {"overview": "", "highlights": []}),
+        "trending": grab(_TRENDING_RE, {"items": []}),
+    }

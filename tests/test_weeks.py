@@ -103,5 +103,24 @@ class ArchiveManifestTest(unittest.TestCase):
         self.assertEqual(out[1]["href"], "/week/2026-06-26")
 
 
+class ExtractPayloadsTest(unittest.TestCase):
+    def test_extracts_three_payloads(self):
+        html = (
+            '<script>window.__PAPERS__ = [{"id":"p1"}];'
+            'window.__WEEKLY__ = {"overview":"ov","highlights":[]};'
+            'window.__TRENDING__ = {"items":[{"repo":"r"}]};</script>'
+        )
+        out = weeks.extract_payloads_from_html(html)
+        self.assertEqual(out["papers"], [{"id": "p1"}])
+        self.assertEqual(out["weekly"]["overview"], "ov")
+        self.assertEqual(out["trending"]["items"], [{"repo": "r"}])
+
+    def test_missing_payloads_use_defaults(self):
+        out = weeks.extract_payloads_from_html("<html>no scripts</html>")
+        self.assertEqual(out["papers"], [])
+        self.assertEqual(out["weekly"], {"overview": "", "highlights": []})
+        self.assertEqual(out["trending"], {"items": []})
+
+
 if __name__ == "__main__":
     unittest.main()
