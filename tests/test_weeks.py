@@ -19,11 +19,22 @@ class ParseWeekMetaTest(unittest.TestCase):
         self.assertEqual(m["range"]["start"], "2026-06-26")
         self.assertEqual(m["range"]["end"], "2026-07-03")
 
-    def test_uses_fallback_year(self):
-        # 2025 年的 overview 也用 fallback 年份
+    def test_cross_year_window_rolls_end_year_forward(self):
+        # A Dec-26~01-02 window read on 2026-01-05 spans year boundary:
+        # start is in the previous year (2025-12-26), end in the current (2026-01-02).
         ov = "本周动态(12-26~01-02)：..."
         m = weeks.parse_week_meta(ov, "2026-01-05")
-        self.assertEqual(m["label"], "2026-12-26")
+        self.assertEqual(m["label"], "2025-12-26")
+        self.assertEqual(m["range"]["start"], "2025-12-26")
+        self.assertEqual(m["range"]["end"], "2026-01-02")
+        self.assertTrue(m["range"]["start"] < m["range"]["end"])
+
+    def test_start_in_future_relative_to_fallback_rolls_back(self):
+        # A Dec-26~01-02 window read in July (fallback 2026-07-09): start month-day
+        # (12-26) is later than today's (07-09), so start is last year (2025-12-26).
+        ov = "本周动态(12-26~01-02)：..."
+        m = weeks.parse_week_meta(ov, "2026-07-09")
+        self.assertEqual(m["label"], "2025-12-26")
         self.assertEqual(m["range"]["end"], "2026-01-02")
 
     def test_no_range_falls_back_to_date(self):

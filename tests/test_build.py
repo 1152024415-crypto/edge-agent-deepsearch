@@ -8,6 +8,7 @@ page with a rewritten back link.
 """
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -71,6 +72,24 @@ def run_payload(*papers):
     }
 
 
+def _weeks_tmp_env(self):
+    """Redirect weeks_mod.WEEKS_DIR + EDGE_WEEKS_DIR env to a tmp dir, so the
+    subprocess ``python app/build.py`` writes archives to tmp instead of the
+    real committed ``data/weeks/`` (which a test must never wipe). Also returns
+    an env dict to pass to subprocess.run.
+
+    Call in setUp; cleanups are registered automatically.
+    """
+    tmp = tempfile.TemporaryDirectory()
+    self.addCleanup(tmp.cleanup)
+    weeks_dir = Path(tmp.name)
+    orig = weeks_mod.WEEKS_DIR
+    weeks_mod.WEEKS_DIR = weeks_dir
+    self.addCleanup(lambda: setattr(weeks_mod, "WEEKS_DIR", orig))
+    self.weeks_dir = weeks_dir
+    self.weeks_env = {**os.environ, "EDGE_WEEKS_DIR": str(weeks_dir)}
+
+
 class MirrorBuildTest(unittest.TestCase):
     def setUp(self):
         # validate_payload checks paper_url liveness; stub it for the test.
@@ -93,10 +112,9 @@ class MirrorBuildTest(unittest.TestCase):
             shutil.rmtree(self.site_dir)
         self.addCleanup(self._cleanup_site)
 
-        self.weeks_dir = ROOT / "data" / "weeks"
-        if self.weeks_dir.exists():
-            shutil.rmtree(self.weeks_dir)
-        self.addCleanup(self._cleanup_weeks)
+        # Redirect the week archive to a tmp dir (subprocess build.py picks up
+        # EDGE_WEEKS_DIR via env). Never wipe the real data/weeks/ archive.
+        _weeks_tmp_env(self)
 
     def _stop_server(self):
         self.httpd.shutdown()
@@ -106,10 +124,6 @@ class MirrorBuildTest(unittest.TestCase):
     def _cleanup_site(self):
         if self.site_dir.exists():
             shutil.rmtree(self.site_dir)
-
-    def _cleanup_weeks(self):
-        if (ROOT / "data" / "weeks").exists():
-            shutil.rmtree(ROOT / "data" / "weeks")
 
     def test_build_mirrors_server_to_static_site(self):
         # Publish one validated paper to the running test server.
@@ -121,6 +135,7 @@ class MirrorBuildTest(unittest.TestCase):
             [sys.executable, str(ROOT / "app" / "build.py"),
              "--server", self.base_url],
             cwd=ROOT,
+            env=self.weeks_env,
             capture_output=True,
             text=True,
             timeout=60,
@@ -192,18 +207,14 @@ class PageSwitcherTest(unittest.TestCase):
 class WeekArchiveBuildTest(unittest.TestCase):
     def setUp(self):
         self.site_dir = ROOT / "site"
-        self.weeks_dir = ROOT / "data" / "weeks"
         if self.site_dir.exists():
             shutil.rmtree(self.site_dir)
-        if self.weeks_dir.exists():
-            shutil.rmtree(self.weeks_dir)
         self.addCleanup(self._cleanup)
+        _weeks_tmp_env(self)
 
     def _cleanup(self):
         if self.site_dir.exists():
             shutil.rmtree(self.site_dir)
-        if self.weeks_dir.exists():
-            shutil.rmtree(self.weeks_dir)
 
     def _seed_index(self, overview):
         """Stand in for an existing built index.html with inlined payloads."""
@@ -221,7 +232,7 @@ class WeekArchiveBuildTest(unittest.TestCase):
         self._seed_index("本周端侧动态(06-26~07-03)：...")
         result = subprocess.run(
             [sys.executable, str(ROOT / "app" / "build.py"), "--backfill"],
-            cwd=ROOT, capture_output=True, text=True, timeout=60,
+            cwd=ROOT, env=self.weeks_env, capture_output=True, text=True, timeout=60,
         )
         self.assertEqual(result.returncode, 0, msg=f"{result.stdout}\n{result.stderr}")
         a = weeks_mod.read_archive("2026-06-26")
@@ -233,7 +244,7 @@ class WeekArchiveBuildTest(unittest.TestCase):
         # no site/index.html -> backfill prints warning, returns 0, no archive
         result = subprocess.run(
             [sys.executable, str(ROOT / "app" / "build.py"), "--backfill"],
-            cwd=ROOT, capture_output=True, text=True, timeout=60,
+            cwd=ROOT, env=self.weeks_env, capture_output=True, text=True, timeout=60,
         )
         self.assertEqual(result.returncode, 0)
         self.assertEqual(weeks_mod.read_manifest(), [])
@@ -245,11 +256,10 @@ class TwoWeekFlowTest(unittest.TestCase):
 
     def setUp(self):
         self.site_dir = ROOT / "site"
-        self.weeks_dir = ROOT / "data" / "weeks"
-        for d in (self.site_dir, self.weeks_dir):
-            if d.exists():
-                shutil.rmtree(d)
+        if self.site_dir.exists():
+            shutil.rmtree(self.site_dir)
         self.addCleanup(self._cleanup)
+        _weeks_tmp_env(self)
         # validate_payload checks paper_url liveness; stub it for the test.
         patcher = mock.patch("research_run.is_link_alive", return_value=True)
         self.addCleanup(patcher.stop)
@@ -264,9 +274,8 @@ class TwoWeekFlowTest(unittest.TestCase):
         self.addCleanup(self._stop)
 
     def _cleanup(self):
-        for d in (self.site_dir, self.weeks_dir):
-            if d.exists():
-                shutil.rmtree(d)
+        if self.site_dir.exists():
+            shutil.rmtree(self.site_dir)
 
     def _stop(self):
         self.httpd.shutdown()
@@ -282,7 +291,7 @@ class TwoWeekFlowTest(unittest.TestCase):
         self.site_dir.mkdir(parents=True, exist_ok=True)
         (self.site_dir / "index.html").write_text(old_html, encoding="utf-8")
         r = subprocess.run([sys.executable, str(ROOT / "app" / "build.py"), "--backfill"],
-                           cwd=ROOT, capture_output=True, text=True, timeout=60)
+                           cwd=ROOT, env=self.weeks_env, capture_output=True, text=True, timeout=60)
         self.assertEqual(r.returncode, 0, msg=f"{r.stdout}\n{r.stderr}")
 
         # 2) publish a "new week" paper to the live server and build
@@ -306,7 +315,7 @@ class TwoWeekFlowTest(unittest.TestCase):
 
         r = subprocess.run([sys.executable, str(ROOT / "app" / "build.py"),
                             "--server", self.base_url],
-                           cwd=ROOT, capture_output=True, text=True, timeout=60)
+                           cwd=ROOT, env=self.weeks_env, capture_output=True, text=True, timeout=60)
         self.assertEqual(r.returncode, 0, msg=f"{r.stdout}\n{r.stderr}")
 
         # 3) current index = new week, has switcher

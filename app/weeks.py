@@ -8,11 +8,14 @@ builder (app.build) and the runtime server (app.server) call into it.
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-WEEKS_DIR = ROOT / "data" / "weeks"
+# Env-overridable so subprocess builds in tests can write to a tmp dir without
+# touching the real committed archive under data/weeks/. Set EDGE_WEEKS_DIR.
+WEEKS_DIR = Path(os.environ.get("EDGE_WEEKS_DIR") or (ROOT / "data" / "weeks"))
 
 _RANGE_RE = re.compile(r"(\d{2})-(\d{2})~(\d{2})-(\d{2})")
 
@@ -20,11 +23,15 @@ _RANGE_RE = re.compile(r"(\d{2})-(\d{2})~(\d{2})-(\d{2})")
 def parse_week_meta(overview: str, fallback_iso: str) -> dict:
     """Derive {label, title, range} from the weekly overview text.
 
-    Parses the first ``MM-DD~MM-DD`` occurrence; year taken from
-    ``fallback_iso`` (a YYYY-MM-DD string). If no range is found, falls
-    back to ``fallback_iso`` for every field.
+    Parses the first ``MM-DD~MM-DD`` occurrence; the year is disambiguated
+    from ``fallback_iso`` (a YYYY-MM-DD string, typically today). If the start
+    month-day is later in the year than fallback's month-day, start belongs to
+    the previous year (e.g. a Dec-26~01-02 window read in January). If end's
+    month-day is earlier than start's (a cross-year window), end belongs to the
+    year after start. If no range is found, falls back to ``fallback_iso``.
     """
-    year = fallback_iso[:4]
+    year = int(fallback_iso[:4])
+    today_md = (int(fallback_iso[5:7]), int(fallback_iso[8:10]))
     m = _RANGE_RE.search(overview or "")
     if not m:
         return {
@@ -33,8 +40,12 @@ def parse_week_meta(overview: str, fallback_iso: str) -> dict:
             "range": {"start": fallback_iso, "end": fallback_iso},
         }
     sm, sd, em, ed = m.groups()
-    start = f"{year}-{sm}-{sd}"
-    end = f"{year}-{em}-{ed}"
+    start_md = (int(sm), int(sd))
+    end_md = (int(em), int(ed))
+    start_year = year - 1 if start_md > today_md else year
+    end_year = start_year + 1 if end_md < start_md else start_year
+    start = f"{start_year:04d}-{sm}-{sd}"
+    end = f"{end_year:04d}-{em}-{ed}"
     title = f"{sm}-{sd}~{em}-{ed}"
     return {"label": start, "title": title, "range": {"start": start, "end": end}}
 
