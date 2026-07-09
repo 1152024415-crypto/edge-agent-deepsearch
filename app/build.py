@@ -50,9 +50,15 @@ def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, r
     ``weeks`` already carries per-entry ``href`` (see app.weeks.attach_hrefs).
     ``week_label`` is this page's label, or None for the current-week page.
     """
+    # Strip any globals the runtime server injected into ``/`` (it sets
+    # WEEKS/WEEK_LABEL/WEEKS_BASE for the *live* page with runtime hrefs + null
+    # label). build.py fetches ``/`` as a template, so without stripping, the
+    # server's runtime values would execute AFTER render_page's own inline and
+    # overwrite the correct static values (wrong switcher hrefs, wrong label).
+    html = re.sub(r'<script>window\.__WEEKS__.*?;</script>', '', html, flags=re.S)
     inline = (
         '<script>window.__PAPERS__='
-        + json.dumps(papers, ensure_ascii=False)
+        + json.dumps({"papers": papers}, ensure_ascii=False)
         + ';window.__WEEKLY__='
         + json.dumps(weekly, ensure_ascii=False)
         + ';window.__TRENDING__='

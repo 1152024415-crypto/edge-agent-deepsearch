@@ -117,13 +117,18 @@ def attach_hrefs(manifest: list[dict], weeks_base: str, runtime: bool) -> list[d
     return out
 
 
-_PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(\[.*?\]);\s*window\.__WEEKLY__", re.S)
+_PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(.+?);\s*window\.__WEEKLY__", re.S)
 _WEEKLY_RE = re.compile(r"window\.__WEEKLY__\s*=\s*(\{.*?\});\s*window\.__TRENDING__", re.S)
 _TRENDING_RE = re.compile(r"window\.__TRENDING__\s*=\s*(\{.*?\});</script>", re.S)
 
 
 def extract_payloads_from_html(html: str) -> dict:
-    """Pull the three inlined payloads back out of a built index.html (for backfill)."""
+    """Pull the three inlined payloads back out of a built index.html (for backfill).
+
+    ``window.__PAPERS__`` is inlined as ``{"papers": [...]}`` (matching the
+    ``/api/papers`` contract), so the raw capture is a dict and the bare list
+    is under its ``papers`` key. Falls back to ``[]`` for missing/malformed.
+    """
     def grab(rx, default):
         m = rx.search(html)
         if not m:
@@ -132,8 +137,15 @@ def extract_payloads_from_html(html: str) -> dict:
             return json.loads(m.group(1))
         except Exception:
             return default
+    papers_raw = grab(_PAPERS_RE, [])
+    if isinstance(papers_raw, dict):
+        papers = papers_raw.get("papers", [])
+    elif isinstance(papers_raw, list):
+        papers = papers_raw  # legacy bare-list form
+    else:
+        papers = []
     return {
-        "papers": grab(_PAPERS_RE, []),
+        "papers": papers,
         "weekly": grab(_WEEKLY_RE, {"overview": "", "highlights": []}),
         "trending": grab(_TRENDING_RE, {"items": []}),
     }

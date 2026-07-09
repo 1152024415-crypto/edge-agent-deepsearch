@@ -143,6 +143,17 @@ class ExtractPayloadsTest(unittest.TestCase):
         self.assertEqual(out["papers"], [{"id": "p1", "title": "a];b"}])
         self.assertEqual(out["weekly"]["overview"], "ov")
 
+    def test_extracts_papers_dict_format(self):
+        # render_page inlines window.__PAPERS__ as {"papers":[...]} (matching
+        # /api/papers). extract must return the inner bare list.
+        html = (
+            '<script>window.__PAPERS__ = {"papers":[{"id":"p1"},{"id":"p2"}]};'
+            'window.__WEEKLY__ = {"overview":"ov","highlights":[]};'
+            'window.__TRENDING__ = {"items":[]};</script>'
+        )
+        out = weeks.extract_payloads_from_html(html)
+        self.assertEqual(out["papers"], [{"id": "p1"}, {"id": "p2"}])
+
 
 if __name__ == "__main__":
     unittest.main()

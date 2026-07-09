@@ -173,6 +173,9 @@ class RenderPageTest(unittest.TestCase):
         out = build_app.render_page(html, [{"id": "abc"}], {"overview": ""}, {"items": []},
                                     weeks, week_label="2026-06-26", weeks_base="../", runtime=False)
         self.assertIn("window.__PAPERS__", out)
+        # __PAPERS__ must be a {"papers":[...]} dict (matches /api/papers contract;
+        # page.py reads `data.papers`). A bare list here would render "0 signals".
+        self.assertIn('window.__PAPERS__={"papers":', out)
         self.assertIn("window.__WEEKS__", out)
         self.assertIn('"2026-06-26"', out)  # week_label inlined
         self.assertIn('window.__WEEKS_BASE__="../"', out)
@@ -192,6 +195,28 @@ class RenderPageTest(unittest.TestCase):
         out_rt = build_app.render_page(html, [], {"overview": ""}, {"items": []}, [],
                                        week_label=None, weeks_base="../", runtime=True)
         self.assertIn('href="notes.html"', out_rt)
+
+    def test_render_page_strips_runtime_server_globals(self):
+        # server.py injects a runtime globals block (WEEKS with "/" hrefs,
+        # WEEK_LABEL=null, WEEKS_BASE="") into /. build.py fetches / as a
+        # template; render_page MUST strip that block so its own static values
+        # win (else the server's runtime hrefs break switching on gh-pages).
+        html = (
+            '<html><body>'
+            '<script>window.__WEEKS__ = [{"label":"2026-07-02","current":true,"href":"/"},'
+            '{"label":"2026-06-26","current":false,"href":"/week/2026-06-26"}];'
+            'window.__WEEK_LABEL__ = null;window.__WEEKS_BASE__ = "";</script>'
+            '<script>let ALL=[];</script></body></html>'
+        )
+        weeks = [{"label": "2026-06-26", "current": False, "href": "../week/2026-06-26.html"}]
+        out = build_app.render_page(html, [], {"overview": ""}, {"items": []}, weeks,
+                                    week_label="2026-06-26", weeks_base="../", runtime=False)
+        # the server's runtime block is gone (no "/" href, no '= null' label)
+        self.assertNotIn('window.__WEEK_LABEL__ = null', out)
+        self.assertNotIn('"href":"/"', out)
+        # render_page's own static values are the only assignment
+        self.assertIn('window.__WEEK_LABEL__="2026-06-26"', out)
+        self.assertIn('window.__WEEKS_BASE__="../"', out)
 
 
 class PageSwitcherTest(unittest.TestCase):
