@@ -110,6 +110,9 @@
 - `paper_url` 必须和论文标题、摘要匹配。
 - `effects` 必须来自论文原文；没有报告写 `未报告`。
 - 发布前必须跑 `validate_research_run.py`。
+- **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、内链 404、热点复读论文列表、0 官方动态静默。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
+- `data/weekly_summary.json` 是**独立编辑产物**，不是 run 的派生字段。`highlights` 必须是编辑性新闻（厂商博客/动态/行业事件，带**外部 URL**，≥5 条），不许用 run 的 paper_id 切 top N 填充——那会让热点复读下面的论文列表。流程顺序：先采厂商动态（`官方动态`）→ 再写 weekly_summary（从新闻 + 判断）→ run 论文列表是另一层。
+- **0 官方动态是流程告警，不是可接受结果**。research-prompt 强制查 18 厂博客 + 模型实验室博客（DeepSeek/Moonshot/Zhipu/Minimax/百川）。run 里 `官方动态` count==0 时，必须要么去补采，要么在 `data/weeks/<label>-no-vendor.md` 写明逐厂证据（哪厂查了、在窗内是否有端侧文），不许静默接受 0。
 - 修改完成前至少跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py`。
 
 ## 已知教训
@@ -122,6 +125,9 @@
 - [2026-06-26] 主 agent 绕过 research-prompt.md 自写简化 prompt → 子 agent 没守标准 → 编造 404 链接。修复：发起子 agent 时 prompt 必须注入 research-prompt.md 全文，不许自写简化版。
 - [2026-06-26] 本周大厂官方内容稀疏时凑数，拿不确定链接充数。修复：找不到官方 URL 就丢弃，大厂不足就少收，不凑数。
 - [2026-06-26] 整理 agent 产出的 detail 含英文双引号会破坏 JSON 编码（方案 B 已停用整理 agent，不再产 detail，此条归档）。
+- [2026-07-09] 周切换器上线后在线站点论文列表 0 篇、切换器跳错、热点链接 404、热点复读论文列表——四个功能回归全因「只验数据形状（assertIn 子串/count/测试绿）不验产品体验（不打开页面点链接、不跟上周对比）」。修复：加 `app/gates/gate_release.py` 机械门（契约/内链/编辑层/官方动态），FAIL 不许部署；发布前用 chrome-devtools 实点每类链接。
+- [2026-07-09] `weekly_summary` 被当 run 派生字段（切 top N 论文填热点）→ 热点复读论文列表、无厂商新闻。根因：编辑层和采集层没分离。修复：weekly_summary 标为独立编辑产物，先采厂商动态再写热点，highlights 须 ≥5 外部 URL。
+- [2026-07-09] 子 agent 报「0 官方动态」主 agent 直接信 → 厂商博客层根本没采。修复：0 官方动态必须配 `data/weeks/<label>-no-vendor.md` 逐厂证据，gate_release 拦。
 - [2026-06-26] 调研 agent 标注 vendors/affiliation 只凭作者名推测，没附证据来源 → 用户质疑。修复：vendors/affiliation 标注必须有证据来源（OpenReview profile / Google Scholar / 论文 PDF 作者机构页），score_reason 里写明 affiliation 依据（如「Zhixiang Chi OpenReview profile 显示 Huawei Technologies Ltd，huawei.com 邮箱确认」），不许只凭名字猜。
 - [2026-06-26] 整理 agent 等全部整理完才统一推送 → 页面长时间停在「整理中」（方案 B 已停用整理 agent，详情页改短摘要+标签+链接，无「整理中」状态，此条归档）。
 - [2026-06-27] 6 维评分表演性太强（relevance 没口径、vendor 按出身加权、维度重叠、跨 run date 漂移）→ 改方案 B：2 维（relevance+contribution，0-20）+ source_tier facet + open_source bool + 多标签 tags。取消 6 段 detail 整理 agent（`detail-prompt.md` 删除）。新增 arXiv date 核对 + 跨 run 去重，根治「旧论文改日期充本周」。

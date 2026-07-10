@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 here = Path(__file__).resolve().parent
-gates = ["gate_frontmatter.py", "gate_dedup.py", "gate_window.py", "gate_vendors.py"]
+gates = ["gate_frontmatter.py", "gate_dedup.py", "gate_window.py", "gate_vendors.py", "gate_release.py"]
 failed = []
 for g in gates:
     print(f"\n=== {g} ===")
