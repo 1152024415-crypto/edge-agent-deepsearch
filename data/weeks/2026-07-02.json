@@ -7,6 +7,36 @@
   },
   "papers": [
     {
+      "id": "vendor-nvidia-nemotron-langchain-2026-07-08",
+      "run_id": "run-20260709-165925",
+      "title": "NVIDIA Nemotron 3 Ultra × LangChain Deep Agents:10x 低成本推理",
+      "abstract": "LangChain 把 Deep Agents 框架适配 NVIDIA Nemotron 3 Ultra,开放模型里准确率领先,单次推理成本比领先闭源模型低 10 倍。",
+      "effects": "开放模型中准确率领先;单次推理成本比领先闭源模型低 10 倍",
+      "mechanism": "完全靠工程化 agent 环境(调整 prompt、工具描述、中间件),不做模型再训练",
+      "paper_url": "https://blogs.nvidia.com/blog/nemotron-langchain-agents-open-stack/",
+      "date": "2026-07-08",
+      "score": 14,
+      "score_relevance": 8,
+      "score_contribution": 6,
+      "score_reason": "NVIDIA 官方博客,agent 推理成本优化(relevance 8);属 agent 环境工程整合非模型创新(contribution 6)",
+      "source_tier": "官方动态",
+      "open_source": true,
+      "tags": [
+        "方向:端侧agent",
+        "方向:工具调用",
+        "方向:云端serving",
+        "硬件:GPU"
+      ],
+      "insight_person": "",
+      "wiki_url": "",
+      "authors": "NVIDIA / LangChain",
+      "vendors": "NVIDIA",
+      "venue": "NVIDIA Blog",
+      "recommendation": "纳入",
+      "detail": null,
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
+    },
+    {
       "id": "github-mlx-v0.32.0",
       "run_id": "run-20260709-165925",
       "title": "MLX v0.32.0 — Apple Silicon 端侧推理框架大版本",
@@ -34,7 +64,7 @@
       "venue": "GitHub",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05722",
@@ -64,7 +94,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05147",
@@ -94,37 +124,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02770",
-      "run_id": "run-20260709-165925",
-      "title": "Gemma 4 Technical Report",
-      "abstract": "Google 发布 Gemma 4 开放权重多模态模型族，2.3B-31B 参数，含 dense 与 MoE 架构，12B 版采用统一无编码器架构直接吃原始音频和图像 patch。",
-      "effects": "STEM/多模态/长上下文基准大幅提升，可匹敌更大的前沿开放模型；改进推理速度、内存与计算效率，集成思考模式。",
-      "mechanism": "改进视觉/音频编码器、12B 无编码器统一架构、思考模式生成推理轨迹、关键设计选择提升长上下文能力与推理效率。",
-      "paper_url": "https://arxiv.org/abs/2607.02770",
-      "date": "2026-07-02",
-      "score": 16,
-      "score_relevance": 8,
-      "score_contribution": 8,
-      "score_reason": "开放权重小模型（2.3B 起）+ 推理效率设计，端侧可部署（relevance 8）。无编码器统一架构+思考模式是模型族级创新（contribution 8）。Gemma Team 技术报告，Google 主导，证据：arXiv 技术报告署名 Gemma Team / Google。",
-      "source_tier": "公司项目",
-      "open_source": true,
-      "tags": [
-        "方向:模型架构",
-        "方向:多模态",
-        "方向:高效推理",
-        "模型:Gemma"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Gemma Team (Google)",
-      "vendors": "Google",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04371",
@@ -154,7 +154,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07046",
@@ -184,7 +184,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05475",
@@ -215,7 +215,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03652",
@@ -245,7 +245,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07707",
@@ -274,7 +274,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07403",
@@ -304,7 +304,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06651",
@@ -334,7 +334,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04668",
@@ -364,7 +364,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04224",
@@ -392,7 +392,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04302",
@@ -424,7 +424,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03803",
@@ -456,7 +456,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03333",
@@ -486,64 +486,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02501",
-      "run_id": "run-20260709-165925",
-      "title": "Embodied.cpp: A Portable Inference Runtime of Embodied AI Models on Heterogeneous Robots",
-      "abstract": "为异构边缘设备上的具身 AI 模型（VLA/WAM）设计的可移植 C++ 推理运行时。",
-      "effects": "在 HY-VLA 与 pi0.5 上闭环执行任务成功率分别 100.0% 与 91.0%；WAM benchmark 把 block 内存从 312.2MiB 降到 88.1MiB。",
-      "mechanism": "分析代表性 VLA/WAM 提取共享执行路径，分五层（输入适配/序列构建/主干执行/head 插件/部署适配），提供多速率执行、延迟优先融合推理与可扩展算子/IO，通过一个后端抽象跨设备部署。",
-      "paper_url": "https://arxiv.org/abs/2607.02501",
-      "date": "2026-07-02",
-      "score": 16,
-      "score_relevance": 9,
-      "score_contribution": 7,
-      "score_reason": "明确异构边缘设备具身模型部署运行时（relevance 9）。C++ 五层可移植运行时+多速率延迟优先有高创新（contribution 7）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:编译部署",
-        "方向:推理框架",
-        "应用:机器人"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Ling Xu; Chuyu Han; Borui Li; Hao Wu; Shiqi Jiang; Ting Cao; Chuanyou Li; Sheng Zhong",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01590",
-      "run_id": "run-20260709-165925",
-      "title": "Hawk: Harnessing Hardware-Aware Knowledge for High-Performance NPU Kernel Generation",
-      "abstract": "用 LLM 做高性能 NPU kernel 生成的 training-free 框架，弥补硬件先验缺失。",
-      "effects": "真实 NPU 工作负载上生成准确率从 49.4% 提到 80.0%，执行速度最多比 SOTA 快 2.2 倍。",
-      "mechanism": "三模块：运行时知识合成（Triple-Part 可执行知识表示耦合错误上下文与可执行语义）；瓶颈感知检索（2D 检索投到正交语法与硬件语义空间）；效果驱动知识蒸馏（LLM 语义仲裁按执行反馈剪错除冗）。",
-      "paper_url": "https://arxiv.org/abs/2607.01590",
-      "date": "2026-07-02",
-      "score": 16,
-      "score_relevance": 9,
-      "score_contribution": 7,
-      "score_reason": "明确 NPU kernel 生成（relevance 9）。硬件感知知识+2D 检索+执行反馈蒸馏有高创新（contribution 7）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:编译部署",
-        "硬件:NPU"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Junyi Wen; Ruiyan Zhuang; Yongjia Xu; Pengtu Li; Rui Zou; Hongyi Chen; Chingman Wan; Puxu Yang",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07386",
@@ -573,7 +516,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07388",
@@ -603,7 +546,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05933",
@@ -632,7 +575,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06724",
@@ -662,7 +605,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05711",
@@ -692,7 +635,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06370",
@@ -722,7 +665,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06601",
@@ -752,7 +695,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05590",
@@ -782,7 +725,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05241",
@@ -810,7 +753,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05061",
@@ -839,7 +782,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05511",
@@ -869,7 +812,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03876",
@@ -899,7 +842,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05445",
@@ -929,7 +872,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.02980",
@@ -958,7 +901,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03213",
@@ -988,7 +931,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03089",
@@ -1017,65 +960,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02465",
-      "run_id": "run-20260709-165925",
-      "title": "Probabilistic Memory for Trustworthy Edge Intelligence",
-      "abstract": "为可信边缘智能引入 probabilistic memory（p-MEM），在原生内存带宽上直接采样的统一记忆原语。",
-      "effects": "p-MEM 可达 1000+ GSa/s/mm² 高斯随机数生成吞吐；集成进 CPU/GPU 后指令数最多降 2.19x/4.37x，采样延迟降 562x/3.45x，能耗降 295.5x/3.53x（贝叶斯神经网络负载）。",
-      "mechanism": "p-MEM 存储分布参数（均值/标准差）并在原生内存带宽直接采样，确定性数据为零方差特例；用 layout 验证仿真器全面探索器件、内存规格与技术节点。",
-      "paper_url": "https://arxiv.org/abs/2607.02465",
-      "date": "2026-07-02",
-      "score": 15,
-      "score_relevance": 8,
-      "score_contribution": 7,
-      "score_reason": "明确边缘智能硬件基底（relevance 8）。probabilistic memory 原语+原生带宽采样有高创新（contribution 7）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:记忆",
-        "方向:能耗功耗",
-        "硬件:CIM"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Likai Pei; Jiahao Zheng; Xueji Zhao; Emilie Ye; Jianbo Liu; Hanqing Tao; Ming-Yen Lee; Ruiyang Qin",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02512",
-      "run_id": "run-20260709-165925",
-      "title": "Program-as-Weights: A Programming Paradigm for Fuzzy Functions",
-      "abstract": "把自然语言规范编译成可本地执行的小型神经 artifact 的 fuzzy-function 编程范式。",
-      "effects": "0.6B Qwen3 解释器执行 PAW 程序匹配 Qwen3-32B 直接提示，推理内存仅约 1/50，MacBook M3 上 30 tok/s；并发布 10M 例 FuzzyBench。",
-      "mechanism": "4B 编译器在 FuzzyBench 上训练，为冻结轻量解释器产出参数高效 adapter；把基础模型从每输入解题器变成工具构建器，每次函数定义调用一次产小可复用 artifact，后续调用便宜且离线。",
-      "paper_url": "https://arxiv.org/abs/2607.02512",
-      "date": "2026-07-02",
-      "score": 15,
-      "score_relevance": 8,
-      "score_contribution": 7,
-      "score_reason": "明确本地执行 0.6B Qwen + MacBook 真机（relevance 8）。fuzzy-function 编程范式+编译成 adapter 有高创新（contribution 7）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": true,
-      "tags": [
-        "方向:端侧agent",
-        "方向:高效推理",
-        "模型:Qwen"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Wentao Zhang; Liliana Hotsko; Woojeong Kim; Pengyu Nie; Stuart Shieber; Yuntian Deng",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07033",
@@ -1104,7 +989,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07026",
@@ -1133,7 +1018,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07409",
@@ -1162,7 +1047,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07373",
@@ -1190,7 +1075,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07144",
@@ -1219,7 +1104,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06924",
@@ -1248,7 +1133,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06456",
@@ -1277,7 +1162,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05756",
@@ -1305,7 +1190,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06631",
@@ -1335,7 +1220,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06600",
@@ -1365,7 +1250,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05804",
@@ -1394,7 +1279,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06114",
@@ -1422,7 +1307,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05116",
@@ -1452,7 +1337,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04605",
@@ -1481,7 +1366,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05240",
@@ -1510,7 +1395,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04475",
@@ -1539,7 +1424,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03191",
@@ -1568,7 +1453,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.02893",
@@ -1597,94 +1482,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02461",
-      "run_id": "run-20260709-165925",
-      "title": "OrbitQuant: Data-Agnostic Quantization for Image and Video Diffusion Transformers",
-      "abstract": "给扩散 Transformer 做数据无关的权重-激活量化，一个旋转基让同一码本跨时间步/提示/层/模态通用，无需逐检查点重标定。",
-      "effects": "FLUX.1/Z-Image-Turbo/Wan2.1/CogVideoX 上多低比特设定 SOTA；把图像扩散 Transformer 量化推到 W2A4 仍可用。",
-      "mechanism": "随机置换块 Hadamard 旋转把每坐标集中到一个固定已知边际，单一 Lloyd-Max 码本服务所有时间步/层；旋转吸收进权重，运行时仅剩激活前向旋转。",
-      "paper_url": "https://arxiv.org/abs/2607.02461",
-      "date": "2026-07-02",
-      "score": 14,
-      "score_relevance": 6,
-      "score_contribution": 8,
-      "score_reason": "扩散模型量化属高效推理技术栈，端侧可迁移但非显式端侧（relevance 6）。数据无关旋转基量化跨模态通用有创新（contribution 8）。作者学校项目。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:量化",
-        "方向:高效推理",
-        "方向:多模态"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Donghyun Lee, Jitesh Chavan, Duy Nguyen, Sam Huang, Liming Jiang, Priyadarshini Panda, Timo Mertens, Saurabh Shukla",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02689",
-      "run_id": "run-20260709-165925",
-      "title": "S-EMBER: A Large-Scale Benchmark for Streaming Egocentric Memory Retrieval",
-      "abstract": "用 Ray-Ban Meta 智能眼镜采集的大规模流式第一视角记忆检索基准。",
-      "effects": "3141 个视频共 388 小时、9448 个 QA 对；揭示定位悖论：语义推理随参数变大而提升，但时间定位精度是停滞的架构瓶颈，不受益于暴力扩规模。",
-      "mechanism": "S-EMBER 把全局离线搜索转为由视觉事件触发的因果主动回忆流式检索范式，要求手动视觉证明与精确时间定位。",
-      "paper_url": "https://arxiv.org/abs/2607.02689",
-      "date": "2026-07-02",
-      "score": 14,
-      "score_relevance": 8,
-      "score_contribution": 6,
-      "score_reason": "可穿戴第一视角记忆检索基准，明确可穿戴端侧（relevance 8）。流式因果主动回忆范式+定位悖论发现有创新（contribution 6）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": true,
-      "tags": [
-        "方向:记忆",
-        "方向:端侧agent",
-        "方向:评测基准"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Xiaodong Wang; Xuanyi Zhao; Pedro Rodriguez; Devendra Singh Sachan; Barlas Oguz; Seungwhan Moon; Shang-Wen Li; Gargi Ghosh",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02371",
-      "run_id": "run-20260709-165925",
-      "title": "VisionAId: An Offline-First Multimodal Android Assistant for People with Visual Impairment, Featuring Personalized Object Retrieval",
-      "abstract": "离线优先的多模态 Android 视觉辅助应用，把手机变成实时视觉助手。",
-      "effects": "Samsung Galaxy S21 Ultra 上 INT8 量化把深度延迟从约 1200ms 降到约 491ms；自定义钞票检测器 mAP@50 达 0.986；度量深度 3m 内误差 <1cm。",
-      "mechanism": "集成六个 on-device 模型（度量深度、实例分割、视觉/人脸嵌入、人脸检测、钞票检测）经 ONNX Runtime 跑；可选云端 LLM 仅做场景叙述；含 few-shot 个人物体定位管线，反馈多模态（语音/振动/AR）。",
-      "paper_url": "https://arxiv.org/abs/2607.02371",
-      "date": "2026-07-02",
-      "score": 14,
-      "score_relevance": 9,
-      "score_contribution": 5,
-      "score_reason": "明确 on-device Android 全离线多模态部署（relevance 9）。六模型集成+few-shot 个人物体定位属工程整合（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:端侧agent",
-        "方向:多模态",
-        "硬件:手机"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Cristian-Gabriel Florea; Stelian Spînu",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.07643",
@@ -1712,7 +1510,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06982",
@@ -1742,7 +1540,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06922",
@@ -1772,7 +1570,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06915",
@@ -1802,7 +1600,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06519",
@@ -1830,7 +1628,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06839",
@@ -1860,7 +1658,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06036",
@@ -1889,7 +1687,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05272",
@@ -1918,7 +1716,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05155",
@@ -1947,7 +1745,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04921",
@@ -1975,7 +1773,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04290",
@@ -2003,7 +1801,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04164",
@@ -2033,7 +1831,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03801",
@@ -2062,7 +1860,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03784",
@@ -2090,208 +1888,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02753",
-      "run_id": "run-20260709-165925",
-      "title": "A Spiking Sequence Generator for Polar Trajectories on Neuromorphic Hardware",
-      "abstract": "在 SpiNNaker2 神经形态处理器上生成极坐标轨迹的脉冲神经网络架构。",
-      "effects": "相对常规计算平台 wall-clock 步长时间降两到三个数量级，能耗降三到四个数量级。",
-      "mechanism": "用 winner-take-all 架构加附属群体诱导受控行为切换，用 shunting inhibition 独立控制极坐标轨迹的方向、速度与半径，给出群体动力学调参规则。",
-      "paper_url": "https://arxiv.org/abs/2607.02753",
-      "date": "2026-07-02",
-      "score": 13,
-      "score_relevance": 8,
-      "score_contribution": 5,
-      "score_reason": "神经形态 SpiNNaker2 端侧 SWaP 约束（relevance 8）。SNN 极坐标轨迹生成器+独立控制有创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:编译部署"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "William R. P. Nourse; Roger D. Quinn",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02255",
-      "run_id": "run-20260709-165925",
-      "title": "AgenticSTS: A Bounded-Memory Testbed for Long-Horizon LLM Agents",
-      "abstract": "给长程 LLM agent 提出有界记忆契约：每次决策从新鲜用户消息按类型检索组装，不累积原始跨决策记录，prompt 长度恒定。",
-      "effects": "Slay the Spire 2 上释放 298 条轨迹的有界记忆测试床；启用技能层后胜率从 3/10 升到 6/10（方向性，p≈0.37）。",
-      "mechanism": "每次决策从新鲜消息按类型检索组装，无跨决策原始记录，prompt 跨任意长运行有界；可隔离消融任意记忆层。",
-      "paper_url": "https://arxiv.org/abs/2607.02255",
-      "date": "2026-07-02",
-      "score": 13,
-      "score_relevance": 7,
-      "score_contribution": 6,
-      "score_reason": "有界记忆 agent，prompt 恒定可迁移端侧（relevance 7）。有界记忆契约+可复现测试床有方法学价值（contribution 6）。作者含 Kaipeng Zhang，学校项目。",
-      "source_tier": "学校预印本",
-      "open_source": true,
-      "tags": [
-        "方向:记忆",
-        "方向:端侧agent",
-        "方向:评测基准"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Xiangchen Cheng, Yunwei Jiang, Jianwen Sun, Zizhen Li, Chuanhao Li, Xiangcheng Cao, Yihao Liu, Fanrui Zhang, Li Jin, Kaipeng Zhang",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01798",
-      "run_id": "run-20260709-165925",
-      "title": "Approximate Attention Weighting for Sustainable FPGA-Based Vision Transformer Inference",
-      "abstract": "面向小 FPGA 上 ViT 推理的无 BRAM 近似注意力加权单元。",
-      "effects": "Xilinx Zynq-7020 上注意力行核用 1444 LUT、77 DSP、无 BRAM，硬件精确仿真下 ViT 系列 top-1 绝对差仅 0.20%。",
-      "mechanism": "用 16 段分段线性函数在分布式 LUT 上近似 softmax 中的自然指数，无需 BRAM 查找表，保留预训练注意力温度避免重标定。",
-      "paper_url": "https://arxiv.org/abs/2607.01798",
-      "date": "2026-07-02",
-      "score": 13,
-      "score_relevance": 8,
-      "score_contribution": 5,
-      "score_reason": "明确小 FPGA 边缘 ViT 推理（relevance 8）。BRAM-free 自然指数近似有工程创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:高效推理",
-        "方向:高效注意力",
-        "硬件:FPGA"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Muhammad Usman; Muhammad Akmal Shafique; Shujaat Khan; Dorit Merhof",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01607",
-      "run_id": "run-20260709-165925",
-      "title": "MxGLUT: A Reconfigurable LUT-Centric Broadcast Dataflow Accelerator for Mixed-Precision GEMM",
-      "abstract": "基于 LUT 的可重构广播数据流混合精度 GEMM 加速器，统一 FP8-INT4 与 FP8-FP8 计算。",
-      "effects": "28nm 200MHz 综合下乘法器面积最多降 56.92%，FP8-INT4/FP8-FP8 功耗降 77.07%/78.35%；Llama 系列上 prefill/decode 延迟加速最多 2.16x/1.49x，困惑度最多升 1.70%。",
-      "mechanism": "统一 LUT 执行框架下用 MxLPE 同时组织 FP8-INT4 与 FP8-FP8 GEMM，无需专用 FP 乘法器；RLB 数据流在 prefill 局部化部分和累加、在 decode 利用权重复用。",
-      "paper_url": "https://arxiv.org/abs/2607.01607",
-      "date": "2026-07-02",
-      "score": 13,
-      "score_relevance": 7,
-      "score_contribution": 6,
-      "score_reason": "LLM 推理混合精度硬件加速器（relevance 7）。统一 LUT 机制+RLB 数据流有创新（contribution 6）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:编译部署",
-        "方向:高效推理",
-        "硬件:CIM",
-        "模型:Llama"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Weiyu Zhou; Chen Ding; Mingyuan Liu; Liangyu Gan; Yukun Feng; Hao Jia; Haoming Chu; Lirong Zheng",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01602",
-      "run_id": "run-20260709-165925",
-      "title": "ProWAFT: A ROMA-LPD Instance for Workload-Aware and Dynamic Fault Tolerance in FPGA-Based CNN Accelerators",
-      "abstract": "面向 FPGA CNN 加速器的负载感知动态容错框架，用部分重配置选择性 TMR。",
-      "effects": "在 ZCU104 六重配区、500 任务 trace（ResNet-18/MobileNetV2/EfficientNet-Lite）与时变 SEU 注入下，复合代价低于静态 TMR 与反应式恢复，任务成功率高、吞吐近基线。",
-      "mechanism": "ProWAFT 量化负载关键性、建模故障传播与重配开销，选择最小化延迟/能耗/可靠性风险复合目标的配置，跨重配分区选择性施 TMR。",
-      "paper_url": "https://arxiv.org/abs/2607.01602",
-      "date": "2026-07-02",
-      "score": 13,
-      "score_relevance": 8,
-      "score_contribution": 5,
-      "score_reason": "明确边缘 FPGA CNN 加速器容错（relevance 8）。负载感知选择性 TMR 有工程创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:编译部署",
-        "硬件:FPGA"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Xinxin Chen; Haoran Qiao; Yiming Guo; Kecheng Luo; Siyuan Feng; Jingwen Ma",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01876",
-      "run_id": "run-20260709-165925",
-      "title": "SAB-LVLM: Significance-Aware Binarization for Large Vision-Language Models",
-      "abstract": "为大型视觉语言模型做显著度感知的二值化，按层与模态区分权重重要性。",
-      "effects": "在约 1bit 压缩约束下优于现有二值 PTQ 方法。",
-      "mechanism": "为文本与视觉输入构建 Hessian 矩阵，提出空间显著度图区分单模态与跨模态激活的全精度权重，再用模态引导整合得显著度二值化图，作为误差再加权项并入二值化目标，交替显著度加权更新。",
-      "paper_url": "https://arxiv.org/abs/2607.01876",
-      "date": "2026-07-02",
-      "score": 13,
-      "score_relevance": 7,
-      "score_contribution": 6,
-      "score_reason": "二值化面向资源受限设备 VLM 部署（relevance 7）。显著度感知跨模态二值化有创新（contribution 6）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": true,
-      "tags": [
-        "方向:量化",
-        "方向:多模态",
-        "方向:高效推理"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Qi Lyu; Jiahua Dong; Baichen Liu; Xudong Wang; Mingfei Han; Yulun Zhang; Fahad Shahbaz Khan; Salman Khan",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02819",
-      "run_id": "run-20260709-165925",
-      "title": "Vision Token Manipulation Attacks on Cloud-Edge Inference of Large Vision-Language Models",
-      "abstract": "研究云-边缘 LVLM 推理中 vision token 传输被中间人篡改的新攻击面。",
-      "effects": "在 6 个 LVLM（3B-72B）4 个基准上，仅篡改 10% vision token 即可把准确率最多降 88.31%。",
-      "mechanism": "在黑盒中间人预算约束下拦截并篡改部分传输中的 vision token；提出四种朴素策略与一种优化式 token 选择方法。",
-      "paper_url": "https://arxiv.org/abs/2607.02819",
-      "date": "2026-07-02",
-      "score": 13,
-      "score_relevance": 7,
-      "score_contribution": 6,
-      "score_reason": "云-边缘 LVLM 推理安全，明确端云协同（relevance 7）。揭示 vision token 传输新攻击面有创新（contribution 6）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:安全隐私",
-        "方向:多模态",
-        "方向:端云协同"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Zikai Zhang; Rui Hu; Olivera Kotevska; Jiahao Xu",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06979",
@@ -2319,7 +1916,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06678",
@@ -2348,7 +1945,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06763",
@@ -2375,7 +1972,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04698",
@@ -2405,7 +2002,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04951",
@@ -2434,7 +2031,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04254",
@@ -2461,7 +2058,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04179",
@@ -2490,7 +2087,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04244",
@@ -2519,7 +2116,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.02963",
@@ -2548,7 +2145,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03451",
@@ -2577,65 +2174,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01831",
-      "run_id": "run-20260709-165925",
-      "title": "Lynx: Progressive Speculative Quantization for accelerating KV Transfer in Long-Context Inference",
-      "abstract": "把 KV cache 分成优先级流渐进传输的量化方案，加速长上下文 disaggregated 推理的 KV 迁移。",
-      "effects": "TTFT 与激进 4bit KV 量化相当但精度匹配 BF16；比标准 8bit KV 量化 TTFT 提升最多 1.43 倍，精度比 SOTA 提升最多 5.1%。",
-      "mechanism": "把 KV cache 分成高位 Anchor 流与低位 Residual 流；Anchor 到达即开始投机解码，Residual 并发传输后做验证保证等价于高精度解码。",
-      "paper_url": "https://arxiv.org/abs/2607.01831",
-      "date": "2026-07-02",
-      "score": 12,
-      "score_relevance": 6,
-      "score_contribution": 6,
-      "score_reason": "云端 disaggregated serving 的 KV 迁移（relevance 6，云端serving）。渐进分流投机解码有创新（contribution 6）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:KV cache",
-        "方向:量化",
-        "方向:云端serving"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Wenchen Han; Gingfung Matthew Yeung; Marco Barletta; William Toner; Amory Hoste; Adam Barker",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02640",
-      "run_id": "run-20260709-165925",
-      "title": "Metronome: Bound the Cache, Keep the Beat for Real-Time Interaction Model Serving",
-      "abstract": "面向实时交互模型（Moshi/MiniCPM-o/Qwen-Omni）的 KV 窗口 bounded serving，揭示并消除雪崩式崩溃。",
-      "effects": "in-engine KV 窗口把崩溃从 14/20 降到 0/20；把每帧延迟变成单调负载信号使在线准入控制器能找到可调度并发；一阶模型预测崩溃时间误差几个百分点。",
-      "mechanism": "揭示持续负载下 KV pool 耗尽导致亚稳崩溃；用 in-engine KV 窗口 bound 每个 session 的常驻状态，恢复稳定性与可观测性，再由在线准入控制器据单调延迟信号找并发。",
-      "paper_url": "https://arxiv.org/abs/2607.02640",
-      "date": "2026-07-02",
-      "score": 12,
-      "score_relevance": 5,
-      "score_contribution": 7,
-      "score_reason": "实时交互模型 serving，KV cache 行为分析端云通用（relevance 5，云端serving）。雪崩崩溃机制揭示+KV 窗口修复有高创新（contribution 7）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:云端serving",
-        "方向:KV cache",
-        "模型:MiniCPM"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Jiaying Meng; Bojie Li",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06768",
@@ -2662,7 +2201,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04593",
@@ -2691,7 +2230,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04219",
@@ -2719,7 +2258,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04218",
@@ -2746,7 +2285,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04206",
@@ -2775,7 +2314,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04079",
@@ -2804,7 +2343,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03171",
@@ -2831,7 +2370,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03334",
@@ -2858,7 +2397,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03050",
@@ -2888,178 +2427,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02484",
-      "run_id": "run-20260709-165925",
-      "title": "Combating Textual Noise and Redundancy: Entropy-Aware Dense Visual Token Pruning",
-      "abstract": "用熵感知解决文本噪声与特征碎片化，做结构化视觉 token 剪枝。",
-      "effects": "在严格 token 预算下鲁棒保留细粒度视觉线索，在多模态基准上达 SoTA 的效率-精度折衷。",
-      "mechanism": "EADP 先用统计熵量化过滤文本噪声得稳健细粒度指令相关性分数；再把 token 选择建模为带空间先验的次模最大化问题，保证整体非冗余视觉表示。",
-      "paper_url": "https://arxiv.org/abs/2607.02484",
-      "date": "2026-07-02",
-      "score": 11,
-      "score_relevance": 6,
-      "score_contribution": 5,
-      "score_reason": "VLM 视觉 token 剪枝属端侧技术栈但非显式端侧（relevance 6）。熵感知+次模最大化结构化剪枝有创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:剪枝稀疏",
-        "方向:多模态",
-        "方向:高效推理"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Xuehui Wang; Xuankun Yang; Wei Shen",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01984",
-      "run_id": "run-20260709-165925",
-      "title": "Do Newer Lightweight CNNs Perform Better Under Resource Constraints? A Controlled Multigenerational Study of Architecture, Initialization, Training Budget, and Efficiency",
-      "abstract": "在受控协议下比较九款轻量 CNN 在资源约束下的架构/初始化/训练预算/效率。",
-      "effects": "EfficientNetV2-S 在 CIFAR-10/100 最优（97.57%/86.98%），RepViT-M1.0 在 Tiny ImageNet 领先（79.87%）；EfficientNet-B0 出现在所有 Pareto 前沿；L4 与 CPU 上延迟排名差异显著。",
-      "mechanism": "在 CIFAR-10/100/Tiny ImageNet 上统一评测九款轻量 CNN 的 top-1/F1/参数/GMAC/batch-1 延迟（L4 与 AMD CPU）/峰值 CUDA 内存，给 Pareto 前沿。",
-      "paper_url": "https://arxiv.org/abs/2607.01984",
-      "date": "2026-07-02",
-      "score": 11,
-      "score_relevance": 7,
-      "score_contribution": 4,
-      "score_reason": "资源约束下轻量 CNN 部署评测（relevance 7）。受控比较研究无新方法（contribution 4）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:高效推理"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Tasnim Shahriar",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02636",
-      "run_id": "run-20260709-165925",
-      "title": "Federated Learning for Object Detection: Enabling Collaborative Drone Learning Without Centralizing Data",
-      "abstract": "把联邦学习用于无人机目标检测，让机群在不集中图像数据下协同训练。",
-      "effects": "FL 方案接近集中式训练且远超单机训练；最适合受限边缘的 YOLO26 nano 在 mAP@0.50 与 mAP@0.50:0.95 上相对增益 52.89% 与 67.80%。",
-      "mechanism": "用 Sherpa.ai FL 平台在 KIIT-MiTA 数据集上实现联邦目标检测管线，与单机/集中式基线比较 mAP。",
-      "paper_url": "https://arxiv.org/abs/2607.02636",
-      "date": "2026-07-02",
-      "score": 11,
-      "score_relevance": 7,
-      "score_contribution": 4,
-      "score_reason": "联邦边缘无人机检测（relevance 7）。FL 应用到检测属工程整合（contribution 4）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:联邦学习",
-        "应用:机器人"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Daniel M. Jimenez-Gutierrez; Enrique Zuazua; Georgios Kellaris; Joaquin del Rio; Oleksii Sliusarenko; Xabi Uribe-Etxebarria",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01792",
-      "run_id": "run-20260709-165925",
-      "title": "PARTREP: Learning What to Repeat for Decoder-only LLMs",
-      "abstract": "为 decoder-only LLM 选择性重复最有信息量的 prompt token，而非整段重复，降低 KV 成本。",
-      "effects": "在八个基准（含 MMLU/GSM8K/RULER）三种模型族上保留全重复大部分增益，KV cache 仅用 59.4%、prefill FLOPs 仅用 79.0%。",
-      "mechanism": "用 token 负对数似然作选择信号（难预测 token 更需后位重复），训轻量 gate 从早期层隐状态预测高 NLL token，在 prefill 中途早退出做选择。",
-      "paper_url": "https://arxiv.org/abs/2607.01792",
-      "date": "2026-07-02",
-      "score": 11,
-      "score_relevance": 6,
-      "score_contribution": 5,
-      "score_reason": "KV cache 成本降低属端侧技术栈但非显式端侧（relevance 6）。选择性 token 重复+轻量 gate 早退出有创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:KV cache",
-        "方向:高效推理",
-        "模型:Qwen",
-        "模型:Llama",
-        "模型:Gemma"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Andikawati P Widjaja; Yongjun Kim; Hyounghun Kim; Jaeho Lee",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01893",
-      "run_id": "run-20260709-165925",
-      "title": "Spec-AUF: Accept-Until-Fail Training under Train-Inference Misalignment for Masked Block Drafters",
-      "abstract": "为 masked block drafter 设计的 accept-until-fail 训练目标，纠正训练-推理失配。",
-      "effects": "在 Qwen3-8B 的 DFlash drafter 上把六个基准平均 emitted length τ 从 2.40 提到 2.61（每项均提升），并迁移到 Domino 双分支头（2.56→2.68）。",
-      "mechanism": "AUF 是对 CE 支持的单点 detach 修改：只在 drafter 首个预测失败前保留交叉熵支持，无需辅助目标、验证器 rollout 或改推理管线与正确性契约。",
-      "paper_url": "https://arxiv.org/abs/2607.01893",
-      "date": "2026-07-02",
-      "score": 11,
-      "score_relevance": 6,
-      "score_contribution": 5,
-      "score_reason": "投机解码 drafter 训练属端侧技术栈但非显式端侧（relevance 6）。accept-until-fail 支持截断有创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:投机解码",
-        "模型:Qwen"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Tianjian Yang; Meng Li",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01804",
-      "run_id": "run-20260709-165925",
-      "title": "VLA-Corrector: Lightweight Detect-and-Correct Inference for Adaptive Action Horizon",
-      "abstract": "为 action-chunked VLA 策略设计的轻量 detect-and-correct 推理框架，自适应动作时域。",
-      "effects": "未报告量化结果（仿真中显著提升长程接触丰富任务鲁棒性）。",
-      "mechanism": "VLA-Corrector 引入 Latent-space Vision Monitor 持续比较预测与实际视觉特征演化做在线偏差检测；检测到持续偏差即触发截断、丢弃陈旧动作，用 Online Gradient Guidance 做纠正重规划，不改主干权重。",
-      "paper_url": "https://arxiv.org/abs/2607.01804",
-      "date": "2026-07-02",
-      "score": 11,
-      "score_relevance": 6,
-      "score_contribution": 5,
-      "score_reason": "轻量 VLA 纠正属端侧技术栈但偏机器人（relevance 6）。事件触发自适应时域+在线梯度纠正有创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:高效推理",
-        "应用:机器人"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Yi Pan; Miao Pan; Qi Lu; Jiaming Huang; Man Zhang; Siteng Huang; Xin Li; Jie Zhang",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06796",
@@ -3087,7 +2455,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.06612",
@@ -3115,7 +2483,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.05571",
@@ -3142,7 +2510,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.04181",
@@ -3170,7 +2538,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     },
     {
       "id": "arxiv-2607.03948",
@@ -3199,196 +2567,46 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01617",
-      "run_id": "run-20260709-165925",
-      "title": "3DLS: A 3D Logic-Stacked Architecture for Disaggregated LLM Serving",
-      "abstract": "为 disaggregated LLM serving 设计的 logic-on-logic 3D 堆叠 chiplet 架构，隔离 KV 迁移与 TP 集体通信流量。",
-      "effects": "相对共享 fabric 平面基线吞吐最多 1.49x、端到端延迟降 60.2%；相对负载感知优先级管理平面基线吞吐 1.17x、延迟降 31.4%。",
-      "mechanism": "3DLS 用垂直互连走 KV cache 迁移，保留 decode 侧 TP 集体通信在横向 D2D fabric，物理隔离两类流量。",
-      "paper_url": "https://arxiv.org/abs/2607.01617",
-      "date": "2026-07-02",
-      "score": 10,
-      "score_relevance": 4,
-      "score_contribution": 6,
-      "score_reason": "云端 chiplet serving 架构（relevance 4，云端serving）。3D 堆叠物理流量隔离有创新（contribution 6）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:云端serving",
-        "硬件:GPU"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Jaehun Lee; In-Jun Jung; Joo-Young Kim",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01789",
-      "run_id": "run-20260709-165925",
-      "title": "EPnG: Adaptive Expert Prune-and-Grow for Parameter-Efficient MoE Fine-tuning",
-      "abstract": "按专家重要性做 LoRA 容量再分配的 MoE 参数高效微调 prune-and-grow 框架。",
-      "effects": "在 OLMoE 与 Qwen1.5-MoE 上同预算下优于 LoRA，接近全量微调，只更新 0.55%-0.72% 参数（少 140x-180x）。",
-      "mechanism": "EPnG 据路由门概率得专家重要性，剪低用专家、对高用专家用 rank growth+正交初始化扩展，保持固定参数预算。",
-      "paper_url": "https://arxiv.org/abs/2607.01789",
-      "date": "2026-07-02",
-      "score": 10,
-      "score_relevance": 5,
-      "score_contribution": 5,
-      "score_reason": "MoE PEFT 属端侧相邻但非显式端侧（relevance 5）。对齐 PEFT 与 MoE 路由的 prune-and-grow 有创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:剪枝稀疏",
-        "方向:MoE"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Ahin Lee; Sehyun Yun; Taesik Gong",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.02043",
-      "run_id": "run-20260709-165925",
-      "title": "Towards Load-Aware Prefill Deflection for Disaggregated LLM Serving",
-      "abstract": "面向 disaggregated LLM serving 的 proactive prefill 偏转调度器，让 decode 节点帮忙做 prefill。",
-      "effects": "在 vLLM 上用 DeepSeek-V2-Lite 评测生产 trace，P95 TTFT 最多降 81%，SLO 达成率最多提升 79%，单请求路由开销亚毫秒。",
-      "mechanism": "估计请求在 prefill 节点的 TTFT，在每个 decode 节点搜索保持在飞 decode 的 TBT SLO 的最大 chunk 调度，decode 路径有利时偏转；偏转请求的 prefill 就地执行消除跨节点 KV 传输。",
-      "paper_url": "https://arxiv.org/abs/2607.02043",
-      "date": "2026-07-02",
-      "score": 10,
-      "score_relevance": 4,
-      "score_contribution": 6,
-      "score_reason": "云端 disaggregated serving 调度（relevance 4，云端serving）。prefill 偏转消除 KV 传输有创新（contribution 6）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:云端serving",
-        "方向:调度服务",
-        "方向:KV cache"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "Shrikara Arun; Anjaly Parayil; Srikant Bharadwaj; Renee St. Amant; Victor Rühle",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
-    },
-    {
-      "id": "arxiv-2607.01579",
-      "run_id": "run-20260709-165925",
-      "title": "OmniPilot: An Uncertainty-Aware LLM Inference Advisor for Heterogeneous GPU Clusters",
-      "abstract": "异构 GPU 集群上 LLM serving 的不确定性感知启动顾问，预测配置代价并 abstain。",
-      "effects": "A100/H100/H200 四种精度 460 次基准上吞吐 MAPE 6.2%、log 空间 R²=0.92；top-1 准确率 95%、平均效用遗憾 0.003；OOD holdout 上 abstention 层成功标记全部 5 个低置信点。",
-      "mechanism": "用共形校准分位数代价模型（八项 serving 目标）配 OOD abstention 层，按校准到操作者偏好的经济效用度量排序配置。",
-      "paper_url": "https://arxiv.org/abs/2607.01579",
-      "date": "2026-07-02",
-      "score": 9,
-      "score_relevance": 4,
-      "score_contribution": 5,
-      "score_reason": "云端异构 GPU serving 配置顾问（relevance 4，云端serving）。共形校准+OOD abstention 有创新（contribution 5）。vendors 空。",
-      "source_tier": "学校预印本",
-      "open_source": false,
-      "tags": [
-        "方向:云端serving",
-        "方向:调度服务"
-      ],
-      "insight_person": "",
-      "wiki_url": "",
-      "authors": "D. Balamurugan; Thomas W. Bush",
-      "vendors": "",
-      "venue": "arXiv",
-      "recommendation": "纳入",
-      "detail": null,
-      "updated_at": "2026-07-09T11:09:48.409313+00:00"
+      "updated_at": "2026-07-10T03:48:36.291600+00:00"
     }
   ],
   "weekly": {
-    "overview": "本周端侧 AI 技术动态(07-02~07-09):端侧高效推理(DSpark 投机解码真实流量 60-85% 提速、Nemotron-Labs-Diffusion 三模态解码、SPORK 自投机加速 agent)、NPU/硬件实测(移动 NPU LLM 瓶颈剖析框架间差 10 倍、HiFA4 昇腾 4-bit FlashAttention、ELiTeFormer FPGA transformer)、端侧多设备部署(Voltron 弹性多设备 LLM、AMD Ryzen AI 机载多 agent、Elastic Gang 与 OS 进程协同调度)、小模型与记忆(Co-LMLM 360M 有限内存)、联邦边缘(Raspberry Pi 集群 56.8 倍压缩)、开放模型(Google Gemma 4 2.3B-31B)——端侧从硬件加速到部署框架到推理优化持续推进。",
+    "overview": "本周端侧 AI 动态(07-02~07-09):厂商动态(Amazon Alexa AZ3 端侧芯片、Samsung GAIA AI PC 芯片、NVIDIA Jetson Orin Nano 新平台、Apple Silicon 端侧路线、Nordic 超低功耗 edge AI、Anthropic Claude Cowork 移动端、1stProtect×Multiverse 端侧安全推理)+学术(DSpark 投机解码 60-85% 提速、移动 NPU LLM 瓶颈剖析、HiFA4 昇腾 4-bit、ELiTeFormer FPGA、Voltron 多设备 LLM、Raspberry Pi 联邦 56.8 倍压缩)——端侧从芯片整机到推理优化到部署持续推进。",
     "highlights": [
       {
-        "url": "",
-        "topic": "DSpark: DeepSeek 投机解码真实流量提速 60-85%（07-06）",
-        "why": "DeepSeek-V4 服务系统真实流量下每用户生成速度提升 60-85%,打开严格交互约束下此前不可达的性能档",
-        "paper_id": "arxiv-2607.05147"
+        "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNZEtxejc2QTIwZ05kTnI0NERVZnhQLUZsVF9TVjZPcW5ZQ0pPS1hXNWpGWG9pZmN4MGhHY0YwUTBSTlhEVDlseE0xSlp6TTBHYkNNOUFxMk5TVTJpZjUxTHcwRGUxMWV2YmVKVDMyQkszUy16NGtpX0lTYXQtckhocVBBTktKT3V2NDlDZGxMN2xDN2I0ZDNtdHlyXzExWkVhUlQtWXN1SzRuQjJWMHo0a2ZIN1dyNTl0Wm81Q3o5Tk9MM3U2SEF2cTljVQ?oc=5",
+        "topic": "Amazon Alexa 端侧 AI 落地:AZ3 芯片承担本地推理(07-04)",
+        "why": "Amazon 自研 AZ3 芯片把 Alexa 语音助手关键推理搬到端侧,减少云端往返"
       },
       {
-        "url": "",
-        "topic": "Nemotron-Labs-Diffusion: NVIDIA 三模态解码（07-07）",
-        "why": "8B 模型每 forward 解码 token 数是 Qwen3-8B 的 6 倍,统一 AR/扩散/自投机三种解码",
-        "paper_id": "arxiv-2607.05722"
+        "url": "https://news.google.com/rss/articles/CBMiggJBVV95cUxQV1lGSERickUyNHl0MDhXZ0dLUERDcnJuYmFrN1pmdEdOWG1RSk12VEtLeWZMRmZ3T2tSdmpPcVFRbU4yZDJHQ2dmRkFqVGNiRGNHdzNPUVBSVG5xbjN6bWRnNlZqVnprZXg5c0VtVnBCbFRSdUYzMVVqa1A2RkkxNmtkWXBQeE15ZGhOdHh5bXZVVndHUGs3eTdYYnlrd2x1M0ktcFdyTFhFaU1lbXpDazBVUi0xOWpuZURmd2hvSDRWNFpqR2dod1pPRDVtYnFjWkNqbXJOT2VxQlVMMmU5TzRpS0I3NlA0VWhxV3ozcnBIX0pra1ZWbUxtZGFFRE5lWlE?oc=5",
+        "topic": "NVIDIA Jetson Orin Nano 平台:多模态端侧计算(07-06)",
+        "why": "Jetson 端侧模组新平台面向多模态边缘计算部署"
       },
       {
-        "url": "",
-        "topic": "Voltron: 弹性多设备端侧 LLM 执行（07-08）",
-        "why": "多台端设备协同跑 LLM,准确率比单台最强可跑模型高 16.5% 且满足 QoS 延迟",
-        "paper_id": "arxiv-2607.07046"
+        "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQX3I0a2dTaXJObXlpU3lTLVZ0Q1JJY2JBdE8tT2xidTNMc1FMRFFFa1BLWklqb056ODM2eDI1Qy1JUUhEU3piZDRnT1lIdVNFV2RFcmtFajZ6Q0pMdEdpRmEwWVMtV0RiZ2t4ajYwVnVySG5tUmh1OGhkSTRmMFltLWRfcWdsY3lsbkE0Mw?oc=5",
+        "topic": "Apple 高管谈 Mac Mini AI 需求与端侧路线(07-06)",
+        "why": "Apple Silicon 高层阐释端侧 AI 需求增长与 on-device 未来"
       },
       {
-        "url": "",
-        "topic": "移动 NPU 跑 LLM 的隐藏瓶颈剖析（07-06）",
-        "why": "NPU 框架间性能差 10 倍,调度不当致 40% 能耗浪费,最佳配置可降 NPU 能耗 54.8%",
-        "paper_id": "arxiv-2607.05475"
+        "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNUEp5cG5mOUxWUENHMGlyVDJNZ0U5X3UyN3hCNlRraEFzRnZMTk5CVDdNcFVLMWx5NnVxVTVNLWJCYVZIbk96ZU05ZVoxaDF3ZzJ4QWlXc2E4V2JCaEoxb05xZkdVNkp1UGg5MGFWWlJSczBWZG9YdnpGS2VFOE41dDlROENyVWpOUER4bzI1c1ZVUmRWRnNIbEV4a1V5eldoLTE0M2NHOV9OUWNxay1yQm9xQ0NJVlpINXV4ZzNmSmNjRFV3VG8xLW9n0gHQAUFVX3lxTE9VNERSZHNWSHhQbHJIU2lzWDlkcTk0N0FMeGFtcVRqSVlhRHZqQndUaEJjZWhLM1k1WlVtNk9zNXVUcm9ycW1uNFN4eEZ4eDQxRWROQU96cnRHQUtHMHdrVkx4MEI5elVtaEZMZDYyaWg0ejhaOXZuSnd4a3ZrRUdKa002Qjh3LXljMFJORzhHOERwYVRmMjJ2YzE3MVo0RlYyZU5OR0huVWhlS050NFJNSTJLbTVkTTJPbXFyQkFGYTZDYnNUWEVKaEM1NFQ2NXU?oc=5",
+        "topic": "Anthropic Claude Cowork 扩展到移动端与 Web(07-08)",
+        "why": "Claude agent 跨移动/Web 协同,移动 agent 体验向外延展"
       },
       {
-        "url": "",
-        "topic": "ELiTeFormer: 面向 FPGA 的高效 Transformer（07-04）",
-        "why": "权重压 10 倍、KV 缓存压 12.8 倍,端到端比 A100 延迟低 3.9 倍能效高 3.2 倍",
-        "paper_id": "arxiv-2607.03652"
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQMkxDWlRqV0RwSHBjUkEyd3BkWWRaVlpWbVI3bXZ3WnpNWkN0WEFZYzJPTnZwcGdkYlQ4dGltOXlWdGNFTDZHbUJ5Q29oam5xSDFrZF83QVd4b1JuTTg1cV9fQzFFY2lkSzBKZjJ3eEpYWms5RkRiV25CSlpncngtYm5aX0Qxd0w1WWFwRm9ubjVEb0JuaDJVUzRTWTY0OTc0ZTlueUV2SDV1UQ?oc=5",
+        "topic": "Nordic Semiconductor 把 Edge AI 推进到超低功耗设备(07-03)",
+        "why": "Nordic 蓝牙/IoT 芯片厂把 edge AI 带入超低功耗端侧场景"
       },
       {
-        "url": "",
-        "topic": "Gemma 4: Google 2.3B-31B 开放权重模型（07-02）",
-        "why": "改进推理速度/内存/计算效率,集成思考模式,多模态+长上下文,匹敌更大前沿开放模型",
-        "paper_id": "arxiv-2607.02770"
+        "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZ0tGWmg2R2V4TzVCVW9KemFqbnBOcnpKa0dpYzRlQWZYbVdsUjdpdHRmMFd5b1hUQmFackVSZ25JOUZ2c01BQlJDOE0wNjJsTnFuc1Vva0pHMnVmUG1jclgwUW14NVktelZ6UTRQYXlKbnAxMERSMThOeGxkMTlvdDdyU01uSjV6?oc=5",
+        "topic": "Samsung 自研 GAIA AI PC 芯片对标 NVIDIA/Qualcomm(07-09)",
+        "why": "Samsung 推 GAIA AI PC 芯片,加入端侧 AI PC 芯片竞争"
       },
       {
-        "url": "",
-        "topic": "Co-LMLM: 360M 有限内存语言模型（07-08）",
-        "why": "360M 规模困惑度低于数据量多 40 倍的模型,SimpleQA 事实精度与 gpt-4o-mini 相当",
-        "paper_id": "arxiv-2607.07707"
-      },
-      {
-        "url": "",
-        "topic": "AMD Ryzen AI 上全机载多 agent VLM 控制（07-08）",
-        "why": "mini PC 硬件在环仿真验证全机载多 agent 架构可行,成本低于云依赖方案",
-        "paper_id": "arxiv-2607.07403"
-      },
-      {
-        "url": "",
-        "topic": "Raspberry Pi 集群联邦学习 56.8 倍压缩（07-07）",
-        "why": "15 节点异构 Pi 4/5 集群熵引导张量压缩,压缩比 56.8 倍且准确率反升 2.01%",
-        "paper_id": "arxiv-2607.06651"
-      },
-      {
-        "url": "",
-        "topic": "HiFA4: 昇腾 NPU 4-bit FlashAttention（07-05）",
-        "why": "Qwen3-8B 上恢复 37.5% 直接量化精度损失,MMLU 损失从 1.12pp 降到 0.70pp",
-        "paper_id": "arxiv-2607.04302"
-      },
-      {
-        "url": "",
-        "topic": "SPORK: 自投机加速 agent LLM（07-03）",
-        "why": "Qwen3-32B 工具名预测准确率 74.6-99.6%,GAIA P95 降 18%,覆盖 4B-32B dense/MoE",
-        "paper_id": "arxiv-2607.03333"
-      },
-      {
-        "url": "",
-        "topic": "Elastic Gang: LLM 推理与 OS 进程协同调度（07-06）",
-        "why": "AMD Zen 5 上推理与 OS 进程共享核,通用吞吐 1.28-1.75 倍,推理空闲恢复全部 8 核",
-        "paper_id": "arxiv-2607.04668"
+        "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPRW9OZE1hcnc4QnZnbGwzQW13bXU2SDlqekFjTXVBNXBSajhieEtYcUxjSmVPd2dWU0UwMlNHZFdfWDlIWVVhN2dHMUtlZjFWYW9MMTQycDN3bnQ5d0M1NHJuRklVd0h2SF9HeVhCclE0VWRpODAyNlBFd0N0OGhaejFsTDJsRDFsN280c09mNndFcVJCeE5XTlJ6QWo?oc=5",
+        "topic": "1stProtect × Multiverse:端侧安全 AI 推理合作(07-03)",
+        "why": "量子+安全厂商合作把 AI 推理做到端侧安全场景"
       }
     ]
   },

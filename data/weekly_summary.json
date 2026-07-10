@@ -1,17 +1,40 @@
 {
-  "overview": "本周端侧 AI 技术动态(07-02~07-09):端侧高效推理(DSpark 投机解码真实流量 60-85% 提速、Nemotron-Labs-Diffusion 三模态解码、SPORK 自投机加速 agent)、NPU/硬件实测(移动 NPU LLM 瓶颈剖析框架间差 10 倍、HiFA4 昇腾 4-bit FlashAttention、ELiTeFormer FPGA transformer)、端侧多设备部署(Voltron 弹性多设备 LLM、AMD Ryzen AI 机载多 agent、Elastic Gang 与 OS 进程协同调度)、小模型与记忆(Co-LMLM 360M 有限内存)、联邦边缘(Raspberry Pi 集群 56.8 倍压缩)、开放模型(Google Gemma 4 2.3B-31B)——端侧从硬件加速到部署框架到推理优化持续推进。",
+  "overview": "本周端侧 AI 动态(07-02~07-09):厂商动态(Amazon Alexa AZ3 端侧芯片、Samsung GAIA AI PC 芯片、NVIDIA Jetson Orin Nano 新平台、Apple Silicon 端侧路线、Nordic 超低功耗 edge AI、Anthropic Claude Cowork 移动端、1stProtect×Multiverse 端侧安全推理)+学术(DSpark 投机解码 60-85% 提速、移动 NPU LLM 瓶颈剖析、HiFA4 昇腾 4-bit、ELiTeFormer FPGA、Voltron 多设备 LLM、Raspberry Pi 联邦 56.8 倍压缩)——端侧从芯片整机到推理优化到部署持续推进。",
   "highlights": [
-    { "url": "", "topic": "DSpark: DeepSeek 投机解码真实流量提速 60-85%（07-06）", "why": "DeepSeek-V4 服务系统真实流量下每用户生成速度提升 60-85%,打开严格交互约束下此前不可达的性能档", "paper_id": "arxiv-2607.05147" },
-    { "url": "", "topic": "Nemotron-Labs-Diffusion: NVIDIA 三模态解码（07-07）", "why": "8B 模型每 forward 解码 token 数是 Qwen3-8B 的 6 倍,统一 AR/扩散/自投机三种解码", "paper_id": "arxiv-2607.05722" },
-    { "url": "", "topic": "Voltron: 弹性多设备端侧 LLM 执行（07-08）", "why": "多台端设备协同跑 LLM,准确率比单台最强可跑模型高 16.5% 且满足 QoS 延迟", "paper_id": "arxiv-2607.07046" },
-    { "url": "", "topic": "移动 NPU 跑 LLM 的隐藏瓶颈剖析（07-06）", "why": "NPU 框架间性能差 10 倍,调度不当致 40% 能耗浪费,最佳配置可降 NPU 能耗 54.8%", "paper_id": "arxiv-2607.05475" },
-    { "url": "", "topic": "ELiTeFormer: 面向 FPGA 的高效 Transformer（07-04）", "why": "权重压 10 倍、KV 缓存压 12.8 倍,端到端比 A100 延迟低 3.9 倍能效高 3.2 倍", "paper_id": "arxiv-2607.03652" },
-    { "url": "", "topic": "Gemma 4: Google 2.3B-31B 开放权重模型（07-02）", "why": "改进推理速度/内存/计算效率,集成思考模式,多模态+长上下文,匹敌更大前沿开放模型", "paper_id": "arxiv-2607.02770" },
-    { "url": "", "topic": "Co-LMLM: 360M 有限内存语言模型（07-08）", "why": "360M 规模困惑度低于数据量多 40 倍的模型,SimpleQA 事实精度与 gpt-4o-mini 相当", "paper_id": "arxiv-2607.07707" },
-    { "url": "", "topic": "AMD Ryzen AI 上全机载多 agent VLM 控制（07-08）", "why": "mini PC 硬件在环仿真验证全机载多 agent 架构可行,成本低于云依赖方案", "paper_id": "arxiv-2607.07403" },
-    { "url": "", "topic": "Raspberry Pi 集群联邦学习 56.8 倍压缩（07-07）", "why": "15 节点异构 Pi 4/5 集群熵引导张量压缩,压缩比 56.8 倍且准确率反升 2.01%", "paper_id": "arxiv-2607.06651" },
-    { "url": "", "topic": "HiFA4: 昇腾 NPU 4-bit FlashAttention（07-05）", "why": "Qwen3-8B 上恢复 37.5% 直接量化精度损失,MMLU 损失从 1.12pp 降到 0.70pp", "paper_id": "arxiv-2607.04302" },
-    { "url": "", "topic": "SPORK: 自投机加速 agent LLM（07-03）", "why": "Qwen3-32B 工具名预测准确率 74.6-99.6%,GAIA P95 降 18%,覆盖 4B-32B dense/MoE", "paper_id": "arxiv-2607.03333" },
-    { "url": "", "topic": "Elastic Gang: LLM 推理与 OS 进程协同调度（07-06）", "why": "AMD Zen 5 上推理与 OS 进程共享核,通用吞吐 1.28-1.75 倍,推理空闲恢复全部 8 核", "paper_id": "arxiv-2607.04668" }
+    {
+      "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNZEtxejc2QTIwZ05kTnI0NERVZnhQLUZsVF9TVjZPcW5ZQ0pPS1hXNWpGWG9pZmN4MGhHY0YwUTBSTlhEVDlseE0xSlp6TTBHYkNNOUFxMk5TVTJpZjUxTHcwRGUxMWV2YmVKVDMyQkszUy16NGtpX0lTYXQtckhocVBBTktKT3V2NDlDZGxMN2xDN2I0ZDNtdHlyXzExWkVhUlQtWXN1SzRuQjJWMHo0a2ZIN1dyNTl0Wm81Q3o5Tk9MM3U2SEF2cTljVQ?oc=5",
+      "topic": "Amazon Alexa 端侧 AI 落地:AZ3 芯片承担本地推理(07-04)",
+      "why": "Amazon 自研 AZ3 芯片把 Alexa 语音助手关键推理搬到端侧,减少云端往返"
+    },
+    {
+      "url": "https://news.google.com/rss/articles/CBMiggJBVV95cUxQV1lGSERickUyNHl0MDhXZ0dLUERDcnJuYmFrN1pmdEdOWG1RSk12VEtLeWZMRmZ3T2tSdmpPcVFRbU4yZDJHQ2dmRkFqVGNiRGNHdzNPUVBSVG5xbjN6bWRnNlZqVnprZXg5c0VtVnBCbFRSdUYzMVVqa1A2RkkxNmtkWXBQeE15ZGhOdHh5bXZVVndHUGs3eTdYYnlrd2x1M0ktcFdyTFhFaU1lbXpDazBVUi0xOWpuZURmd2hvSDRWNFpqR2dod1pPRDVtYnFjWkNqbXJOT2VxQlVMMmU5TzRpS0I3NlA0VWhxV3ozcnBIX0pra1ZWbUxtZGFFRE5lWlE?oc=5",
+      "topic": "NVIDIA Jetson Orin Nano 平台:多模态端侧计算(07-06)",
+      "why": "Jetson 端侧模组新平台面向多模态边缘计算部署"
+    },
+    {
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQX3I0a2dTaXJObXlpU3lTLVZ0Q1JJY2JBdE8tT2xidTNMc1FMRFFFa1BLWklqb056ODM2eDI1Qy1JUUhEU3piZDRnT1lIdVNFV2RFcmtFajZ6Q0pMdEdpRmEwWVMtV0RiZ2t4ajYwVnVySG5tUmh1OGhkSTRmMFltLWRfcWdsY3lsbkE0Mw?oc=5",
+      "topic": "Apple 高管谈 Mac Mini AI 需求与端侧路线(07-06)",
+      "why": "Apple Silicon 高层阐释端侧 AI 需求增长与 on-device 未来"
+    },
+    {
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNUEp5cG5mOUxWUENHMGlyVDJNZ0U5X3UyN3hCNlRraEFzRnZMTk5CVDdNcFVLMWx5NnVxVTVNLWJCYVZIbk96ZU05ZVoxaDF3ZzJ4QWlXc2E4V2JCaEoxb05xZkdVNkp1UGg5MGFWWlJSczBWZG9YdnpGS2VFOE41dDlROENyVWpOUER4bzI1c1ZVUmRWRnNIbEV4a1V5eldoLTE0M2NHOV9OUWNxay1yQm9xQ0NJVlpINXV4ZzNmSmNjRFV3VG8xLW9n0gHQAUFVX3lxTE9VNERSZHNWSHhQbHJIU2lzWDlkcTk0N0FMeGFtcVRqSVlhRHZqQndUaEJjZWhLM1k1WlVtNk9zNXVUcm9ycW1uNFN4eEZ4eDQxRWROQU96cnRHQUtHMHdrVkx4MEI5elVtaEZMZDYyaWg0ejhaOXZuSnd4a3ZrRUdKa002Qjh3LXljMFJORzhHOERwYVRmMjJ2YzE3MVo0RlYyZU5OR0huVWhlS050NFJNSTJLbTVkTTJPbXFyQkFGYTZDYnNUWEVKaEM1NFQ2NXU?oc=5",
+      "topic": "Anthropic Claude Cowork 扩展到移动端与 Web(07-08)",
+      "why": "Claude agent 跨移动/Web 协同,移动 agent 体验向外延展"
+    },
+    {
+      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQMkxDWlRqV0RwSHBjUkEyd3BkWWRaVlpWbVI3bXZ3WnpNWkN0WEFZYzJPTnZwcGdkYlQ4dGltOXlWdGNFTDZHbUJ5Q29oam5xSDFrZF83QVd4b1JuTTg1cV9fQzFFY2lkSzBKZjJ3eEpYWms5RkRiV25CSlpncngtYm5aX0Qxd0w1WWFwRm9ubjVEb0JuaDJVUzRTWTY0OTc0ZTlueUV2SDV1UQ?oc=5",
+      "topic": "Nordic Semiconductor 把 Edge AI 推进到超低功耗设备(07-03)",
+      "why": "Nordic 蓝牙/IoT 芯片厂把 edge AI 带入超低功耗端侧场景"
+    },
+    {
+      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZ0tGWmg2R2V4TzVCVW9KemFqbnBOcnpKa0dpYzRlQWZYbVdsUjdpdHRmMFd5b1hUQmFackVSZ25JOUZ2c01BQlJDOE0wNjJsTnFuc1Vva0pHMnVmUG1jclgwUW14NVktelZ6UTRQYXlKbnAxMERSMThOeGxkMTlvdDdyU01uSjV6?oc=5",
+      "topic": "Samsung 自研 GAIA AI PC 芯片对标 NVIDIA/Qualcomm(07-09)",
+      "why": "Samsung 推 GAIA AI PC 芯片,加入端侧 AI PC 芯片竞争"
+    },
+    {
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPRW9OZE1hcnc4QnZnbGwzQW13bXU2SDlqekFjTXVBNXBSajhieEtYcUxjSmVPd2dWU0UwMlNHZFdfWDlIWVVhN2dHMUtlZjFWYW9MMTQycDN3bnQ5d0M1NHJuRklVd0h2SF9HeVhCclE0VWRpODAyNlBFd0N0OGhaejFsTDJsRDFsN280c09mNndFcVJCeE5XTlJ6QWo?oc=5",
+      "topic": "1stProtect × Multiverse:端侧安全 AI 推理合作(07-03)",
+      "why": "量子+安全厂商合作把 AI 推理做到端侧安全场景"
+    }
   ]
 }
