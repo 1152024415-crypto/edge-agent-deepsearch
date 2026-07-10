@@ -196,6 +196,21 @@ class RenderPageTest(unittest.TestCase):
                                        week_label=None, weeks_base="../", runtime=True)
         self.assertIn('href="notes.html"', out_rt)
 
+    def test_render_page_rewrites_weekly_highlight_paper_links(self):
+        # weekly highlights link to papers via href="/paper/${paper_id}"; on a
+        # static gh-pages subpath the absolute /paper/... would 404 (resolves to
+        # domain root). render_page must prefix it with weeks_base + .html like
+        # the row template, so highlights resolve to the static detail page.
+        html = '<a class="weekly-topic" href="/paper/${escapeAttr(h.paper_id)}">t</a>'
+        out = build_app.render_page(html, [], {"overview": ""}, {"items": []}, [],
+                                    week_label=None, weeks_base="../", runtime=False)
+        self.assertIn('href="../paper/${escapeAttr(h.paper_id)}.html"', out)
+        self.assertNotIn('href="/paper/${escapeAttr(h.paper_id)}"', out)
+        # runtime keeps the absolute form (server serves /paper/<id>)
+        out_rt = build_app.render_page(html, [], {"overview": ""}, {"items": []}, [],
+                                       week_label=None, weeks_base="../", runtime=True)
+        self.assertIn('href="/paper/${escapeAttr(h.paper_id)}"', out_rt)
+
     def test_render_page_strips_runtime_server_globals(self):
         # server.py injects a runtime globals block (WEEKS with "/" hrefs,
         # WEEK_LABEL=null, WEEKS_BASE="") into /. build.py fetches / as a
