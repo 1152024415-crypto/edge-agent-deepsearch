@@ -119,7 +119,15 @@
       }
       var idx = h.indexOf('/');
       if(idx < 0) return;
-      selectNote(h.slice(0, idx), h.slice(idx + 1));
+      // location.hash is URL-encoded by the browser (e.g. Chinese filenames become
+      // %E8%BD...). Decode here so selectNote receives the raw name and
+      // encodeURIComponent in selectNote encodes exactly once — otherwise the fetch
+      // URL is double-encoded (%25E8...) and the note 404s on click.
+      try {
+        selectNote(decodeURIComponent(h.slice(0, idx)), decodeURIComponent(h.slice(idx + 1)));
+      } catch(e) {
+        selectNote(h.slice(0, idx), h.slice(idx + 1));  // fall back if not encoded
+      }
     }
 
     function esc(v){v = String(v==null?'':v); return v.replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
