@@ -169,7 +169,12 @@
       if(!w||!w.highlights||!w.highlights.length){el.innerHTML="";return;}
       el.innerHTML=`<div class="weekly-title">本周热点 · weekly signals</div>`+
         (w.overview?`<div class="weekly-ov">${escapeHtml(w.overview)}</div>`:"")+
-        w.highlights.map((h,i)=>{const href=h.url?escapeAttr(h.url):`/paper/${escapeAttr(h.paper_id)}`;const tgt=h.url?` target="_blank" rel="noopener"`:"";return `<div class="weekly-hl"><span class="weekly-num">${i+1}</span><a class="weekly-topic" href="${href}"${tgt}>${escapeHtml(h.topic)}</a><span class="weekly-why">— ${escapeHtml(h.why)}</span></div>`;}).join("");
+        w.highlights.map((h,i)=>{
+          const a=h.url
+            ?`<a class="weekly-topic" href="${escapeAttr(h.url)}" target="_blank" rel="noopener">${escapeHtml(h.topic)}</a>`
+            :`<a class="weekly-topic" href="paper/${escapeAttr(h.paper_id)}.html">${escapeHtml(h.topic)}</a>`;
+          return `<div class="weekly-hl"><span class="weekly-num">${i+1}</span>${a}<span class="weekly-why">— ${escapeHtml(h.why)}</span></div>`;
+        }).join("");
     }
     function range(){const d=ALL.map(p=>p.date).sort();return d.length?`${d[0]} → ${d[d.length-1]}`:'';}
 
