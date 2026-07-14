@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Apple PCC 技术深读",
+    "slug": "pcc-research",
+    "source": "D:/proj/pcc-research",
+    "desc": "Apple Private Cloud Compute 设计目标、六大技术组件、端到端链路、局限与 2026/06 Expanding PCC 进展"
+  },
+  {
+    "name": "DSpark 技术解读",
+    "slug": "dspark-blog",
+    "source": "D:/proj/dspark-blog",
+    "desc": "DeepSeek DSpark 投机解码在高并发下不塌方——半自回归生成、置信度调度、draft 并行、Adaptive Verification"
+  }
+]

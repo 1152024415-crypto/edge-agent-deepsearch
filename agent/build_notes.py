@@ -39,7 +39,10 @@ def ingest_collection(coll: dict) -> dict:
     if not src.exists():
         print(f"[NOTES] WARN source missing: {src}")
         return {**coll, "notes": []}
-    for p in sorted(src.iterdir()):
+    # rglob so image subdirs (e.g. DSpark's images/) are picked up too, not just
+    # top-level files. Files are copied FLAT into dest/<basename>; notes_page.py
+    # rewrites relative image src to notes/<slug>/<basename> so this resolves.
+    for p in sorted(src.rglob("*")):
         if not p.is_file():
             continue
         if p.suffix.lower() == ".md":
