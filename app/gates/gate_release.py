@@ -158,6 +158,12 @@ def check_trending_freshness(root: Path, errors: list) -> None:
                      f"shows stale repos. Run agent/collect_github_trending.py to refresh.")
 
 
+def check_snn_page(root: Path, errors: list) -> None:
+    """site/snn.html must exist — the SNN insight page nav link points at it."""
+    if not (root / "site" / "snn.html").exists():
+        _err(errors, "site/snn.html missing — run agent/build_snn.py (SNN 洞察 nav 链接会 404)")
+
+
 def _read_json(path: Path, default=None):
     if not path.exists():
         return default
@@ -174,6 +180,7 @@ def run_all(root: Path) -> list:
     check_highlights(root, errors)
     check_vendor_tier(root, errors)
     check_trending_freshness(root, errors)
+    check_snn_page(root, errors)
     return errors
 
 

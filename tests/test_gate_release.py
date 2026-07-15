@@ -59,6 +59,7 @@ class GateReleaseTest(unittest.TestCase):
         # detail page exists -> no 404
         _write(self.root, "site/paper/arxiv-x1.html", "<html>detail</html>")
         _write(self.root, "site/notes.html", "<html>notes</html>")
+        _write(self.root, "site/snn.html", "<html>snn</html>")
         # fresh trending file (mtime now) so check_trending_freshness passes
         _write(self.root, "data/github_trending_top20.json", "[]")
         import os
@@ -140,6 +141,13 @@ class GateReleaseTest(unittest.TestCase):
                "# 0 vendor this week\n- Apple: no in-window edge post\n- Google: Gemma4 QAT was 06-05 (out)")
         errs = gr.run_all(self.root)
         self.assertEqual(errs, [], errs)
+
+    # ---- snn page ----
+    def test_fail_when_snn_page_missing(self):
+        self._seed_good()
+        (self.root / "site" / "snn.html").unlink()
+        errs = gr.run_all(self.root)
+        self.assertTrue(any("snn.html" in e and "missing" in e for e in errs), errs)
 
     def test_pass_good_layout(self):
         self._seed_good()
