@@ -44,6 +44,7 @@ QUERIES = [
     ("edge-agent", 'abs:"edge agent"'),
     ("pruning-edge", "(abs:pruning AND (abs:edge OR abs:mobile OR abs:efficient))"),
     ("neuromorphic", "abs:neuromorphic"),
+    ("SNN", '(abs:"spiking neural network" OR abs:"spiking neuron" OR abs:"spike-based")'),
 ]
 
 

@@ -31,6 +31,7 @@
   - 联邦学习
   - 测试时自适应
   - 端侧训练
+  - SNN
 
 应用:
   - OCR
@@ -60,6 +61,7 @@
   - Apple-Silicon
   - Ascend
   - CIM
+  - 神经形态
 
 模型:
   - Llama

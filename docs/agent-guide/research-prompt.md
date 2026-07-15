@@ -35,7 +35,7 @@
 
 ## arXiv MCP（`search_papers`，全量结构化搜索，主力）
 多轮 query，`sort_by="submittedDate"`，`date_from`=7天前，`categories=[cs.AI,cs.LG,cs.CL,cs.RO]`。建议 query：
-1. `"on-device agent"` 2. `"edge computing agent"` 3. `"mobile LLM inference"` 4. `"NPU agent"` 5. `"agent memory edge"` 6. `"tool use edge device"` 7. `"federated agent"` 8. `"quantization agent mobile"`
+1. `"on-device agent"` 2. `"edge computing agent"` 3. `"mobile LLM inference"` 4. `"NPU agent"` 5. `"agent memory edge"` 6. `"tool use edge device"` 7. `"federated agent"` 8. `"quantization agent mobile"` 9. `"spiking neural network"`（SNN/脉冲网络/neuromorphic，端侧低功耗相邻方向）
 **自适应**：某 query 返回过少就自行放宽/换词（去掉引号精确匹配、换同义词、扩 category、放宽到 `cs.ET/cs.DC` 等），不必死守固定 query。正常返回多就继续。
 取每篇的 submittedDate 作为 `date`（不许自填）。
 
@@ -71,9 +71,10 @@ fetch 18 家大厂官方博客 URL 找过去 7 天动态，命中官方域名才
 
 - **核心架构**：Agentic AI / Mobile-Embedded Agent / Cognitive Edge / Multi-Agent on Edge
 - **轻量化**：量化(GPTQ/AWQ/KV量化) / 剪枝稀疏(SparseGPT/Wanda) / 蒸馏 / 高效注意力 / 投机解码(Medusa/EAGLE)
+- **脉冲/神经形态**：SNN(脉冲神经网络) / neuromorphic / 事件驱动低功耗推理（Loihi/SpiNNaker/TrueNorth/天机），与端侧低功耗相邻
 - **运行时自适应**：测试时自适应 / 动态多模态融合 / 能耗感知 / 端云协同卸载
 - **感知记忆规划**：VLM 端侧部署 / 记忆压缩 / 任务分解 / 工具调用
 - **评测硬件**：AndroidWorld/Mobile-Env/AIoTBench/MLPerf Tiny / NPU-DSP-GPU 编译(MLC-LLM/llama.cpp/ONNX Runtime)
 - **厂商技术**：Apple Intelligence/CoreAI / Samsung Gauss/Galaxy AI / Huawei HarmonyOS AI/Pangu/HiAI/Ascend / Qualcomm AI Hub/Hexagon / MediaTek NeuroPilot / 小米 HyperAI/MiLM/AISP / OPPO AndesGPT / vivo BlueLM / 荣耀 YOYO / Google Gemini Nano/MediaPipe / Microsoft Phi/Copilot Runtime / Meta Llama / Mistral Ministral / 面壁 MiniCPM / Qwen 端侧
 
-打标时对照 `data/tags.yaml`（4 维 dim:val 格式：`方向:值` / `应用:值` / `硬件:值` / `模型:值`），上述分支对应 `方向:端侧agent`/`方向:量化`/`方向:剪枝稀疏`/`方向:蒸馏`/`方向:投机解码`/`方向:KV cache`/`方向:推理框架`/`方向:调度服务`/`方向:云端serving`/`方向:多模态`/`方向:记忆`/`方向:工具调用`/`方向:规划推理`/`方向:模型架构`/`方向:MoE`/`方向:高效推理`/`方向:稀疏注意力`/`方向:高效注意力`/`方向:测试时自适应`/`方向:端侧训练`/`方向:端云协同`/`方向:能耗功耗`/`方向:编译部署`/`方向:评测基准`/`方向:安全隐私`/`方向:联邦学习`；硬件维 `硬件:NPU`/`硬件:GPU`/`硬件:Jetson` 等；应用维 `应用:OCR`/`应用:语音`/`应用:RAG` 等；模型维 `模型:Llama`/`模型:Qwen` 等。
+打标时对照 `data/tags.yaml`（4 维 dim:val 格式：`方向:值` / `应用:值` / `硬件:值` / `模型:值`），上述分支对应 `方向:端侧agent`/`方向:量化`/`方向:剪枝稀疏`/`方向:蒸馏`/`方向:投机解码`/`方向:KV cache`/`方向:推理框架`/`方向:调度服务`/`方向:云端serving`/`方向:多模态`/`方向:记忆`/`方向:工具调用`/`方向:规划推理`/`方向:模型架构`/`方向:MoE`/`方向:高效推理`/`方向:稀疏注意力`/`方向:高效注意力`/`方向:测试时自适应`/`方向:端侧训练`/`方向:端云协同`/`方向:能耗功耗`/`方向:编译部署`/`方向:评测基准`/`方向:安全隐私`/`方向:联邦学习`/`方向:SNN`；硬件维 `硬件:NPU`/`硬件:GPU`/`硬件:Jetson`/`硬件:神经形态` 等；应用维 `应用:OCR`/`应用:语音`/`应用:RAG` 等；模型维 `模型:Llama`/`模型:Qwen` 等。

@@ -32,12 +32,14 @@ TAG_RULES = [
     ("方向:评测基准", [r"benchmark", r"evaluat"]),
     ("方向:云端serving", [r"serving system", r"data center", r"datacenter", r"cluster"]),
     ("方向:端侧agent", [r"on-device", r"on device", r"\bedge\b", r"mobile", r"embedded", r"\biot\b", r"\bagent\b"]),
+    ("方向:SNN", [r"spiking neural network", r"\bsnn\b", r"spike-based", r"neuromorphic", r"spiking neuron"]),
     ("硬件:NPU", [r"\bnpu\b", r"hexagon", r"snapdragon", r"neural engine"]),
     ("硬件:GPU", [r"\bgpu\b", r"\bcuda\b", r"vulkan", r"rtx", r"h100", r"h800"]),
     ("硬件:Jetson", [r"jetson"]),
     ("硬件:手机", [r"phone", r"android", r"\bios\b", r"smartphone"]),
     ("硬件:MCU", [r"microcontroller", r"\bmcu\b"]),
     ("硬件:DGX", [r"dgx"]),
+    ("硬件:神经形态", [r"loihi", r"spinnaker", r"truenorth", r"neuromorphic chip", r"tianjic"]),
     ("模型:Llama", [r"\bllama\b"]),
     ("模型:Qwen", [r"\bqwen\b"]),
     ("模型:DeepSeek", [r"deepseek"]),
@@ -84,7 +86,7 @@ def convert_arxiv(path: Path) -> list[dict]:
         aid = re.sub(r"v\d+$", "", p["id"])
         summary = p.get("summary", "")
         text = (p.get("title", "") + " " + summary).lower()
-        is_edge = bool(re.search(r"on-device|on device|\bedge\b|mobile|embedded|\biot\b|npu|phone|microcontroller", text))
+        is_edge = bool(re.search(r"on-device|on device|\bedge\b|mobile|embedded|\biot\b|npu|phone|microcontroller|neuromorphic|loihi|spinnaker", text))
         rel = 7 if is_edge else 5
         contrib = 5
         authors = p.get("authors") or []

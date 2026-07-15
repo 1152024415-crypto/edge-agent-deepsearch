@@ -33,6 +33,7 @@
 - `方向:联邦学习` — federated/分布式训练
 - `方向:测试时自适应` — test-time adaptation/动态多模态融合
 - `方向:端侧训练` — 端侧/设备端训练
+- `方向:SNN` — 脉冲神经网络/spiking neural network/neuromorphic，事件驱动低功耗，端侧低功耗推理相邻
 
 ## 应用（受控）
 
@@ -62,6 +63,7 @@
 - `硬件:Snapdragon` — 高通 Snapdragon
 - `硬件:Apple-Silicon` — Apple Silicon
 - `硬件:Ascend` — 华为 Ascend
+- `硬件:神经形态` — Loihi/SpiNNaker/TrueNorth/天机 等神经形态芯片
 
 ## 模型（半自由，starter 列表）
 

@@ -24,6 +24,7 @@ QUERIES = [
     ('q8_slm', '(abs:"small language model" OR abs:"SLM" OR abs:"lightweight")'),
     ('q9_effinfer', '(abs:"efficient inference" AND abs:"LLM")'),
     ('q10_agentfed', '(abs:"agent memory" OR abs:"tool use" OR abs:"federated")'),
+    ('q11_snn', '(abs:"spiking neural network" OR abs:"spike-based" OR abs:neuromorphic OR abs:"spiking neuron")'),
 ]
 
 DATE_FROM = "2026-06-26"
