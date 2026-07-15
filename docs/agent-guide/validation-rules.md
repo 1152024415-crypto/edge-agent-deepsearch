@@ -23,7 +23,8 @@
 17. **死链检查**：`paper_url` 必须 HTTP 可访问。validate 对每个 URL 发 HEAD 请求，HEAD 失败 fallback GET；超时/网络不可达记 alive + warning 不 fail；只有 404 才 fail。单 URL 超时 5 秒。
 18. **arXiv date 核对**：`paper_url` 是 arXiv 时，validate 查 arXiv API 取真实提交日，与 JSON `date` 不一致 fail（防旧论文改日期充本周）；离线 warning 跳过。
 19. **跨 run 去重**：validate 读 `data/.last_run_papers.json`（publish 时写入），命中上次 run 的 id 给 warning（不 fail，因相邻两周窗口有合法重叠），提示主 agent 核实是否真有新进展。
-20. **内容匹配抽检**（主 agent publish 前）：对 `source_tier=官方动态` 和 `source_tier=开源大项目` 的条目，fetch URL 核验页面内容与标题摘要对应。URL 能打开 ≠ 内容对题，对不上就丢。
+20. **内容匹配抽检**（主 agent publish 前）：对 `source_tier=官方动态` 和 `source_tier=开源大项目` 的条目，fetch URL 核验页面内容与标题摘要对应。URL 能打开 ≠ 内容对题，对不上就丢。（07-15 教训：阶跃星辰 AI 手机新闻用了官网首页 stepfun.com 当 URL，但首页是 JS 壳不专门讲 STEPX Neo，内容对不上题——该条改走 weekly_summary 编辑性 highlight 用真实新闻链接，run 里丢弃。）
+21. **标签触发词精度**：`auto_tags` 每条方向 tag 的触发词必须是该架构/方法的特定词，不许用**伞词**当唯一触发词。`neuromorphic` 是超集（含 Ising 机/事件硬件/memristor，不全是 SNN）；`spike-based`/`spiking neuron` 可能是生物学放电（神经科学）。`方向:SNN` 必须用 `spiking neural network`/`\bsnn\b`/`spikformer`/`spiking transformer`/`spiking neuron model`。通则：新增 tag 前想「会不会匹配到别的领域」（SLM=Small/Speech、quantization 量化 BERT、neuromorphic≠SNN）。
 
 ## 评分口径参考
 

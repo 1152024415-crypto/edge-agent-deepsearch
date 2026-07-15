@@ -10,6 +10,23 @@
   - 每个内联 paper id 有 `site/paper/<id>.html`；每个历史周有 `site/week/<label>.html`；`site/notes.html` 在
   - weekly_summary highlights 外部 URL（厂商博客/新闻）≥5，非 paper_id 复读
   - 当前周 `官方动态` ≥1；为 0 则有 `data/weeks/<label>-no-vendor.md` 逐厂证据
+  - `data/github_trending_top20.json` mtime ≤7 天（>7 天 FAIL——防止 trending 区显示过期仓）
+
+## 厂商覆盖自检（防漏大新闻，07-15 阶跃星辰 AI 手机漏掉后补）
+
+gate 拦不住「漏一个厂商」——它只检查 官方动态 ≥1，不检查覆盖了哪些厂。发布前人工扫一眼本周 `官方动态` 的 vendors 列表，确认中国头部模型厂/终端厂**至少考虑过**：
+
+- 模型厂：Google / Microsoft / OpenAI / Anthropic / Meta / NVIDIA / Mistral / 面壁 / Qwen / **阶跃星辰 StepFun** / DeepSeek / Moonshot / Zhipu / Minimax / 百川
+- 设备厂：Apple / Samsung / Huawei / Qualcomm / MediaTek / 小米 / OPPO / vivo / 荣耀
+- 漏的厂商要写「本周 X 厂官方域名索引页已查，窗口内无端侧相关动态」逐厂证据（不许只写「0」断言）。**阶跃星辰这类「模型厂亲自下场造机/造端侧硬件」是端侧雷达最对题的信号，不许因为不在固定清单里就跳过**——vendor-research-guide 的厂商清单是起步集不是穷举，遇到「等」要主动扩。
+
+## 标签精度（防 tag 把不相关论文错标，07-15 SNN 把 Ising 神经形态错标后补）
+
+`auto_tags` 的每条方向 tag 规则，触发词必须是**该架构/方法的特定词**，不许用**伞词**当唯一触发词：
+
+- 反例：`方向:SNN` 用裸 `neuromorphic` → Ising 机/事件硬件/memristor 都算 neuromorphic 但不是脉冲网络，被错标；裸 `spike-based`/`spiking neuron` 可能是生物学放电（神经科学），不是 SNN 架构。
+- 正例：`方向:SNN` 用 `spiking neural network` / `\bsnn\b` / `spikformer` / `spiking transformer` / `spiking neuron model`——都是 SNN 架构本身。
+- 通则：新增任何方向 tag 前，先想「这个触发词会不会匹配到别的领域」（SLM=Small vs Speech-Language、quantization 量化 BERT、neuromorphic≠SNN），用架构特定词，别用伞词。
 
 ## 体验项（chrome-devtools 真点，每类链接都要 200）
 
@@ -19,6 +36,13 @@
 - [ ] **周切换器**：切到上周 → 上周页 166 篇渲染、`__WEEK_LABEL__` 正确；切回本周 → 114 篇
 - [ ] 返回链接（详情页 `← 返回雷达`）→ 回 index 200
 - [ ] 调研笔记 nav → notes.html 200
+
+### 用户视角浏览（不只点链接，验内容语义——gate 拦不住语义）
+
+- [ ] **按非默认 tag 筛**（如 SNN/投机解码/MoE）：随机点 2-3 篇，标题/摘要真的对题吗？（07-15 SNN 把 Ising 神经形态信道解码错标，就是没做这步）
+- [ ] **trending 区第一仓**：repo 名是本周新建/本周高星的吗？不是 → `collect_github_trending.py` 没跑，trending 过期
+- [ ] **扫官方动态列表**：中国头部模型厂/终端厂有没有明显遗漏（如本周有模型厂发端侧硬件却没收录）→ 回采集层补
+- [ ] **weekly highlights 置顶**：是本周最大动态吗？链接点开是**对应新闻/官方 blog**（不是首页壳）吗？（07-15 阶跃星辰错用官网首页当新闻链接，内容对不上题）
 
 ## 编辑项（跟设计/上周对比）
 

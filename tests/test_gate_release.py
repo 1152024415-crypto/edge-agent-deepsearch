@@ -59,6 +59,10 @@ class GateReleaseTest(unittest.TestCase):
         # detail page exists -> no 404
         _write(self.root, "site/paper/arxiv-x1.html", "<html>detail</html>")
         _write(self.root, "site/notes.html", "<html>notes</html>")
+        # fresh trending file (mtime now) so check_trending_freshness passes
+        _write(self.root, "data/github_trending_top20.json", "[]")
+        import os
+        os.utime(self.root / "data" / "github_trending_top20.json", None)  # touch -> now
 
     # ---- contract ----
     def test_fail_when_papers_inlined_as_bare_list(self):
@@ -141,6 +145,23 @@ class GateReleaseTest(unittest.TestCase):
         self._seed_good()
         errs = gr.run_all(self.root)
         self.assertEqual(errs, [], errs)
+
+    # ---- trending freshness ----
+    def test_fail_when_trending_file_missing(self):
+        self._seed_good()
+        (self.root / "data" / "github_trending_top20.json").unlink()
+        errs = gr.run_all(self.root)
+        self.assertTrue(any("github_trending_top20" in e and "missing" in e for e in errs), errs)
+
+    def test_fail_when_trending_file_stale(self):
+        self._seed_good()
+        import os, time
+        p = self.root / "data" / "github_trending_top20.json"
+        # set mtime 10 days ago -> > 7d threshold
+        old = time.time() - 10 * 86400
+        os.utime(p, (old, old))
+        errs = gr.run_all(self.root)
+        self.assertTrue(any("stale" in e or "old" in e for e in errs), errs)
 
 
 if __name__ == "__main__":

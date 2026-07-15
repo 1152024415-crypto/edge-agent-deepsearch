@@ -136,6 +136,28 @@ def check_vendor_tier(root: Path, errors: list) -> None:
                          f"acknowledge per-vendor evidence at data/weeks/{label}-no-vendor.md.")
 
 
+def check_trending_freshness(root: Path, errors: list) -> None:
+    """github_trending_top20.json must be refreshed within 7 days of deploy.
+
+    Catches the 07-15 regression: the run + weekly_summary were refreshed but
+    data/github_trending_top20.json was left at 07-03 (12 days stale), so the
+    page's trending section showed two-week-old repos. mtime > 7 days = FAIL.
+    """
+    import os
+    import time
+    tp = root / "data" / "github_trending_top20.json"
+    if not tp.exists():
+        _err(errors, "data/github_trending_top20.json missing — run agent/collect_github_trending.py "
+                     "before deploy (trending section would be empty/stale)")
+        return
+    age_sec = time.time() - tp.stat().st_mtime
+    if age_sec > 7 * 86400:
+        import datetime
+        days_old = int(age_sec // 86400)
+        _err(errors, f"data/github_trending_top20.json is {days_old}d old (>7d) — trending section "
+                     f"shows stale repos. Run agent/collect_github_trending.py to refresh.")
+
+
 def _read_json(path: Path, default=None):
     if not path.exists():
         return default
@@ -151,6 +173,7 @@ def run_all(root: Path) -> list:
     check_links(root, errors)
     check_highlights(root, errors)
     check_vendor_tier(root, errors)
+    check_trending_freshness(root, errors)
     return errors
 
 

@@ -54,6 +54,7 @@ arXiv 自身搜索只匹配标题和摘要，不直接按作者 affiliation 过�
 | NVIDIA | `developer.nvidia.com/nim`、`blogs.nvidia.com`、`developer.nvidia.com/blog`（技术博客）、`build.nvidia.com` | `"NVIDIA NIM" on-device`、`"Project DIGITS"`、`"NVIDIA ACE"`、`site:blogs.nvidia.com` | `NVIDIA`、`NVIDIA Research` | `developer.nvidia.com/nim`、`build.nvidia.com`、`github.com/NVIDIA` |
 | Mistral | `mistral.ai`（news / research）、`docs.mistral.ai` | `"Mistral Ministral"`、`"Ministral 3B 8B"`、`site:mistral.ai` | `Mistral AI` | `mistral.ai/news`、`github.com/mistralai` |
 | 面壁智能 ModelBest | `modelbest.cn`、`modelbest.cn/en` | `"MiniCPM"`、`"面壁智能"`、`"MiniCPM-V"`、`site:modelbest.cn` | `ModelBest`、`面壁智能`、`OpenBMB` | `github.com/OpenBMB/MiniCPM`、`modelbest.cn` |
+| 阶跃星辰 StepFun | `stepfun.com`（官网 JS 渲染，公告多在微信公众号，WebFetch 取不到深度页） | `"阶跃星辰"`、`"STEPX"`、`"Step 系列"`、`"印奇"`、`site:stepfun.com` | `StepFun`、`阶跃星辰` | `stepfun.com`、官方公众号（2026-07 发布全球首个 AI 智能体手机 STEPX Neo+智能体 OS） |
 | Qwen（阿里云） | `qwenlm.github.io`、`alibabacloud.com` 博客 | `"Qwen2.5" on-device`、`"Qwen Mobile-Agent"`、`site:qwenlm.github.io` | `Alibaba`、`Alibaba Cloud`、`Qwen Team`、`阿里云` | `github.com/QwenLM`、`qwenlm.github.io` |
 
 > 模型厂商 arXiv affiliation 命中率高，论文和官方技术报告都多。端侧关注小参数量变体（MiniCPM、Qwen 0.5B/1.5B/3B、Llama 1B/3B、Ministral 3B/8B、Phi-3-mini、Gemini Nano）。
