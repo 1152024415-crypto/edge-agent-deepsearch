@@ -1,40 +1,65 @@
 {
-  "overview": "本周端侧 AI 动态(07-02~07-09):厂商动态(Amazon Alexa AZ3 端侧芯片、Samsung GAIA AI PC 芯片、NVIDIA Jetson Orin Nano 新平台、Apple Silicon 端侧路线、Nordic 超低功耗 edge AI、Anthropic Claude Cowork 移动端、1stProtect×Multiverse 端侧安全推理)+学术(DSpark 投机解码 60-85% 提速、移动 NPU LLM 瓶颈剖析、HiFA4 昇腾 4-bit、ELiTeFormer FPGA、Voltron 多设备 LLM、Raspberry Pi 联邦 56.8 倍压缩)——端侧从芯片整机到推理优化到部署持续推进。",
+  "overview": "本周端侧 AI 动态(07-09~07-15):厂商动态密集——Google Tensor+Pixel 下一代端侧 AI 路线、LiteRT.js 浏览器端高性能推理、NVIDIA 连发(Performance-per-watt 基础设施效率度量、AI Model Co-Design 硬件友好 LLM 设计、CUDA Kernel Fusion 降内存/launch 开销、NeMo/Cosmos Agent Skills 自研工作流、机器人策略真机评测、Nemotron 开放模型)、Anthropic Claude 进物理 AI、Meta Muse Spark 1.1 模型 API、Mistral Studio prompt/skill 记录系统、ONNX Runtime v1.27.1 QMoE batch-1 decode GEMV 快路径;学术侧 177 篇 arXiv(含 7 篇 SNN/脉冲网络新方向:PalmClaw 端侧 agent 框架、sEMG 肌疲劳 SNN 检测、CSP SNN 求解器并行回火、移动 NPU LLM 瓶颈、KV cache/投机解码/量化持续涌现)+26 篇公司项目(ByteDance/Tencent/Alibaba/DeepSeek 等 affiliation 命中)+HF 精选(ABot-AgentOS 机器人 agent OS、CineMobile 端侧、LightMem-Ego 手机/AI 眼镜、KronQ 量化)——端侧从芯片整机、推理优化、agent 框架到神经形态低功耗全栈推进。",
   "highlights": [
     {
-      "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNZEtxejc2QTIwZ05kTnI0NERVZnhQLUZsVF9TVjZPcW5ZQ0pPS1hXNWpGWG9pZmN4MGhHY0YwUTBSTlhEVDlseE0xSlp6TTBHYkNNOUFxMk5TVTJpZjUxTHcwRGUxMWV2YmVKVDMyQkszUy16NGtpX0lTYXQtckhocVBBTktKT3V2NDlDZGxMN2xDN2I0ZDNtdHlyXzExWkVhUlQtWXN1SzRuQjJWMHo0a2ZIN1dyNTl0Wm81Q3o5Tk9MM3U2SEF2cTljVQ?oc=5",
-      "topic": "Amazon Alexa 端侧 AI 落地:AZ3 芯片承担本地推理(07-04)",
-      "why": "Amazon 自研 AZ3 芯片把 Alexa 语音助手关键推理搬到端侧,减少云端往返"
+      "url": "https://developers.googleblog.com/unlocking-the-next-era-of-on-device-ai-with-google-tensor-and-pixel/",
+      "topic": "Google Tensor+Pixel:下一代端侧 AI 路线(07-13)",
+      "why": "Google 官方阐释 Tensor 芯片+Pixel 设备上的 on-device AI 下一步,端侧硬件-模型协同的核心信号"
     },
     {
-      "url": "https://news.google.com/rss/articles/CBMiggJBVV95cUxQV1lGSERickUyNHl0MDhXZ0dLUERDcnJuYmFrN1pmdEdOWG1RSk12VEtLeWZMRmZ3T2tSdmpPcVFRbU4yZDJHQ2dmRkFqVGNiRGNHdzNPUVBSVG5xbjN6bWRnNlZqVnprZXg5c0VtVnBCbFRSdUYzMVVqa1A2RkkxNmtkWXBQeE15ZGhOdHh5bXZVVndHUGs3eTdYYnlrd2x1M0ktcFdyTFhFaU1lbXpDazBVUi0xOWpuZURmd2hvSDRWNFpqR2dod1pPRDVtYnFjWkNqbXJOT2VxQlVMMmU5TzRpS0I3NlA0VWhxV3ozcnBIX0pra1ZWbUxtZGFFRE5lWlE?oc=5",
-      "topic": "NVIDIA Jetson Orin Nano 平台:多模态端侧计算(07-06)",
-      "why": "Jetson 端侧模组新平台面向多模态边缘计算部署"
+      "url": "https://developers.googleblog.com/litertjs-googles-high-performance-web-ai-inference/",
+      "topic": "LiteRT.js:Google 浏览器端高性能 AI 推理(07-09)",
+      "why": "把 LiteRT 推理搬到浏览器/WebGPU,边缘推理又扩一个部署面(Web 端侧)"
     },
     {
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQX3I0a2dTaXJObXlpU3lTLVZ0Q1JJY2JBdE8tT2xidTNMc1FMRFFFa1BLWklqb056ODM2eDI1Qy1JUUhEU3piZDRnT1lIdVNFV2RFcmtFajZ6Q0pMdEdpRmEwWVMtV0RiZ2t4ajYwVnVySG5tUmh1OGhkSTRmMFltLWRfcWdsY3lsbkE0Mw?oc=5",
-      "topic": "Apple 高管谈 Mac Mini AI 需求与端侧路线(07-06)",
-      "why": "Apple Silicon 高层阐释端侧 AI 需求增长与 on-device 未来"
+      "url": "https://blogs.nvidia.com/blog/performance-per-watt-ai-infrastructure-efficiency/",
+      "topic": "NVIDIA:Performance per Watt 是 AI 基础设施效率终极度量(07-14)",
+      "why": "能效比是端侧/边缘推理的核心约束,官方定调 per-watt 为第一指标"
     },
     {
-      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNUEp5cG5mOUxWUENHMGlyVDJNZ0U5X3UyN3hCNlRraEFzRnZMTk5CVDdNcFVLMWx5NnVxVTVNLWJCYVZIbk96ZU05ZVoxaDF3ZzJ4QWlXc2E4V2JCaEoxb05xZkdVNkp1UGg5MGFWWlJSczBWZG9YdnpGS2VFOE41dDlROENyVWpOUER4bzI1c1ZVUmRWRnNIbEV4a1V5eldoLTE0M2NHOV9OUWNxay1yQm9xQ0NJVlpINXV4ZzNmSmNjRFV3VG8xLW9n0gHQAUFVX3lxTE9VNERSZHNWSHhQbHJIU2lzWDlkcTk0N0FMeGFtcVRqSVlhRHZqQndUaEJjZWhLM1k1WlVtNk9zNXVUcm9ycW1uNFN4eEZ4eDQxRWROQU96cnRHQUtHMHdrVkx4MEI5elVtaEZMZDYyaWg0ejhaOXZuSnd4a3ZrRUdKa002Qjh3LXljMFJORzhHOERwYVRmMjJ2YzE3MVo0RlYyZU5OR0huVWhlS050NFJNSTJLbTVkTTJPbXFyQkFGYTZDYnNUWEVKaEM1NFQ2NXU?oc=5",
-      "topic": "Anthropic Claude Cowork 扩展到移动端与 Web(07-08)",
-      "why": "Claude agent 跨移动/Web 协同,移动 agent 体验向外延展"
+      "url": "https://developer.nvidia.com/blog/ai-model-co-design-hardware-friendly-llm-design/",
+      "topic": "NVIDIA:AI Model Co-Design 硬件友好 LLM 设计(07-10)",
+      "why": "模型-硬件协同设计,把 LLM 往端侧友好(低带宽/低功耗)方向调"
     },
     {
-      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQMkxDWlRqV0RwSHBjUkEyd3BkWWRaVlpWbVI3bXZ3WnpNWkN0WEFZYzJPTnZwcGdkYlQ4dGltOXlWdGNFTDZHbUJ5Q29oam5xSDFrZF83QVd4b1JuTTg1cV9fQzFFY2lkSzBKZjJ3eEpYWms5RkRiV25CSlpncngtYm5aX0Qxd0w1WWFwRm9ubjVEb0JuaDJVUzRTWTY0OTc0ZTlueUV2SDV1UQ?oc=5",
-      "topic": "Nordic Semiconductor 把 Edge AI 推进到超低功耗设备(07-03)",
-      "why": "Nordic 蓝牙/IoT 芯片厂把 edge AI 带入超低功耗端侧场景"
+      "url": "https://developer.nvidia.com/blog/kernel-fusion-in-nvidia-cuda-optimizing-memory-traffic-and-launch-overhead/",
+      "topic": "NVIDIA:CUDA Kernel Fusion 降内存流量与 launch 开销(07-10)",
+      "why": "kernel 融合是端侧/边缘推理降开销的通用优化手段"
     },
     {
-      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZ0tGWmg2R2V4TzVCVW9KemFqbnBOcnpKa0dpYzRlQWZYbVdsUjdpdHRmMFd5b1hUQmFackVSZ25JOUZ2c01BQlJDOE0wNjJsTnFuc1Vva0pHMnVmUG1jclgwUW14NVktelZ6UTRQYXlKbnAxMERSMThOeGxkMTlvdDdyU01uSjV6?oc=5",
-      "topic": "Samsung 自研 GAIA AI PC 芯片对标 NVIDIA/Qualcomm(07-09)",
-      "why": "Samsung 推 GAIA AI PC 芯片,加入端侧 AI PC 芯片竞争"
+      "url": "https://developer.nvidia.com/blog/how-to-run-an-autoresearch-workflow-with-rl-agent-skills-and-nvidia-nemo/",
+      "topic": "NVIDIA:NeMo+RL Agent Skills 跑自动科研工作流(07-14)",
+      "why": "agent skills 自动化工作流,agent 框架向科研场景落地"
     },
     {
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPRW9OZE1hcnc4QnZnbGwzQW13bXU2SDlqekFjTXVBNXBSajhieEtYcUxjSmVPd2dWU0UwMlNHZFdfWDlIWVVhN2dHMUtlZjFWYW9MMTQycDN3bnQ5d0M1NHJuRklVd0h2SF9HeVhCclE0VWRpODAyNlBFd0N0OGhaejFsTDJsRDFsN280c09mNndFcVJCeE5XTlJ6QWo?oc=5",
-      "topic": "1stProtect × Multiverse:端侧安全 AI 推理合作(07-03)",
-      "why": "量子+安全厂商合作把 AI 推理做到端侧安全场景"
+      "url": "https://developer.nvidia.com/blog/post-train-nvidia-cosmos-3-in-one-day-using-agent-skills/",
+      "topic": "NVIDIA:Agent Skills 一天 post-train Cosmos 3(07-14)",
+      "why": "agent 驱动的模型后训练流水线,效率数量级提升"
+    },
+    {
+      "url": "https://developer.nvidia.com/blog/how-to-evaluate-general-purpose-robot-policies-for-real-world-deployment/",
+      "topic": "NVIDIA:通用机器人策略真机部署评测(07-11)",
+      "why": "embodied/机器人 agent 真机评测方法论,端侧+具身交叉"
+    },
+    {
+      "url": "https://blogs.nvidia.com/blog/nemotron-open-models-ai-trust-control-customize/",
+      "topic": "NVIDIA Nemotron Labs:开放模型给企业/国家可控可定制 AI(07-14)",
+      "why": "开放模型+可控部署,端侧/私有化推理的模型供给"
+    },
+    {
+      "url": "https://www.anthropic.com/news/ust-claude",
+      "topic": "Anthropic:UST 把 Claude 带进物理 AI(07-09)",
+      "why": "Claude 进 physical AI/具身场景,模型厂向端侧+物理世界延展"
+    },
+    {
+      "url": "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/",
+      "topic": "Meta:Muse Spark 1.1 模型 API 发布(07-09)",
+      "why": "Meta 开放 Muse Spark 生成模型 API,多模态生成模型供给"
+    },
+    {
+      "url": "https://mistral.ai/news/manage-prompts-and-skills-in-studio/",
+      "topic": "Mistral:Studio 给 prompt/skill 做记录系统(07-09)",
+      "why": "agent 的 prompt/skill 管理走向系统化,agent 工程基础设施"
     }
   ]
 }

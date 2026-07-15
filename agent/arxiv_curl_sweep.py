@@ -20,8 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 RUN = ROOT / "research_runs" / "run-20260709-165925.json"
 OUT = ROOT / ".superpowers" / "sdd" / "arxiv_candidates.json"
 
-WINDOW_LO = "2026-07-02"
-WINDOW_HI = "2026-07-09"
+WINDOW_LO = "2026-07-09"
+WINDOW_HI = "2026-07-15"
 CATS = "(cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.RO OR cat:cs.AR OR cat:cs.DC OR cat:cs.ET OR cat:cs.SY OR cat:cs.NE)"
 
 # (label, search_query_fragment)  -- single words quoted, multi-word via AND
