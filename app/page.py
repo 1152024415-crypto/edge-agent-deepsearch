@@ -134,6 +134,7 @@ INDEX_HTML = """<!doctype html>
         <h1>RADAR<span class="sub">端侧 AI Agent 信号周报</span></h1>
         <div class="scope-stats" id="summary">scanning…</div>
         <a class="nav-link" href="notes.html">调研笔记 ↗</a>
+        <a class="nav-link" href="snn.html">SNN 洞察 ↗</a>
         <select class="week-switch" id="week-switch" title="切换周"></select>
       </div>
       <div class="sweep"></div>
