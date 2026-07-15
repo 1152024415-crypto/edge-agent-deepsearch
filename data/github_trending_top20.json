@@ -1,162 +1,162 @@
 [
   {
     "rank": 1,
-    "repo": "xbtlin/ai-berkshire",
-    "url": "https://github.com/xbtlin/ai-berkshire",
-    "total": "8,808",
-    "week": "6,989",
-    "desc": "AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built for Claude Code / Codex. 4 masters' methodologies + multi-agent adversarial analysis."
+    "repo": "avifenesh/bw24",
+    "url": "https://github.com/avifenesh/bw24",
+    "total": "266★",
+    "week": "266",
+    "desc": "From-scratch Rust+CUDA inference engine, bit-exact by construction — NVFP4, MoE, MTP speculative decoding, tuned against measured limits of "
   },
   {
     "rank": 2,
-    "repo": "simplex-chat/simplex-chat",
-    "url": "https://github.com/simplex-chat/simplex-chat",
-    "total": "17,688",
-    "week": "6,376",
-    "desc": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!"
+    "repo": "katipally/openlive",
+    "url": "https://github.com/katipally/openlive",
+    "total": "64★",
+    "week": "64",
+    "desc": "Live voice + vision AI assistant — on-device voice pipeline, thin LLM proxy"
   },
   {
     "rank": 3,
-    "repo": "ripienaar/free-for-dev",
-    "url": "https://github.com/ripienaar/free-for-dev",
-    "total": "127,884",
-    "week": "4,416",
-    "desc": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev"
+    "repo": "tonyd2wild/MiniMax-M3-2x-DGX-Spark-36-tok-s",
+    "url": "https://github.com/tonyd2wild/MiniMax-M3-2x-DGX-Spark-36-tok-s",
+    "total": "25★",
+    "week": "25",
+    "desc": "MiniMax-M3 (428B, no pruning) at 36 tok/s on 2× NVIDIA DGX Spark — W4A16 GPTQ + NVFP4 KV + EAGLE-3 speculative decoding on vLLM. Three servi"
   },
   {
     "rank": 4,
-    "repo": "DeusData/codebase-memory-mcp",
-    "url": "https://github.com/DeusData/codebase-memory-mcp",
-    "total": "24,915",
-    "week": "9,873",
-    "desc": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies."
+    "repo": "tonyd2wild/MiMo-V2.5-DFlash-1M-ctx-NVFP4-KV-2x-DGX-Spark",
+    "url": "https://github.com/tonyd2wild/MiMo-V2.5-DFlash-1M-ctx-NVFP4-KV-2x-DGX-Spark",
+    "total": "17★",
+    "week": "17",
+    "desc": "MiMo-V2.5 NVFP4 4-bit weights + NVFP4 4-bit KV cache + DFlash speculative decoding on 2× NVIDIA DGX Spark — 1M context, 3.4M-token KV pool"
   },
   {
     "rank": 5,
-    "repo": "kunchenguid/no-mistakes",
-    "url": "https://github.com/kunchenguid/no-mistakes",
-    "total": "4,961",
-    "week": "2,091",
-    "desc": "git push no-mistakes"
+    "repo": "wundercorp/openmodel",
+    "url": "https://github.com/wundercorp/openmodel",
+    "total": "15★",
+    "week": "15",
+    "desc": "Use any AI model, locally or in the cloud, while tracking on-device token usage and collecting token telemetry data."
   },
   {
     "rank": 6,
-    "repo": "google-labs-code/design.md",
-    "url": "https://github.com/google-labs-code/design.md",
-    "total": "24,455",
-    "week": "6,240",
-    "desc": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system."
+    "repo": "tonyd2wild/Hy3-295B-NVFP4-MTP-2x-DGX-Spark",
+    "url": "https://github.com/tonyd2wild/Hy3-295B-NVFP4-MTP-2x-DGX-Spark",
+    "total": "14★",
+    "week": "14",
+    "desc": "Tencent Hunyuan 3 (295B MoE) on 2x NVIDIA DGX Spark: NVFP4 W4A16 + native MTP speculative decoding. First published MTP-on-GB10 numbers, ful"
   },
   {
     "rank": 7,
-    "repo": "calesthio/OpenMontage",
-    "url": "https://github.com/calesthio/OpenMontage",
-    "total": "31,903",
-    "week": "10,199",
-    "desc": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio."
+    "repo": "ghdtjrtka/ghost-vessel",
+    "url": "https://github.com/ghdtjrtka/ghost-vessel",
+    "total": "9★",
+    "week": "9",
+    "desc": "A video-call avatar frontend for your local LLM agent (Hermes/OpenClaw) — replaces the messenger chat and serves the agent's exact slash-com"
   },
   {
     "rank": 8,
-    "repo": "Robbyant/lingbot-map",
-    "url": "https://github.com/Robbyant/lingbot-map",
-    "total": "9,443",
-    "week": "2,012",
-    "desc": "A feed-forward 3D foundation model for reconstructing scenes from streaming data"
+    "repo": "HeNryous/mimo-v25-dflash-dgx-spark",
+    "url": "https://github.com/HeNryous/mimo-v25-dflash-dgx-spark",
+    "total": "7★",
+    "week": "7",
+    "desc": "vLLM recipe: Xiaomi MiMo-V2.5 + DFlash speculative decoding + fp8 KV cache on 2x DGX Spark (GB10/sm_121)"
   },
   {
     "rank": 9,
-    "repo": "usestrix/strix",
-    "url": "https://github.com/usestrix/strix",
-    "total": "32,766",
-    "week": "4,743",
-    "desc": "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities."
+    "repo": "gregordinary/ggml-rocket",
+    "url": "https://github.com/gregordinary/ggml-rocket",
+    "total": "6★",
+    "week": "6",
+    "desc": "Drop-in ggml backend for Rockchip NPUs: offloads llama.cpp/whisper.cpp prefill to the RK3588 NPU"
   },
   {
     "rank": 10,
-    "repo": "JCodesMore/ai-website-cloner-template",
-    "url": "https://github.com/JCodesMore/ai-website-cloner-template",
-    "total": "25,032",
-    "week": "4,843",
-    "desc": "Clone any website with one command using AI coding agents"
+    "repo": "gregordinary/rocket-userspace",
+    "url": "https://github.com/gregordinary/rocket-userspace",
+    "total": "6★",
+    "week": "6",
+    "desc": "Userspace driver, matmul, and on-NPU op library for Rockchip NPUs (RK3588) via the mainline rocket DRM-accel driver"
   },
   {
     "rank": 11,
-    "repo": "mauriceboe/TREK",
-    "url": "https://github.com/mauriceboe/TREK",
-    "total": "8,946",
-    "week": "2,676",
-    "desc": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support, SSO, budgets, packing lists, and more."
+    "repo": "satindergrewal/aviary-1m",
+    "url": "https://github.com/satindergrewal/aviary-1m",
+    "total": "6★",
+    "week": "6",
+    "desc": "Open models extended to 1M context with YaRN and certified needle by needle: Ornith, Gemma 4 uncensored, Qwen3.6 uncensored. MTP speculative"
   },
   {
     "rank": 12,
-    "repo": "topoteretes/cognee",
-    "url": "https://github.com/topoteretes/cognee",
-    "total": "26,674",
-    "week": "4,531",
-    "desc": "Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine."
+    "repo": "Rkcr7/inkwordle",
+    "url": "https://github.com/Rkcr7/inkwordle",
+    "total": "5★",
+    "week": "5",
+    "desc": "InkWordle — write-by-hand Wordle for the reMarkable Paper Pro. On-device handwriting recognition, no LLM, no network."
   },
   {
     "rank": 13,
-    "repo": "stablyai/orca",
-    "url": "https://github.com/stablyai/orca",
-    "total": "11,190",
-    "week": "3,574",
-    "desc": "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop and mobile."
+    "repo": "zeraix/zeraix",
+    "url": "https://github.com/zeraix/zeraix",
+    "total": "5★",
+    "week": "5",
+    "desc": "Born for local models. The AI workspace built around on-device LLMs — not one that treats them as an afterthought."
   },
   {
     "rank": 14,
-    "repo": "msitarzewski/agency-agents",
-    "url": "https://github.com/msitarzewski/agency-agents",
-    "total": "125,798",
-    "week": "9,484",
-    "desc": "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables."
+    "repo": "tonyd2wild/MiMo-V2.5-DFlash-FP8-KV-2x-DGX-Spark",
+    "url": "https://github.com/tonyd2wild/MiMo-V2.5-DFlash-FP8-KV-2x-DGX-Spark",
+    "total": "5★",
+    "week": "5",
+    "desc": "MiMo-V2.5 NVFP4 weights + DFlash speculative decoding + FP8 KV cache, tensor-parallel across 2× NVIDIA DGX Spark (GB10)"
   },
   {
     "rank": 15,
-    "repo": "interviewstreet/hiring-agent",
-    "url": "https://github.com/interviewstreet/hiring-agent",
-    "total": "4,433",
-    "week": "1,689",
-    "desc": "AI agent to evaluate and score resumes."
+    "repo": "Gaurav-Gosain/qwopus-dflash",
+    "url": "https://github.com/Gaurav-Gosain/qwopus-dflash",
+    "total": "4★",
+    "week": "4",
+    "desc": "DFlash speculative decoding for Qwopus3.5-9B-Coder on upstream llama.cpp"
   },
   {
     "rank": 16,
-    "repo": "Panniantong/Agent-Reach",
-    "url": "https://github.com/Panniantong/Agent-Reach",
-    "total": "49,318",
-    "week": "8,265",
-    "desc": "Give your AI agent eyes to see the entire internet. Read &amp; search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees."
+    "repo": "open-ribbi/velocut",
+    "url": "https://github.com/open-ribbi/velocut",
+    "total": "4★",
+    "week": "4",
+    "desc": "AI-native, local-first video editor that runs entirely in the browser. Canonical Rust/WASM engine mirrored by a TypeScript reference engine,"
   },
   {
     "rank": 17,
-    "repo": "browser-use/video-use",
-    "url": "https://github.com/browser-use/video-use",
-    "total": "13,957",
-    "week": "3,389",
-    "desc": "Edit videos with coding agents"
+    "repo": "abayomipopoola/mlx-chat",
+    "url": "https://github.com/abayomipopoola/mlx-chat",
+    "total": "3★",
+    "week": "3",
+    "desc": "A native macOS chat app for running LLMs fully on-device."
   },
   {
     "rank": 18,
-    "repo": "alibaba/page-agent",
-    "url": "https://github.com/alibaba/page-agent",
-    "total": "21,706",
-    "week": "1,451",
-    "desc": "JavaScript in-page GUI agent. Control web interfaces with natural language."
+    "repo": "john-rocky/hf-to-litertlm",
+    "url": "https://github.com/john-rocky/hf-to-litertlm",
+    "total": "3★",
+    "week": "3",
+    "desc": "Custom converter: open-weight Hugging Face LLMs/VLMs -> on-device LiteRT-LM (.litertlm), with one-command reproduction"
   },
   {
     "rank": 19,
-    "repo": "diegosouzapw/OmniRoute",
-    "url": "https://github.com/diegosouzapw/OmniRoute",
-    "total": "10,377",
-    "week": "3,197",
-    "desc": "Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline &amp; Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA."
+    "repo": "js-lee-AI/Kestrel",
+    "url": "https://github.com/js-lee-AI/Kestrel",
+    "total": "3★",
+    "week": "3",
+    "desc": "One-pass block speculative decoding for vision-language models (lossless)"
   },
   {
     "rank": 20,
-    "repo": "ogulcancelik/herdr",
-    "url": "https://github.com/ogulcancelik/herdr",
-    "total": "10,281",
-    "week": "2,721",
-    "desc": "agent multiplexer that lives in your terminal."
+    "repo": "bird/DSv4-Flash-spark",
+    "url": "https://github.com/bird/DSv4-Flash-spark",
+    "total": "3★",
+    "week": "3",
+    "desc": "DeepSeek-V4-Flash + DSpark speculative decoding on a pair of NVIDIA DGX Sparks (vLLM TP=2 over RoCE) — tuned recipe, overlays that halve mul"
   }
 ]

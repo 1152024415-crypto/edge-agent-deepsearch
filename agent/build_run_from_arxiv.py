@@ -32,7 +32,14 @@ TAG_RULES = [
     ("方向:评测基准", [r"benchmark", r"evaluat"]),
     ("方向:云端serving", [r"serving system", r"data center", r"datacenter", r"cluster"]),
     ("方向:端侧agent", [r"on-device", r"on device", r"\bedge\b", r"mobile", r"embedded", r"\biot\b", r"\bagent\b"]),
-    ("方向:SNN", [r"spiking neural network", r"\bsnn\b", r"spike-based", r"neuromorphic", r"spiking neuron"]),
+    ("方向:SNN", [r"spiking neural network", r"\bsnn\b", r"spikformer", r"spiking transformer", r"spiking neuron model"]),
+    # NB: bare "neuromorphic" is deliberately NOT a 方向:SNN trigger — neuromorphic
+    # is a superset (Ising machines / event-based hardware / memristor crossbars)
+    # and matches papers that never use a spiking neuron (e.g. Ising QUBO
+    # solvers). Likewise bare "spike-based"/"spiking neuron" can be biological
+    # (neuroscience spike trains), not SNN architecture. Require phrases that
+    # name the SNN architecture itself. Neuromorphic HARDWARE still gets the
+    # 硬件:神经形态 tag below via its own chip-name rule.
     ("硬件:NPU", [r"\bnpu\b", r"hexagon", r"snapdragon", r"neural engine"]),
     ("硬件:GPU", [r"\bgpu\b", r"\bcuda\b", r"vulkan", r"rtx", r"h100", r"h800"]),
     ("硬件:Jetson", [r"jetson"]),

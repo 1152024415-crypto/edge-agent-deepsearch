@@ -88,6 +88,7 @@ OFFICIAL_SOURCE_DOMAINS = (
     "developer.nvidia.com",
     "deepseek.com",
     "api-docs.deepseek.com",
+    "stepfun.com",
 )
 
 ARXIV_URL_RE = re.compile(

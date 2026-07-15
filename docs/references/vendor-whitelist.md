@@ -28,6 +28,7 @@
 | Mistral | Mistral / Ministral |
 | 面壁智能 | ModelBest / 面壁 / MiniCPM |
 | Qwen | Alibaba / 阿里云 / Qwen / Mobile-Agent |
+| 阶跃星辰 StepFun | StepFun / 阶跃星辰 / STEPX / 印奇 / Step 系列 |
 
 ## 学术顶会顶刊（信息质量维度参考）
 NeurIPS / ICML / ICLR / MobiSys / SenSys / ASPLOS / CVPR / ICCV / ACL / EMNLP / AAAI / IJCAI / TPAMI / TNNLS / ToN
@@ -53,3 +54,4 @@ vivo: `vivo.com`
 Honor: `honor.com`
 Alibaba/Qwen: `alibabacloud.com`, `qwenlm.github.io`
 Mistral: `mistral.ai`
+阶跃星辰 StepFun: `stepfun.com`
