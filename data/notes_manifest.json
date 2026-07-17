@@ -30,6 +30,10 @@
       {
         "title": "DSpark 技术解读：让投机推理在高并发下不塌方",
         "file": "DSpark-技术解读-blog.md"
+      },
+      {
+        "title": "DSpark 演讲口头稿（照 blog 对照版）",
+        "file": "DSpark-演讲口头稿.md"
       }
     ]
   }

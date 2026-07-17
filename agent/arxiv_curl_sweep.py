@@ -17,11 +17,11 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RUN = ROOT / "research_runs" / "run-20260709-165925.json"
+RUN = ROOT / "research_runs" / "_nodup_placeholder.json"  # nonexistent → no dedup (complete fresh re-sweep of the window)
 OUT = ROOT / ".superpowers" / "sdd" / "arxiv_candidates.json"
 
-WINDOW_LO = "2026-07-09"
-WINDOW_HI = "2026-07-15"
+WINDOW_LO = "2026-07-10"
+WINDOW_HI = "2026-07-17"
 CATS = "(cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.RO OR cat:cs.AR OR cat:cs.DC OR cat:cs.ET OR cat:cs.SY OR cat:cs.NE)"
 
 # (label, search_query_fragment)  -- single words quoted, multi-word via AND

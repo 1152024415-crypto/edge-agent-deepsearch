@@ -1,35 +1,20 @@
 {
-  "overview": "本周端侧 AI 动态(07-09~07-15):厂商动态密集——Google Tensor+Pixel 下一代端侧 AI 路线、LiteRT.js 浏览器端高性能推理、NVIDIA 连发(Performance-per-watt 基础设施效率度量、AI Model Co-Design 硬件友好 LLM 设计、CUDA Kernel Fusion 降内存/launch 开销、NeMo/Cosmos Agent Skills 自研工作流、机器人策略真机评测、Nemotron 开放模型)、Anthropic Claude 进物理 AI、Meta Muse Spark 1.1 模型 API、Mistral Studio prompt/skill 记录系统、ONNX Runtime v1.27.1 QMoE batch-1 decode GEMV 快路径;学术侧 177 篇 arXiv(含 7 篇 SNN/脉冲网络新方向:PalmClaw 端侧 agent 框架、sEMG 肌疲劳 SNN 检测、CSP SNN 求解器并行回火、移动 NPU LLM 瓶颈、KV cache/投机解码/量化持续涌现)+26 篇公司项目(ByteDance/Tencent/Alibaba/DeepSeek 等 affiliation 命中)+HF 精选(ABot-AgentOS 机器人 agent OS、CineMobile 端侧、LightMem-Ego 手机/AI 眼镜、KronQ 量化)——端侧从芯片整机、推理优化、agent 框架到神经形态低功耗全栈推进。",
+  "overview": "本周端侧 AI 动态(07-10~07-17):NVIDIA 连发——Jetson Thor 新一代端侧机器人/边缘 AI 计算机(本周最大硬件新闻)、Japan 全栈 AI/机器人落地、Performance-per-watt 基础设施效率度量、AI Model Co-Design 硬件友好 LLM、NeMo/Cosmos Agent Skills 自研工作流、Context-Aware Video AI Agents、Scaling Agentic AI Factories BlueField、机器人策略真机评测;Google Gemini Enterprise Agent Platform(parallel web search grounding)+scalable AI agents modular prompt transpilation+Conductor spec-driven+Qwen MoE on Ironwood TPU;Anthropic/Microsoft/Qualcomm 动态;ONNX Runtime v1.27.1 QMoE decode 快路径;学术侧 209 篇(arXiv 162+HF 48,含 7 篇 SNN:Spikformer/脉冲加速器/剪枝/医疗/汽车/安全/理论)+30 篇公司项目(ByteDance/Tencent/Alibaba/DeepSeek 等)+18 官方动态——端侧从新硬件(Jetson Thor)、推理优化、agent 平台到神经形态全栈推进。",
   "highlights": [
     {
-      "url": "https://companies.caixin.com/2026-07-14/102464046.html",
-      "topic": "阶跃星辰发布全球首个AI智能体手机STEPX Neo+智能体OS(07-14)",
-      "why": "模型厂亲自下场造机:STEPX Neo 把大模型原生跑在端侧手机做 agent 原生终端,CEO印奇亲自造机;本周最大端侧 AI 新闻(财新/财联社/联合早报/华尔街见闻多源报道,尚未量产上市)。阶跃星辰官网为 JS 壳无独立 blog 页,官方公告主要在微信公众号,故此处用财新直接文章链接"
-    },
-    {
-      "url": "https://developers.googleblog.com/unlocking-the-next-era-of-on-device-ai-with-google-tensor-and-pixel/",
-      "topic": "Google Tensor+Pixel:下一代端侧 AI 路线(07-13)",
-      "why": "Google 官方阐释 Tensor 芯片+Pixel 设备上的 on-device AI 下一步,端侧硬件-模型协同的核心信号"
-    },
-    {
-      "url": "https://developers.googleblog.com/litertjs-googles-high-performance-web-ai-inference/",
-      "topic": "LiteRT.js:Google 浏览器端高性能 AI 推理(07-09)",
-      "why": "把 LiteRT 推理搬到浏览器/WebGPU,边缘推理又扩一个部署面(Web 端侧)"
+      "url": "https://blogs.nvidia.com/blog/jetson-thor-robotics-edge-ai-agent/",
+      "topic": "NVIDIA 发布 Jetson Thor:新一代端侧机器人/边缘 AI 计算机(07-15)",
+      "why": "Jetson Thor 面向主流机器人与边缘 AI agent,本周最大端侧硬件新闻——端侧算力新平台落地"
     },
     {
       "url": "https://blogs.nvidia.com/blog/performance-per-watt-ai-infrastructure-efficiency/",
       "topic": "NVIDIA:Performance per Watt 是 AI 基础设施效率终极度量(07-14)",
-      "why": "能效比是端侧/边缘推理的核心约束,官方定调 per-watt 为第一指标"
+      "why": "能效比是端侧/边缘推理核心约束,官方定调 per-watt 第一指标"
     },
     {
       "url": "https://developer.nvidia.com/blog/ai-model-co-design-hardware-friendly-llm-design/",
       "topic": "NVIDIA:AI Model Co-Design 硬件友好 LLM 设计(07-10)",
       "why": "模型-硬件协同设计,把 LLM 往端侧友好(低带宽/低功耗)方向调"
-    },
-    {
-      "url": "https://developer.nvidia.com/blog/kernel-fusion-in-nvidia-cuda-optimizing-memory-traffic-and-launch-overhead/",
-      "topic": "NVIDIA:CUDA Kernel Fusion 降内存流量与 launch 开销(07-10)",
-      "why": "kernel 融合是端侧/边缘推理降开销的通用优化手段"
     },
     {
       "url": "https://developer.nvidia.com/blog/how-to-run-an-autoresearch-workflow-with-rl-agent-skills-and-nvidia-nemo/",
@@ -42,29 +27,39 @@
       "why": "agent 驱动的模型后训练流水线,效率数量级提升"
     },
     {
+      "url": "https://developer.nvidia.com/blog/scaling-agentic-ai-factories-through-extreme-co-design-with-nvidia-bluefield/",
+      "topic": "NVIDIA:Scaling Agentic AI Factories 通过 BlueField 极致协同设计(07-16)",
+      "why": "agentic AI 工厂规模化,BlueField DPU 协同设计——agent 基础设施"
+    },
+    {
+      "url": "https://developer.nvidia.com/blog/integrating-context-aware-video-ai-agents-into-enterprise-workflows/",
+      "topic": "NVIDIA:Context-Aware Video AI Agents 进企业工作流(07-16)",
+      "why": "视频 AI agent 进企业,边缘/视频感知+agent 结合"
+    },
+    {
+      "url": "https://developers.googleblog.com/expanding-choice-in-gemini-enterprise-agent-platform-introducing-grounding-with-parallel-web-search/",
+      "topic": "Google:Gemini Enterprise Agent Platform 加 Parallel Web Search grounding(07-16)",
+      "why": "企业 agent 平台扩 grounded 搜索能力,agent 工程基础设施"
+    },
+    {
+      "url": "https://developers.googleblog.com/building-scalable-ai-agents-with-modular-prompt-transpilation/",
+      "topic": "Google:模块化 prompt 转译构建可扩展 AI agents(07-16)",
+      "why": "agent prompt 工程模块化,可扩展 agent 架构方法"
+    },
+    {
+      "url": "https://developers.googleblog.com/systems-engineering-playbook-optimizing-qwen-35-397b-moe-on-ironwood-tpu7x/",
+      "topic": "Google:Qwen 3.5-397B MoE 在 Ironwood(TPU7x) 上的系统优化(07-14)",
+      "why": "大规模 MoE 在 TPU 上的系统工程,模型-硬件协同参考"
+    },
+    {
+      "url": "https://blogs.nvidia.com/blog/japan-ecosystem-2026/",
+      "topic": "NVIDIA × Japan:全栈 AI 与机器人落地千行百业(07-15)",
+      "why": "全栈 AI/机器人国家尺度落地,端侧+具身区域推进"
+    },
+    {
       "url": "https://developer.nvidia.com/blog/how-to-evaluate-general-purpose-robot-policies-for-real-world-deployment/",
       "topic": "NVIDIA:通用机器人策略真机部署评测(07-11)",
       "why": "embodied/机器人 agent 真机评测方法论,端侧+具身交叉"
-    },
-    {
-      "url": "https://blogs.nvidia.com/blog/nemotron-open-models-ai-trust-control-customize/",
-      "topic": "NVIDIA Nemotron Labs:开放模型给企业/国家可控可定制 AI(07-14)",
-      "why": "开放模型+可控部署,端侧/私有化推理的模型供给"
-    },
-    {
-      "url": "https://www.anthropic.com/news/ust-claude",
-      "topic": "Anthropic:UST 把 Claude 带进物理 AI(07-09)",
-      "why": "Claude 进 physical AI/具身场景,模型厂向端侧+物理世界延展"
-    },
-    {
-      "url": "https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/",
-      "topic": "Meta:Muse Spark 1.1 模型 API 发布(07-09)",
-      "why": "Meta 开放 Muse Spark 生成模型 API,多模态生成模型供给"
-    },
-    {
-      "url": "https://mistral.ai/news/manage-prompts-and-skills-in-studio/",
-      "topic": "Mistral:Studio 给 prompt/skill 做记录系统(07-09)",
-      "why": "agent 的 prompt/skill 管理走向系统化,agent 工程基础设施"
     }
   ]
 }
