@@ -164,6 +164,12 @@ def check_snn_page(root: Path, errors: list) -> None:
         _err(errors, "site/snn.html missing — run agent/build_snn.py (SNN 洞察 nav 链接会 404)")
 
 
+def check_waic_page(root: Path, errors: list) -> None:
+    """site/waic.html must exist — the WAIC insight page nav link points at it."""
+    if not (root / "site" / "waic.html").exists():
+        _err(errors, "site/waic.html missing — run agent/build_waic.py (WAIC 洞察 nav 链接会 404)")
+
+
 def _read_json(path: Path, default=None):
     if not path.exists():
         return default
@@ -181,6 +187,7 @@ def run_all(root: Path) -> list:
     check_vendor_tier(root, errors)
     check_trending_freshness(root, errors)
     check_snn_page(root, errors)
+    check_waic_page(root, errors)
     return errors
 
 
