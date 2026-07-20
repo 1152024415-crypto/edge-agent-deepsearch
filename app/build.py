@@ -91,6 +91,7 @@ def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, r
         html = re.sub(r'href="/paper/([^"]+)"', r'href="' + weeks_base + r'paper/\1.html"', html)
         html = re.sub(r'href="notes\.html"', f'href="{weeks_base}notes.html"', html)
         html = re.sub(r'href="snn\.html"', f'href="{weeks_base}snn.html"', html)
+        html = re.sub(r'href="waic\.html"', f'href="{weeks_base}waic.html"', html)
     return html
 
 

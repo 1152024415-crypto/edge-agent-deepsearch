@@ -8,6 +8,7 @@ title (first H1) per note, and renders site/notes.html from app/notes_page.py
 with the manifest inlined. Re-run after editing sources or adding a collection.
 """
 import json
+import os
 import re
 import shutil
 import sys
@@ -39,17 +40,27 @@ def ingest_collection(coll: dict) -> dict:
     if not src.exists():
         print(f"[NOTES] WARN source missing: {src}")
         return {**coll, "notes": []}
-    # rglob so image subdirs (e.g. DSpark's images/) are picked up too, not just
-    # top-level files. Files are copied FLAT into dest/<basename>; notes_page.py
-    # rewrites relative image src to notes/<slug>/<basename> so this resolves.
-    for p in sorted(src.rglob("*")):
-        if not p.is_file():
+    # Notes = top-level *.md; images = top-level images/ dir (recursive within
+    # images/) + top-level image files. Do NOT descend into arbitrary subdirs —
+    # a note source dir may hold an unrelated subproject (e.g. DSpark's
+    # deepspec/ with its own .venv + hundreds of .md) which would pollute the
+    # collection and crash on Windows symlinks. os.walk with onerror swallow
+    # guards the images/ rglob against broken reparse points.
+    SKIP_DIRS = {".venv", ".git", "node_modules", "__pycache__"}
+    note_files = sorted(src.glob("*.md"))
+    img_files = sorted(p for p in (src / "images").rglob("*") if p.is_file()) \
+        if (src / "images").is_dir() else []
+    img_files += sorted(p for p in src.glob("*") if p.is_file() and p.suffix.lower() in IMG_EXT)
+    for p in note_files:
+        shutil.copy2(p, dest / p.name)
+        notes.append({"title": note_title(p), "file": p.name})
+    for p in img_files:
+        if any(part in SKIP_DIRS for part in p.parts):
             continue
-        if p.suffix.lower() == ".md":
+        try:
             shutil.copy2(p, dest / p.name)
-            notes.append({"title": note_title(p), "file": p.name})
-        elif p.suffix.lower() in IMG_EXT:
-            shutil.copy2(p, dest / p.name)
+        except OSError:
+            pass  # skip inaccessible files (broken symlinks under images/)
     print(f"[NOTES] {slug}: {len(notes)} note(s), images copied -> {dest}")
     return {"name": coll.get("name", slug), "slug": slug,
             "desc": coll.get("desc", ""), "notes": notes}
