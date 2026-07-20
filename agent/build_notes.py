@@ -35,6 +35,12 @@ def ingest_collection(coll: dict) -> dict:
     src = Path(coll["source"])
     slug = coll["slug"]
     dest = SITE / "notes" / slug
+    # Clean dest before ingest so stale files from a previous (possibly
+    # broken) build don't accumulate — e.g. a run that picked up an unrelated
+    # subproject's .md leaves hundreds of junk files that bloat the deploy and
+    # slow the Pages build.
+    if dest.exists():
+        shutil.rmtree(dest, ignore_errors=True)
     dest.mkdir(parents=True, exist_ok=True)
     notes = []
     if not src.exists():
