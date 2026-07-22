@@ -80,6 +80,13 @@ def detect_affil(text: str) -> str | None:
     return None
 
 
+def _coerce_authors(v) -> str:
+    """authors may be a list (HF) or '; '-joined string (arXiv) — coerce to str."""
+    if isinstance(v, list):
+        return ", ".join(str(a) for a in v)
+    return str(v) if v else ""
+
+
 def is_edge_text(text: str) -> bool:
     return bool(re.search(
         r"on-device|on device|\bedge\b|mobile|embedded|\biot\b|npu|phone|"
@@ -91,7 +98,7 @@ def convert_arxiv(c: dict) -> dict:
     aid = re.sub(r"v\d+$", "", str(c.get("id") or "")).strip()
     title = (c.get("title") or "").strip()
     summary = c.get("abstract") or c.get("summary") or ""
-    authors = c.get("authors") or ""
+    authors = _coerce_authors(c.get("authors"))
     text = (title + " " + summary).lower()
     rel = 7 if is_edge_text(text) else 5
     contrib = 5
@@ -145,7 +152,7 @@ def convert_hf(c: dict, seen_arxiv: set) -> dict | None:
         paper_url = url or ""
     title = (c.get("title") or "").strip()
     summary = c.get("abstract") or ""
-    authors = c.get("authors") or ""
+    authors = _coerce_authors(c.get("authors"))
     text = (title + " " + summary).lower()
     rel = 7 if is_edge_text(text) else 6  # HF精选质量高，基础分稍高
     contrib = 5

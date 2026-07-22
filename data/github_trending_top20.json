@@ -1,150 +1,134 @@
 [
   {
     "rank": 1,
-    "repo": "avifenesh/bw24",
-    "url": "https://github.com/avifenesh/bw24",
-    "total": "266★",
-    "week": "266",
-    "desc": "From-scratch Rust+CUDA inference engine, bit-exact by construction — NVFP4, MoE, MTP speculative decoding, tuned against measured limits of "
+    "repo": "zeraix/zeraix",
+    "url": "https://github.com/zeraix/zeraix",
+    "total": "128★",
+    "week": "128",
+    "desc": "Open-source local AI workspace — advancing on-device inference."
   },
   {
     "rank": 2,
-    "repo": "katipally/openlive",
-    "url": "https://github.com/katipally/openlive",
-    "total": "64★",
-    "week": "64",
-    "desc": "Live voice + vision AI assistant — on-device voice pipeline, thin LLM proxy"
+    "repo": "MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
+    "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
+    "total": "33★",
+    "week": "33",
+    "desc": "vLLM 0.25.1 serving stack for poolside/Laguna-S-2.1-NVFP4 with DFlash speculative decoding — DGX Spark & RTX 6000 PRO"
   },
   {
     "rank": 3,
-    "repo": "tonyd2wild/MiniMax-M3-2x-DGX-Spark-36-tok-s",
-    "url": "https://github.com/tonyd2wild/MiniMax-M3-2x-DGX-Spark-36-tok-s",
-    "total": "25★",
-    "week": "25",
-    "desc": "MiniMax-M3 (428B, no pruning) at 36 tok/s on 2× NVIDIA DGX Spark — W4A16 GPTQ + NVFP4 KV + EAGLE-3 speculative decoding on vLLM. Three servi"
-  },
-  {
-    "rank": 4,
-    "repo": "tonyd2wild/MiMo-V2.5-DFlash-1M-ctx-NVFP4-KV-2x-DGX-Spark",
-    "url": "https://github.com/tonyd2wild/MiMo-V2.5-DFlash-1M-ctx-NVFP4-KV-2x-DGX-Spark",
-    "total": "17★",
-    "week": "17",
-    "desc": "MiMo-V2.5 NVFP4 4-bit weights + NVFP4 4-bit KV cache + DFlash speculative decoding on 2× NVIDIA DGX Spark — 1M context, 3.4M-token KV pool"
-  },
-  {
-    "rank": 5,
     "repo": "wundercorp/openmodel",
     "url": "https://github.com/wundercorp/openmodel",
-    "total": "15★",
-    "week": "15",
+    "total": "16★",
+    "week": "16",
     "desc": "Use any AI model, locally or in the cloud, while tracking on-device token usage and collecting token telemetry data."
   },
   {
-    "rank": 6,
-    "repo": "tonyd2wild/Hy3-295B-NVFP4-MTP-2x-DGX-Spark",
-    "url": "https://github.com/tonyd2wild/Hy3-295B-NVFP4-MTP-2x-DGX-Spark",
-    "total": "14★",
-    "week": "14",
-    "desc": "Tencent Hunyuan 3 (295B MoE) on 2x NVIDIA DGX Spark: NVFP4 W4A16 + native MTP speculative decoding. First published MTP-on-GB10 numbers, ful"
-  },
-  {
-    "rank": 7,
-    "repo": "ghdtjrtka/ghost-vessel",
-    "url": "https://github.com/ghdtjrtka/ghost-vessel",
-    "total": "9★",
-    "week": "9",
-    "desc": "A video-call avatar frontend for your local LLM agent (Hermes/OpenClaw) — replaces the messenger chat and serves the agent's exact slash-com"
-  },
-  {
-    "rank": 8,
-    "repo": "HeNryous/mimo-v25-dflash-dgx-spark",
-    "url": "https://github.com/HeNryous/mimo-v25-dflash-dgx-spark",
-    "total": "7★",
-    "week": "7",
-    "desc": "vLLM recipe: Xiaomi MiMo-V2.5 + DFlash speculative decoding + fp8 KV cache on 2x DGX Spark (GB10/sm_121)"
-  },
-  {
-    "rank": 9,
-    "repo": "gregordinary/ggml-rocket",
-    "url": "https://github.com/gregordinary/ggml-rocket",
-    "total": "6★",
-    "week": "6",
-    "desc": "Drop-in ggml backend for Rockchip NPUs: offloads llama.cpp/whisper.cpp prefill to the RK3588 NPU"
-  },
-  {
-    "rank": 10,
-    "repo": "gregordinary/rocket-userspace",
-    "url": "https://github.com/gregordinary/rocket-userspace",
-    "total": "6★",
-    "week": "6",
-    "desc": "Userspace driver, matmul, and on-NPU op library for Rockchip NPUs (RK3588) via the mainline rocket DRM-accel driver"
-  },
-  {
-    "rank": 11,
-    "repo": "satindergrewal/aviary-1m",
-    "url": "https://github.com/satindergrewal/aviary-1m",
-    "total": "6★",
-    "week": "6",
-    "desc": "Open models extended to 1M context with YaRN and certified needle by needle: Ornith, Gemma 4 uncensored, Qwen3.6 uncensored. MTP speculative"
-  },
-  {
-    "rank": 12,
+    "rank": 4,
     "repo": "Rkcr7/inkwordle",
     "url": "https://github.com/Rkcr7/inkwordle",
-    "total": "5★",
-    "week": "5",
+    "total": "8★",
+    "week": "8",
     "desc": "InkWordle — write-by-hand Wordle for the reMarkable Paper Pro. On-device handwriting recognition, no LLM, no network."
   },
   {
-    "rank": 13,
-    "repo": "zeraix/zeraix",
-    "url": "https://github.com/zeraix/zeraix",
-    "total": "5★",
-    "week": "5",
-    "desc": "Born for local models. The AI workspace built around on-device LLMs — not one that treats them as an afterthought."
+    "rank": 5,
+    "repo": "Ali-hey-0/ai-runtime-lab",
+    "url": "https://github.com/Ali-hey-0/ai-runtime-lab",
+    "total": "7★",
+    "week": "7",
+    "desc": "Engineering deterministic, production-grade systems around non-deterministic LLMs — FSM, durable execution, retries, DAGs, agent runtimes, m"
   },
   {
-    "rank": 14,
-    "repo": "tonyd2wild/MiMo-V2.5-DFlash-FP8-KV-2x-DGX-Spark",
-    "url": "https://github.com/tonyd2wild/MiMo-V2.5-DFlash-FP8-KV-2x-DGX-Spark",
-    "total": "5★",
-    "week": "5",
-    "desc": "MiMo-V2.5 NVFP4 weights + DFlash speculative decoding + FP8 KV cache, tensor-parallel across 2× NVIDIA DGX Spark (GB10)"
+    "rank": 6,
+    "repo": "MiaAI-Lab/Gemma-4-31B-IT-NVFP4-Recipe",
+    "url": "https://github.com/MiaAI-Lab/Gemma-4-31B-IT-NVFP4-Recipe",
+    "total": "6★",
+    "week": "6",
+    "desc": "Serve nvidia/Gemma-4-31B-IT-NVFP4 via vLLM with MTP speculative decoding, tool calling, and thinking/reasoning support"
   },
   {
-    "rank": 15,
+    "rank": 7,
+    "repo": "localweights/vllm-gguf-plugin",
+    "url": "https://github.com/localweights/vllm-gguf-plugin",
+    "total": "6★",
+    "week": "6",
+    "desc": "vLLM GGUF plugin fork — Qwen3.5/3.6 hybrid (GDN) serving: iq4_xs mmvq perf, MTP speculative decode, MoE draft support"
+  },
+  {
+    "rank": 8,
+    "repo": "nilava/TabType",
+    "url": "https://github.com/nilava/TabType",
+    "total": "5★",
+    "week": "5",
+    "desc": "Free, open-source AI autocomplete for macOS — on-device ghost-text suggestions in every app. A private, local Cotypist alternative built wit"
+  },
+  {
+    "rank": 9,
     "repo": "Gaurav-Gosain/qwopus-dflash",
     "url": "https://github.com/Gaurav-Gosain/qwopus-dflash",
-    "total": "4★",
-    "week": "4",
+    "total": "5★",
+    "week": "5",
     "desc": "DFlash speculative decoding for Qwopus3.5-9B-Coder on upstream llama.cpp"
   },
   {
-    "rank": 16,
-    "repo": "open-ribbi/velocut",
-    "url": "https://github.com/open-ribbi/velocut",
+    "rank": 10,
+    "repo": "memloom/memloom",
+    "url": "https://github.com/memloom/memloom",
+    "total": "5★",
+    "week": "5",
+    "desc": "Local-first memory engine for AI agents"
+  },
+  {
+    "rank": 11,
+    "repo": "adoslabsproject-gif/Liara-toolkit",
+    "url": "https://github.com/adoslabsproject-gif/Liara-toolkit",
     "total": "4★",
     "week": "4",
-    "desc": "AI-native, local-first video editor that runs entirely in the browser. Canonical Rust/WASM engine mirrored by a TypeScript reference engine,"
+    "desc": "Fully on-device, privacy-first personal AI assistant for Android & desktop — local Qwen3 LLM, tool-calling agent, encrypted memory. Source-a"
+  },
+  {
+    "rank": 12,
+    "repo": "IPADS-SAI/ClawMate",
+    "url": "https://github.com/IPADS-SAI/ClawMate",
+    "total": "4★",
+    "week": "4",
+    "desc": "A proactive on-device intelligent operating system for HarmonyOS, featuring proactive perception, autonomous decision-making, lightweight us"
+  },
+  {
+    "rank": 13,
+    "repo": "bitwize-ai/Logue",
+    "url": "https://github.com/bitwize-ai/Logue",
+    "total": "4★",
+    "week": "4",
+    "desc": "Privacy-first AI meeting notes & writing assistant for Mac — on-device transcription, smart minutes, action items & 60+ writing modes, runni"
+  },
+  {
+    "rank": 14,
+    "repo": "xangel82/DS4-GB10-GX10-DSpark-CUDA",
+    "url": "https://github.com/xangel82/DS4-GB10-GX10-DSpark-CUDA",
+    "total": "4★",
+    "week": "4",
+    "desc": "This is an experimental fork of Salvatore Sanfilippo's `antirez/ds4` project:  ```text https://github.com/antirez/ds4 ```  This checkout con"
+  },
+  {
+    "rank": 15,
+    "repo": "statico/llmac",
+    "url": "https://github.com/statico/llmac",
+    "total": "3★",
+    "week": "3",
+    "desc": "Apple's on-device Foundation Models from the command line — tiny, fast, no API key, in the spirit of Simon Willison's llm"
+  },
+  {
+    "rank": 16,
+    "repo": "8crsk/openclaw-android",
+    "url": "https://github.com/8crsk/openclaw-android",
+    "total": "3★",
+    "week": "3",
+    "desc": "On-device AI agent for Android   local OpenClaw gateway, bring-your-own-key (NVIDIA/OpenAI/Anthropic/Gemini), UI automation via Accessibilit"
   },
   {
     "rank": 17,
-    "repo": "abayomipopoola/mlx-chat",
-    "url": "https://github.com/abayomipopoola/mlx-chat",
-    "total": "3★",
-    "week": "3",
-    "desc": "A native macOS chat app for running LLMs fully on-device."
-  },
-  {
-    "rank": 18,
-    "repo": "john-rocky/hf-to-litertlm",
-    "url": "https://github.com/john-rocky/hf-to-litertlm",
-    "total": "3★",
-    "week": "3",
-    "desc": "Custom converter: open-weight Hugging Face LLMs/VLMs -> on-device LiteRT-LM (.litertlm), with one-command reproduction"
-  },
-  {
-    "rank": 19,
     "repo": "js-lee-AI/Kestrel",
     "url": "https://github.com/js-lee-AI/Kestrel",
     "total": "3★",
@@ -152,11 +136,27 @@
     "desc": "One-pass block speculative decoding for vision-language models (lossless)"
   },
   {
-    "rank": 20,
-    "repo": "bird/DSv4-Flash-spark",
-    "url": "https://github.com/bird/DSv4-Flash-spark",
+    "rank": 18,
+    "repo": "lnguyen503/ai-director",
+    "url": "https://github.com/lnguyen503/ai-director",
     "total": "3★",
     "week": "3",
-    "desc": "DeepSeek-V4-Flash + DSpark speculative decoding on a pair of NVIDIA DGX Sparks (vLLM TP=2 over RoCE) — tuned recipe, overlays that halve mul"
+    "desc": "Two-session human-in-the-loop pattern for directing local AI render engines with an LLM director over a plain-file relay. Hard human gates o"
+  },
+  {
+    "rank": 19,
+    "repo": "amalshaji/dictator",
+    "url": "https://github.com/amalshaji/dictator",
+    "total": "2★",
+    "week": "2",
+    "desc": "Native macOS dictation with on-device or BYOK speech-to-text, LLM cleanup, screen-aware writing, global hotkeys, focused-field insertion, an"
+  },
+  {
+    "rank": 20,
+    "repo": "jammastergirish/one-tap-transcribe",
+    "url": "https://github.com/jammastergirish/one-tap-transcribe",
+    "total": "2★",
+    "week": "2",
+    "desc": "Local, private push-to-talk dictation for macOS — hold a key, speak, and it types. On-device Whisper + optional local LLM cleanup. Menu-bar "
   }
 ]

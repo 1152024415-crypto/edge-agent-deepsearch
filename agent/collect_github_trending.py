@@ -12,7 +12,7 @@ Reusable each week — change DATE_FROM and keywords as needed.
 import urllib.request, urllib.parse, re, sys, json, time, os
 from datetime import datetime, timezone
 
-DATE_FROM = "2026-07-02"  # created:> this date
+DATE_FROM = "2026-07-08"  # created:> this date
 
 EDGE_KW = [
   "on-device","on device","edge","mobile","npu","embedded","mcu","iot","llm","agent",

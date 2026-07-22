@@ -6037,6 +6037,11 @@
         "why": "Jetson Thor 面向主流机器人与边缘 AI agent,本周最大端侧硬件新闻——端侧算力新平台落地"
       },
       {
+        "url": "https://companies.caixin.com/2026-07-14/102464046.html",
+        "topic": "阶跃星辰发布全球首个AI智能体手机STEPX Neo+智能体OS(07-14)",
+        "why": "模型厂亲自下场造机:STEPX Neo 把大模型原生跑在端侧手机做 agent 原生终端,CEO印奇亲自造机;本周最大端侧 AI 新闻之一(财新/财联社/联合早报多源报道,尚未量产上市)。阶跃星辰官网为 JS 壳无独立 blog 页,官方公告主要在微信公众号,故用财新直接文章链接"
+      },
+      {
         "url": "https://blogs.nvidia.com/blog/performance-per-watt-ai-infrastructure-efficiency/",
         "topic": "NVIDIA:Performance per Watt 是 AI 基础设施效率终极度量(07-14)",
         "why": "能效比是端侧/边缘推理核心约束,官方定调 per-watt 第一指标"

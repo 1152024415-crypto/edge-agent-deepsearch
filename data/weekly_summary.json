@@ -1,70 +1,65 @@
 {
-  "overview": "本周端侧 AI 动态(07-10~07-17):NVIDIA 连发——Jetson Thor 新一代端侧机器人/边缘 AI 计算机(本周最大硬件新闻)、Japan 全栈 AI/机器人落地、Performance-per-watt 基础设施效率度量、AI Model Co-Design 硬件友好 LLM、NeMo/Cosmos Agent Skills 自研工作流、Context-Aware Video AI Agents、Scaling Agentic AI Factories BlueField、机器人策略真机评测;Google Gemini Enterprise Agent Platform(parallel web search grounding)+scalable AI agents modular prompt transpilation+Conductor spec-driven+Qwen MoE on Ironwood TPU;Anthropic/Microsoft/Qualcomm 动态;ONNX Runtime v1.27.1 QMoE decode 快路径;学术侧 209 篇(arXiv 162+HF 48,含 7 篇 SNN:Spikformer/脉冲加速器/剪枝/医疗/汽车/安全/理论)+30 篇公司项目(ByteDance/Tencent/Alibaba/DeepSeek 等)+18 官方动态——端侧从新硬件(Jetson Thor)、推理优化、agent 平台到神经形态全栈推进。",
+  "overview": "本周端侧 AI 动态(07-17~07-22):WAIC 2026 期间(07-17~20 上海)厂商密集发布——Honor 发布全球首款机器人手机(从数字屏幕到物理世界,多模态具身交互)、阿里云 WAIC Agent-Native 创新(AgentLoop框架/Wan-Streamer实时音视频流式/Qwen-Audio-3.0-TTS/Qwen-Coder-Qoder自进化记忆)、NVIDIA Vera Rubin(后训练intelligence-per-dollar+perf-per-watt+SIGGRAPH agentic/physical AI)、Apple ML研究(unlearning低影响/calibrated sparse attention文生视频/API-calling agents合成数据/RayRoPE多视角);OpenBMB/面壁发布 MiniCPM-Robot 端侧机器人AI新仓;学术侧 203 篇(arXiv 120+HF 68,含 5 篇 SNN:Spikformer/脉冲加速器/剪枝/医疗/理论)+25 篇公司项目(ByteDance/Tencent/Alibaba/DeepSeek/ModelBest等)+20 官方动态——端侧从机器人手机、agent 框架、实时音视频到神经形态持续推进。",
   "highlights": [
     {
-      "url": "https://blogs.nvidia.com/blog/jetson-thor-robotics-edge-ai-agent/",
-      "topic": "NVIDIA 发布 Jetson Thor:新一代端侧机器人/边缘 AI 计算机(07-15)",
-      "why": "Jetson Thor 面向主流机器人与边缘 AI agent,本周最大端侧硬件新闻——端侧算力新平台落地"
+      "url": "https://www.honor.com/cn/news/honor-waic-2026/",
+      "topic": "Honor 发布全球首款机器人手机:从数字屏幕到物理世界(07-18 WAIC)",
+      "why": "Honor 在 WAIC 2026 启动机器人手机预约,多模态具身交互,把手机做成端侧具身入口——本周最对题的端侧终端信号"
     },
     {
-      "url": "https://companies.caixin.com/2026-07-14/102464046.html",
-      "topic": "阶跃星辰发布全球首个AI智能体手机STEPX Neo+智能体OS(07-14)",
-      "why": "模型厂亲自下场造机:STEPX Neo 把大模型原生跑在端侧手机做 agent 原生终端,CEO印奇亲自造机;本周最大端侧 AI 新闻之一(财新/财联社/联合早报多源报道,尚未量产上市)。阶跃星辰官网为 JS 壳无独立 blog 页,官方公告主要在微信公众号,故用财新直接文章链接"
+      "url": "https://www.alibabacloud.com/blog/alibaba-cloud-unveils-agent-native-innovations-at-waic-2026_603377",
+      "topic": "阿里云 WAIC 2026 发布 Agent-Native 创新(07-20)",
+      "why": "WAIC 上阿里云集中发布 agent-native 创新(AgentLoop/Wan-Streamer/Qoder),agent 平台层本周最大发布"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/performance-per-watt-ai-infrastructure-efficiency/",
-      "topic": "NVIDIA:Performance per Watt 是 AI 基础设施效率终极度量(07-14)",
-      "why": "能效比是端侧/边缘推理核心约束,官方定调 per-watt 第一指标"
+      "url": "https://www.alibabacloud.com/blog/what-is-the-newly-released-agentloop-by-alibaba-cloud_603378",
+      "topic": "阿里云发布 AgentLoop agent 框架(07-20)",
+      "why": "AgentLoop 是阿里云新 agent 框架,agent 工程基础设施落地"
     },
     {
-      "url": "https://developer.nvidia.com/blog/ai-model-co-design-hardware-friendly-llm-design/",
-      "topic": "NVIDIA:AI Model Co-Design 硬件友好 LLM 设计(07-10)",
-      "why": "模型-硬件协同设计,把 LLM 往端侧友好(低带宽/低功耗)方向调"
+      "url": "https://www.alibabacloud.com/blog/wan-streamer-a-native-streaming-model-for-real-time-audio-visual-conversation_603376",
+      "topic": "Wan-Streamer:实时音视频流式对话原生模型(07-20)",
+      "why": "原生流式实时音视频对话,端侧/边缘多模态实时交互的新形态"
     },
     {
-      "url": "https://developer.nvidia.com/blog/how-to-run-an-autoresearch-workflow-with-rl-agent-skills-and-nvidia-nemo/",
-      "topic": "NVIDIA:NeMo+RL Agent Skills 跑自动科研工作流(07-14)",
-      "why": "agent skills 自动化工作流,agent 框架向科研场景落地"
+      "url": "https://www.alibabacloud.com/blog/qwen-audio-3-0-tts-more-multilingual-easier-to-direct_603379",
+      "topic": "Qwen-Audio-3.0-TTS 多语言易导引(07-21)",
+      "why": "Qwen 音频 TTS 3.0,多模态模型供给,端侧语音场景"
     },
     {
-      "url": "https://developer.nvidia.com/blog/post-train-nvidia-cosmos-3-in-one-day-using-agent-skills/",
-      "topic": "NVIDIA:Agent Skills 一天 post-train Cosmos 3(07-14)",
-      "why": "agent 驱动的模型后训练流水线,效率数量级提升"
+      "url": "https://www.alibabacloud.com/blog/qwen-coder-qoder-customizing-a-fast-evolving-frontier-model-for-real-software_603370",
+      "topic": "Qwen-Coder-Qoder:为真实软件定制快速演进前沿模型(07-17)",
+      "why": "Qoder CLI 为真实软件定制,模型+agent 工程化,自进化记忆系统"
     },
     {
-      "url": "https://developer.nvidia.com/blog/scaling-agentic-ai-factories-through-extreme-co-design-with-nvidia-bluefield/",
-      "topic": "NVIDIA:Scaling Agentic AI Factories 通过 BlueField 极致协同设计(07-16)",
-      "why": "agentic AI 工厂规模化,BlueField DPU 协同设计——agent 基础设施"
+      "url": "https://blogs.nvidia.com/blog/vera-rubin/",
+      "topic": "NVIDIA Vera Rubin:Performance per Watt 最低 token 成本(07-21)",
+      "why": "Vera Rubin 主打 perf-per-watt + 最低 token 成本,能效比是端侧/边缘推理核心约束"
     },
     {
-      "url": "https://developer.nvidia.com/blog/integrating-context-aware-video-ai-agents-into-enterprise-workflows/",
-      "topic": "NVIDIA:Context-Aware Video AI Agents 进企业工作流(07-16)",
-      "why": "视频 AI agent 进企业,边缘/视频感知+agent 结合"
+      "url": "https://blogs.nvidia.com/blog/siggraph-news-2026/",
+      "topic": "NVIDIA SIGGRAPH:agentic 与物理 AI 推进图形与仿真(07-20)",
+      "why": "SIGGRAPH 上 agentic+physical AI 推进,物理 AI 主线与端侧具身交叉"
     },
     {
-      "url": "https://developers.googleblog.com/expanding-choice-in-gemini-enterprise-agent-platform-introducing-grounding-with-parallel-web-search/",
-      "topic": "Google:Gemini Enterprise Agent Platform 加 Parallel Web Search grounding(07-16)",
-      "why": "企业 agent 平台扩 grounded 搜索能力,agent 工程基础设施"
+      "url": "https://blogs.nvidia.com/blog/nvidia-vera-rubin-post-training-intelligence-per-dollar/",
+      "topic": "NVIDIA Vera Rubin 后训练 intelligence-per-dollar 最大化(07-17)",
+      "why": "后训练每美元 intelligence 最大化,模型-硬件协同效率"
     },
     {
-      "url": "https://developers.googleblog.com/building-scalable-ai-agents-with-modular-prompt-transpilation/",
-      "topic": "Google:模块化 prompt 转译构建可扩展 AI agents(07-16)",
-      "why": "agent prompt 工程模块化,可扩展 agent 架构方法"
+      "url": "https://machinelearning.apple.com/research/calibrated-sparse-attention",
+      "topic": "Apple:Calibrated Sparse Attention 加速文生视频(07-21)",
+      "why": "校准稀疏注意力加速文生视频,高效注意力是端侧推理降开销通用手段"
     },
     {
-      "url": "https://developers.googleblog.com/systems-engineering-playbook-optimizing-qwen-35-397b-moe-on-ironwood-tpu7x/",
-      "topic": "Google:Qwen 3.5-397B MoE 在 Ironwood(TPU7x) 上的系统优化(07-14)",
-      "why": "大规模 MoE 在 TPU 上的系统工程,模型-硬件协同参考"
+      "url": "https://machinelearning.apple.com/research/environment-free",
+      "topic": "Apple:无环境合成数据训练 API-calling agents(07-21)",
+      "why": "免环境合成数据训 API-calling agents,agent 训练数据工程方法"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/japan-ecosystem-2026/",
-      "topic": "NVIDIA × Japan:全栈 AI 与机器人落地千行百业(07-15)",
-      "why": "全栈 AI/机器人国家尺度落地,端侧+具身区域推进"
-    },
-    {
-      "url": "https://developer.nvidia.com/blog/how-to-evaluate-general-purpose-robot-policies-for-real-world-deployment/",
-      "topic": "NVIDIA:通用机器人策略真机部署评测(07-11)",
-      "why": "embodied/机器人 agent 真机评测方法论,端侧+具身交叉"
+      "url": "https://machinelearning.apple.com/research/unlearning-free-low-influence",
+      "topic": "Apple:低成本机器遗忘(低影响点降计算)(07-17)",
+      "why": "低影响点机器遗忘降计算成本,端侧隐私/安全相关 ML 优化"
     }
   ]
 }
