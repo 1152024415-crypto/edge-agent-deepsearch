@@ -46,16 +46,20 @@ def ingest_collection(coll: dict) -> dict:
     if not src.exists():
         print(f"[NOTES] WARN source missing: {src}")
         return {**coll, "notes": []}
-    # Notes = top-level *.md; images = top-level images/ dir (recursive within
-    # images/) + top-level image files. Do NOT descend into arbitrary subdirs —
+    # Notes = top-level *.md; images = images/ OR assets/ subdir (recursive
+    # within) + top-level image files. Do NOT descend into arbitrary subdirs —
     # a note source dir may hold an unrelated subproject (e.g. DSpark's
     # deepspec/ with its own .venv + hundreds of .md) which would pollute the
-    # collection and crash on Windows symlinks. os.walk with onerror swallow
-    # guards the images/ rglob against broken reparse points.
+    # collection and crash on Windows symlinks. assets/ is Obsidian's default
+    # image dir (e.g. AMD note's slide webp). os.walk not needed here — rglob
+    # under a known image dir is safe.
     SKIP_DIRS = {".venv", ".git", "node_modules", "__pycache__"}
     note_files = sorted(src.glob("*.md"))
-    img_files = sorted(p for p in (src / "images").rglob("*") if p.is_file()) \
-        if (src / "images").is_dir() else []
+    img_files = []
+    for img_dir_name in ("images", "assets"):
+        img_dir = src / img_dir_name
+        if img_dir.is_dir():
+            img_files += sorted(p for p in img_dir.rglob("*") if p.is_file())
     img_files += sorted(p for p in src.glob("*") if p.is_file() and p.suffix.lower() in IMG_EXT)
     for p in note_files:
         shutil.copy2(p, dest / p.name)

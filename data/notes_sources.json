@@ -10,5 +10,11 @@
     "slug": "dspark-blog",
     "source": "D:/proj/dspark-blog",
     "desc": "DeepSeek DSpark 投机解码在高并发下不塌方——半自回归生成、置信度调度、draft 并行、Adaptive Verification"
+  },
+  {
+    "name": "AMD Advancing AI 2026 复盘",
+    "slug": "amd-advancing-ai",
+    "source": "C:/Users/11520/Documents/学习/output/amd-advancing-ai-2026",
+    "desc": "AMD Advancing AI 2026 完整技术复盘——Helios 72×MI455X 机架、Anthropic/OpenAI/Meta/Microsoft 合作、ROCm.ai、Gorgon Halo、机器人大脑、开放系统 vs NVIDIA"
   }
 ]

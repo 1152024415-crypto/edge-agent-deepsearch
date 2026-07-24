@@ -36,5 +36,16 @@
         "file": "DSpark-演讲口头稿.md"
       }
     ]
+  },
+  {
+    "name": "AMD Advancing AI 2026 复盘",
+    "slug": "amd-advancing-ai",
+    "desc": "AMD Advancing AI 2026 完整技术复盘——Helios 72×MI455X 机架、Anthropic/OpenAI/Meta/Microsoft 合作、ROCm.ai、Gorgon Halo、机器人大脑、开放系统 vs NVIDIA",
+    "notes": [
+      {
+        "title": "AMD Advancing AI 2026 完整技术复盘",
+        "file": "AMD_Advancing_AI_2026_完整技术复盘.md"
+      }
+    ]
   }
 ]
