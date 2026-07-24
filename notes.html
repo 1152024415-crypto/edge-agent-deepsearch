@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     *{box-sizing:border-box}
     :root{--bg:#eef1f3;--panel:#ffffff;--ink:#0b1a24;--muted:#5a6b78;--faint:#8a99a6;--rule:#d4dae0;--hair:#e3e8ec;--amber:#c2410c;--green:#15803d}
@@ -106,9 +107,34 @@
           var s = imgs[i].getAttribute('src');
           if(s && !/^(https?:|\/|data:)/.test(s)) imgs[i].src = 'notes/' + slug + '/' + s.split('/').pop();
         }
+        renderMermaid(art);
         window.scrollTo(0,0);
         CURRENT = {slug:slug, file:file};
       }).catch(function(e){art.innerHTML = '<p>加载出错：' + esc(String(e)) + '</p>';});
+    }
+
+    // Render ```mermaid fenced blocks (marked emits <pre><code class="language-mermaid">)
+    // as actual diagrams. Convert each to <div class="mermaid"> + run mermaid.
+    function renderMermaid(art){
+      var blocks = art.querySelectorAll('pre code.language-mermaid');
+      if(!blocks.length) return;
+      if(!window.mermaid){  // lib not loaded yet — retry shortly
+        setTimeout(function(){renderMermaid(art);}, 500);
+        return;
+      }
+      if(!mermaid._init){ mermaid.initialize({startOnLoad:false, securityLevel:'loose'}); mermaid._init = true; }
+      var nodes = [];
+      blocks.forEach(function(code){
+        var pre = code.parentNode;
+        var div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;  // unescaped diagram source (mermaid needs raw >, etc.)
+        pre.parentNode.replaceChild(div, pre);
+        nodes.push(div);
+      });
+      try { mermaid.run({nodes: nodes}); } catch(e){
+        nodes.forEach(function(d){ d.setAttribute('style','white-space:pre-wrap;font-family:IBM Plex Mono,monospace;font-size:12px;color:var(--muted)'); });
+      }
     }
 
     function route(){
