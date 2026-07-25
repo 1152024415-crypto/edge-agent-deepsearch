@@ -238,6 +238,13 @@ def is_link_alive(url: str, timeout: int = 5) -> bool:
                 # Server rejected HEAD (405/403/400). GET is ground truth;
                 # a truly dead URL fails GET too, so no false positives.
                 continue
+            # 429 (Too Many Requests) / 503 (Service Unavailable) are transient
+            # rate-limit/overload — the URL is fine, the server is throttling
+            # (e.g. huggingface.co/papers under rapid sequential HEAD). Treat as
+            # alive so batch validation doesn't false-kill real papers.
+            if exc.code in (429, 503):
+                print(f"warning: link check got {exc.code} (rate-limit) for {url} (treating as alive)", file=sys.stderr)
+                return True
             return exc.code < 400
         except (TimeoutError, socket.timeout):
             print(f"warning: link check timed out for {url} (treating as alive)", file=sys.stderr)

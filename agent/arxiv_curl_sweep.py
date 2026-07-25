@@ -21,7 +21,7 @@ RUN = ROOT / "research_runs" / "_nodup_placeholder.json"  # nonexistent → no d
 OUT = ROOT / ".superpowers" / "sdd" / "arxiv_candidates.json"
 
 WINDOW_LO = "2026-07-17"
-WINDOW_HI = "2026-07-22"
+WINDOW_HI = "2026-07-24"
 CATS = "(cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.RO OR cat:cs.AR OR cat:cs.DC OR cat:cs.ET OR cat:cs.SY OR cat:cs.NE)"
 
 # (label, search_query_fragment)  -- single words quoted, multi-word via AND

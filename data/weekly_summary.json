@@ -1,45 +1,30 @@
 {
-  "overview": "本周端侧 AI 动态(07-17~07-22):WAIC 2026 期间(07-17~20 上海)厂商密集发布——Honor 发布全球首款机器人手机(从数字屏幕到物理世界,多模态具身交互)、阿里云 WAIC Agent-Native 创新(AgentLoop框架/Wan-Streamer实时音视频流式/Qwen-Audio-3.0-TTS/Qwen-Coder-Qoder自进化记忆)、NVIDIA Vera Rubin(后训练intelligence-per-dollar+perf-per-watt+SIGGRAPH agentic/physical AI)、Apple ML研究(unlearning低影响/calibrated sparse attention文生视频/API-calling agents合成数据/RayRoPE多视角);OpenBMB/面壁发布 MiniCPM-Robot 端侧机器人AI新仓;学术侧 203 篇(arXiv 120+HF 68,含 5 篇 SNN:Spikformer/脉冲加速器/剪枝/医疗/理论)+25 篇公司项目(ByteDance/Tencent/Alibaba/DeepSeek/ModelBest等)+20 官方动态——端侧从机器人手机、agent 框架、实时音视频到神经形态持续推进。",
+  "overview": "本周端侧 AI 动态(07-17~07-24,扩大窗口):Anthropic 发布 Claude Opus 5(07-24,新前沿模型);Samsung Galaxy Unpacked 2026(07-22~23)——Galaxy Z Fold8 Ultra/Fold8/Flip8 折叠旗舰、Watch Ultra2/Watch9、Galaxy 生态进日常 AI 眼镜、Health Assistant AI 个人健康助手;Qualcomm×Samsung Snapdragon 驱动新 Galaxy;NVIDIA Vera Rubin(perf-per-watt+最低 token 成本+后训练 intelligence-per-dollar+AI Summit Korea 路线)+Naval Postgraduate School DGX 超算上线;Google Scaling Agentic RL(Tunix 高吞吐 agent 训练)+Run Ray on TPU;Meta Genesis Mission(AI 模型驱动科学);开源 alibaba/MNN v3.6.1 端侧推理引擎。学术侧 339 篇(arXiv 183+HF 148,含 7 篇 SNN)+40 篇公司项目——端侧从新模型、AI 眼镜/健康助手、agentic RL、端侧推理引擎到神经形态持续推进。",
   "highlights": [
     {
-      "url": "https://www.honor.com/cn/news/honor-waic-2026/",
-      "topic": "Honor 发布全球首款机器人手机:从数字屏幕到物理世界(07-18 WAIC)",
-      "why": "Honor 在 WAIC 2026 启动机器人手机预约,多模态具身交互,把手机做成端侧具身入口——本周最对题的端侧终端信号"
+      "url": "https://www.anthropic.com/news/claude-opus-5",
+      "topic": "Anthropic 发布 Claude Opus 5(07-24)",
+      "why": "Anthropic 新前沿模型 Opus 5 发布,本周最大模型动态。模型厂前沿模型供给更新"
     },
     {
-      "url": "https://www.alibabacloud.com/blog/alibaba-cloud-unveils-agent-native-innovations-at-waic-2026_603377",
-      "topic": "阿里云 WAIC 2026 发布 Agent-Native 创新(07-20)",
-      "why": "WAIC 上阿里云集中发布 agent-native 创新(AgentLoop/Wan-Streamer/Qoder),agent 平台层本周最大发布"
+      "url": "https://news.samsung.com/global/samsung-brings-galaxy-ecosystem-into-everyday-eyewear",
+      "topic": "Samsung Galaxy 生态进日常 AI 眼镜(07-22 Unpacked)",
+      "why": "Galaxy 生态延伸到日常眼镜形态,端侧 AI 眼镜新形态落地——端侧可穿戴入口"
     },
     {
-      "url": "https://www.alibabacloud.com/blog/what-is-the-newly-released-agentloop-by-alibaba-cloud_603378",
-      "topic": "阿里云发布 AgentLoop agent 框架(07-20)",
-      "why": "AgentLoop 是阿里云新 agent 框架,agent 工程基础设施落地"
+      "url": "https://news.samsung.com/global/samsung-launches-health-assistant-beta-first-fully-integrated-ai-powered-personal-health-assistant",
+      "topic": "Samsung Health Assistant Beta:首个全集成 AI 个人健康助手(07-21)",
+      "why": "端侧 AI 健康助手 Beta 上线,always-on 个人健康场景的端侧 agent 落地"
     },
     {
-      "url": "https://www.alibabacloud.com/blog/wan-streamer-a-native-streaming-model-for-real-time-audio-visual-conversation_603376",
-      "topic": "Wan-Streamer:实时音视频流式对话原生模型(07-20)",
-      "why": "原生流式实时音视频对话,端侧/边缘多模态实时交互的新形态"
-    },
-    {
-      "url": "https://www.alibabacloud.com/blog/qwen-audio-3-0-tts-more-multilingual-easier-to-direct_603379",
-      "topic": "Qwen-Audio-3.0-TTS 多语言易导引(07-21)",
-      "why": "Qwen 音频 TTS 3.0,多模态模型供给,端侧语音场景"
-    },
-    {
-      "url": "https://www.alibabacloud.com/blog/qwen-coder-qoder-customizing-a-fast-evolving-frontier-model-for-real-software_603370",
-      "topic": "Qwen-Coder-Qoder:为真实软件定制快速演进前沿模型(07-17)",
-      "why": "Qoder CLI 为真实软件定制,模型+agent 工程化,自进化记忆系统"
+      "url": "https://www.qualcomm.com/news/releases/2026/07/qualcomm-and-samsung-expand-collaboration-with-snapdragon-poweri",
+      "topic": "Qualcomm×Samsung 扩大合作:Snapdragon 驱动新 Galaxy 阵容(07-22)",
+      "why": "Qualcomm Snapdragon 驱动 Samsung 新 Galaxy,移动端侧芯片-终端协同"
     },
     {
       "url": "https://blogs.nvidia.com/blog/vera-rubin/",
-      "topic": "NVIDIA Vera Rubin:Performance per Watt 最低 token 成本(07-21)",
-      "why": "Vera Rubin 主打 perf-per-watt + 最低 token 成本,能效比是端侧/边缘推理核心约束"
-    },
-    {
-      "url": "https://blogs.nvidia.com/blog/siggraph-news-2026/",
-      "topic": "NVIDIA SIGGRAPH:agentic 与物理 AI 推进图形与仿真(07-20)",
-      "why": "SIGGRAPH 上 agentic+physical AI 推进,物理 AI 主线与端侧具身交叉"
+      "topic": "NVIDIA Vera Rubin:perf-per-watt + 最低 token 成本(07-21)",
+      "why": "Vera Rubin 主打 perf-per-watt+最低 token 成本,能效比是端侧/边缘推理核心约束"
     },
     {
       "url": "https://blogs.nvidia.com/blog/nvidia-vera-rubin-post-training-intelligence-per-dollar/",
@@ -47,19 +32,34 @@
       "why": "后训练每美元 intelligence 最大化,模型-硬件协同效率"
     },
     {
-      "url": "https://machinelearning.apple.com/research/calibrated-sparse-attention",
-      "topic": "Apple:Calibrated Sparse Attention 加速文生视频(07-21)",
-      "why": "校准稀疏注意力加速文生视频,高效注意力是端侧推理降开销通用手段"
+      "url": "https://blogs.nvidia.com/blog/ai-summit-korea-partners-and-nvidia/",
+      "topic": "NVIDIA AI Summit Korea:韩国 AI 未来路线(07-23)",
+      "why": "AI Summit Korea 国家尺度 AI 路线,端侧/边缘+生态区域推进"
     },
     {
-      "url": "https://machinelearning.apple.com/research/environment-free",
-      "topic": "Apple:无环境合成数据训练 API-calling agents(07-21)",
-      "why": "免环境合成数据训 API-calling agents,agent 训练数据工程方法"
+      "url": "https://developers.googleblog.com/en/scaling-agentic-rl-high-throughput-agentic-training-with-tunix/",
+      "topic": "Google:Scaling Agentic RL,Tunix 高吞吐 agent 训练(07-21)",
+      "why": "agentic RL 高吞吐训练框架 Tunix,agent 训练基础设施"
     },
     {
-      "url": "https://machinelearning.apple.com/research/unlearning-free-low-influence",
-      "topic": "Apple:低成本机器遗忘(低影响点降计算)(07-17)",
-      "why": "低影响点机器遗忘降计算成本,端侧隐私/安全相关 ML 优化"
+      "url": "https://developers.googleblog.com/en/run-ray-on-tpu-part-1-the-foundations/",
+      "topic": "Google:Run Ray on TPU 基础(07-20)+ Part 2 Ray AI 库(07-24)",
+      "why": "Ray 在 TPU 上跑,大规模分布式 AI 训练/推理基础设施"
+    },
+    {
+      "url": "https://ai.meta.com/blog/genesis-mission-lawrence-berkeley-national-laboratory-segment-anything-dino/",
+      "topic": "Meta:AI 模型驱动 Genesis Mission 科学第一波(07-21)",
+      "why": "Meta SAM/DINO 等模型驱动科学计算(Berkeley 实验室),AI for science 应用"
+    },
+    {
+      "url": "https://news.samsung.com/global/samsung-galaxy-z-fold8-ultra-fold8-and-flip8foldables-perfected-for-every-way-of-living",
+      "topic": "Samsung Galaxy Z Fold8 Ultra/Fold8/Flip8 折叠旗舰(07-22)",
+      "why": "Galaxy 折叠旗舰搭载 Galaxy AI,端侧移动设备 AI 旗舰迭代"
+    },
+    {
+      "url": "https://blogs.nvidia.com/blog/naval-postgraduate-school-dgx-ai-supercomputer/",
+      "topic": "NVIDIA:Naval Postgraduate School DGX AI 超算上线(07-22)",
+      "why": "DGX AI 超算部署教育/国防,AI 算力基础设施扩展"
     }
   ]
 }

@@ -121,7 +121,13 @@ def init_db(db_path: Path) -> None:
 
 
 def upsert_run(db_path: Path, payload: dict) -> dict:
-    normalized = research_run.validate_payload(payload, skip_network=True)
+    # EDGE_TODAY env (YYYY-MM-DD) overrides the "today" used for the 7-day
+    # window check — lets an expanded-window run (e.g. 07-17~07-24 published
+    # on 07-25, where 07-17 is 8 days back from real today) pass by treating
+    # the window END as today. Same env-override pattern as EDGE_WEEKS_DIR.
+    import os
+    today_override = os.environ.get("EDGE_TODAY")
+    normalized = research_run.validate_payload(payload, skip_network=True, today=today_override)
     timestamp = now_iso()
     with closing(connect(db_path)) as conn:
         with conn:
