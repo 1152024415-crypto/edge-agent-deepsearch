@@ -774,10 +774,10 @@ AMD 用两组例子说明硬件可运行模型的边界在快速移动：
 
 AMD 的映射是：
 
-| 平台 | 官方演讲稿中的模型规模口径 |
-|---|---:|
-| Ryzen AI 400 | 最高约 24B |
-| Ryzen AI MAX | 最高约 200B |
+| 平台                 |                         官方演讲稿中的模型规模口径 |
+| ------------------ | ------------------------------------: |
+| Ryzen AI 400       |                               最高约 24B |
+| Ryzen AI MAX       |                              最高约 200B |
 | Ryzen AI Halo 开发平台 | 128 GB unified memory，原生运行最高约 200B 模型 |
 
 ![Ryzen AI Halo 开发平台](assets/slide-093-ryzen-ai-halo.webp)
@@ -806,11 +806,11 @@ AMD 还把 ROCm libraries、runtime/compiler、PyTorch/JAX/vLLM/ONNX 以及 Lemo
 
 Gorgon Halo 是下一代 Ryzen AI Halo 开发平台的台上代号，采用 **Ryzen AI Max PRO 400 Series** 处理器；同一处理器系列还会进入 OEM 商用系统。
 
-| 维度 | Ryzen AI Halo | Gorgon Halo |
-|---|---:|---:|
-| 统一内存 | 128 GB | 192 GB 系统统一内存；最多 160 GB 可配置给 GPU |
-| 模型规模口径 | 最高 200B | 最高 300B+，限定 4-bit 量化 |
-| 供货状态 | 已可用 | 计划 2026Q3，属于 2026H2 |
+| 维度     | Ryzen AI Halo |                      Gorgon Halo |
+| ------ | ------------: | -------------------------------: |
+| 统一内存   |        128 GB | 192 GB 系统统一内存；最多 160 GB 可配置给 GPU |
+| 模型规模口径 |       最高 200B |             最高 300B+，限定 4-bit 量化 |
+| 供货状态   |           已可用 |              计划 2026Q3，属于 2026H2 |
 
 300B 仍是“模型可容纳”口径，而且要给 KV cache、runtime 和 OS 留出内存。更大的统一内存主要扩大了可实验范围；能否达到可接受的 tokens/s，需要看实际 APU、内存带宽、上下文和并行实现。[AMD 对 Ryzen AI Max PRO 400 的官方预告](https://www.amd.com/en/blogs/2026/amd-powers-next-generation-agent-computers-with-new-ryzen-ai-hal.html)
 
