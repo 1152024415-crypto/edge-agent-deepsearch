@@ -16,6 +16,9 @@ NOTES_HTML = r"""<!doctype html>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
   <style>
     *{box-sizing:border-box}
     :root{--bg:#eef1f3;--panel:#ffffff;--ink:#0b1a24;--muted:#5a6b78;--faint:#8a99a6;--rule:#d4dae0;--hair:#e3e8ec;--amber:#c2410c;--green:#15803d}
@@ -107,7 +110,12 @@ NOTES_HTML = r"""<!doctype html>
         return res.text();
       }).then(function(md){
         if(md == null) return;
-        var html = marked.parse(md);
+        // Protect $...$$ / $$...$$ from marked's inline parser (it mangles
+        // math with _ * | inside, splitting $$ pairs so KaTeX can't match).
+        // Replace with plain placeholders, parse, restore, THEN KaTeX render.
+        var pm = protectMath(md);
+        var html = marked.parse(pm.md);
+        html = restoreMath(html, pm.math);
         art.innerHTML = html;
         var imgs = art.querySelectorAll('img');
         for(var i=0;i<imgs.length;i++){
@@ -115,9 +123,29 @@ NOTES_HTML = r"""<!doctype html>
           if(s && !/^(https?:|\/|data:)/.test(s)) imgs[i].src = 'notes/' + slug + '/' + s.split('/').pop();
         }
         renderMermaid(art);
+        renderMath(art);
         window.scrollTo(0,0);
         CURRENT = {slug:slug, file:file};
       }).catch(function(e){art.innerHTML = '<p>加载出错：' + esc(String(e)) + '</p>';});
+    }
+
+    // Replace $$...$$ (display) and $...$ (inline) with placeholders so
+    // marked.parse won't touch the math. Store originals; restore after parse.
+    function protectMath(md){
+      var math = [];
+      // display first (multi-line, non-greedy)
+      md = md.replace(/\$\$([\s\S]+?)\$\$/g, function(m){
+        var i = math.length; math.push(m); return '\n\nMATHB' + i + '\n\n';
+      });
+      // inline (no $ or newline inside)
+      md = md.replace(/\$([^\$\n]+?)\$/g, function(m){
+        var i = math.length; math.push(m); return 'MATHI' + i;
+      });
+      return {md: md, math: math};
+    }
+    function restoreMath(html, math){
+      return html.replace(/MATHB(\d+)/g, function(_, i){ return math[+i]; })
+                 .replace(/MATHI(\d+)/g, function(_, i){ return math[+i]; });
     }
 
     // Render ```mermaid fenced blocks (marked emits <pre><code class="language-mermaid">)
@@ -142,6 +170,25 @@ NOTES_HTML = r"""<!doctype html>
       try { mermaid.run({nodes: nodes}); } catch(e){
         nodes.forEach(function(d){ d.setAttribute('style','white-space:pre-wrap;font-family:IBM Plex Mono,monospace;font-size:12px;color:var(--muted)'); });
       }
+    }
+
+    // Render LaTeX math ($$...$$ display, $...$ inline) via KaTeX auto-render.
+    // marked.js emits $ as literal text (it's not math-aware), so auto-render
+    // scans the rendered DOM text and converts $...$ / $$...$$ to KaTeX.
+    function renderMath(art){
+      if(!window.renderMathInElement){  // katex auto-render not loaded yet — retry
+        setTimeout(function(){renderMath(art);}, 500);
+        return;
+      }
+      try {
+        renderMathInElement(art, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false}
+          ],
+          throwOnError: false
+        });
+      } catch(e){}
     }
 
     function route(){
