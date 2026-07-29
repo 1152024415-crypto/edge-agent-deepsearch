@@ -6,11 +6,11 @@
 > 机构：University of Alberta、Huawei Technologies Canada  
 > 代码：[Multi-Head-Latent-Control](https://github.com/Amirhosein-gh98/Multi-Head-Latent-Control)  
 > 版本：arXiv v1，2026-07-15  
-> 说明：本文重点讲摘要、Introduction 和方法；Related Work 与附录正文不展开。实验部分主要围绕论文中的四张图解释。
+> 阅读方式：本文不是逐段翻译论文，而是按“问题、方法、训练、实验、落地”的顺序重组内容。Related Work 不单独展开；附录只在解释训练数据、图表和局限时引用。
 
 ---
 
-## Abstract
+## 先说结论：这是一层“推理控制面”，不是一个新模型
 
 这篇论文要做的事情是：
 
@@ -31,9 +31,9 @@
 
 ---
 
-**摘要的核心内容**
+摘要中的信息可以拆成三个问题：Agent 还需要做哪些生成之外的决策，论文为此增加了什么模块，以及这些模块带来了怎样的系统收益。
 
-**Agent 需要的不只是 next-token prediction**
+### Agent 的问题不只是预测下一个 token
 
 普通语言模型的核心目标是：
 
@@ -61,7 +61,7 @@ $$
 
 > 能否在不重新微调基础模型的情况下，增加一个专门负责部署时决策的轻量控制接口？
 
-**两个控制头**
+### 两个控制头分别解决两个问题
 
 论文把部署决策拆成两个层次。
 
@@ -96,7 +96,7 @@ $$
 - `cant`：当前条件下无法完成；
 - 三个分数都不触发：直接回答。
 
-**摘要报告的主要结果**
+### 论文报告了怎样的收益
 
 论文报告：
 
@@ -113,9 +113,11 @@ $$
 
 ---
 
-## 1 Introduction
+## 为什么 Agent 需要独立的推理时控制层
 
-**一个模型“会回答”不等于一个 Agent“会决策”**
+> 对应论文：§1 Introduction
+
+### “会回答”不等于“会做部署决策”
 
 在普通问答中，模型只需要完成一次输入到输出的映射：
 
@@ -151,7 +153,7 @@ $$
 
 > 什么时候继续、什么时候停、什么时候求助、什么时候调用外部能力。
 
-**为什么不能始终使用最大模型**
+### 始终使用最大模型不是免费午餐
 
 “所有任务都交给最大模型”看起来简单，但存在四类成本：
 
@@ -164,11 +166,11 @@ $$
 
 这也是论文将 AndroidWorld 作为重要案例的原因：GUI Agent 不是只回答一道题，而是在每一步观察屏幕、推理、执行动作并继续循环。
 
-**现有控制方式的不足**
+### 现有控制方式为什么仍然不够
 
 论文主要指出三类现有方案的局限。
 
-**输入侧路由器**
+#### 方案一：在生成前使用输入侧 Router
 
 典型流程是：
 
@@ -184,7 +186,7 @@ $$
 
 但缺点是它只看输入侧信号。一个问题看起来复杂，不代表小模型一定不会；一个问题看起来简单，也可能因为图像细节、知识缺失或推理错误而失败。
 
-**外部编排器**
+#### 方案二：增加外部编排器
 
 系统可以增加一个单独的 LLM 或规则引擎，负责规划模型、工具和 Agent 的协作。
 
@@ -195,11 +197,11 @@ $$
 - 控制模型可能同样犯错；
 - 每次更换基础模型，都可能需要重新适配编排策略。
 
-**针对任务微调整个模型**
+#### 方案三：为控制行为微调整个模型
 
 可以把模型微调成更擅长工具调用、拒答或协作，但基础模型更新速度很快。每出现一个新 backbone，都重新进行端到端微调，维护成本很高。
 
-**核心 insight**
+## 核心思路：从生成轨迹中读取模型的“自知能力”
 
 论文提出一个关键假设：
 
@@ -219,7 +221,7 @@ $$
 
 > 它不是说模型获得了意识，而是训练了一个分类/回归器，从模型内部激活中预测模型是否胜任以及应该采取什么行为。
 
-**为什么是 post hoc adaptation**
+### 为什么可以后装到冻结模型上
 
 `post hoc adaptation` 可以翻译为“后装式适配”。
 
@@ -242,13 +244,15 @@ $$
 
 ---
 
-## Figure 1: Multi-Head Latent Control as an Intrinsic Control Interface for Frozen Foundation Models
+## 整体架构：两个控制头分别决定“谁来做”和“怎么做”
 
 ![图 1：Multi-Head Latent Control 总体框架](./assets/figure1-overview.png)
 
+*图 1：Multi-Head Latent Control 总体框架。左上是单次控制决策，左下是多步骤 Agent 循环，右侧是 AndroidWorld 的成本—成功率结果。*
+
 图 1 同时包含方法、Agent 循环和 AndroidWorld 结果，是整篇论文最重要的一张图。
 
-**Figure 1 Symbols**
+### 先认识图里的组件
 
 - 小模型 $m_1$：默认执行请求的主模型；
 - 大模型 $m_2$：能力更强但成本更高的 fallback；
@@ -258,7 +262,7 @@ $$
 - Capability Head：决定留在 $m_1$ 还是转到 $m_2$；
 - Resolution Head：决定直接回答、请求信息、调用工具或放弃。
 
-**Figure 1(a): Single-Step Control Decision**
+### 一次请求如何流过这套系统
 
 用户输入可以是普通问答、复杂推理，也可以是长时程 Agent 的某一步。
 
@@ -280,7 +284,7 @@ $$
 
 同一条轨迹被两个控制头读取，但两个头关心的问题不同。
 
-**Capability Head: Who Should Handle the Instance?**
+#### Capability Head：判断当前模型是否胜任
 
 它回答：
 
@@ -292,7 +296,7 @@ $$
 
 当它决定升级时，原始任务交给大模型 $m_2$。论文不是把 $m_1$ 的 KV cache 或 hidden states 迁移给 $m_2$，因为两个模型的参数和 hidden space 不同；通常是让 $m_2$ 对原始任务重新生成。
 
-**Resolution Head: How Should the Instance Be Handled?**
+#### Resolution Head：判断当前模型该采取什么动作
 
 如果任务继续留在当前模型，则判断：
 
@@ -305,7 +309,7 @@ $$
 
 图中只直接画出了 Ask for more info、Invoke tool 和 Directly answer；论文方法中还包含 Abstain / Cannot answer。
 
-**Parallel Scores, Sequential Policy**
+### 两个 Head 同时读取轨迹，但控制策略按顺序执行
 
 图形布局把两个头并排放置，但论文的正式推理策略是分层的：
 
@@ -319,7 +323,7 @@ $$
 
 两个头可以在实现中同时计算分数，但控制逻辑首先使用 Capability 决定是否保留 $m_1$。
 
-**Figure 1(b): Dynamic Routed Multi-Step Agent Loop**
+### 为什么长时程 Agent 要在每一步重新判断
 
 图中 Agent 循环包括：
 
@@ -345,7 +349,7 @@ $$
 
 这与“整条任务一旦升级就永久使用大模型”不同。动态逐步路由可以获得更细粒度的成本控制。
 
-**Figure 1(c): AndroidWorld Quality–Cost Tradeoff**
+### 图中的成本—效果曲线说明了什么
 
 右侧横轴是付费 API 成本，纵轴是 AndroidWorld 成功率。
 
@@ -371,9 +375,23 @@ Qwen3.5 组：
 
 ---
 
-## 3 The Multi-Head Latent Control Mechanism
+## 方法详解：hidden states 如何变成控制决策
 
-### 3.1 Problem Setup
+> 对应论文：§3.1 Problem Setup 与 §3.2 Control Prediction from Hidden States
+
+前面的系统图回答了“两个 Head 放在哪里”。这一节进一步回答数据究竟怎样流动。整套方法可以先压缩成四步：
+
+```text
+生成 completion
+    ↓
+提取指定层、与生成 token 对齐的 hidden states
+    ↓
+将可变长轨迹编码成固定维表示
+    ↓
+分别输出 capability score 和 resolution scores
+```
+
+### 第一步：从生成 token 提取 hidden-state trajectory
 
 令：
 
@@ -388,7 +406,7 @@ $$
 
 其中 $N$ 是生成 token 数量。
 
-**Hidden-State Trajectory**
+#### 一条 hidden-state trajectory 是什么
 
 假设 $m_1$ 的 hidden size 为 $d$。在第 $\ell$ 层，每个生成 token $\hat y_t$ 对应一个 hidden state：
 
@@ -412,7 +430,7 @@ $$
 
 这不是一个 token 的向量，而是一条随生成过程演化的轨迹。
 
-**Head-Specific Layer Choice**
+### 第二步：两个 Head 读取不同深度的特征
 
 论文认为两类信息可能在不同深度上更容易分离：
 
@@ -438,7 +456,7 @@ $$
 
 这并不是理论上永远成立，而是论文对这些 backbone 的经验选择。新的模型仍然需要重新验证。
 
-**Fixed-Budget Trace Compression**
+### 第三步：把可变长轨迹压缩成固定预算表示
 
 不同回答的 token 数 $N$ 不同：
 
@@ -474,7 +492,7 @@ $\Pi$ 表示将可变长轨迹转换为固定计算预算的表示。
 
 公开轻量 Capability Head 会得到约 256 维轨迹表示，再映射为一个 logit。不同 checkpoint 的具体结构应以配套配置文件为准。
 
-**Generated-Token Hidden States Only**
+### 为什么只读取生成 token 的 hidden states
 
 论文明确排除：
 
@@ -496,9 +514,9 @@ $\Pi$ 表示将可变长轨迹转换为固定计算预算的表示。
 
 ---
 
-### 3.2 Control Prediction from Hidden States
+### 第四步：轨迹编码器输出两个控制信号
 
-**Trajectory Encoding**
+#### 先把两条轨迹编码成固定维表示
 
 两个头分别将压缩轨迹编码成固定表示：
 
@@ -532,7 +550,7 @@ $$
 
 $\sigma$ 是 Sigmoid，把结果限制在 0～1。
 
-**Capability Head Output**
+#### Capability score 表示当前模型是否胜任
 
 输出：
 
@@ -557,7 +575,7 @@ p_cap 接近 0：小模型很可能不胜任
 - 小模型和大模型各有所长时，单纯 adequacy score 未必是最优效用路由；
 - 真正面向生产的路由目标还可以加入大模型成功概率、延迟和费用。
 
-**Resolution Head Output**
+#### Resolution scores 表示当前模型需要哪种干预
 
 输出：
 
@@ -580,7 +598,7 @@ $$
 
 论文公式的排列是 `[info, tool, cant]`，开源训练代码内部常使用 `[tool_call, request_for_info, cannot_answer]`。阅读 checkpoint 配置时需要确认具体顺序，不能只看自然语言名称。
 
-**Implicit Direct-Answer State**
+#### 为什么“直接回答”被编码成全零
 
 Resolution Head 被设计成一个“是否需要干预”的模块：
 
@@ -596,7 +614,7 @@ cant = 0
 
 它的好处是将“直接回答”定义为无干预状态；缺点是阈值和校准非常重要。如果三个分数都被系统性低估，模型会过度直接回答。
 
-**Scope of the Control Heads**
+### 控制头只做决策，不负责生成具体内容
 
 控制头只输出决策信号，不生成具体内容：
 
@@ -610,7 +628,11 @@ cant = 0
 
 ---
 
-### 3.3 Inference-Time Policy
+## 推理时策略：何时继续、升级模型或调用工具
+
+> 对应论文：§3.3 Inference-Time Policy
+
+两个 Head 输出的只是连续分数，Agent runtime 还需要把分数转换为动作。论文使用的是一个两级策略：先判断是否保留当前模型，再判断当前模型是否需要干预。
 
 ```mermaid
 flowchart TD
@@ -647,7 +669,7 @@ Resolution 最高分 > 0.5 → 执行相应干预
 三个分数均不超过 0.5 → 直接回答
 ```
 
-**Capability and Resolution Thresholds**
+### 阈值其实是质量—成本的控制旋钮
 
 提高 $\tau_{\mathrm{cap}}$：
 
@@ -664,7 +686,7 @@ Resolution 最高分 > 0.5 → 执行相应干预
 
 所以 0.8 不是普适真理。生产部署需要在自己的流量上校准。
 
-**Full-Generation and Prefix-Time Routing**
+### 如何避免完整生成后才升级造成的浪费
 
 默认方法在小模型完成回答后再判断。这有一个明显问题：
 
@@ -689,9 +711,11 @@ Resolution 最高分 > 0.5 → 执行相应干预
 
 ---
 
-### 3.4 Control Heads Training
+## 训练过程：两个 Head 的 GT 从哪里来
 
-**Frozen Backbone and Lightweight Heads**
+> 对应论文：§3.4 Control Heads Training
+
+### 共同原则：冻结 backbone，只训练轻量 Head
 
 ```mermaid
 flowchart LR
@@ -711,11 +735,13 @@ flowchart LR
 | Capability | 小模型回答是否足够好 | `correctness_score ∈ [0,1]` | 加权 MSE |
 | Resolution | 应采取哪类处置行为 | 三维 0/1 向量 | 三路 BCE |
 
-#### 3.4.1 Capability Head
+### Capability Head：学习“当前模型回答得够不够好”
 
 论文使用约 120K 混合训练样本。训练数据的目的不是训练一个只会判断数学题的 verifier，而是学习跨模态、跨任务的通用 adequacy signal。
 
 ![图 3：Capability Head 的 120K 训练数据构成](./assets/figure3-training-mixture.png)
+
+*图 3：Capability Head 的 120K 训练混合数据覆盖视觉问答、推理、知识、grounding、工具调用和 Agent 交互。*
 
 图中包含 15 个来源：
 
@@ -743,7 +769,7 @@ $$
 
 然后混合训练同一个、但只属于当前 backbone 的 Capability Head。
 
-**Capability Ground Truth: `correctness_score`**
+#### `correctness_score` 是怎样构造的
 
 每条样本属于一个具体任务，不是把多个 benchmark 的分数加在一起。
 
@@ -763,7 +789,7 @@ correctness_score ∈ [0,1]
 
 开源实现采用“能规则判断就先规则判断，否则 Judge”的方式。
 
-**普通 QA**
+##### 普通 QA：规则匹配优先，Judge 兜底
 
 先对答案做归一化和精确匹配。如果无法确定，再把以下信息交给 Qwen3-VL-30B-A3B Judge：
 
@@ -783,15 +809,15 @@ Judge 被要求返回：
 
 这里没有严格规定 0.3、0.6、0.8 分别表示什么，因此开放问答的连续分数属于 LLM 生成的伪标签。
 
-**DAPO-Math**
+##### DAPO-Math：优先验证数学等价性
 
 优先使用数学验证器检查表达式是否等价，也检查 boxed answer。能确定时直接得到 0 或 1，不能确定时再交给 Judge。
 
-**TriviaQA**
+##### TriviaQA：归一化匹配后再交给 Judge
 
 归一化后完全相等或明显包含时直接得 1，否则使用通用 Judge。
 
-**GroundUI**
+##### GroundUI：使用几何匹配分数
 
 根据预测框与 GT 框计算：
 
@@ -809,11 +835,11 @@ $$
 
 因此它的 `correctness_score` 可以是连续的几何匹配分数。
 
-**AGUVIS**
+##### AGUVIS：联合动作规则和视觉 Judge
 
 解析动作类型、点击坐标、滑动起止点、文本参数等，得到 rule score；同时使用视觉 Judge 评价动作语义，最终取二者较大值。
 
-**APIGen**
+##### APIGen：同时检查内容、策略与格式
 
 Judge 从相关性、正确性、策略和格式四个方面评分，得到总分；代码还会与规则相似度取较大值。
 
@@ -821,7 +847,7 @@ Judge 从相关性、正确性、策略和格式四个方面评分，得到总�
 
 > 它是任务规则 GT 与大模型 Judge 伪 GT 的混合，最终都被统一成 0～1 的 `correctness_score`。
 
-**Capability Head Objective**
+#### weighted MSE 如何训练 Capability Head
 
 训练集：
 
@@ -864,7 +890,7 @@ $w_i$ 用于处理数据不平衡。例如，训练集中正确回答明显多�
 
 真正部署时的路由阈值可以是 0.8，并不要求与训练统计阈值相同。
 
-#### 3.4.2 Resolution Head
+### Resolution Head：学习“当前模型应该采取什么动作”
 
 Resolution Head 使用 WHEN2CALL。
 
@@ -899,7 +925,7 @@ ambiguous
 
 这里的 Judge 输出是伪 GT，不是绝对客观的人类 ground truth。
 
-**Resolution Training Example**
+#### 一个完整样本：缺少工具参数时应该先追问
 
 WHEN2CALL 中有一条样本：
 
@@ -937,13 +963,14 @@ request_for_info
 
 假设小模型错误地立即调用工具，训练样本仍然是：
 
-$$
-(\text{该错误 completion 的 hidden states},[0,1,0])
-$$
+```text
+Head 输入：该错误 completion 对应的 hidden-state trajectory
+训练目标：[tool_call, request_for_info, cannot_answer] = [0,1,0]
+```
 
 论文希望 Head 能从内部状态中恢复“缺少必要参数”的信号，即使模型表面动作错误。
 
-**Resolution Head Objective**
+#### 三路 BCE 如何训练 Resolution Head
 
 训练集：
 
@@ -989,9 +1016,11 @@ $$
 
 ---
 
-## 4 Experiments and Results
+## 实验结果：控制信号是否真的有用
 
-**Evaluation Scope**
+> 对应论文：§4 Experiments and Results，以及附录中的补充图表
+
+### 实验覆盖了哪些能力
 
 论文使用的 backbone 包括：
 
@@ -1010,7 +1039,7 @@ $$
 
 论文表格给出了大量具体数字，本文不逐表展开，只解释四张图传达的结论。
 
-### Figure 1: Multi-Head Latent Control as an Intrinsic Control Interface for Frozen Foundation Models
+### 动态路由能否降低大模型成本
 
 图 1 已在方法部分展开。实验侧最重要的观察是：
 
@@ -1021,9 +1050,11 @@ $$
 
 图 1 说明的是系统最终价值，而不是 Head 本身的分类准确率。
 
-### Figure 2: Overall Cost–Performance Tradeoff for Two Routed Systems
+### 路由阈值如何控制成本与性能
 
 ![图 2：不同 Capability 阈值下的成本—性能曲线](./assets/figure2-cost-performance.png)
+
+*图 2：两个 routed system 在不同 Capability 阈值下的成本—性能曲线。*
 
 左图是：
 
@@ -1037,17 +1068,7 @@ Qwen3.5-9B → Qwen3.5-27B-Thinking
 Qwen3-VL-4B → Qwen3-VL-32B-Thinking
 ```
 
-横轴：
-
-$$
-\text{Overall Estimated Cost}
-$$
-
-纵轴：
-
-$$
-\text{Overall Score}
-$$
+这张图的横轴是 **Overall Estimated Cost**，也就是论文口径下的估算调用成本；纵轴是 **Overall Score**，也就是各 benchmark 得分汇总后的整体任务质量。
 
 图中：
 
@@ -1079,11 +1100,9 @@ $$
 - 根据大模型拥塞、网络状况和预算实时调整；
 - 不同用户等级使用不同阈值。
 
-### Figure 3: Composition of the 120K Training Mixture for the Capability Head
+### 训练数据为什么必须覆盖多种任务
 
-![图 3：120K Capability 训练混合数据](./assets/figure3-training-mixture.png)
-
-图 3 的重点不是每个扇区的精确比例，而是训练分布覆盖了非常不同的失败模式：
+前文展示的图 3 给出了 120K Capability 训练混合数据。它的重点不是每个扇区的精确比例，而是训练分布覆盖了非常不同的失败模式：
 
 - 视觉识别失败；
 - OCR 与文档理解失败；
@@ -1110,9 +1129,11 @@ $$
 - 大量外部 Judge 伪标签；
 - 与目标 backbone 匹配的生成轨迹。
 
-### Figure 4: Capability Head Scores versus Model Token Confidence on Qwen3.5-9B over ScreenSpot-Pro
+### token confidence 能否替代 latent control signal
 
 ![图 4：Capability Head 与 token confidence 的区分能力](./assets/figure4-head-vs-confidence.png)
+
+*图 4：在 Qwen3.5-9B 与 ScreenSpot-Pro 上，Capability Head score 和平均 token probability 对正确、错误样本的区分能力。*
 
 这张图比较 Qwen3.5-9B 在 ScreenSpot-Pro 上两种信号。
 
@@ -1149,7 +1170,9 @@ Capability Head 尝试回答的是：
 
 ---
 
-## 5 Conclusion
+## 与现有推理优化如何配合
+
+Multi-Head Latent Control 处在推理系统的控制面，因此它不会替代模型路由、投机解码或底层推理引擎。下面这张表可以帮助确定它与相邻技术的边界。
 
 | 方法 | 何时决策 | 主要输入 | 目标 |
 |---|---|---|---|
@@ -1159,7 +1182,7 @@ Capability Head 尝试回答的是：
 | 外部 Orchestrator | Agent 执行过程中 | 文本状态、规则或另一个 LLM | 编排模型、工具和步骤 |
 | Token confidence | 生成过程中/生成后 | token probability | 估计局部生成置信度 |
 
-**与投机解码的关系**
+### 与投机解码：先决定要不要调用，再考虑怎样加速
 
 投机解码回答：
 
@@ -1179,7 +1202,7 @@ Capability Head 决定升级
 再用 speculative decoding 加速大模型
 ```
 
-**与传统 Router 的关系**
+### 与传统 Router：决策更晚，但看到的信息更多
 
 传统 Router 在生成前判断，节省小模型试运行成本；本文利用生成轨迹，可能更准确地看到实例级失败，但需要先支付部分或全部小模型生成成本。
 
@@ -1192,7 +1215,9 @@ Latent Router：更晚、有额外计算，但信息更丰富
 
 ---
 
-**从 AI Infra 角度看部署需求**
+## 工程落地：系统需要增加哪些组件
+
+从 AI Infra 角度看，这个方法的难点不在两个小型 Head 本身，而在于推理 runtime 能否低开销地暴露生成过程中的内部状态，并把控制结果接入模型、工具和 Agent 的调度链路。
 
 一个生产级实现需要推理 runtime 支持：
 
@@ -1245,21 +1270,11 @@ LLM decode kernel
 
 ---
 
-**Limitations**
+## 局限性：论文结论不能被过度外推
 
-**“是否调用大模型”不是直接 GT**
+### Capability score 不是完整的路由效用
 
-Capability Head 学的是：
-
-$$
-\text{小模型是否胜任}
-$$
-
-不是：
-
-$$
-\text{大模型相对小模型的收益是否大于成本}
-$$
+Capability Head 直接学习的是“**小模型是否胜任**”，而不是“**大模型相对小模型的收益是否大于调用成本**”。
 
 更完整的路由目标应考虑：
 
@@ -1273,7 +1288,7 @@ $$
 
 本文没有直接学习这个效用。
 
-**GT 大量依赖外部 Judge**
+### GT 大量依赖外部 Judge
 
 Capability 的开放任务分数与 Resolution 四分类都大量使用大模型生成伪标签。
 
@@ -1288,7 +1303,7 @@ Capability 的开放任务分数与 Resolution 四分类都大量使用大模型
 
 的影响。
 
-**Head 不是跨 backbone 通用**
+### Head 与具体 backbone 绑定
 
 每个 Head 与以下内容绑定：
 
@@ -1302,7 +1317,7 @@ Capability 的开放任务分数与 Resolution 四分类都大量使用大模型
 
 更换 backbone 后通常需要重新生成轨迹、重新打标签和重新训练 Head。
 
-**小模型成本不是真正为零**
+### 论文的成本口径没有覆盖完整系统
 
 论文只计算付费 fallback API 成本，但系统实际还包括：
 
@@ -1316,11 +1331,11 @@ Capability 的开放任务分数与 Resolution 四分类都大量使用大模型
 
 因此生产评估应统计端到端 latency、energy、吞吐和总拥有成本，而不只是 API token。
 
-**完整生成后路由会浪费计算**
+### 完整生成后再路由仍然浪费计算
 
 如果小模型完成回答后才升级，它的整段计算可能被丢弃。Prefix Head 可以缓解，但较短 prefix 的判断能力更弱。
 
-**校准可能随流量漂移**
+### 固定阈值会随着线上分布漂移
 
 固定阈值 0.8 在论文 benchmark 上有效，不代表在医疗、金融、代码或公司内部流量上也可靠。
 
@@ -1335,7 +1350,7 @@ Capability 的开放任务分数与 Resolution 四分类都大量使用大模型
 
 ---
 
-**Takeaway**
+## 总结
 
 这篇论文真正的贡献可以分成三层。
 
