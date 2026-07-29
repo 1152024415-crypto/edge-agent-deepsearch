@@ -144,8 +144,12 @@ NOTES_HTML = r"""<!doctype html>
       return {md: md, math: math};
     }
     function restoreMath(html, math){
-      return html.replace(/MATHB(\d+)/g, function(_, i){ return math[+i]; })
-                 .replace(/MATHI(\d+)/g, function(_, i){ return math[+i]; });
+      // Escape < > & in the restored math so the browser doesn't parse e.g.
+      // y_{<t} as an HTML tag (which truncates the formula at y_{). The DOM
+      // text node (what KaTeX auto-render reads) is the unescaped math.
+      function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      return html.replace(/MATHB(\d+)/g, function(_, i){ return esc(math[+i]); })
+                 .replace(/MATHI(\d+)/g, function(_, i){ return esc(math[+i]); });
     }
 
     // Render ```mermaid fenced blocks (marked emits <pre><code class="language-mermaid">)
