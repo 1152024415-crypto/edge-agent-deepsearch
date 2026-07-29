@@ -137,8 +137,9 @@ NOTES_HTML = r"""<!doctype html>
       md = md.replace(/\$\$([\s\S]+?)\$\$/g, function(m){
         var i = math.length; math.push(m); return '\n\nMATHB' + i + '\n\n';
       });
-      // inline (no $ or newline inside)
-      md = md.replace(/\$([^\$\n]+?)\$/g, function(m){
+      // inline (no bare $ or newline inside; \\X escapes like \$ count as content
+      // so $\$2.70$ matches as one block, not splitting \$ into a false delimiter)
+      md = md.replace(/\$((?:\\.|[^\\\$\n])+?)\$/g, function(m){
         var i = math.length; math.push(m); return 'MATHI' + i;
       });
       return {md: md, math: math};
