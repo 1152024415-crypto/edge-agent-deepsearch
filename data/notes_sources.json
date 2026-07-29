@@ -16,5 +16,11 @@
     "slug": "amd-advancing-ai",
     "source": "C:/Users/11520/Documents/学习/output/amd-advancing-ai-2026",
     "desc": "AMD Advancing AI 2026 完整技术复盘——Helios 72×MI455X 机架、Anthropic/OpenAI/Meta/Microsoft 合作、ROCm.ai、Gorgon Halo、机器人大脑、开放系统 vs NVIDIA"
+  },
+  {
+    "name": "Multi-Head-Latent-Control 论文精读",
+    "slug": "mhl-control",
+    "source": "C:/Users/11520/Documents/学习/Multi-Head-Latent-Control论文精读",
+    "desc": "Multi-Head-Latent-Control (MLC) 论文精读——多头潜变量控制,高效注意力+潜变量条件生成,降推理成本"
   }
 ]

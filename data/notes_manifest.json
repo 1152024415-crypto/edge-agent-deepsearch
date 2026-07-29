@@ -47,5 +47,16 @@
         "file": "AMD_Advancing_AI_2026_完整技术复盘.md"
       }
     ]
+  },
+  {
+    "name": "Multi-Head-Latent-Control 论文精读",
+    "slug": "mhl-control",
+    "desc": "Multi-Head-Latent-Control (MLC) 论文精读——多头潜变量控制,高效注意力+潜变量条件生成,降推理成本",
+    "notes": [
+      {
+        "title": "Multi-Head Latent Control: A Unified Interface for LLM Agent Decision Making",
+        "file": "Multi-Head-Latent-Control论文精读.md"
+      }
+    ]
   }
 ]
