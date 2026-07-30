@@ -35,11 +35,11 @@ NOTES_HTML = r"""<!doctype html>
     @keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
     @media(prefers-reduced-motion:reduce){.sweep::after{animation:none;opacity:.5}}
     .layout{display:grid;grid-template-columns:248px 1fr 210px;gap:16px;align-items:start;transition:grid-template-columns .2s}
-    .layout.collapsed{grid-template-columns:0px 1fr 210px}
+    .layout.collapsed{grid-template-columns:1fr 210px}
     .layout.collapsed .side{display:none}
     .side{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 10px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;overflow-x:hidden}
-    .side-toggle{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);background:none;border:1px solid var(--hair);border-radius:3px;padding:2px 8px;cursor:pointer}
-    .side-toggle:hover{color:var(--amber);border-color:var(--amber)}
+    .side-toggle,.copy-md{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);background:none;border:1px solid var(--hair);border-radius:3px;padding:2px 8px;cursor:pointer}
+    .side-toggle:hover,.copy-md:hover{color:var(--amber);border-color:var(--amber)}
     .side-title{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;border-bottom:1px solid var(--hair);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
     .coll{margin-bottom:10px}
     .coll-name{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:600;color:var(--ink);padding:4px 6px;display:flex;align-items:center;gap:6px}
@@ -83,6 +83,7 @@ NOTES_HTML = r"""<!doctype html>
     <header class="scope">
       <h1>RADAR<span class="sub">调研笔记 · research notes</span></h1>
       <button class="side-toggle" id="side-toggle" title="收起/展开侧栏">◀ 收起侧栏</button>
+      <button class="copy-md" id="copy-md" title="复制当前笔记的原始 markdown 源码">📋 复制原文</button>
       <a class="back" href="index.html">← 返回雷达</a>
       <div class="sweep"></div>
     </header>
@@ -95,6 +96,7 @@ NOTES_HTML = r"""<!doctype html>
   <script>
     const NOTES = window.__NOTES__ || [];
     let CURRENT = null;
+    var LAST_RAW = '';
 
     function renderSide(){
       const el = document.querySelector('#side');
@@ -124,6 +126,7 @@ NOTES_HTML = r"""<!doctype html>
         return res.text();
       }).then(function(md){
         if(md == null) return;
+        LAST_RAW = md;  // store raw markdown for copy button
         // Protect $...$$ / $$...$$ from marked's inline parser (it mangles
         // math with _ * | inside, splitting $$ pairs so KaTeX can't match).
         // Replace with plain placeholders, parse, restore, THEN KaTeX render.
@@ -277,6 +280,25 @@ NOTES_HTML = r"""<!doctype html>
       btn.addEventListener('click', function(){
         var c = layout.classList.toggle('collapsed');
         btn.textContent = c ? '▶ 展开侧栏' : '◀ 收起侧栏';
+      });
+    })();
+
+    // Copy raw markdown source to clipboard
+    (function(){
+      var btn = document.getElementById('copy-md');
+      if(!btn) return;
+      btn.addEventListener('click', function(){
+        if(!LAST_RAW){ btn.textContent = '⚠ 先选一篇笔记'; setTimeout(function(){btn.textContent='📋 复制原文';},1500); return; }
+        navigator.clipboard.writeText(LAST_RAW).then(function(){
+          btn.textContent = '✅ 已复制原文';
+          setTimeout(function(){ btn.textContent = '📋 复制原文'; }, 2000);
+        }).catch(function(){
+          // fallback: select + execCommand
+          var ta = document.createElement('textarea');
+          ta.value = LAST_RAW; document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); btn.textContent = '✅ 已复制原文'; setTimeout(function(){btn.textContent='📋 复制原文';},2000); } catch(e){}
+          document.body.removeChild(ta);
+        });
       });
     })();
 
