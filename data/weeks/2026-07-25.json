@@ -31,7 +31,7 @@
       "venue": "Google",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-nvidia-how-to-self-host-a-validated-ai-coding-assistant-with-nvidia-ne",
@@ -58,7 +58,7 @@
       "venue": "NVIDIA",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-google-interactions-api-our-primary-interface-for-gemini-models-and-ag",
@@ -85,7 +85,7 @@
       "venue": "Google",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-qualcomm-qualcomm-named-bmw-group-s-lead-compute-silicon-provider-for-",
@@ -112,7 +112,7 @@
       "venue": "Qualcomm",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-nvidia-developing-healthcare-robotics-with-gpu-native-medical-physics-",
@@ -141,7 +141,7 @@
       "venue": "NVIDIA",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-google-gemini-api-managed-agents-3-6-flash-hooks-and-more",
@@ -168,7 +168,7 @@
       "venue": "Google",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-nvidia-powerful-compute-so-compact-it-s-clutch-build-ai-anywhere-with-",
@@ -196,7 +196,7 @@
       "venue": "NVIDIA",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-nvidia-industry-leaders-unite-in-open-secure-ai-alliance-for-ai-safety",
@@ -223,7 +223,7 @@
       "venue": "NVIDIA",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-meta-reimagining-independence-how-meta-s-ai-models-are-helping-the-uni",
@@ -251,7 +251,7 @@
       "venue": "Meta",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-nvidia-six-agent-harness-capabilities-for-higher-model-performance",
@@ -278,7 +278,7 @@
       "venue": "NVIDIA",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-microsoft-what-customers-value-most-in-microsoft-databases-from-reliab",
@@ -305,7 +305,7 @@
       "venue": "Microsoft",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-nvidia-nvidia-harnesses-vera-cpu-to-speed-up-design-of-next-generation",
@@ -333,7 +333,7 @@
       "venue": "NVIDIA",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "vendor-nvidia-nvidia-nemotron-3-ultra-leads-open-models-on-accuracy-and-effic",
@@ -360,13 +360,13 @@
       "venue": "NVIDIA",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "github-google-ai-edge-mediapipe-v1-0-0",
       "run_id": "run-20260730-094221",
       "title": "MediaPipe v1.0.0",
-      "abstract": "First 1.0 milestone release (from 0.10.x); migrates Apple Bazel rules to MODULE.bazel, adds Gecko and Embedding Gemma support to Text Embedder, stores wgpu::Ins…",
+      "abstract": "首个 1.0 里程碑版本（从 0.10.x 升级）；把 Apple Bazel 规则迁移到 MODULE.bazel，Text Embedder 新增 Gecko 与 Embedding Gemma 支持，WebGpuService 中保存 wgpu::Instance，LiteRtService 扩展支持 Android 系统运行时。内部 MediaPipe 版本号升至 0.10.36，Abseil 升至 2025-01-14。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://github.com/google-ai-edge/mediapipe/releases/tag/v1.0.0",
@@ -390,13 +390,13 @@
       "venue": "GitHub",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "github-microsoft-onnxruntime-v1-28-0",
       "run_id": "run-20260730-094221",
       "title": "ONNX Runtime v1.28.0",
-      "abstract": "Upgraded to ONNX 1.22.0 and protobuf 6.33.5; cuDNN and cuFFT are now optional at runtime for the CUDA EP (nvrtc no longer linked), significantly reducing the CU…",
+      "abstract": "ONNX Runtime 升级到 ONNX 1.22.0 与 protobuf 6.33.5，CUDA EP 运行时不再强依赖 cuDNN/cuFFT（不再链接 nvrtc），显著缩小 CUDA 包体积；新增实验性 C/C++ 模型包 API（OrtModelPackageApi），并移除 CUDA EP 中的 TensorRT 融合因果注意力 kernel。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://github.com/microsoft/onnxruntime/releases/tag/v1.28.0",
@@ -419,13 +419,13 @@
       "venue": "GitHub",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "github-hkuds-nanobot-v0-3-0",
       "run_id": "run-20260730-094221",
       "title": "nanobot v0.3.0",
-      "abstract": "260 PRs merged and 38 new contributors; introduces one-command `nanobot webui` workbench, inline subagents with authorized verification, long-running `/goal` su…",
+      "abstract": "合并 260 个 PR、新增 38 位贡献者；引入一行命令 nanobot webui 工作台、带授权验证的内联 subagent、长时间运行的 /goal 持续执行模式，并扩展更多 provider/渠道（OpenCode、Kimi Coding、Grok OAuth+托管 X Search、Neonize WhatsApp）。运行时支持配置热重载、网关重启/关闭更稳健、Docker/Render 部署可复现。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://github.com/HKUDS/nanobot/releases/tag/v0.3.0",
@@ -447,13 +447,13 @@
       "venue": "GitHub",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26661",
       "run_id": "run-20260730-094221",
       "title": "AgenticCANN: Automated Ascend C Operator Generation via Knowledge-Augmented Agentic Evolution",
-      "abstract": "Ascend C operator optimization is critical for NPU (Neural Processing Unit) inference performance but requires deep hardware expertise.While large language mode…",
+      "abstract": "昇腾 C 算子优化对 NPU 推理性能至关重要但需要深厚硬件专业知识，作者探索用大模型辅助该优化。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26661",
@@ -476,13 +476,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26491",
       "run_id": "run-20260730-094221",
       "title": "LLMET: Enabling Cross-Layer Evaluation of Emerging M3D Memories for Energy-Efficient LLM Serving",
-      "abstract": "The energy consumption of Large Language Model (LLM) serving is becoming a major system challenge as deployment scales, driven by hardware power and thermal con…",
+      "abstract": "LLM 服务的能耗随部署规模扩大正成为主要系统挑战，受硬件功耗和热约束驱动，作者针对该问题。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26491",
@@ -508,13 +508,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26444",
       "run_id": "run-20260730-094221",
       "title": "StrataCL: Fabric-Native Communication Library for Production Supernodes",
-      "abstract": "Modern distributed AI workloads run across hundreds of accelerators, making communication a major bottleneck.",
+      "abstract": "现代分布式 AI 负载跨数百个加速器运行，使通信成为主要瓶颈，作者针对该通信瓶颈展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26444",
@@ -537,13 +537,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25340",
       "run_id": "run-20260730-094221",
       "title": "Cardiologent: Multi-Agent Clinical Decision Support for Patient-Level Arrhythmia Assessment, Urgency, and Management",
-      "abstract": "The same episode of atrial fibrillation is a minor finding in a healthy adult and grounds for anticoagulation in an elderly patient with hypertension: identical…",
+      "abstract": "同一段房颤在健康成人中是小发现、在伴高血压老年患者中却是抗凝指征：相同表现的临床意义因人而异，作者针对该问题。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25340",
@@ -565,13 +565,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26238",
       "run_id": "run-20260730-094221",
       "title": "Lightweight Image Classification of Raptor Species for Edge Devices: Rare-Species Dataset Expansion via Video Frame Extraction, Knowledge Distillation, and TensorRT Deployment",
-      "abstract": "We investigate lightweight raptor-species classification for real-time edge deployment in wind-turbine collision mitigation.",
+      "abstract": "作者研究用于风机碰撞缓解中实时端侧部署的轻量级猛禽物种分类方法。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26238",
@@ -595,13 +595,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24434",
       "run_id": "run-20260730-094221",
       "title": "DraftExpert: Expansion-Aware Self-Speculative Decoding for End-Device MoE Inference",
-      "abstract": "Large Mixture-of-Experts (MoE) language models are attractive for end-device deployment because only a small subset of experts is active per token, but their ro…",
+      "abstract": "大型 MoE 语言模型适合端侧部署，因为每 token 只有小子集专家激活，但其路由与部署仍存问题，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24434",
@@ -629,13 +629,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24396",
       "run_id": "run-20260730-094221",
       "title": "The SpiNNaker2 chip: a many-core platform for flexible and scalable brain-inspired computing",
-      "abstract": "In deep learning, efficiency gets more and more important to compensate for the ongoing growth in model sizes and applications.",
+      "abstract": "深度学习中效率越来越重要，以补偿模型规模与应用的持续增长，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24396",
@@ -661,13 +661,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23693",
       "run_id": "run-20260730-094221",
       "title": "Compute Globally, Materialize Locally: The Memory Contract of Sparse Event-KV",
-      "abstract": "Long-horizon agents increasingly reuse their KV cache as memory: a serving system keeps a subset of cached entries and drops the rest.",
+      "abstract": "长时序 agent 越来越多地复用其 KV 缓存作为记忆：服务系统保留部分缓存条目丢弃其余，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23693",
@@ -692,13 +692,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23722",
       "run_id": "run-20260730-094221",
       "title": "E-Bench: Benchmarking Multi-Step Tool-Use Agents in Real-World Product Scenarios",
-      "abstract": "Large Language Models (LLMs) are increasingly deployed as agents that interact with stateful environments over multiple steps: gathering hidden information, com…",
+      "abstract": "大模型越来越多地被部署为与有状态环境多步交互的 agent：收集隐藏信息、提交动作等，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23722",
@@ -721,13 +721,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23811",
       "run_id": "run-20260730-094221",
       "title": "Memory Efficient Audio Synthesis with Decoupled Temporal Depth Diffusion Transformers",
-      "abstract": "Siri Expressive Voices synthesize rich, configurable speech in real time and entirely on device, powered by AFM 3 Core Advanced, Apple's most powerful on-device…",
+      "abstract": "Siri Expressive Voices 完全在端侧实时合成丰富可配置语音，由苹果最强端侧模型 AFM 3 Core Advanced 驱动。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23811",
@@ -752,13 +752,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23386",
       "run_id": "run-20260730-094221",
       "title": "Confidently Wrong: Exception Chain Collapse in Frontier LLM Rule Evaluation",
-      "abstract": "We document a failure class in frontier large language models -- exception chain collapse -- observed in eligibility evaluation under nested conditional rules o…",
+      "abstract": "作者记录了前沿大模型中的一类失效——异常链坍塌（exception chain collapse），出现在嵌套条件规则的资格判定中。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23386",
@@ -782,13 +782,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23304",
       "run_id": "run-20260730-094221",
       "title": "Context-Adaptive Inference: A Unified Statistical and Foundation-Model View",
-      "abstract": "Modern predictive systems are expected to adapt their behavior to the specific situation they are facing.",
+      "abstract": "现代预测系统被期望能根据其面临的具体情况调整行为，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23304",
@@ -810,13 +810,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26594",
       "run_id": "run-20260730-094221",
       "title": "A Physics-Informed Framework for PID Tuning of Chemical Processes Using Large Language Model Agents",
-      "abstract": "PID tuning for chemical processes commonly relies on identified process models, whereas plant engineers often retune loops iteratively by observing responses, d…",
+      "abstract": "化工过程 PID 调参通常依赖辨识的过程模型，而现场工程师常靠观察响应迭代重调，作者针对此问题。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26594",
@@ -838,13 +838,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26723",
       "run_id": "run-20260730-094221",
       "title": "FARI: Robust One-Step Inversion for Watermarking in Diffusion Models",
-      "abstract": "Inversion-based watermarking is a promising approach to authenticate diffusion-generated images, yet practical use is bottlenecked by inversion that is both slo…",
+      "abstract": "基于反演的水印是认证扩散生成图像的有前景方法，但其实用化受制于既慢又贵的反演过程，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26723",
@@ -866,13 +866,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26401",
       "run_id": "run-20260730-094221",
       "title": "Sensor-Placement-Agnostic Sonomyography: Toward Continuous High-Dimensional Control by Users with Tetraplegia",
-      "abstract": "Sonomyography (SMG) enables continuous device control via ultrasound-measured muscle deformation signals, but existing SMG interfaces generally require substant…",
+      "abstract": "肌声图（SMG）靠超声测肌肉形变信号实现连续设备控制，但现有 SMG 接口通常需要大量训练/标定，作者对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26401",
@@ -894,13 +894,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26621",
       "run_id": "run-20260730-094221",
       "title": "WhisperRec: Latent Reasoning for Efficient Foundation Recommendation Models",
-      "abstract": "Large language models (LLMs) have demonstrated strong reasoning capabilities, motivating their adoption as backbones for foundation recommendation models (FRMs)…",
+      "abstract": "大模型已展现强推理能力，促使它们被用作基础推荐模型（FRM）的骨干，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26621",
@@ -922,13 +922,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25669",
       "run_id": "run-20260730-094221",
       "title": "OmniDelta: Skill-Driven Budget Allocation for Token Compression in OmniLLMs",
-      "abstract": "Emerging Omni-modal Large Language Models (OmniLLMs) enable unified understanding of text, audio, and video, but their long audio-video token sequences introduc…",
+      "abstract": "新兴全模态大模型（OmniLLM）能统一理解文本、音频和视频，但其长音视频 token 序列带来开销，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25669",
@@ -952,13 +952,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25816",
       "run_id": "run-20260730-094221",
       "title": "Speculate While You Reason: Teaching Agents to Predict Their Next Tool Call via Joint Agent-Speculator RL",
-      "abstract": "Large language model agents often spend substantial wall-clock time waiting for tool call results.",
+      "abstract": "LLM agent 常花费大量墙钟时间等待工具调用结果，作者针对该等待开销展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25816",
@@ -981,13 +981,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24904",
       "run_id": "run-20260730-094221",
       "title": "Mage-VL: An Efficient Codec-Native Streaming Multimodal Foundation Model",
-      "abstract": "Standard vision-language models (VLMs) suffer from Moravec's paradox: they excel at complex offline visual reasoning but struggle with simple streaming percepti…",
+      "abstract": "标准视觉-语言模型（VLM）受 Moravec 悖论困扰：擅长复杂离线视觉推理却在简单流式感知上挣扎，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24904",
@@ -1013,13 +1013,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24593",
       "run_id": "run-20260730-094221",
       "title": "PIVOT: Efficient Query-Group Indexing for Token-Level Sparse Attention",
-      "abstract": "Token-level sparse attention, as implemented by DeepSeek Sparse Attention (DSA) in production systems, makes the downstream attention efficient but shifts the b…",
+      "abstract": "DeepSeek 稀疏注意力（DSA）等 token 级稀疏注意力让下游注意力高效，却把瓶颈转移到上游，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24593",
@@ -1043,13 +1043,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24081",
       "run_id": "run-20260730-094221",
       "title": "Towards simultaneous decoding of kinetic and kinematic movement parameters during grasp and lift task by noninvasive brain imaging",
-      "abstract": "Brain-machine interfaces (BMIs) can assist individuals with limited mobility, such as stroke survivors or amputees.",
+      "abstract": "脑机接口（BMI）可帮助行动受限人群，如卒中幸存者或截肢者，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24081",
@@ -1070,13 +1070,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23446",
       "run_id": "run-20260730-094221",
       "title": "Do Small Models Use the Law You Give Them? Context-Injected Fine-Tuning for Legal QA in Bangladesh",
-      "abstract": "A small language model can receive the governing statutory provision and still answer incorrectly.",
+      "abstract": "小语言模型即便拿到相关法定条款仍可能答错，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23446",
@@ -1097,13 +1097,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23815",
       "run_id": "run-20260730-094221",
       "title": "Kalypso: Relational LLM Serving",
-      "abstract": "Large language models are increasingly used as semantic operators for filtering, extracting, ranking, joining, and transforming unstructured data.",
+      "abstract": "大模型越来越多地用作对非结构化数据进行过滤、抽取、排序、连接和变换的语义算子，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23815",
@@ -1128,13 +1128,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23099",
       "run_id": "run-20260730-094221",
       "title": "Decoding the Skew: Distribution-Aware MoE Inference with Adaptive Kernel Dispatch",
-      "abstract": "Mixture-of-Experts (MoE) inference consists of sparse expert GEMMs whose shapes vary with the runtime routing distribution.",
+      "abstract": "MoE 推理由稀疏专家 GEMM 组成，其形状随运行时路由分布而变，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23099",
@@ -1161,13 +1161,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23115",
       "run_id": "run-20260730-094221",
       "title": "Gleam: Adaptive Network-Efficient CUDA API Remoting for Cross-Device GPU Sharing over LANs",
-      "abstract": "This paper aims to enable computation- and communication-efficient GPU sharing across devices within local area networks (LANs), facilitating ubiquitous AI infe…",
+      "abstract": "本文旨在实现局域网内设备间算力与通信高效的 GPU 共享，推动泛在 AI 推理。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23115",
@@ -1189,13 +1189,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23054",
       "run_id": "run-20260730-094221",
       "title": "Through the Bottleneck: How Multi-head Latent Attention Separates Content from Position in Language Models",
-      "abstract": "Multi-head Latent Attention (MLA), introduced in DeepSeek-V2, compresses key-value pairs through a shared low-rank bottleneck (cKV), achieving 81% KV-cache redu…",
+      "abstract": "DeepSeek-V2 提出的多头潜在注意力（MLA）通过共享低秩瓶颈（cKV）压缩键值对，实现 81% KV 缓存压缩，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23054",
@@ -1217,13 +1217,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23264",
       "run_id": "run-20260730-094221",
       "title": "X-Stage: An Overlooked Pipeline Stage for Communication-Computation Overlap in DiT Inference",
-      "abstract": "Fine-grained, device-initiated communication lets persistent GPU kernels in distributed diffusion transformer (DiT) inference issue remote stores and overlap da…",
+      "abstract": "细粒度、设备发起的通信让分布式扩散 Transformer（DiT）推理中的常驻 GPU kernel 发出远程存储并重叠数据传输，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23264",
@@ -1245,13 +1245,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26835",
       "run_id": "run-20260730-094221",
       "title": "A Low-Power Sparse Convolution Accelerator with Idle-First-Task-Assignment for Edge Vision",
-      "abstract": "In recent years, edge-vision monitoring systems for applications such as smart animal husbandry have faced strict tripartite constraints: maintaining input reso…",
+      "abstract": "智慧畜牧等端侧视觉监测系统同时面临输入分辨率、算力、带宽等多重约束，作者提出兼顾方案。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26835",
@@ -1275,13 +1275,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26933",
       "run_id": "run-20260730-094221",
       "title": "Defending Against Backdoor Attacks via Alignment Checking in Model-Contrastive Federated Learning",
-      "abstract": "Federated Learning (FL) is vulnerable to backdoor attacks because of its distributed nature in edge computing scenarios.",
+      "abstract": "联邦学习因其在边缘计算场景中的分布式特性而容易遭受后门攻击，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26933",
@@ -1304,13 +1304,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.12544",
       "run_id": "run-20260730-094221",
       "title": "Edge-Aware Thermal Infrared UAV Swarm Tracking",
-      "abstract": "Thermal infrared (TIR) imaging is essential for UAV swarm operations in visually degraded environments.",
+      "abstract": "热红外（TIR）成像对无人机集群在视觉退化环境中的行动至关重要，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.12544",
@@ -1332,13 +1332,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26513",
       "run_id": "run-20260730-094221",
       "title": "Explicit Kinematic Guidance from Analytic Concepts for Vision-Language-Action Models",
-      "abstract": "Current Vision-Language-Action (VLA) models rely mainly on 2D inputs, neglecting the rich object structural information and commonsense knowledge inherent in th…",
+      "abstract": "现有视觉-语言-动作（VLA）模型主要依赖 2D 输入，忽略了丰富的物体结构信息和常识知识，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26513",
@@ -1359,13 +1359,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26993",
       "run_id": "run-20260730-094221",
       "title": "Foundation Models for Face Presentation Attack Detection: A Unified Linear-Probing Benchmark",
-      "abstract": "Face presentation attack detection (PAD) remains challenging under cross-dataset evaluation, where domain shift degrades models trained on a single dataset.",
+      "abstract": "人脸呈现攻击检测（PAD）在跨数据集评估下仍具挑战，分布偏移会削弱单数据集训练的模型，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26993",
@@ -1388,13 +1388,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25895",
       "run_id": "run-20260730-094221",
       "title": "HiFi-UMI: Learning Deployable Manipulation Policies from High-Fidelity UMI Data Alone",
-      "abstract": "Learning deployable manipulation policies is bottlenecked by the scarcity of data that is both high-fidelity and scalable.",
+      "abstract": "学习可部署操作策略受限于既高保真又可扩展的数据的稀缺，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.25895",
@@ -1416,13 +1416,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26631",
       "run_id": "run-20260730-094221",
       "title": "RAG-HAR+: Towards Cost-Efficient LLM-Based Human Activity Recognition for Edge Deployment",
-      "abstract": "Human Activity Recognition (HAR) from wearable sensors supports applications in healthcare, rehabilitation, fitness tracking, and smart environments.",
+      "abstract": "基于可穿戴传感器的人体活动识别（HAR）支撑医疗、康复、健身追踪和智能环境等应用，作者展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26631",
@@ -1445,13 +1445,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26460",
       "run_id": "run-20260730-094221",
       "title": "RLMM-Flow: A Flow-based Mobile Manipulation Framework with Latent-Space Reinforcement Learning",
-      "abstract": "Mobile manipulation requires generating whole-body action chunks that jointly satisfy goal reaching, collision avoidance, base kinematic constraints, manipulato…",
+      "abstract": "移动操作需要生成全身动作块，同时满足目标到达、避障、底盘运动学约束等，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26460",
@@ -1474,13 +1474,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26483",
       "run_id": "run-20260730-094221",
       "title": "Reconstructing Backpropagation from Forward Fluctuations in Noise-modulated Neural Networks",
-      "abstract": "A Noise-modulated Neural Network (NNN) learns and infers only in the presence of noise, treating noise as a computational resource rather than a disturbance.",
+      "abstract": "噪声调制神经网络（NNN）只在有噪声时才学习和推理，把噪声当作计算资源而非干扰，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26483",
@@ -1501,13 +1501,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.27065",
       "run_id": "run-20260730-094221",
       "title": "ScratchSim: A Procedural Synthetic Data Pipeline for Surface Scratch Detection",
-      "abstract": "While automated defect detection such as the detection of surface scratched is an important aspect in industrial quality control, the scarcity of annotated defe…",
+      "abstract": "工业质检中的表面划痕等缺陷自动检测很重要，但标注缺陷样本稀缺，作者针对此数据稀缺问题提出方法。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.27065",
@@ -1529,13 +1529,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26567",
       "run_id": "run-20260730-094221",
       "title": "Speech2Grasp: Data-Efficient Transfer of Text-Conditioned Grasp Detection to Speech in Humanoid Robots",
-      "abstract": "Humanoid robots increasingly require multi-modal understanding for natural interaction with humans.",
+      "abstract": "人形机器人越来越需要多模态理解以与人类自然交互，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26567",
@@ -1558,13 +1558,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26788",
       "run_id": "run-20260730-094221",
       "title": "Stable and Budget-Feasible Coalition Formation for Clustered Federated Learning: A Hedonic Potential-Game Approach",
-      "abstract": "Clustered federated learning benefits from organizing heterogeneous participants into coalitions that train coalition-specific models, but such clustering is su…",
+      "abstract": "聚类联邦学习通过把异构参与者组织成联盟训练各自模型而受益，但该聚类过程存在诸多难点，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26788",
@@ -1587,13 +1587,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26648",
       "run_id": "run-20260730-094221",
       "title": "The Sparsity Ceiling: Where Spiking Networks Can and Cannot Trade Activity for Energy",
-      "abstract": "Spiking neural networks (SNNs) are promoted as an energy-efficient substrate because sparse, event-driven activity replaces dense multiply-accumulates with chea…",
+      "abstract": "脉冲神经网络（SNN）因稀疏事件驱动活动替代密集乘加而被推崇为节能底座，作者针对其相关挑战展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26648",
@@ -1618,13 +1618,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26865",
       "run_id": "run-20260730-094221",
       "title": "Think Short, Defer Smart, Act, and Repeat: Calibrated Reasoning and Uncertainty-Aware Deferral for Edge LLM Agents",
-      "abstract": "LLM agents following the ReAct paradigm are promising enablers of complex multi-step tasks, including multi-hop question answering, code generation, and control…",
+      "abstract": "基于 ReAct 范式的 LLM agent 可完成多跳问答、代码生成、控制等复杂多步任务，作者针对其相关挑战展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26865",
@@ -1648,13 +1648,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26935",
       "run_id": "run-20260730-094221",
       "title": "What Does It Take to Detect an AI Agent? Minimal Feature Sets for Behavioral Detection under Browser Automation",
-      "abstract": "Bot detectors deployed at scale treat traffic as binary: human or bot.",
+      "abstract": "现有大规模部署的机器人检测器把流量当成“人或机器人”二分类处理，作者指出其局限并提出改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26935",
@@ -1677,13 +1677,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25289",
       "run_id": "run-20260730-094221",
       "title": "AMRD: Adaptive Multi-Teacher Relational Distillation for Lightweight Speech Emotion Recognition",
-      "abstract": "On-device speech emotion recognition (SER) is critical for real-time applications, yet large self-supervised models that excel at SER are too costly for edge de…",
+      "abstract": "端侧语音情感识别（SER）对实时应用很关键，但擅长 SER 的大型自监督模型对端侧设备太贵，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25289",
@@ -1706,13 +1706,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25498",
       "run_id": "run-20260730-094221",
       "title": "Beyond Prefill-Decode Disaggregation: Dissecting LLM Inference for Heterogeneous Platforms via Dynamic Operator Scheduling",
-      "abstract": "Prefill-decode disaggregation (PD) and roofline-based operator placement are common strategies for partitioning Large Language Model (LLM) inference across hete…",
+      "abstract": "Prefill-解码分离（PD）和基于 roofline 的算子放置是跨异构资源切分 LLM 推理的常见策略，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25498",
@@ -1733,13 +1733,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26208",
       "run_id": "run-20260730-094221",
       "title": "MEDA: Measurement-Efficient Disorder-Aware Majorana Zero Mode Detection in Realistic Devices",
-      "abstract": "Fault-tolerant topological quantum computing relies on identifying Majorana zero modes (MZMs), but reliable detection in realistic devices remains challenging.",
+      "abstract": "容错拓扑量子计算依赖识别 Majorana 零模（MZM），但实际器件中可靠检测仍具挑战，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26208",
@@ -1760,13 +1760,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25807",
       "run_id": "run-20260730-094221",
       "title": "Modular Robotic Catheters for Endovascular Aneurysm Repair",
-      "abstract": "Fenestrated/Branched endovascular aneurysm repair (FEVAR/BEVAR) require surgeons to navigate catheters and guidewires into various branches of the abdominal aor…",
+      "abstract": "开窗/分支腔内动脉瘤修复（FEVAR/BEVAR）要求外科医生把导管和导丝导航进腹主动脉各分支，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25807",
@@ -1789,13 +1789,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25232",
       "run_id": "run-20260730-094221",
       "title": "Neurai-VN Benchmark: Standardized Machine Learning Models for Multimodal Digital Phenotyping in Mental Health Classification",
-      "abstract": "Digital phenotyping (DP) using smartphones and wearable devices has shown considerable potential for mental health monitoring.",
+      "abstract": "用手机和可穿戴设备进行的数字表型（DP）已在心理健康监测中展现可观潜力，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25232",
@@ -1818,13 +1818,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25545",
       "run_id": "run-20260730-094221",
       "title": "OrthKD: Extracting Generalized Clinical Knowledge from Heterogeneous Teachers for Lightweight Deployment",
-      "abstract": "Deploying diabetic retinopathy (DR) screening models in primary care requires edge-efficient systems that remain accurate, safe, and reliable under domain shift…",
+      "abstract": "在初级保健中部署糖尿病视网膜病变（DR）筛查模型需要兼顾高效且在分布偏移下保持准确安全的端侧系统，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25545",
@@ -1846,13 +1846,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.21655",
       "run_id": "run-20260730-094221",
       "title": "Progress Reward Modeling for Robotic Learning: A Comprehensive Survey",
-      "abstract": "Robotic learning takes place in dynamic environments with large behavior spaces.",
+      "abstract": "机器人学习发生在动态环境、行为空间巨大的场景中，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.21655",
@@ -1874,13 +1874,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25439",
       "run_id": "run-20260730-094221",
       "title": "Robust Unsupervised Network Intrusion Detection via Federated Learning with Selective Aggregation under Anomalous Sample Contamination",
-      "abstract": "Network intrusion detection systems (NIDS) have become essential for Internet of Things (IoT) environments, as malware targeting IoT devices continues to evolve…",
+      "abstract": "网络入侵检测系统（NIDS）已成为物联网环境的关键，因为针对物联网设备的恶意软件持续演化，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25439",
@@ -1902,13 +1902,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26335",
       "run_id": "run-20260730-094221",
       "title": "The Fabric Is the Cluster Driver: Cross-Layer eBPF Policies for GPU-CXL Fabrics",
-      "abstract": "We present fabric_ext, an eBPF middleware compiler and runtime for extensible OS policies over GPU--CXL fabrics.",
+      "abstract": "作者提出 fabric_ext，一个用于在 GPU-CXL fabric 上实现可扩展 OS 策略的 eBPF 中间件编译器与运行时。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26335",
@@ -1933,13 +1933,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26307",
       "run_id": "run-20260730-094221",
       "title": "TraceCoder: Explainable and Auditable Code Generation with Position-Key Snippet Versioning",
-      "abstract": "Contemporary LLM-based coding agents produce code as black-box outputs: the rationale behind each line is hidden, the evolution of the code through benchmark-dr…",
+      "abstract": "当代基于 LLM 的编程 agent 把代码当黑箱输出：每行的理由隐藏、代码在基准驱动下的演化不透明，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26307",
@@ -1962,13 +1962,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23373",
       "run_id": "run-20260730-094221",
       "title": "UltraViT: Latency-Optimized On-device Vision Encoder for Large Vision-Language Models",
-      "abstract": "Large Vision-Language Models (LVLMs) remain bottlenecked by massive computational footprints, precluding their deployment on resource-constrained edge devices.",
+      "abstract": "大型视觉-语言模型（LVLM）仍受庞大计算足迹掣肘，无法在资源受限的边缘设备上部署，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.23373",
@@ -1990,13 +1990,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26042",
       "run_id": "run-20260730-094221",
       "title": "VetClaw: An Edge-Cloud Multimodal Agentic System for Veterinary Disease Screening",
-      "abstract": "We present VetClaw, an edge-cloud multimodal agentic system for early veterinary disease screening.",
+      "abstract": "作者提出 VetClaw，一个用于早期兽医疾病筛查的端云协同多模态 agent 系统。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26042",
@@ -2019,13 +2019,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23909",
       "run_id": "run-20260730-094221",
       "title": "WorldDiT: A Unified Diffusion Architecture for World and Action Modeling",
-      "abstract": "Many recent robot policies pursue stronger control by using large pretrained vision-language models (VLMs) as the action backbone.",
+      "abstract": "近期许多机器人策略通过用大型预训练 VLM 作动作骨干来追求更强控制，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.23909",
@@ -2047,13 +2047,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24031",
       "run_id": "run-20260730-094221",
       "title": "A Cyclic Adaptation-Generalization Framework with Uncertainty-Guided Self-Paced Learning for Long-Term Brain-Machine Interfaces",
-      "abstract": "Brain-Machine Interfaces (BMIs), which link the brain to external devices, hold great potential in rehabilitation, human performance augmentation, and human-cen…",
+      "abstract": "脑机接口将大脑与外部设备相连，在康复、人因增强和人机交互中潜力巨大，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24031",
@@ -2075,13 +2075,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24669",
       "run_id": "run-20260730-094221",
       "title": "A Heterogeneous Neural Network Accelerator for End-to-End Multitask RF Signal Recognition",
-      "abstract": "This paper presents a heterogeneous neural network accelerator for multi-task RF signal recognition, supporting automatic modulation recognition (AMR), hardware…",
+      "abstract": "本文提出一个用于多任务射频信号识别的异构神经网络加速器，支持自动调制识别（AMR）和硬件指纹识别等。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24669",
@@ -2104,13 +2104,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24148",
       "run_id": "run-20260730-094221",
       "title": "A Motion-Aware Vector Quantization Framework with Centroid Reuse for Efficient VLA Inference",
-      "abstract": "Vision-Language-Action (VLA) models have demonstrated strong potential for embodied AI, yet their high inference latency on GPUs limits real-time deployment.",
+      "abstract": "视觉-语言-动作（VLA）模型在具身 AI 中潜力可观，但其在 GPU 上推理延迟高限制了实时部署，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24148",
@@ -2135,13 +2135,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24409",
       "run_id": "run-20260730-094221",
       "title": "Accuracy potential of visual localization exploiting high-end street-level imagery",
-      "abstract": "Accurate and reliable pose information with respect to a reference frame is increasingly demanded across applications such as autonomous navigation, surveying, …",
+      "abstract": "相对参考系的准确可靠位姿信息在自动导航、测绘等应用中日益重要，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24409",
@@ -2164,13 +2164,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23902",
       "run_id": "run-20260730-094221",
       "title": "Autonomous Physical Computation: A Categorical Closure Criterion for Physical and Neuromorphic Reservoirs",
-      "abstract": "Physical reservoirs, neuromorphic devices, and wave-mediated systems often possess memory, feedback, and rich state-dependent dynamics, but these properties do …",
+      "abstract": "物理储备池、神经形态器件和波介系统常具记忆、反馈和丰富的状态依赖动力学，但这些属性未被充分利用，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23902",
@@ -2191,13 +2191,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25070",
       "run_id": "run-20260730-094221",
       "title": "Characterizing and Mitigating the Effects of Device Temperature on RF Fingerprinting Accuracy",
-      "abstract": "Radio Frequency Fingerprinting (RFFP) has emerged as a promising approach for device authentication by exploiting hardware-specific impairments embedded in tran…",
+      "abstract": "射频指纹（RFFP）通过利用发射信号中嵌入的硬件特定缺陷做设备认证，已成有前景方法，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25070",
@@ -2220,13 +2220,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24629",
       "run_id": "run-20260730-094221",
       "title": "Development of a Handheld Actuation Mechanism for a Tendon-driven Robotically Steered Guidewire",
-      "abstract": "An endovascular intervention begins with a skilled clinician manually navigating a long, slender wire, called a guidewire, to the target location within the vas…",
+      "abstract": "血管内介入开始于临床医生手动把一根细长导丝导航到血管内目标位置，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24629",
@@ -2248,13 +2248,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24126",
       "run_id": "run-20260730-094221",
       "title": "EEGForceFusion: Joint Tokenised-Continuous Representation Learning for Subject-Independent Grasp Force Decoding",
-      "abstract": "Brain-machine interfaces provide a link between neural activity and external devices, enabling restoration of motor function and advancing human-machine interac…",
+      "abstract": "脑机接口在神经活动与外部设备间建立连接，可恢复运动功能并推进人机交互，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24126",
@@ -2276,13 +2276,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24895",
       "run_id": "run-20260730-094221",
       "title": "Formalization and quantitative metrics for functional stability of edge computing systems",
-      "abstract": "Edge computing systems operate in conditions where component failures, intermittent backhaul connectivity, resource exhaustion and adversarial disturbances are …",
+      "abstract": "边缘计算系统运行在组件故障、间歇回程连接、资源耗尽和对抗扰动等条件下，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24895",
@@ -2303,13 +2303,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24585",
       "run_id": "run-20260730-094221",
       "title": "From Data to Device: ELMOD An Efficient German-First 2.7B Language Model for Mobile Inference",
-      "abstract": "We present ELMOD - Efficient Language Model for On-Device Deployment - a compact (2.7B) German language model designed for efficient inference on resource-const…",
+      "abstract": "作者提出 ELMOD——面向端侧部署的高效语言模型，一个为资源受限设备设计的 2.7B 紧凑德语模型。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24585",
@@ -2331,13 +2331,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23969",
       "run_id": "run-20260730-094221",
       "title": "LeapBot-WA: World-Anchor Action Models via Predictive Latent Alignments",
-      "abstract": "World Action Models (WAMs) have emerged as a powerful paradigm for embodied intelligence, yet the prevailing reliance on pixel-level video generation creates a …",
+      "abstract": "世界动作模型（WAM）已成具身智能的强大范式，但当前对像素级视频生成的依赖造成开销，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23969",
@@ -2359,13 +2359,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24971",
       "run_id": "run-20260730-094221",
       "title": "Right Multiplication on Grammar-Compressed Matrices: A Streaming, Memory-Bounded GPU Engine",
-      "abstract": "Grammar-compressed matrices (the mm-repair family) store a matrix's non-zero structure as a RePair straight-line program (SLP), supporting matrix-vector product…",
+      "abstract": "文法压缩矩阵（mm-repair 族）把矩阵非零结构存为 RePair 直线式程序（SLP），支持矩阵向量积，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24971",
@@ -2391,13 +2391,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22043",
       "run_id": "run-20260730-094221",
       "title": "Scaling Native Multimodal Pre-Training From Scratch",
-      "abstract": "Although large language models (LLMs) exhibit remarkable reasoning capabilities, their reliance on text-only pre-training restricts the perception of the multim…",
+      "abstract": "虽然大模型推理能力出众，但纯文本预训练限制了对多模态的感知，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22043",
@@ -2419,13 +2419,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24023",
       "run_id": "run-20260730-094221",
       "title": "Self-Supervised Consistency Enhanced Disentangled Learning for Neural Decoding Generalization in Brain-Machine Interface",
-      "abstract": "Brain-Machine Interfaces (BMIs) provide a direct communication pathway between the brain and external devices, enabling humans to control assistive and robotic …",
+      "abstract": "脑机接口提供大脑与外部设备间的直接通信通路，使人能控制辅助与机器人设备，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24023",
@@ -2447,13 +2447,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24392",
       "run_id": "run-20260730-094221",
       "title": "When LLM Defenses Backfire: Characterizing Safety, Performance, and Cost Trade-offs",
-      "abstract": "Jailbreak defenses are essential for protecting large language models (LLMs), but they can also introduce secondary costs that weaken model utility.",
+      "abstract": "越狱防御对保护 LLM 至关重要，但也会引入削弱模型有用性的次生成本，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24392",
@@ -2474,13 +2474,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23406",
       "run_id": "run-20260730-094221",
       "title": "Blood Pressure Estimation from PPG: A Comparative Study of Direct and ECG-Mediated Deep Learning Pipelines",
-      "abstract": "Continuous cuffless blood pressure (BP) monitoring is essential for connected health systems and wearable devices, enabling early detection, longitudinal tracki…",
+      "abstract": "连续无袖带血压监测对互联健康系统和可穿戴设备很关键，可早检和长期追踪，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23406",
@@ -2501,13 +2501,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23503",
       "run_id": "run-20260730-094221",
       "title": "Impute On-Demand: Adaptive Correlated Time Series Imputation for Changing Environments",
-      "abstract": "Internet of Things (IoT) applications generate vast amounts of Correlated Time Series (CTS) data that often contain missing values and require imputation.",
+      "abstract": "物联网应用产生海量相关时间序列（CTS）数据，常含缺失值需要补全，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23503",
@@ -2531,13 +2531,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23089",
       "run_id": "run-20260730-094221",
       "title": "Compiler-Grounded Hierarchical Diagnosis for LLM-Based Triton Kernel Optimization",
-      "abstract": "Recent advances in large language models (LLMs) have enabled automated kernel generation and optimization, but most existing approaches rely on surface signals …",
+      "abstract": "近期大模型进展已实现自动 kernel 生成与优化，但现有方法多依赖表面信号，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23089",
@@ -2558,13 +2558,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23227",
       "run_id": "run-20260730-094221",
       "title": "INT8 Quantization Makes ARM Edge Inference Dispatch-Invariant",
-      "abstract": "On x86, kernel dispatch fragments the outputs of the same neural network into many equivalence classes across hardware.",
+      "abstract": "在 x86 上，kernel 调度把同一神经网络的输出切成跨硬件的多个等价类，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23227",
@@ -2586,13 +2586,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22997",
       "run_id": "run-20260730-094221",
       "title": "Real2Sim2Real for Vision-Language-Action Manipulation: An AMD ROCm-Based Pipeline",
-      "abstract": "Physical AI -- the integration of large vision-language-action (VLA) models with embodied agents that act in the real world -- has emerged as the next major fro…",
+      "abstract": "物理 AI——把大型视觉-语言-动作模型与具身 agent 结合作用于真实世界——已成下一前沿，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.22997",
@@ -2617,13 +2617,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24223",
       "run_id": "run-20260730-094221",
       "title": "A New Role for Relevance: Guiding Corpus Interaction in Agentic Search",
-      "abstract": "Relevance is a query-dependent estimate of whether a document or excerpt contains useful evidence.",
+      "abstract": "相关性是对一份文档或片段是否含有用证据的、依赖查询的估计，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24223",
@@ -2644,13 +2644,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24882",
       "run_id": "run-20260730-094221",
       "title": "Agent Retrieval Bench: Evaluating Repository Context Retrieval for Coding Agents",
-      "abstract": "Modern coding agents are usually evaluated by whether they eventually produce a correct patch, but patch generation depends on an earlier context-acquisition st…",
+      "abstract": "现代编程 agent 通常按是否最终产出正确 patch 来评估，但 patch 生成依赖更早的上下文获取阶段，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24882",
@@ -2673,13 +2673,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25431",
       "run_id": "run-20260730-094221",
       "title": "CodeNib: A Multi-View Data System for Serving Repository Context to Coding Agents",
-      "abstract": "Coding agents repeatedly search, navigate, and retain context from evolving repositories, but disconnected indexes, language servers, and task-local histories f…",
+      "abstract": "编程 agent 反复从演化的仓库中搜索、导航并保留上下文，但割裂的索引、语言服务器和任务局部历史形成障碍，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.25431",
@@ -2701,13 +2701,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24368",
       "run_id": "run-20260730-094221",
       "title": "Keep It InMind: Benchmarking the Implicit-Association Blind Spot in Agent Memory",
-      "abstract": "Long-term memory systems store what a user says in an external store and retrieve it when a related query arrives.",
+      "abstract": "长期记忆系统把用户说的话存入外部存储，在相关查询到来时检索出来，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24368",
@@ -2730,13 +2730,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25948",
       "run_id": "run-20260730-094221",
       "title": "MODUS: Decoder-Only Any-to-Any Modeling of Diverse Modalities",
-      "abstract": "Any-to-any models predict any modality from any combination of others within a single network, a formulation used in multimodal vision and vision-language model…",
+      "abstract": "any-to-any 模型在单一网络中从任意其他模态组合预测任意模态，该范式用于多模态视觉和视觉-语言模型，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.25948",
@@ -2757,13 +2757,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23514",
       "run_id": "run-20260730-094221",
       "title": "Novel Claim or Déjà Vu? Rethinking \"Contamination-Free'' Dynamic Evaluation for Multimodal Automated Fact-Checking",
-      "abstract": "Multimodal automated fact-checking (MAFC) verifies claims by retrieving and reasoning over external evidence.",
+      "abstract": "多模态自动事实核查（MAFC）通过检索并对外部证据推理来验证声明，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.23514",
@@ -2786,13 +2786,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26004",
       "run_id": "run-20260730-094221",
       "title": "Parallel Decoding Distillation for Fast Image and Video Generation",
-      "abstract": "Generation in video diffusion or flow models is computationally expensive due to the slow and iterative sampling process.",
+      "abstract": "视频扩散或流模型中的生成因缓慢迭代采样过程而计算昂贵，作者针对此展开改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.26004",
@@ -2813,13 +2813,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26057",
       "run_id": "run-20260730-094221",
       "title": "Pass the Baton: Trajectory-Relayed On-Policy Distillation",
-      "abstract": "On-policy distillation (OPD) grounds token-level supervision in the student's own trajectory, yet suffers from prefix failure: once the student commits to a wro…",
+      "abstract": "在策略蒸馏（OPD）把 token 级监督锚定在学生自身轨迹上，但受前缀失败困扰：学生一旦选错前缀就难以纠正，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.26057",
@@ -2841,13 +2841,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24957",
       "run_id": "run-20260730-094221",
       "title": "PerceptionBench: Evaluating Atomic Visual Perception in Multimodal Large Language Models",
-      "abstract": "We introduce PerceptionBench, a benchmark specifically designed to evaluate the atomic visual perception capabilities of Multimodal Large Language Models (MLLMs…",
+      "abstract": "作者提出 PerceptionBench，一个专门评估多模态大模型（MLLM）原子视觉感知能力的基准。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24957",
@@ -2870,13 +2870,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25565",
       "run_id": "run-20260730-094221",
       "title": "ReDesign: Recovering Editable Design Structures from Images via Agentic Decomposition",
-      "abstract": "Recovering an editable design file from a raster image is a common and costly bottleneck in modern design workflows, yet remains challenging since editability d…",
+      "abstract": "从光栅图像恢复可编辑设计文件是现代设计工作流中常见且昂贵的瓶颈，因可编辑性要求而仍具挑战，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.25565",
@@ -2897,13 +2897,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25857",
       "run_id": "run-20260730-094221",
       "title": "Shieldstral",
-      "abstract": "We introduce Shieldstral, a 3B-parameter policy-adaptive multimodal safety classifier that matches or outperforms models nearly 7times its size on text safety b…",
+      "abstract": "作者提出 Shieldstral，一个 3B 参数的策略自适应多模态安全分类器，在文本安全上匹配或超过近 7 倍体积的模型。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.25857",
@@ -2925,13 +2925,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.17674",
       "run_id": "run-20260730-094221",
       "title": "Uncovering Latent Reasoning Strategies in Language Models",
-      "abstract": "A language model p_θ(y mid x) trained on reasoning tasks learns to solve problems via multiple distinct strategies, yet these strategies are implicit and entang…",
+      "abstract": "在推理任务上训练的语言模型通过多种不同策略学解题，但这些策略隐式且相互纠缠，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.17674",
@@ -2953,13 +2953,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22682",
       "run_id": "run-20260730-094221",
       "title": "A Vocabulary for Multi-Agent Automated Research Systems",
-      "abstract": "We introduce a vocabulary for automated research systems built from one or more agents to make their design choices easier to describe and compare.",
+      "abstract": "作者引入一套词汇表，用于描述由一个或多个 agent 构成的自动研究系统，便于描述和比较其设计选择。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22682",
@@ -2981,13 +2981,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24743",
       "run_id": "run-20260730-094221",
       "title": "ClinFusion: A Vision-Centric Multimodal LLM System for Holistic Medical Understanding",
-      "abstract": "Multimodal large language models (MLLMs) hold immense potential to revolutionize clinical practice, yet deploying them in the medical domain is fundamentally a …",
+      "abstract": "多模态大模型（MLLM）在革命性临床实践上潜力巨大，但在医疗领域部署本质上是高风险命题，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24743",
@@ -3009,13 +3009,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22561",
       "run_id": "run-20260730-094221",
       "title": "Codifying the Judge: Scalable Evaluation via Program Distillation",
-      "abstract": "LLM-as-a-judge has become the standard for automated evaluation, but it suffers from high cost, significant latency, and opaque decisions -- limitations that un…",
+      "abstract": "LLM-as-a-judge 已成自动评估标准，但成本高、延迟大、决策不透明，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22561",
@@ -3037,13 +3037,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24744",
       "run_id": "run-20260730-094221",
       "title": "Data Pyramid for Embodied Manipulation",
-      "abstract": "Multimodal foundation models learned to see and to speak by consuming the whole internet.",
+      "abstract": "多模态基础模型通过消费整个互联网学会了看和说，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24744",
@@ -3065,13 +3065,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24516",
       "run_id": "run-20260730-094221",
       "title": "DecoupleMix: Decoupled Ratio Search and Convex Allocation for Scalable VLM Data Recipes",
-      "abstract": "While data curation for Vision Language Models (VLMs) is increasingly active, public practice for constructing pretraining mixtures remains largely heuristic: p…",
+      "abstract": "视觉语言模型（VLM）的数据筛选日益活跃，但公开的预训练混合构造实践仍多靠启发式，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24516",
@@ -3092,13 +3092,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23822",
       "run_id": "run-20260730-094221",
       "title": "DriveDNA: A Large-Scale Multimodal Naturalistic Driving Dataset and Benchmark for Driving Style Identification",
-      "abstract": "Driving style captures stable, driver-specific patterns in how a vehicle is driven.",
+      "abstract": "驾驶风格刻画的是某辆车被驾驶方式的稳定、司机特有模式，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.23822",
@@ -3120,13 +3120,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24241",
       "run_id": "run-20260730-094221",
       "title": "FilmBench: A Film-Grade Benchmark for Cinematic Video Generation",
-      "abstract": "Progress in video generation keeps narrowing the visual gap between AI-generated and professionally produced footage, yet most benchmarks still draw prompts fro…",
+      "abstract": "视频生成进展持续缩小 AI 生成与专业素材的视觉差距，但多数基准仍从单一来源取 prompt，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24241",
@@ -3148,13 +3148,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24280",
       "run_id": "run-20260730-094221",
       "title": "From Proprietary to Open-Source: Bridging the Distribution Gap via Multi-Agent Protocol Distillation in Agentic Search",
-      "abstract": "Agentic search enables large language models to solve knowledge-intensive tasks by interleaving multi-step reasoning with retrieval, yet optimizing this with ou…",
+      "abstract": "agentic 搜索让大模型通过多步推理与检索交织来求解知识密集任务，作者针对其优化展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24280",
@@ -3178,13 +3178,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23588",
       "run_id": "run-20260730-094221",
       "title": "JarvisHub: An Open Harness for Canvas-Native Multimodal Creative Agents",
-      "abstract": "Creative AI is moving from single-step asset generation toward long-horizon multimodal production.",
+      "abstract": "创意 AI 正从单步资产生成转向长时序多模态制作，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.23588",
@@ -3205,13 +3205,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24653",
       "run_id": "run-20260730-094221",
       "title": "Kimi K3: Open Frontier Intelligence",
-      "abstract": "We introduce Kimi K3, a 2.8T parameter Mixture-of-Experts model with 104 billion activated parameters, native vision capabilities, and a 1-million-token context…",
+      "abstract": "作者发布 Kimi K3，一个 2.8T 参数、激活 1040 亿的 MoE 模型，具备原生视觉能力和百万 token 上下文。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24653",
@@ -3232,13 +3232,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.21936",
       "run_id": "run-20260730-094221",
       "title": "Leveraging External Knowledge for Historical Document Restoration via Retrieval-Augmented Large Language Models",
-      "abstract": "Historical documents act as invaluable knowledge archives but often suffer from illegibility due to physical deterioration and damage.",
+      "abstract": "历史文献是无价知识档案，但常因物理老化和损坏而难以辨认，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.21936",
@@ -3260,13 +3260,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22098",
       "run_id": "run-20260730-094221",
       "title": "Reasoning Denoiser: Denoising Reasoning Traces for Hallucination Detection in Large Reasoning Models",
-      "abstract": "Large reasoning models (LRMs) generate long reasoning traces before producing final answers.",
+      "abstract": "大推理模型（LRM）在给出最终答案前生成冗长推理轨迹，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22098",
@@ -3288,13 +3288,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24731",
       "run_id": "run-20260730-094221",
       "title": "Rethinking Classifier-Free Guidance in On-Policy Diffusion Distillation",
-      "abstract": "On-policy distillation (OPD) adapts diffusion models by querying a teacher along trajectories generated by the current student, but how it should behave under c…",
+      "abstract": "在策略蒸馏（OPD）通过沿当前学生生成的轨迹查询教师来适配扩散模型，但在约束下应如何行为尚不清，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24731",
@@ -3315,13 +3315,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24027",
       "run_id": "run-20260730-094221",
       "title": "Sol-Attn: Accelerating Video Generation Inference via On-the-Fly Attention Sparsification",
-      "abstract": "Diffusion transformers are essential for high-fidelity video generation, but long token sequences make attention a dominant inference bottleneck.",
+      "abstract": "扩散 Transformer 对高保真视频生成至关重要，但长 token 序列使注意力成为主导推理瓶颈，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24027",
@@ -3343,13 +3343,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22798",
       "run_id": "run-20260730-094221",
       "title": "StateAct: Program State, before Pixels, for Long-Horizon Computer-Use Agents",
-      "abstract": "Computer-use agents are usually improved by strengthening perception: better models for reading a screenshot and choosing where to click.",
+      "abstract": "计算机使用 agent 通常通过强化感知来改进：更好的截图读取与点击选择模型，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22798",
@@ -3370,13 +3370,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22639",
       "run_id": "run-20260730-094221",
       "title": "TRACE: Business Rule-Grounded Reasoning Curriculum for Knowledge-Preserving Parametric Tool Retrieval in Enterprise LLMs",
-      "abstract": "Parametric retrieval enables LLMs to retrieve tools implicitly by assigning each API a unique virtual token and training the model to generate it via constraine…",
+      "abstract": "参数化检索让 LLM 通过给每个 API 分配唯一虚拟 token 并训练模型生成它来隐式检索工具，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22639",
@@ -3398,13 +3398,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24720",
       "run_id": "run-20260730-094221",
       "title": "The Physics of Multi-Turn Long-Horizon Planning: From Pre-training to Post-training via Single- and Multi-Teacher On-Policy Agentic Distillation",
-      "abstract": "Multi-turn long-horizon planning is critical for foundation model agents, yet how to fundamentally improve it remains unclear.",
+      "abstract": "多轮长时序规划对基础模型 agent 至关重要，但如何根本性改进仍不清楚，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.24720",
@@ -3425,13 +3425,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22148",
       "run_id": "run-20260730-094221",
       "title": "dRAE: Representation Autoencoder with Hyper-Spherical Codes",
-      "abstract": "In this work, we aim to discretize the high-dimensional visual representations to bridge the gap with language models - a non-trivial challenge, as existing qua…",
+      "abstract": "本文旨在把高维视觉表示离散化以弥合与语言模型的鸿沟，但现有量化方法存在困难，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22148",
@@ -3452,13 +3452,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.21503",
       "run_id": "run-20260730-094221",
       "title": "Agentic Context Management: Solving Agent Memory and Cost by Treating Them as Lifecycle and Architecture Problems",
-      "abstract": "Production AI agents' failures are less often due to an inability to reason well and more often because they cannot manage what is in their reasoning context: c…",
+      "abstract": "生产级 AI agent 的失败更多源于无法管理推理上下文中的内容，而非推理能力不足，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.21503",
@@ -3481,13 +3481,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.20465",
       "run_id": "run-20260730-094221",
       "title": "DataPrep-Bench: Benchmarking LLMs as Training Data Preparators",
-      "abstract": "The quality of training data fundamentally determines the capabilities of large language models (LLMs), yet no unified benchmark exists to measure how well LLMs…",
+      "abstract": "训练数据质量从根本上决定大模型能力，但尚无统一基准衡量 LLM 训练数据质量，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.20465",
@@ -3508,13 +3508,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22375",
       "run_id": "run-20260730-094221",
       "title": "IDEAgent: Agentic Quality-Diversity Search for Research Idea Generation",
-      "abstract": "Large Language Models (LLMs) have significantly automated the process of scientific discovery over the past few years.",
+      "abstract": "过去几年大模型已显著自动化了科学发现过程，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22375",
@@ -3535,13 +3535,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.21653",
       "run_id": "run-20260730-094221",
       "title": "Molt: A Scalable PyTorch-Native Training Framework for Agentic Reinforcement Learning",
-      "abstract": "Agentic reinforcement learning research is constant algorithm modification, new estimators, new pipeline stages, new rollout schemes, and in mainstream framewor…",
+      "abstract": "agentic 强化学习研究就是不断改算法、新估计器、新流水线阶段、新 rollout 方案，主流框架难以跟上，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.21653",
@@ -3562,13 +3562,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.14277",
       "run_id": "run-20260730-094221",
       "title": "Multi-Head Latent Control: A Unified Interface for LLM Agent Decision Making",
-      "abstract": "Large language models are increasingly deployed as agents, but reliable agentic behavior requires more than next-token prediction.",
+      "abstract": "大模型越来越多地被部署为 agent，但可靠 agent 行为需要的不仅是下一 token 预测，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.14277",
@@ -3590,13 +3590,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.19636",
       "run_id": "run-20260730-094221",
       "title": "Multimodal Speaker Verification as a Threat to Speaker Anonymization",
-      "abstract": "Most automatic speaker verification (ASV) systems operate on individual utterances, despite real-world interactions typically consisting of multiple utterances.",
+      "abstract": "多数自动说话人验证（ASV）系统在单条语音上运行，尽管真实交互常由多条语音组成，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.19636",
@@ -3618,13 +3618,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.18142",
       "run_id": "run-20260730-094221",
       "title": "O-VAD: Industrial Video Anomaly Detection through Object-Centric Tracking and Reasoning",
-      "abstract": "Industrial Video Anomaly Detection (IVAD) aims to identify anomalous objects and events in an industrial process, which is crucial for modern manufacturing and …",
+      "abstract": "工业视频异常检测（IVAD）旨在识别工业过程中的异常物体和事件，对现代制造业至关重要，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.18142",
@@ -3646,13 +3646,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22393",
       "run_id": "run-20260730-094221",
       "title": "SceneActBench: Can Agents Act on the 3D Scenes They See?",
-      "abstract": "Vision-language model (VLM) agents increasingly use tools to act on 3D scenes rather than only describe them.",
+      "abstract": "视觉-语言模型（VLM）agent 越来越多地使用工具作用于 3D 场景而非仅描述它们，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22393",
@@ -3675,13 +3675,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.22529",
       "run_id": "run-20260730-094221",
       "title": "Skill Self-Play: Pushing the Frontier of LLM Capability with Co-Evolving Skills",
-      "abstract": "LLM training is shifting from manual design and annotation to interaction-driven self-evolution.",
+      "abstract": "LLM 训练正从手工设计与标注转向交互驱动的自演化，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.22529",
@@ -3702,13 +3702,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.12756",
       "run_id": "run-20260730-094221",
       "title": "VisCo: Leveraging Large Language Models as Intrinsic Encoders for Visual Token Compression",
-      "abstract": "Vision-language models (VLMs) process large numbers of visual tokens, resulting in substantial inference latency and memory overhead.",
+      "abstract": "视觉-语言模型（VLM）处理大量视觉 token，导致显著推理延迟和内存开销，作者针对此展开改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://huggingface.co/papers/2607.12756",
@@ -3730,13 +3730,13 @@
       "venue": "HuggingFace Daily",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26891",
       "run_id": "run-20260730-094221",
       "title": "DIRECT: Direct Decoding for Efficient and Aligned Sequence Labeling with Large Language Models",
-      "abstract": "Sequence labeling is a fine-grained information extraction task, yet existing large language model-based approaches suffer from insufficient domain alignment an…",
+      "abstract": "序列标注是细粒度信息抽取任务，但现有基于大模型的方法存在领域对齐不足等问题，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26891",
@@ -3757,13 +3757,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26736",
       "run_id": "run-20260730-094221",
       "title": "Domain adaptation for handwriting trajectory reconstruction from IMU sensors",
-      "abstract": "Digital pens are commonly used to write on digital devices, providing the handwriting trace and enhancing human-computer interation.",
+      "abstract": "数字笔用于数字设备书写，能提供笔迹轨迹并增强人机交互，作者据此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26736",
@@ -3784,13 +3784,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26475",
       "run_id": "run-20260730-094221",
       "title": "DualDecoder: Accelerate Long Context LLM Inference by Predictive Prefetch",
-      "abstract": "Long-context inference is becoming a fundamental capability for modern LLM serving, especially driven by emerging agentic applications.",
+      "abstract": "长上下文推理正成为现代 LLM 服务的基础能力，尤其受新兴 agent 应用驱动，作者针对该问题展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26475",
@@ -3817,13 +3817,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26602",
       "run_id": "run-20260730-094221",
       "title": "Harnessing Large Language Models for Intelligent Resource Allocation in the Internet of Everything",
-      "abstract": "The rapid development of the Internet of Everything (IoE) is accelerating the adoption of intelligent applications.",
+      "abstract": "万物互联加速智能应用普及，作者针对相关端侧智能问题展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26602",
@@ -3846,13 +3846,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26832",
       "run_id": "run-20260730-094221",
       "title": "Kairos: Numerically Robust News Recommendation under Item Cold-Start via Cholesky-based LinUCB",
-      "abstract": "Algorithmic news personalization in regional markets often fails because modern deep learning models require massive interaction data while real-world news has …",
+      "abstract": "区域市场的算法新闻个性化常失效，因为现代深度学习需要海量交互数据而真实新闻交互稀疏，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26832",
@@ -3873,13 +3873,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26598",
       "run_id": "run-20260730-094221",
       "title": "Living-Harness Is an Interactive-Agent Evolver",
-      "abstract": "Large language model (LLM) agents may recover from a failure within an episode or after a retry, yet the same execution failure can recur in later tasks because…",
+      "abstract": "LLM agent 可在一次会话内或重试后从失败中恢复，但同样的执行失败会在后续任务中反复出现，作者针对该复发问题。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26598",
@@ -3902,13 +3902,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26760",
       "run_id": "run-20260730-094221",
       "title": "Metis: Memory Foundation Model",
-      "abstract": "Recent advances in AI agents have increasingly internalized native capabilities into their underlying foundation models, giving rise to multimodal foundation mo…",
+      "abstract": "近期 AI agent 进展把原生能力内化进底层基础模型，催生多模态基础模型新范式，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26760",
@@ -3932,13 +3932,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26633",
       "run_id": "run-20260730-094221",
       "title": "NELSSA: A GPU-PNM Heterogeneous System for Mixed-Length LLM Serving via Length-based Request Placement",
-      "abstract": "Modern LLMs and their agentic applications are broadening the range of serving workloads, spanning context lengths from a few hundred tokens to hundreds of thou…",
+      "abstract": "现代 LLM 及其 agent 应用扩展了服务负载范围，上下文长度从几百到数十万 token 不等，带来系统新挑战。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26633",
@@ -3964,13 +3964,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26464",
       "run_id": "run-20260730-094221",
       "title": "PUDA: An AI-Native Hardware Harness for Self-Driving Laboratories",
-      "abstract": "Physical Unified Device Architecture (PUDA) is an AI-native hardware harness for self-driving laboratories (SDLs).",
+      "abstract": "PUDA 是面向自动驾驶实验室（SDL）的 AI 原生硬件 harness 框架。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26464",
@@ -3991,13 +3991,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26627",
       "run_id": "run-20260730-094221",
       "title": "Revisiting Lossy Verification in Speculative Decoding: Mechanisms, Trade-offs, and Failure Modes",
-      "abstract": "Speculative Decoding (SD) accelerates large language model inference by allowing a lightweight draft model to propose tokens that are subsequently verified in p…",
+      "abstract": "投机解码（SD）通过让轻量级 draft 模型提议 token 再由大模型并行验证来加速 LLM 推理，作者针对其改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26627",
@@ -4019,13 +4019,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26765",
       "run_id": "run-20260730-094221",
       "title": "Searching for Robust Augmentations to Improve Out-of-Domain Generalization in Dermoscopic Skin Cancer Classification",
-      "abstract": "Background/Objectives: Dermoscopic skin lesion classifiers often lose accuracy under domain shift across imaging devices, illumination, and capture artifacts.",
+      "abstract": "皮肤镜病灶分类器在跨成像设备、光照和采集伪影的分布偏移下精度下降，作者针对该 domain shift 问题展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26765",
@@ -4046,13 +4046,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26566",
       "run_id": "run-20260730-094221",
       "title": "ServerlessT2I: Efficient Text-to-Image Workflow Serving on a Serverless Platform",
-      "abstract": "Text-to-image (T2I) workflows are increasingly deployed on serverless platforms because users often compose customized workflows and invoke them intermittently.",
+      "abstract": "文生图（T2I）工作流越来越多地部署在无服务器平台上，因为用户常组合自定义工作流并间歇调用，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26566",
@@ -4075,13 +4075,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26584",
       "run_id": "run-20260730-094221",
       "title": "Unified Shared Memory in OpenMP: Implementation, Programmability, and Performance on Intel Accelerators",
-      "abstract": "OpenMP 5.0 introduced the Unified Shared Memory (USM) feature through the requires directive.",
+      "abstract": "OpenMP 5.0 通过 requires 指令引入统一共享内存（USM）特性，作者围绕其展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26584",
@@ -4104,13 +4104,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25852",
       "run_id": "run-20260730-094221",
       "title": "AngelSpec: Towards Real-World High Performance Inference with Speculative Decoding",
-      "abstract": "Speculative decoding accelerates large language model inference without changing the target distribution, but no single drafting structure performs best across …",
+      "abstract": "投机解码在不改变目标分布的前提下加速 LLM 推理，但没有单一 draft 结构在所有场景下都最优，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25852",
@@ -4131,13 +4131,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25527",
       "run_id": "run-20260730-094221",
       "title": "Argus-Unified: Towards A Compact and Economical Unified Model for Image Understanding and Generation",
-      "abstract": "Unifying visual understanding and generation in one model holds immense promise, but remains challenging and expensive due to heavy compute and data demands and…",
+      "abstract": "在单一模型中统一视觉理解与生成前景广阔，但因算力和数据需求大、训练难仍具挑战，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25527",
@@ -4159,13 +4159,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25504",
       "run_id": "run-20260730-094221",
       "title": "At-the-Roofline Sparse Tensor Contractions on Vector Processors for Transformer Inference",
-      "abstract": "Fine-grained weight pruning and activation sparsification have emerged as effective approaches for reducing the compute and memory cost of inference for Transfo…",
+      "abstract": "细粒度权重剪枝和激活稀疏化已成为降低 Transformer 推理算力与内存成本的有效手段，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25504",
@@ -4189,13 +4189,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25494",
       "run_id": "run-20260730-094221",
       "title": "Automated Numerical Stability Analysis of Deep Learning Operators",
-      "abstract": "Finite-precision arithmetic unavoidably introduces numerical approximation errors.",
+      "abstract": "有限精度算术不可避免地引入数值近似误差，作者针对其影响展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25494",
@@ -4216,13 +4216,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25887",
       "run_id": "run-20260730-094221",
       "title": "Device Invariance using Domain Adaptation on Acoustic Scene Classification",
-      "abstract": "This paper explores the effectiveness of domain adaptation techniques when using convolutional neural network (CNN)-based and transformer-based feature represen…",
+      "abstract": "本文探索在使用 CNN 和 Transformer 特征表示时域适应技术的有效性。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25887",
@@ -4243,13 +4243,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25995",
       "run_id": "run-20260730-094221",
       "title": "Does Runtime Topology Context Improve LLM-Generated Kubernetes Security Patches?",
-      "abstract": "Kubernetes is central to the cloud-native ecosystem, orchestrating containerised workloads.",
+      "abstract": "Kubernetes 是云原生生态的核心，负责编排容器化负载，作者针对其展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25995",
@@ -4271,13 +4271,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25505",
       "run_id": "run-20260730-094221",
       "title": "From sLLG to Fokker-Planck: Accurate WER Modeling for Non-Axisymmetric MRAM Devices",
-      "abstract": "The Fokker--Planck (FP) equation is essential for predicting write error rates (WER) in STT and SOT-MRAM devices, but traditional 1D projections fail when symme…",
+      "abstract": "Fokker-Planck 方程对预测 STT 和 SOT-MRAM 器件的写入错误率很关键，但传统一维投影在对称性破坏时失效，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25505",
@@ -4298,13 +4298,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25853",
       "run_id": "run-20260730-094221",
       "title": "HiSkill: Empowering LLM Agents with Hierarchical Skill Graphs",
-      "abstract": "Skills have become an important abstraction for enabling large language model (LLM) agents to reuse past experience in long-horizon interactive tasks.",
+      "abstract": "Skills 已成为让 LLM agent 在长时序交互任务中复用过往经验的重要抽象，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25853",
@@ -4325,13 +4325,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25583",
       "run_id": "run-20260730-094221",
       "title": "How Small Can You Go? A Controlled Study of LoRA Rank, Target Modules, and Quantization Trade-offs for Text-to-SQL on a 60M-Parameter Model",
-      "abstract": "Parameter-efficient fine-tuning (PEFT) and low-bit quantization are now standard tools for adapting language models under tight compute budgets, yet their inter…",
+      "abstract": "参数高效微调（PEFT）和低位量化已是紧算力预算下适配语言模型的标准工具，但二者交互作用不清，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25583",
@@ -4355,13 +4355,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26016",
       "run_id": "run-20260730-094221",
       "title": "MDTransformer: A Hardware-Software Co-Design of Mode-Division Photonic Transformer Accelerator with Inverse-Designed Coherent Crossbar",
-      "abstract": "Recently, photonic transformer accelerators (PTAs) have successfully achieved significant speedup and energy efficiency improvements over electronic accelerator…",
+      "abstract": "近期光子 Transformer 加速器（PTA）已成功实现相比电子加速器显著的速度与能效提升，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26016",
@@ -4382,13 +4382,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25915",
       "run_id": "run-20260730-094221",
       "title": "Penelope: Localized Latent Recurrence for Efficient Structured Reasoning",
-      "abstract": "Complex structured reasoning tasks often require additional computation, yet current language models obtain it mainly by increasing parameter scale or by serial…",
+      "abstract": "复杂结构化推理任务常需额外计算，但当前语言模型主要靠增大参数规模或串行展开来获得，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25915",
@@ -4411,13 +4411,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25157",
       "run_id": "run-20260730-094221",
       "title": "PreDiff-LM: Pretrained Discrete Masked Diffusion Language Modeling with Hybrid Attention",
-      "abstract": "Discrete masked diffusion language models support bidirectional generation and infilling, but adapting pretrained autoregressive (AR) transformers requires reco…",
+      "abstract": "离散掩码扩散语言模型支持双向生成与填充，但适配预训练自回归 Transformer 需要重构，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25157",
@@ -4439,13 +4439,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25471",
       "run_id": "run-20260730-094221",
       "title": "TRWH: A Text-Driven Random Walk Heterogeneous GNN for Semantic-Aware Sparse Recommendation",
-      "abstract": "Graph Neural Networks (GNNs) and Large Language Models (LLMs) have each advanced recommendation systems by modeling structural and semantic signals, respectivel…",
+      "abstract": "图神经网络和大模型分别通过建模结构和语义信号推进了推荐系统，作者针对二者结合展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25471",
@@ -4466,13 +4466,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.26017",
       "run_id": "run-20260730-094221",
       "title": "UniMem: Complementary Episodic-to-Parametric Memory for Boundary-Agnostic Task Streams",
-      "abstract": "Memory is essential for LLM agents to accumulate task experience and reuse task-specific execution strategies.",
+      "abstract": "记忆对 LLM agent 积累任务经验并复用任务特定执行策略至关重要，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.26017",
@@ -4495,13 +4495,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25209",
       "run_id": "run-20260730-094221",
       "title": "VaLiDRec: Variable-Length LLM-Aligned Semantic IDs for Generative Recommendation",
-      "abstract": "Generative recommendation commonly represents items using fixed-length semantic identifiers (SIDs) constructed through clustering and quantization.",
+      "abstract": "生成式推荐常用通过聚类和量化构造的定长语义标识符（SID）来表示物品，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25209",
@@ -4525,13 +4525,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23935",
       "run_id": "run-20260730-094221",
       "title": "A Sustainable Remote Access Architecture for Digital Inclusion through the Reuse of Discredited TV-BOX Devices",
-      "abstract": "Digital inclusion and the volume of electronic waste (e-waste) are major challenges for society, with direct impacts on the educational context.",
+      "abstract": "数字包容和电子垃圾量是社会的重大挑战，对教育场景有直接影响，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23935",
@@ -4552,13 +4552,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24062",
       "run_id": "run-20260730-094221",
       "title": "ACRL: Adaptive Control of Training-Inference Discrepancy for Stable Reinforcement Learning",
-      "abstract": "Reinforcement Learning (RL) training for Large Language Models (LLMs) often suffers from instability due to the discrepancy between training and inference.",
+      "abstract": "大模型的强化学习训练常因训练与推理间的差异而不稳定，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24062",
@@ -4579,13 +4579,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24331",
       "run_id": "run-20260730-094221",
       "title": "DynaCalKV: Key-Value Cache Compression via Head Grouping and Adaptive Rank Allocation",
-      "abstract": "As the inference phase of Large Language Models (LLMs) requires handling long context windows, the Key-Value (KV) cache initially appears to address this challe…",
+      "abstract": "LLM 推理需处理长上下文窗口，KV 缓存初看能解决该挑战，但其开销随之增长，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24331",
@@ -4608,13 +4608,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24192",
       "run_id": "run-20260730-094221",
       "title": "LLM-based Source Code Compression via Thresholded Symbol Ranking",
-      "abstract": "We study the problem of lossless compression of source code, motivated by the storage demands of large-scale software archives, such as Software Heritage (https…",
+      "abstract": "作者研究源代码的无损压缩，动机来自 Software Heritage 等大规模软件档案的存储需求。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24192",
@@ -4636,13 +4636,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24555",
       "run_id": "run-20260730-094221",
       "title": "LOCKS: Page-Local Compact Key Summaries for Efficient Long-Context Decoding",
-      "abstract": "Serving large language models at long context is bottlenecked by the key-value (KV) cache, which is read in full at every decode step.",
+      "abstract": "长上下文下服务大模型受 KV 缓存瓶颈制约，每步解码都要完整读取它，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24555",
@@ -4665,13 +4665,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23986",
       "run_id": "run-20260730-094221",
       "title": "MEMOIR: Temporal Behavioral Memory for Recommendation Across the Preference-Drift Spectrum",
-      "abstract": "We propose MEMOIR, a framework that segments user interaction histories into temporal windows, generates semantic behavioral memory for each period using an LLM…",
+      "abstract": "作者提出 MEMOIR 框架，把用户交互历史切分成时间窗口，用 LLM 为每段生成语义行为记忆并按需检索。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23986",
@@ -4692,13 +4692,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24377",
       "run_id": "run-20260730-094221",
       "title": "MXAttention: Data-Free Optimal Scaling and Pre-Normalization Quantization for MXFP4 Attention",
-      "abstract": "The quadratic cost of attention is a major bottleneck in diffusion-based video generation models.",
+      "abstract": "注意力的二次开销是扩散视频生成模型的主要瓶颈，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24377",
@@ -4719,13 +4719,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25058",
       "run_id": "run-20260730-094221",
       "title": "Mitigating the Impact of Retention Loss on Inference Accuracy in 65 nm Single-Poly Floating-Gate Analog In-Memory Computing",
-      "abstract": "We show with experiments and system-level simulations that it is possible to successfully mitigate the impact of retention loss on inference accuracy degradatio…",
+      "abstract": "作者通过实验和系统级仿真表明，可以成功缓解保持损失对推理精度退化的影响。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25058",
@@ -4747,13 +4747,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24196",
       "run_id": "run-20260730-094221",
       "title": "PIMID: A Full-System Simulator with Intricacy and Diversity for Processing-in-Memory",
-      "abstract": "Processing-in-Memory addresses the memory wall by co-locating computation with memory, but because real PIM hardware remains scarce, simulation is the primary w…",
+      "abstract": "存内计算通过把计算与存储并置来解决内存墙问题，但因真实 PIM 硬件稀缺，模拟是主要手段，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24196",
@@ -4776,13 +4776,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24953",
       "run_id": "run-20260730-094221",
       "title": "Stable FP4 Training via Transposition-Invariant Block Quantization",
-      "abstract": "Reducing training precision is a key lever for improving the e ciency of large language model (LLM) training, but pushing beyond FP8 to 4-bit oating point (FP4)…",
+      "abstract": "降低训练精度是提升大模型训练效率的关键手段，但突破 FP8 到 4 位浮点（FP4）会带来新挑战，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24953",
@@ -4804,13 +4804,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.25091",
       "run_id": "run-20260730-094221",
       "title": "Towards Robust Reinforcement Learning for Small-Scale Language Model Agents",
-      "abstract": "The alignment of Small Language Models (SLMs) in the 70--500M parameter range using reinforcement learning is often considered unstable, though the underlying f…",
+      "abstract": "用强化学习对齐 7000 万-5 亿参数量级的小语言模型（SLM）常被认为不稳定，作者针对其底层原因展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.25091",
@@ -4831,13 +4831,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24998",
       "run_id": "run-20260730-094221",
       "title": "VPR-Evolve: Multi-Agent-Driven Algorithm Evolution for FPGA Place and Route",
-      "abstract": "CAD tools typically apply the same fixed, hand-designed algorithms across circuits with widely different structural and timing characteristics.",
+      "abstract": "CAD 工具通常对结构与时序特性差异巨大的电路施加相同固定手工算法，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24998",
@@ -4860,13 +4860,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23439",
       "run_id": "run-20260730-094221",
       "title": "A Characterization of the Orthocomplement of the Tangent Space of Semiparametric Markov Models",
-      "abstract": "Graphical models are ubiquitous in social and empirical science as they are intuitive and easy to use.",
+      "abstract": "图模型在社会与实证科学中无处不在，因其直观且易用，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23439",
@@ -4887,13 +4887,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23762",
       "run_id": "run-20260730-094221",
       "title": "Escaping the Euclidean Void: Manifold-Informed Flow Matching for Sequential Recommendation",
-      "abstract": "Conventional recommenders capture users' preferences by optimizing observed user-item relations, whereas continuous generative recommendation additionally learn…",
+      "abstract": "传统推荐器通过优化观测到的用户-物品关系捕捉偏好，而连续生成推荐还学习连续表示，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23762",
@@ -4914,13 +4914,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23607",
       "run_id": "run-20260730-094221",
       "title": "MS-GPT: Rethinking MS/MS De Novo Structure Elucidation as Spectrum-Induced Posterior Querying of a Molecule-Language Model",
-      "abstract": "Molecular structure elucidation from tandem mass spectra (MS/MS) is a central inverse problem in analytical chemistry.",
+      "abstract": "从串联质谱（MS/MS）推断分子结构是分析化学的核心反问题，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23607",
@@ -4942,13 +4942,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23700",
       "run_id": "run-20260730-094221",
       "title": "Offline-Online Curriculum RL for Multimodal Reasoning",
-      "abstract": "Multimodal large language models exhibit capabilities on reasoning tasks, yet often produce flawed intermediate steps while yielding correct final answers.",
+      "abstract": "多模态大模型在推理任务上展现能力，却常产生有错的中间步骤却得到正确最终答案，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23700",
@@ -4972,13 +4972,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23696",
       "run_id": "run-20260730-094221",
       "title": "Offline-to-Online Creative Optimization with Generative Models and Adaptive Testing",
-      "abstract": "Ad creative optimization is increasingly constrained by evaluation rather than generation.",
+      "abstract": "广告创意优化越来越多地受评估而非生成制约，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23696",
@@ -4999,13 +4999,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.24865",
       "run_id": "run-20260730-094221",
       "title": "Tokens are All You Need: Dual-purpose Semantic IDs for Achieving LLM-Level I/O Efficiency in recommendation systems",
-      "abstract": "Large-scale recommendation systems face \"Memory Wall\" bottlenecks due to massive, dense embedding tables.",
+      "abstract": "大规模推荐系统因海量稠密嵌入表面临“内存墙”瓶颈，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.24865",
@@ -5028,13 +5028,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23634",
       "run_id": "run-20260730-094221",
       "title": "Variational-Ising-Attention (VIA):TailoredAttentionMattersfor Science",
-      "abstract": "Attention enables context modeling via query-key scoring with softmax normalization.",
+      "abstract": "注意力通过查询-键打分和 softmax 归一化实现上下文建模，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23634",
@@ -5056,13 +5056,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23044",
       "run_id": "run-20260730-094221",
       "title": "Characterizing Arbitrary Lindbladian Dynamics with a Few Pauli Measurements",
-      "abstract": "Quantum devices are open systems whose dynamics interleave coherent evolution with dissipation, and benchmarking, error mitigation, and error correction all res…",
+      "abstract": "量子器件是开放系统，其动力学交织相干演化与耗散，基准测试、误差缓解和纠错都依赖对其建模，作者针对此。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23044",
@@ -5084,13 +5084,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23083",
       "run_id": "run-20260730-094221",
       "title": "LoRA for Gender-Inclusive Rewriting and Activation Steering for Counter-Narrative Generation",
-      "abstract": "Gender-inclusive language generation seeks to transform biased text into inclusive alternatives while preserving semantic meaning and contextual coherence.",
+      "abstract": "性别包容语言生成旨在把偏见文本转换为包容替代，同时保留语义与上下文连贯，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23083",
@@ -5112,13 +5112,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23000",
       "run_id": "run-20260730-094221",
       "title": "Magnetic Tunnel Junctions for Timekeeping in Intermittent Computing Systems",
-      "abstract": "Batteryless intermittent systems run unattended for years, but power failures erase timekeeping state, corrupting sensing, scheduling, and coordination.",
+      "abstract": "无电池间歇系统可无人运行多年，但停电会抹去计时状态，破坏感知、调度和协调，作者针对此展开研究。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23000",
@@ -5141,13 +5141,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23293",
       "run_id": "run-20260730-094221",
       "title": "PathRIR: Physics-Guided Acoustic Path Selection and Late-Tail Compensation for Fast Room Impulse Response Simulation",
-      "abstract": "Image-source-method (ISM)-based room impulse response (RIR) simulation is a useful and physically interpretable tool for acoustic scene modeling, but full-order…",
+      "abstract": "基于镜像源法（ISM）的房间脉冲响应（RIR）仿真是声学场景建模的有用且物理可解释工具，但全阶计算昂贵，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23293",
@@ -5169,13 +5169,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23389",
       "run_id": "run-20260730-094221",
       "title": "Rendering on Real Silicon: GPU Render-Timing as a Passive, AI-Resistant CAPTCHA Signal",
-      "abstract": "Conventional CAPTCHAs pose puzzles that modern AI systems increasingly solve, while behavioral and cryptographic-attestation defenses carry privacy or enrollmen…",
+      "abstract": "传统验证码出的题现代 AI 越来越能解，而行为和加密证明类防御带来隐私或注册负担，作者针对此改进。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23389",
@@ -5198,13 +5198,13 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     },
     {
       "id": "arxiv-2607.23284",
       "run_id": "run-20260730-094221",
       "title": "StageGuard: Physiologically Constrained Sleep Staging",
-      "abstract": "Automated sleep staging is increasingly used in large-scale studies to derive sleep-architecture endpoints: total sleep time, REM latency, sleep efficiency, and…",
+      "abstract": "自动睡眠分期越来越多地用于大规模研究以得出睡眠结构终点：总睡眠时间、REM 潜伏期、睡眠效率等，作者针对此展开。",
       "effects": "未报告",
       "mechanism": "未报告",
       "paper_url": "https://arxiv.org/abs/2607.23284",
@@ -5225,7 +5225,7 @@
       "venue": "arXiv",
       "recommendation": "纳入",
       "detail": null,
-      "updated_at": "2026-07-30T01:56:17.156494+00:00"
+      "updated_at": "2026-07-30T06:41:59.572545+00:00"
     }
   ],
   "weekly": {
@@ -5299,32 +5299,32 @@
         "rank": 1,
         "repo": "bitwize-ai/Logue",
         "url": "https://github.com/bitwize-ai/Logue",
-        "total": "127★",
-        "week": "127",
+        "total": "128★",
+        "week": "128",
         "desc": "Privacy-first AI meeting notes & writing assistant for Mac — on-device transcription, smart minutes, action items & 60+ writing modes, runni"
       },
       {
         "rank": 2,
         "repo": "Tencent/AngelSpec",
         "url": "https://github.com/Tencent/AngelSpec",
-        "total": "70★",
-        "week": "70",
+        "total": "94★",
+        "week": "94",
         "desc": "A unified, torch-native training framework for MTP and block-parallel speculative decoding."
       },
       {
         "rank": 3,
         "repo": "MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
         "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
-        "total": "69★",
-        "week": "69",
+        "total": "70★",
+        "week": "70",
         "desc": "vLLM 0.25.1 serving stack for poolside/Laguna-S-2.1-NVFP4 with DFlash speculative decoding — DGX Spark & RTX 6000 PRO"
       },
       {
         "rank": 4,
         "repo": "babutree/TTS-API",
         "url": "https://github.com/babutree/TTS-API",
-        "total": "28★",
-        "week": "28",
+        "total": "29★",
+        "week": "29",
         "desc": "Self-hosted streaming TTS gateway with Web UI + REST/WebSocket API — dual-engine local Kokoro CPU inference + Microsoft Edge neural voices, "
       },
       {
@@ -5339,8 +5339,8 @@
         "rank": 6,
         "repo": "YutongChenVictor/NPU-E2E",
         "url": "https://github.com/YutongChenVictor/NPU-E2E",
-        "total": "10★",
-        "week": "10",
+        "total": "16★",
+        "week": "16",
         "desc": "End-to-End NPU: RTL systolic array → AXI4 SoC → TVM compiler → FPGA inference"
       },
       {

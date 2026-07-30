@@ -3,32 +3,32 @@
     "rank": 1,
     "repo": "bitwize-ai/Logue",
     "url": "https://github.com/bitwize-ai/Logue",
-    "total": "127★",
-    "week": "127",
+    "total": "128★",
+    "week": "128",
     "desc": "Privacy-first AI meeting notes & writing assistant for Mac — on-device transcription, smart minutes, action items & 60+ writing modes, runni"
   },
   {
     "rank": 2,
     "repo": "Tencent/AngelSpec",
     "url": "https://github.com/Tencent/AngelSpec",
-    "total": "70★",
-    "week": "70",
+    "total": "94★",
+    "week": "94",
     "desc": "A unified, torch-native training framework for MTP and block-parallel speculative decoding."
   },
   {
     "rank": 3,
     "repo": "MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
     "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
-    "total": "69★",
-    "week": "69",
+    "total": "70★",
+    "week": "70",
     "desc": "vLLM 0.25.1 serving stack for poolside/Laguna-S-2.1-NVFP4 with DFlash speculative decoding — DGX Spark & RTX 6000 PRO"
   },
   {
     "rank": 4,
     "repo": "babutree/TTS-API",
     "url": "https://github.com/babutree/TTS-API",
-    "total": "28★",
-    "week": "28",
+    "total": "29★",
+    "week": "29",
     "desc": "Self-hosted streaming TTS gateway with Web UI + REST/WebSocket API — dual-engine local Kokoro CPU inference + Microsoft Edge neural voices, "
   },
   {
@@ -43,8 +43,8 @@
     "rank": 6,
     "repo": "YutongChenVictor/NPU-E2E",
     "url": "https://github.com/YutongChenVictor/NPU-E2E",
-    "total": "10★",
-    "week": "10",
+    "total": "16★",
+    "week": "16",
     "desc": "End-to-End NPU: RTL systolic array → AXI4 SoC → TVM compiler → FPGA inference"
   },
   {
