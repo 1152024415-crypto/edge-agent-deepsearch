@@ -1,118 +1,102 @@
 [
   {
     "rank": 1,
-    "repo": "zeraix/zeraix",
-    "url": "https://github.com/zeraix/zeraix",
-    "total": "128★",
-    "week": "128",
-    "desc": "Open-source local AI workspace — advancing on-device inference."
+    "repo": "bitwize-ai/Logue",
+    "url": "https://github.com/bitwize-ai/Logue",
+    "total": "127★",
+    "week": "127",
+    "desc": "Privacy-first AI meeting notes & writing assistant for Mac — on-device transcription, smart minutes, action items & 60+ writing modes, runni"
   },
   {
     "rank": 2,
-    "repo": "MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
-    "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
-    "total": "33★",
-    "week": "33",
-    "desc": "vLLM 0.25.1 serving stack for poolside/Laguna-S-2.1-NVFP4 with DFlash speculative decoding — DGX Spark & RTX 6000 PRO"
+    "repo": "Tencent/AngelSpec",
+    "url": "https://github.com/Tencent/AngelSpec",
+    "total": "70★",
+    "week": "70",
+    "desc": "A unified, torch-native training framework for MTP and block-parallel speculative decoding."
   },
   {
     "rank": 3,
-    "repo": "wundercorp/openmodel",
-    "url": "https://github.com/wundercorp/openmodel",
-    "total": "16★",
-    "week": "16",
-    "desc": "Use any AI model, locally or in the cloud, while tracking on-device token usage and collecting token telemetry data."
+    "repo": "MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
+    "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
+    "total": "69★",
+    "week": "69",
+    "desc": "vLLM 0.25.1 serving stack for poolside/Laguna-S-2.1-NVFP4 with DFlash speculative decoding — DGX Spark & RTX 6000 PRO"
   },
   {
     "rank": 4,
-    "repo": "Rkcr7/inkwordle",
-    "url": "https://github.com/Rkcr7/inkwordle",
-    "total": "8★",
-    "week": "8",
-    "desc": "InkWordle — write-by-hand Wordle for the reMarkable Paper Pro. On-device handwriting recognition, no LLM, no network."
+    "repo": "babutree/TTS-API",
+    "url": "https://github.com/babutree/TTS-API",
+    "total": "28★",
+    "week": "28",
+    "desc": "Self-hosted streaming TTS gateway with Web UI + REST/WebSocket API — dual-engine local Kokoro CPU inference + Microsoft Edge neural voices, "
   },
   {
     "rank": 5,
     "repo": "Ali-hey-0/ai-runtime-lab",
     "url": "https://github.com/Ali-hey-0/ai-runtime-lab",
-    "total": "7★",
-    "week": "7",
+    "total": "16★",
+    "week": "16",
     "desc": "Engineering deterministic, production-grade systems around non-deterministic LLMs — FSM, durable execution, retries, DAGs, agent runtimes, m"
   },
   {
     "rank": 6,
-    "repo": "MiaAI-Lab/Gemma-4-31B-IT-NVFP4-Recipe",
-    "url": "https://github.com/MiaAI-Lab/Gemma-4-31B-IT-NVFP4-Recipe",
-    "total": "6★",
-    "week": "6",
-    "desc": "Serve nvidia/Gemma-4-31B-IT-NVFP4 via vLLM with MTP speculative decoding, tool calling, and thinking/reasoning support"
+    "repo": "YutongChenVictor/NPU-E2E",
+    "url": "https://github.com/YutongChenVictor/NPU-E2E",
+    "total": "10★",
+    "week": "10",
+    "desc": "End-to-End NPU: RTL systolic array → AXI4 SoC → TVM compiler → FPGA inference"
   },
   {
     "rank": 7,
-    "repo": "localweights/vllm-gguf-plugin",
-    "url": "https://github.com/localweights/vllm-gguf-plugin",
-    "total": "6★",
-    "week": "6",
-    "desc": "vLLM GGUF plugin fork — Qwen3.5/3.6 hybrid (GDN) serving: iq4_xs mmvq perf, MTP speculative decode, MoE draft support"
+    "repo": "mraza007/minute",
+    "url": "https://github.com/mraza007/minute",
+    "total": "7★",
+    "week": "7",
+    "desc": "Fully offline meeting notetaker for macOS — records, transcribes, and summarizes on-device with Whisper and a local LLM. Meeting detection, "
   },
   {
     "rank": 8,
-    "repo": "nilava/TabType",
-    "url": "https://github.com/nilava/TabType",
-    "total": "5★",
-    "week": "5",
-    "desc": "Free, open-source AI autocomplete for macOS — on-device ghost-text suggestions in every app. A private, local Cotypist alternative built wit"
+    "repo": "arkenoi/timeline-export",
+    "url": "https://github.com/arkenoi/timeline-export",
+    "total": "4★",
+    "week": "4",
+    "desc": "Headless, reproducible export of the on-device Google Maps Timeline (Android/redroid) to JSON — enriched visits, transport movements, and mu"
   },
   {
     "rank": 9,
-    "repo": "Gaurav-Gosain/qwopus-dflash",
-    "url": "https://github.com/Gaurav-Gosain/qwopus-dflash",
-    "total": "5★",
-    "week": "5",
-    "desc": "DFlash speculative decoding for Qwopus3.5-9B-Coder on upstream llama.cpp"
+    "repo": "SaymRuxoTE/EDGE-AI",
+    "url": "https://github.com/SaymRuxoTE/EDGE-AI",
+    "total": "4★",
+    "week": "4",
+    "desc": "A custom C++ AVX2 transformer inference engine built from scratch."
   },
   {
     "rank": 10,
-    "repo": "memloom/memloom",
-    "url": "https://github.com/memloom/memloom",
-    "total": "5★",
-    "week": "5",
-    "desc": "Local-first memory engine for AI agents"
+    "repo": "fxd0h/Axelera-Voyager-Local-Assistant",
+    "url": "https://github.com/fxd0h/Axelera-Voyager-Local-Assistant",
+    "total": "4★",
+    "week": "4",
+    "desc": "Local AI assistant for the Axelera Voyager SDK and Metis AIPU — semantic RAG over the public Axelera sources + workflow skills, via MCP. No "
   },
   {
     "rank": 11,
-    "repo": "adoslabsproject-gif/Liara-toolkit",
-    "url": "https://github.com/adoslabsproject-gif/Liara-toolkit",
+    "repo": "DngBack/awesome-speculative-decoding",
+    "url": "https://github.com/DngBack/awesome-speculative-decoding",
     "total": "4★",
     "week": "4",
-    "desc": "Fully on-device, privacy-first personal AI assistant for Android & desktop — local Qwen3 LLM, tool-calling agent, encrypted memory. Source-a"
+    "desc": "A curated list of awesome speculative decoding papers"
   },
   {
     "rank": 12,
-    "repo": "IPADS-SAI/ClawMate",
-    "url": "https://github.com/IPADS-SAI/ClawMate",
+    "repo": "mavesensei/commitcraft",
+    "url": "https://github.com/mavesensei/commitcraft",
     "total": "4★",
     "week": "4",
-    "desc": "A proactive on-device intelligent operating system for HarmonyOS, featuring proactive perception, autonomous decision-making, lightweight us"
+    "desc": "Smart conventional commits with a two-tier pipeline: a local rule engine handles simple changes instantly, LLM only activates for complex di"
   },
   {
     "rank": 13,
-    "repo": "bitwize-ai/Logue",
-    "url": "https://github.com/bitwize-ai/Logue",
-    "total": "4★",
-    "week": "4",
-    "desc": "Privacy-first AI meeting notes & writing assistant for Mac — on-device transcription, smart minutes, action items & 60+ writing modes, runni"
-  },
-  {
-    "rank": 14,
-    "repo": "xangel82/DS4-GB10-GX10-DSpark-CUDA",
-    "url": "https://github.com/xangel82/DS4-GB10-GX10-DSpark-CUDA",
-    "total": "4★",
-    "week": "4",
-    "desc": "This is an experimental fork of Salvatore Sanfilippo's `antirez/ds4` project:  ```text https://github.com/antirez/ds4 ```  This checkout con"
-  },
-  {
-    "rank": 15,
     "repo": "statico/llmac",
     "url": "https://github.com/statico/llmac",
     "total": "3★",
@@ -120,43 +104,59 @@
     "desc": "Apple's on-device Foundation Models from the command line — tiny, fast, no API key, in the spirit of Simon Willison's llm"
   },
   {
-    "rank": 16,
-    "repo": "8crsk/openclaw-android",
-    "url": "https://github.com/8crsk/openclaw-android",
+    "rank": 14,
+    "repo": "AAAelina/rikkahub-agent",
+    "url": "https://github.com/AAAelina/rikkahub-agent",
     "total": "3★",
     "week": "3",
-    "desc": "On-device AI agent for Android   local OpenClaw gateway, bring-your-own-key (NVIDIA/OpenAI/Anthropic/Gemini), UI automation via Accessibilit"
+    "desc": "RikkaHub Agent - on-device Android LLM agent (local fork/upload)"
+  },
+  {
+    "rank": 15,
+    "repo": "ankit1057/sipllm",
+    "url": "https://github.com/ankit1057/sipllm",
+    "total": "3★",
+    "week": "3",
+    "desc": "sipllm — a dependency-free streaming GGUF LLM inference engine in C++17. Runs quantized Llama models on-device with flat RAM (it sips weight"
+  },
+  {
+    "rank": 16,
+    "repo": "enkhbold470/memdesk",
+    "url": "https://github.com/enkhbold470/memdesk",
+    "total": "3★",
+    "week": "3",
+    "desc": "Screenshots your Mac every minute, OCRs it on-device, and writes one line about what you were doing. The images never leave your machine."
   },
   {
     "rank": 17,
-    "repo": "js-lee-AI/Kestrel",
-    "url": "https://github.com/js-lee-AI/Kestrel",
+    "repo": "Quor-a/ZorvAI",
+    "url": "https://github.com/Quor-a/ZorvAI",
     "total": "3★",
     "week": "3",
-    "desc": "One-pass block speculative decoding for vision-language models (lossless)"
+    "desc": "Zorv AI — 安卓 Android 端本地优先的 AI Agent 智能体助手（开源）。多模型对话、人格系统、记忆、语音全双工 TTS/STT、定时任务、可扩展工具链、飞书/QQ/微信接入。Kotlin + Jetpack Compose 开发。"
   },
   {
     "rank": 18,
-    "repo": "lnguyen503/ai-director",
-    "url": "https://github.com/lnguyen503/ai-director",
+    "repo": "Underline-1024/loom-engine",
+    "url": "https://github.com/Underline-1024/loom-engine",
     "total": "3★",
     "week": "3",
-    "desc": "Two-session human-in-the-loop pattern for directing local AI render engines with an LLM director over a plain-file relay. Hard human gates o"
+    "desc": "🧵 A terminal-native narrative engine & text RPG in Rust 🦀. Play with any LLM: OpenAI, Anthropic, local models & more."
   },
   {
     "rank": 19,
-    "repo": "amalshaji/dictator",
-    "url": "https://github.com/amalshaji/dictator",
-    "total": "2★",
-    "week": "2",
-    "desc": "Native macOS dictation with on-device or BYOK speech-to-text, LLM cleanup, screen-aware writing, global hotkeys, focused-field insertion, an"
+    "repo": "el23ddg/RAG-based-intelligent-data-discovery-engine",
+    "url": "https://github.com/el23ddg/RAG-based-intelligent-data-discovery-engine",
+    "total": "3★",
+    "week": "3",
+    "desc": "A fully local, open-source RAG system: ingest your own PDFs/text files, embed them with a local sentence-transformer model, store vectors in"
   },
   {
     "rank": 20,
-    "repo": "jammastergirish/one-tap-transcribe",
-    "url": "https://github.com/jammastergirish/one-tap-transcribe",
-    "total": "2★",
-    "week": "2",
-    "desc": "Local, private push-to-talk dictation for macOS — hold a key, speak, and it types. On-device Whisper + optional local LLM cleanup. Menu-bar "
+    "repo": "eschizoid/stride",
+    "url": "https://github.com/eschizoid/stride",
+    "total": "3★",
+    "week": "3",
+    "desc": "Local-first, multi-sport training engine — syncs your Strava data into SQLite you own, computes training metrics deterministically, coached "
   }
 ]

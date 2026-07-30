@@ -1,65 +1,65 @@
 {
-  "overview": "本周端侧 AI 动态(07-17~07-24,扩大窗口):Anthropic 发布 Claude Opus 5(07-24,新前沿模型);Samsung Galaxy Unpacked 2026(07-22~23)——Galaxy Z Fold8 Ultra/Fold8/Flip8 折叠旗舰、Watch Ultra2/Watch9、Galaxy 生态进日常 AI 眼镜、Health Assistant AI 个人健康助手;Qualcomm×Samsung Snapdragon 驱动新 Galaxy;NVIDIA Vera Rubin(perf-per-watt+最低 token 成本+后训练 intelligence-per-dollar+AI Summit Korea 路线)+Naval Postgraduate School DGX 超算上线;Google Scaling Agentic RL(Tunix 高吞吐 agent 训练)+Run Ray on TPU;Meta Genesis Mission(AI 模型驱动科学);开源 alibaba/MNN v3.6.1 端侧推理引擎。学术侧 339 篇(arXiv 183+HF 148,含 7 篇 SNN)+40 篇公司项目——端侧从新模型、AI 眼镜/健康助手、agentic RL、端侧推理引擎到神经形态持续推进。",
+  "overview": "本周端侧 AI 动态(07-25~07-30):Qualcomm 被选为 BMW 集团未来十年数字座舱+自动驾驶首席计算芯片供应商(07-29,端侧/汽车大新闻);NVIDIA Jetson「Build AI Anywhere」端侧计算(07-28)+Nemotron 3 Ultra 开放模型(agentic RTL coding)+Vera CPU 加速芯片设计+Six Agent Harness 能力+NeMo Guardrails 自托管 AI 编码助手+Open Secure AI 联盟;Google Gemini API Managed Agents(Gemini 3.6 Flash+hooks)+Interactions API for Gemini agents GA+Gemini macOS 自然语言;Meta 辅助机器人(匹兹堡大学 SAM/DINO);开源 MediaPipe v1.0.0(Google 端侧 AI 框架里程碑)+ONNX Runtime v1.28.0+nanobot v0.3.0;学术侧 185 篇(arXiv 123+HF 48,含 6 篇 SNN)+28 篇公司项目(Kimi K3/Moonshot 等)+13 官方动态——端侧从汽车芯片、Jetson、agent API、开源框架到神经形态持续推进。",
   "highlights": [
     {
-      "url": "https://www.anthropic.com/news/claude-opus-5",
-      "topic": "Anthropic 发布 Claude Opus 5(07-24)",
-      "why": "Anthropic 新前沿模型 Opus 5 发布,本周最大模型动态。模型厂前沿模型供给更新"
+      "url": "https://www.qualcomm.com/news/releases/2026/07/qualcomm-named-bmw-group-s-lead-compute-silicon-provider-for-dig",
+      "topic": "Qualcomm 被选为 BMW 未来十年首席计算芯片供应商(07-29)",
+      "why": "Qualcomm Snapdragon 驱动 BMW 数字座舱+自动驾驶,未来十年——端侧/汽车计算芯片最大商业落地信号"
     },
     {
-      "url": "https://news.samsung.com/global/samsung-brings-galaxy-ecosystem-into-everyday-eyewear",
-      "topic": "Samsung Galaxy 生态进日常 AI 眼镜(07-22 Unpacked)",
-      "why": "Galaxy 生态延伸到日常眼镜形态,端侧 AI 眼镜新形态落地——端侧可穿戴入口"
+      "url": "https://blogs.nvidia.com/blog/build-ai-with-nvidia-jetson/",
+      "topic": "NVIDIA Jetson「Build AI Anywhere」:端侧计算(07-28)",
+      "why": "Jetson 端侧计算平台推广,Build AI Anywhere——端侧算力平台继续下沉"
     },
     {
-      "url": "https://news.samsung.com/global/samsung-launches-health-assistant-beta-first-fully-integrated-ai-powered-personal-health-assistant",
-      "topic": "Samsung Health Assistant Beta:首个全集成 AI 个人健康助手(07-21)",
-      "why": "端侧 AI 健康助手 Beta 上线,always-on 个人健康场景的端侧 agent 落地"
+      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/expanding-managed-agents-gemini-api-3-6-flash-hooks/",
+      "topic": "Google Gemini API Managed Agents:3.6 Flash+hooks(07-28)",
+      "why": "Gemini 3.6 Flash 模型发布 + Managed Agents(hooks 等),agent 平台+模型双更新"
     },
     {
-      "url": "https://www.qualcomm.com/news/releases/2026/07/qualcomm-and-samsung-expand-collaboration-with-snapdragon-poweri",
-      "topic": "Qualcomm×Samsung 扩大合作:Snapdragon 驱动新 Galaxy 阵容(07-22)",
-      "why": "Qualcomm Snapdragon 驱动 Samsung 新 Galaxy,移动端侧芯片-终端协同"
+      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/interactions-api-general-availability/",
+      "topic": "Google Interactions API:Gemini 模型与 agent 的主接口 GA(07-29)",
+      "why": "Interactions API 正式发布,Google 把它定为 Gemini 模型+agent 的主接口——agent 工程基础设施"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/vera-rubin/",
-      "topic": "NVIDIA Vera Rubin:perf-per-watt + 最低 token 成本(07-21)",
-      "why": "Vera Rubin 主打 perf-per-watt+最低 token 成本,能效比是端侧/边缘推理核心约束"
+      "url": "https://developer.nvidia.com/blog/nvidia-nemotron-3-ultra-leads-open-models-on-accuracy-and-efficiency-in-agentic-rtl-coding/",
+      "topic": "NVIDIA Nemotron 3 Ultra:开放模型 agentic RTL coding 领先(07-26)",
+      "why": "Nemotron 3 Ultra 开放模型,agentic RTL(芯片设计)coding——开放模型+agent+EDA 交叉"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/nvidia-vera-rubin-post-training-intelligence-per-dollar/",
-      "topic": "NVIDIA Vera Rubin 后训练 intelligence-per-dollar 最大化(07-17)",
-      "why": "后训练每美元 intelligence 最大化,模型-硬件协同效率"
+      "url": "https://blogs.nvidia.com/blog/vera-cpu-eda/",
+      "topic": "NVIDIA Vera CPU 加速下一代 CPU/GPU 设计(07-26)",
+      "why": "Vera CPU 用于 EDA(芯片设计),用 AI 加速芯片设计——模型-硬件-设计闭环"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/ai-summit-korea-partners-and-nvidia/",
-      "topic": "NVIDIA AI Summit Korea:韩国 AI 未来路线(07-23)",
-      "why": "AI Summit Korea 国家尺度 AI 路线,端侧/边缘+生态区域推进"
+      "url": "https://developer.nvidia.com/blog/six-agent-harness-capabilities-for-higher-model-performance/",
+      "topic": "NVIDIA:六大 Agent Harness 能力提升模型性能(07-27)",
+      "why": "agent harness 六大能力框架,agent 工程方法论——模型性能提升的工程路径"
     },
     {
-      "url": "https://developers.googleblog.com/en/scaling-agentic-rl-high-throughput-agentic-training-with-tunix/",
-      "topic": "Google:Scaling Agentic RL,Tunix 高吞吐 agent 训练(07-21)",
-      "why": "agentic RL 高吞吐训练框架 Tunix,agent 训练基础设施"
+      "url": "https://developer.nvidia.com/blog/how-to-self-host-a-validated-ai-coding-assistant-with-nvidia-nemo-guardrails/",
+      "topic": "NVIDIA:NeMo Guardrails 自托管可验证 AI 编码助手(07-29)",
+      "why": "自托管 AI 编码助手+guardrails,端侧/私有化 agent 编码工具"
     },
     {
-      "url": "https://developers.googleblog.com/en/run-ray-on-tpu-part-1-the-foundations/",
-      "topic": "Google:Run Ray on TPU 基础(07-20)+ Part 2 Ray AI 库(07-24)",
-      "why": "Ray 在 TPU 上跑,大规模分布式 AI 训练/推理基础设施"
+      "url": "https://blogs.nvidia.com/blog/open-secure-ai-alliance/",
+      "topic": "NVIDIA 联合行业领袖组建 Open Secure AI 联盟(07-27)",
+      "why": "Open Secure AI 联盟,AI 安全+开放生态——行业级安全标准共建"
     },
     {
-      "url": "https://ai.meta.com/blog/genesis-mission-lawrence-berkeley-national-laboratory-segment-anything-dino/",
-      "topic": "Meta:AI 模型驱动 Genesis Mission 科学第一波(07-21)",
-      "why": "Meta SAM/DINO 等模型驱动科学计算(Berkeley 实验室),AI for science 应用"
+      "url": "https://ai.meta.com/blog/assistive-robotics-university-of-pittsburgh-sam-dino/",
+      "topic": "Meta:AI 模型帮匹兹堡大学变革辅助机器人(07-27)",
+      "why": "Meta SAM/DINO 模型用于辅助机器人,具身智能+公益应用"
     },
     {
-      "url": "https://news.samsung.com/global/samsung-galaxy-z-fold8-ultra-fold8-and-flip8foldables-perfected-for-every-way-of-living",
-      "topic": "Samsung Galaxy Z Fold8 Ultra/Fold8/Flip8 折叠旗舰(07-22)",
-      "why": "Galaxy 折叠旗舰搭载 Galaxy AI,端侧移动设备 AI 旗舰迭代"
+      "url": "https://github.com/google-ai-edge/mediapipe/releases/tag/v1.0.0",
+      "topic": "MediaPipe v1.0.0:Google 端侧 AI 框架里程碑(07-28)",
+      "why": "MediaPipe 从 v0.10.x 到 1.0——Google 端侧 AI 框架(Gemma/Llama on Android/iOS)的成熟度里程碑"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/naval-postgraduate-school-dgx-ai-supercomputer/",
-      "topic": "NVIDIA:Naval Postgraduate School DGX AI 超算上线(07-22)",
-      "why": "DGX AI 超算部署教育/国防,AI 算力基础设施扩展"
+      "url": "https://github.com/microsoft/onnxruntime/releases/tag/v1.28.0",
+      "topic": "ONNX Runtime v1.28.0:大版本跳版(07-25)",
+      "why": "ONNX Runtime v1.27→v1.28 大版本跳版,工业标准边缘推理引擎持续演进"
     }
   ]
 }
