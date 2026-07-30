@@ -43,6 +43,14 @@ def _deploy_to_ghpages() -> None:
     switching on the main repo).
     """
     try:
+        # Auto-refresh github trending BEFORE build so each publish gets a
+        # fresh top20 (was manual — gate caught staleness but didn't auto-fix).
+        # Runs in the deploy thread; failures are non-fatal (stale trending
+        # is better than no deploy).
+        subprocess.run(
+            [sys.executable, str(ROOT / "agent" / "refresh_trending.py")],
+            cwd=str(ROOT), capture_output=True, text=True, timeout=180,
+        )
         build = subprocess.run(
             [sys.executable, str(ROOT / "app" / "build.py"),
              "--server", DEPLOY_SERVER],

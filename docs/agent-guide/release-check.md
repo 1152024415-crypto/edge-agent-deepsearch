@@ -40,7 +40,7 @@ gate 拦不住「漏一个厂商」——它只检查 官方动态 ≥1，不检
 ### 用户视角浏览（不只点链接，验内容语义——gate 拦不住语义）
 
 - [ ] **按非默认 tag 筛**（如 SNN/投机解码/MoE）：随机点 2-3 篇，标题/摘要真的对题吗？（07-15 SNN 把 Ising 神经形态信道解码错标，就是没做这步）
-- [ ] **trending 区第一仓**：repo 名是本周新建/本周高星的吗？不是 → `collect_github_trending.py` 没跑，trending 过期
+- [ ] **trending 区第一仓**：repo 名是本周新建/本周高星的吗？trending 现在随 publish **自动刷新**（server auto-deploy 跑 `agent/refresh_trending.py`），但若刷新失败仍可能过期——不是本周的 → 手动跑 `python agent/refresh_trending.py` 补
 - [ ] **扫官方动态列表**：中国头部模型厂/终端厂有没有明显遗漏（如本周有模型厂发端侧硬件却没收录）→ 回采集层补
 - [ ] **weekly highlights 置顶**：是本周最大动态吗？链接点开是**对应新闻/官方 blog**（不是首页壳）吗？（07-15 阶跃星辰错用官网首页当新闻链接，内容对不上题）
 
