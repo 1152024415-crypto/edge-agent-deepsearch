@@ -27,9 +27,13 @@
     .sweep::after{content:"";position:absolute;inset:0;width:30%;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:sweep 3.2s linear infinite}
     @keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
     @media(prefers-reduced-motion:reduce){.sweep::after{animation:none;opacity:.5}}
-    .layout{display:grid;grid-template-columns:248px 1fr;gap:16px;align-items:start}
-    .side{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 10px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
-    .side-title{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;border-bottom:1px solid var(--hair);margin-bottom:6px}
+    .layout{display:grid;grid-template-columns:248px 1fr 210px;gap:16px;align-items:start;transition:grid-template-columns .2s}
+    .layout.collapsed{grid-template-columns:0px 1fr 210px}
+    .layout.collapsed .side{display:none}
+    .side{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 10px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;overflow-x:hidden}
+    .side-toggle{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);background:none;border:1px solid var(--hair);border-radius:3px;padding:2px 8px;cursor:pointer}
+    .side-toggle:hover{color:var(--amber);border-color:var(--amber)}
+    .side-title{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;border-bottom:1px solid var(--hair);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
     .coll{margin-bottom:10px}
     .coll-name{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:600;color:var(--ink);padding:4px 6px;display:flex;align-items:center;gap:6px}
     .coll-name::before{content:"";width:3px;height:11px;background:var(--amber);border-radius:1px;display:inline-block}
@@ -37,11 +41,19 @@
     .note-link{display:block;padding:4px 8px 4px 15px;font-size:12.5px;color:var(--muted);border-radius:3px;cursor:pointer;line-height:1.4}
     .note-link:hover{background:var(--hair);color:var(--ink)}
     .note-link.active{background:#fbeae3;color:var(--amber);font-weight:600}
-    .art{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:22px 28px;min-height:60vh}
+    .art{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:22px 28px;min-height:60vh;min-width:0}
     .art:empty::before{content:"选一篇笔记 →";color:var(--faint);font-family:"IBM Plex Mono",monospace}
-    .art h1{font-family:"IBM Plex Sans",sans-serif;font-size:22px;letter-spacing:0;margin:0 0 6px;border-bottom:1px solid var(--rule);padding-bottom:8px}
-    .art h2{font-size:17px;margin:26px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--hair)}
-    .art h3{font-size:14.5px;margin:18px 0 6px;color:var(--ink)}
+    .art h1{font-family:"IBM Plex Sans",sans-serif;font-size:22px;letter-spacing:0;margin:0 0 6px;border-bottom:1px solid var(--rule);padding-bottom:8px;scroll-margin-top:20px}
+    .art h2{font-size:17px;margin:26px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--hair);scroll-margin-top:20px}
+    .art h3{font-size:14.5px;margin:18px 0 6px;color:var(--ink);scroll-margin-top:20px}
+    /* right TOC */
+    .toc{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 10px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+    .toc-title{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;border-bottom:1px solid var(--hair);margin-bottom:6px}
+    .toc a{display:block;padding:3px 8px;font-size:12px;color:var(--muted);border-radius:3px;line-height:1.35;cursor:pointer;text-decoration:none}
+    .toc a.h3{padding-left:18px;font-size:11.5px}
+    .toc a:hover{background:var(--hair);color:var(--ink)}
+    .toc a.active{background:#fbeae3;color:var(--amber);font-weight:600}
+    .toc:empty::before{content:"目录";color:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:10px}
     .art p{margin:8px 0}
     .art ul,.art ol{margin:8px 0;padding-left:22px}
     .art li{margin:3px 0}
@@ -56,19 +68,21 @@
     .art th,.art td{border:1px solid var(--rule);padding:5px 9px;text-align:left}
     .art th{background:var(--hair)}
     .nb-foot{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);padding:6px 6px 0}
-    @media(max-width:760px){.layout{grid-template-columns:1fr}.side{position:static;max-height:none}}
+    @media(max-width:760px){.layout{grid-template-columns:1fr!important}.side,.toc{position:static;max-height:none;display:none}.side-toggle{display:none}}
   </style>
 </head>
 <body>
   <main>
     <header class="scope">
       <h1>RADAR<span class="sub">调研笔记 · research notes</span></h1>
+      <button class="side-toggle" id="side-toggle" title="收起/展开侧栏">◀ 收起侧栏</button>
       <a class="back" href="index.html">← 返回雷达</a>
       <div class="sweep"></div>
     </header>
-    <div class="layout">
+    <div class="layout" id="layout">
       <aside class="side" id="side"></aside>
       <article class="art" id="art"></article>
+      <aside class="toc" id="toc"></aside>
     </div>
   </main>
   <script>
@@ -117,9 +131,46 @@
         }
         renderMermaid(art);
         renderMath(art);
+        renderToc(art);
         window.scrollTo(0,0);
         CURRENT = {slug:slug, file:file};
       }).catch(function(e){art.innerHTML = '<p>加载出错：' + esc(String(e)) + '</p>';});
+    }
+
+    // Build right-side TOC from rendered H2/H3; click-to-scroll + current-section highlight.
+    function renderToc(art){
+      var toc = document.getElementById('toc');
+      var heads = art.querySelectorAll('h2, h3');
+      if(!heads.length){ toc.innerHTML = ''; return; }
+      var html = '<div class="toc-title">目录</div>';
+      for(var i=0;i<heads.length;i++){
+        var h = heads[i];
+        if(!h.id) h.id = 'sec-' + i;
+        var cls = h.tagName === 'H3' ? 'h3' : '';
+        var txt = h.innerText.replace(/^\d+\.?\s*/, '').slice(0,40);
+        html += '<a class="' + cls + '" data-target="' + h.id + '">' + esc(txt) + '</a>';
+      }
+      toc.innerHTML = html;
+      // click → scroll
+      toc.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', function(){
+          var t = document.getElementById(a.getAttribute('data-target'));
+          if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+      // current-section highlight
+      var links = toc.querySelectorAll('a');
+      if('IntersectionObserver' in window){
+        var obs = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            if(en.isIntersecting){
+              var id = en.target.id;
+              links.forEach(function(l){ l.classList.toggle('active', l.getAttribute('data-target')===id); });
+            }
+          });
+        }, {rootMargin:'-20% 0px -70% 0px'});
+        heads.forEach(function(h){ obs.observe(h); });
+      }
     }
 
     // Replace $$...$$ (display) and $...$ (inline) with placeholders so
@@ -210,6 +261,17 @@
 
     function esc(v){v = String(v==null?'':v); return v.replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
     function escAttr(v){return esc(v).replace(/`/g, '&#96;');}
+
+    // Left sidebar collapse toggle
+    (function(){
+      var btn = document.getElementById('side-toggle');
+      var layout = document.getElementById('layout');
+      if(!btn || !layout) return;
+      btn.addEventListener('click', function(){
+        var c = layout.classList.toggle('collapsed');
+        btn.textContent = c ? '▶ 展开侧栏' : '◀ 收起侧栏';
+      });
+    })();
 
     renderSide();
     route();
