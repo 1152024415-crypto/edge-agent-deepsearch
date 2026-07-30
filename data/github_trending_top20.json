@@ -5,7 +5,7 @@
     "url": "https://github.com/bitwize-ai/Logue",
     "total": "128★",
     "week": "128",
-    "desc": "Privacy-first AI meeting notes & writing assistant for Mac — on-device transcription, smart minutes, action items & 60+ writing modes, runni"
+    "desc": "Mac 上的隐私优先 AI 会议笔记与写作助手——端侧转录、智能纪要、行动项与 60+ 写作模式"
   },
   {
     "rank": 2,
@@ -13,7 +13,7 @@
     "url": "https://github.com/Tencent/AngelSpec",
     "total": "94★",
     "week": "94",
-    "desc": "A unified, torch-native training framework for MTP and block-parallel speculative decoding."
+    "desc": "统一的 torch 原生训练框架，支持 MTP 与块并行投机解码"
   },
   {
     "rank": 3,
@@ -21,7 +21,7 @@
     "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
     "total": "70★",
     "week": "70",
-    "desc": "vLLM 0.25.1 serving stack for poolside/Laguna-S-2.1-NVFP4 with DFlash speculative decoding — DGX Spark & RTX 6000 PRO"
+    "desc": "面向 poolside/Laguna-S-2.1-NVFP4 的 vLLM 0.25.1 服务栈，带 DFlash 投机解码"
   },
   {
     "rank": 4,
@@ -29,7 +29,7 @@
     "url": "https://github.com/babutree/TTS-API",
     "total": "29★",
     "week": "29",
-    "desc": "Self-hosted streaming TTS gateway with Web UI + REST/WebSocket API — dual-engine local Kokoro CPU inference + Microsoft Edge neural voices, "
+    "desc": "自托管流式 TTS 网关，带 Web UI + REST/WebSocket API，双引擎"
   },
   {
     "rank": 5,
@@ -37,7 +37,7 @@
     "url": "https://github.com/Ali-hey-0/ai-runtime-lab",
     "total": "16★",
     "week": "16",
-    "desc": "Engineering deterministic, production-grade systems around non-deterministic LLMs — FSM, durable execution, retries, DAGs, agent runtimes, m"
+    "desc": "围绕非确定性 LLM 工程化确定性、生产级系统"
   },
   {
     "rank": 6,
@@ -45,7 +45,7 @@
     "url": "https://github.com/YutongChenVictor/NPU-E2E",
     "total": "16★",
     "week": "16",
-    "desc": "End-to-End NPU: RTL systolic array → AXI4 SoC → TVM compiler → FPGA inference"
+    "desc": "端到端 NPU：RTL 脉动阵列 → AXI4 SoC → TVM 编译器 → FPGA 推理"
   },
   {
     "rank": 7,
@@ -53,7 +53,7 @@
     "url": "https://github.com/mraza007/minute",
     "total": "7★",
     "week": "7",
-    "desc": "Fully offline meeting notetaker for macOS — records, transcribes, and summarizes on-device with Whisper and a local LLM. Meeting detection, "
+    "desc": "macOS 全离线会议笔记——录制、转录、总结"
   },
   {
     "rank": 8,
@@ -61,7 +61,7 @@
     "url": "https://github.com/arkenoi/timeline-export",
     "total": "4★",
     "week": "4",
-    "desc": "Headless, reproducible export of the on-device Google Maps Timeline (Android/redroid) to JSON — enriched visits, transport movements, and mu"
+    "desc": "端侧 Google 地图时间线的无头可复现导出（Android/redacted）"
   },
   {
     "rank": 9,
@@ -69,7 +69,7 @@
     "url": "https://github.com/SaymRuxoTE/EDGE-AI",
     "total": "4★",
     "week": "4",
-    "desc": "A custom C++ AVX2 transformer inference engine built from scratch."
+    "desc": "从零构建的 C++ AVX2 Transformer 推理引擎"
   },
   {
     "rank": 10,
@@ -77,7 +77,7 @@
     "url": "https://github.com/fxd0h/Axelera-Voyager-Local-Assistant",
     "total": "4★",
     "week": "4",
-    "desc": "Local AI assistant for the Axelera Voyager SDK and Metis AIPU — semantic RAG over the public Axelera sources + workflow skills, via MCP. No "
+    "desc": "Axelera Voyager SDK 与 Metis AIPU 的本地 AI 助手——语义 RAG"
   },
   {
     "rank": 11,
@@ -85,7 +85,7 @@
     "url": "https://github.com/DngBack/awesome-speculative-decoding",
     "total": "4★",
     "week": "4",
-    "desc": "A curated list of awesome speculative decoding papers"
+    "desc": "投机解码优秀论文精选列表"
   },
   {
     "rank": 12,
@@ -93,7 +93,7 @@
     "url": "https://github.com/mavesensei/commitcraft",
     "total": "4★",
     "week": "4",
-    "desc": "Smart conventional commits with a two-tier pipeline: a local rule engine handles simple changes instantly, LLM only activates for complex di"
+    "desc": "智能约定式提交，双层流水线：本地规则引擎 + LLM 兜底"
   },
   {
     "rank": 13,
@@ -101,7 +101,7 @@
     "url": "https://github.com/statico/llmac",
     "total": "3★",
     "week": "3",
-    "desc": "Apple's on-device Foundation Models from the command line — tiny, fast, no API key, in the spirit of Simon Willison's llm"
+    "desc": "命令行调用 Apple 端侧 Foundation Models——小、快、无 API key"
   },
   {
     "rank": 14,
@@ -109,7 +109,7 @@
     "url": "https://github.com/AAAelina/rikkahub-agent",
     "total": "3★",
     "week": "3",
-    "desc": "RikkaHub Agent - on-device Android LLM agent (local fork/upload)"
+    "desc": "RikkaHub Agent——端侧 Android LLM agent（本地 fork）"
   },
   {
     "rank": 15,
@@ -117,7 +117,7 @@
     "url": "https://github.com/ankit1057/sipllm",
     "total": "3★",
     "week": "3",
-    "desc": "sipllm — a dependency-free streaming GGUF LLM inference engine in C++17. Runs quantized Llama models on-device with flat RAM (it sips weight"
+    "desc": "sipllm——无依赖的 C++17 流式 GGUF LLM 推理引擎，跑得快"
   },
   {
     "rank": 16,
@@ -125,7 +125,7 @@
     "url": "https://github.com/enkhbold470/memdesk",
     "total": "3★",
     "week": "3",
-    "desc": "Screenshots your Mac every minute, OCRs it on-device, and writes one line about what you were doing. The images never leave your machine."
+    "desc": "每分钟截屏 Mac、端侧 OCR、写一行摘要的本地记忆助手"
   },
   {
     "rank": 17,
@@ -133,7 +133,7 @@
     "url": "https://github.com/Quor-a/ZorvAI",
     "total": "3★",
     "week": "3",
-    "desc": "Zorv AI — 安卓 Android 端本地优先的 AI Agent 智能体助手（开源）。多模型对话、人格系统、记忆、语音全双工 TTS/STT、定时任务、可扩展工具链、飞书/QQ/微信接入。Kotlin + Jetpack Compose 开发。"
+    "desc": "Zorv AI——安卓端本地优先的 AI Agent 助手（开源），多模型对话、人格、记忆、语音双工"
   },
   {
     "rank": 18,
@@ -141,7 +141,7 @@
     "url": "https://github.com/Underline-1024/loom-engine",
     "total": "3★",
     "week": "3",
-    "desc": "🧵 A terminal-native narrative engine & text RPG in Rust 🦀. Play with any LLM: OpenAI, Anthropic, local models & more."
+    "desc": "终端原生叙事引擎与文字 RPG（Rust），配任意 LLM"
   },
   {
     "rank": 19,
@@ -149,7 +149,7 @@
     "url": "https://github.com/el23ddg/RAG-based-intelligent-data-discovery-engine",
     "total": "3★",
     "week": "3",
-    "desc": "A fully local, open-source RAG system: ingest your own PDFs/text files, embed them with a local sentence-transformer model, store vectors in"
+    "desc": "全本地开源 RAG 系统：导入 PDF/文本、嵌入、检索"
   },
   {
     "rank": 20,
@@ -157,6 +157,6 @@
     "url": "https://github.com/eschizoid/stride",
     "total": "3★",
     "week": "3",
-    "desc": "Local-first, multi-sport training engine — syncs your Strava data into SQLite you own, computes training metrics deterministically, coached "
+    "desc": "本地优先多运动训练引擎——把 Strava 数据同步到 SQLite"
   }
 ]
