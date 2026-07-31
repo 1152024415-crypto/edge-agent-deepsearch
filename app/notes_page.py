@@ -295,20 +295,29 @@ NOTES_HTML = r"""<!doctype html>
       });
     })();
 
-    // Copy raw markdown source to clipboard
+    // Copy raw markdown source to clipboard (with relative image paths
+    // rewritten to absolute URLs so the copied md works anywhere)
     (function(){
       var btn = document.getElementById('copy-md');
       if(!btn) return;
       btn.addEventListener('click', function(){
         if(!LAST_RAW){ btn.textContent = '⚠ 先选一篇笔记'; setTimeout(function(){btn.textContent='📋 复制原文';},1500); return; }
-        navigator.clipboard.writeText(LAST_RAW).then(function(){
-          btn.textContent = '✅ 已复制原文';
+        // Rewrite relative image paths to absolute URLs
+        var slug = CURRENT ? CURRENT.slug : '';
+        var base = window.location.href.replace(/notes\.html.*$/i, '') + 'notes/' + encodeURIComponent(slug) + '/';
+        var rewritten = LAST_RAW.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function(m, alt, path){
+          if(/^(https?:|data:|\/)/.test(path)) return m;  // skip absolute/data/root-relative
+          var clean = path.replace(/^\.\//, '');  // strip ./
+          return '![' + alt + '](' + base + clean + ')';
+        });
+        navigator.clipboard.writeText(rewritten).then(function(){
+          btn.textContent = '✅ 已复制(含绝对图片URL)';
           setTimeout(function(){ btn.textContent = '📋 复制原文'; }, 2000);
         }).catch(function(){
           // fallback: select + execCommand
           var ta = document.createElement('textarea');
-          ta.value = LAST_RAW; document.body.appendChild(ta); ta.select();
-          try { document.execCommand('copy'); btn.textContent = '✅ 已复制原文'; setTimeout(function(){btn.textContent='📋 复制原文';},2000); } catch(e){}
+          ta.value = rewritten; document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); btn.textContent = '✅ 已复制(含绝对图片URL)'; setTimeout(function(){btn.textContent='📋 复制原文';},2000); } catch(e){}
           document.body.removeChild(ta);
         });
       });
