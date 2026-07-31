@@ -27,6 +27,7 @@
     "name": "RuView AI 原理",
     "slug": "ruview",
     "source": "C:/Users/11520/Documents/学习/output/ruview",
-    "desc": "RuView 用 Wi-Fi CSI + AI 完成存在/动作/人体姿态感知——输入、模型架构、训练、输出、部署详解(含 HTML 互动页面)"
+    "desc": "RuView 用 Wi-Fi CSI + AI 完成存在/动作/人体姿态感知——输入、模型架构、训练、输出、部署详解(含 HTML 互动页面)",
+    "files": ["RuView-AI原理详解.html", "RuView-AI原理与架构知识整理.md"]
   }
 ]

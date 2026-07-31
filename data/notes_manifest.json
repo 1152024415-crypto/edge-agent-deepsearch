@@ -86,16 +86,6 @@
         "title": "RuView 如何使用 AI｜从 Wi‑Fi 波形到人体姿态",
         "file": "RuView-AI原理详解.html",
         "type": "html"
-      },
-      {
-        "title": "RuView 无线感知课｜离线互动版",
-        "file": "RuView互动教学.html",
-        "type": "html"
-      },
-      {
-        "title": "RuView 项目技术解析：用 Wi‑Fi CSI 构建无摄像头空间感知系统",
-        "file": "RuView项目技术解析.md",
-        "type": "md"
       }
     ]
   }

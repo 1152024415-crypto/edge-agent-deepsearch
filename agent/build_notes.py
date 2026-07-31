@@ -67,7 +67,13 @@ def ingest_collection(coll: dict) -> dict:
     # image dir (e.g. AMD note's slide webp). os.walk not needed here — rglob
     # under a known image dir is safe.
     SKIP_DIRS = {".venv", ".git", "node_modules", "__pycache__"}
-    note_files = sorted(list(src.glob("*.md")) + list(src.glob("*.html")))
+    # Optional per-file whitelist: if coll has "files", only ingest those;
+    # otherwise ingest all top-level *.md + *.html.
+    files_whitelist = coll.get("files")
+    if files_whitelist:
+        note_files = sorted(p for p in src.glob("*") if p.name in files_whitelist and p.suffix.lower() in (".md", ".html"))
+    else:
+        note_files = sorted(list(src.glob("*.md")) + list(src.glob("*.html")))
     img_files = []
     for img_dir_name in ("images", "assets"):
         img_dir = src / img_dir_name
