@@ -103,6 +103,12 @@
         '<div class="nb-foot">markdown · client-rendered</div>';
       el.addEventListener('click', function(e){
         var b = e.target.closest('.note-link'); if(!b) return;
+        var file = b.dataset.file;
+        // HTML notes: open full page directly (complete own layout, back button returns)
+        if(file.endsWith('.html')){
+          window.location.href = 'notes/' + encodeURIComponent(b.dataset.slug) + '/' + encodeURIComponent(file);
+          return;
+        }
         location.hash = b.dataset.slug + '/' + b.dataset.file;
       });
     }
@@ -114,20 +120,9 @@
       var art = document.querySelector('#art');
       art.innerHTML = '<div style="color:var(--faint);font-family:IBM Plex Mono,monospace">loading…</div>';
       var url = 'notes/' + encodeURIComponent(slug) + '/' + encodeURIComponent(file);
-      // HTML notes: load in iframe (self-contained page with own styles/JS)
+      // HTML notes: navigate to full page (complete own layout, back button returns)
       if(file.endsWith('.html')){
-        LAST_RAW = '';
-        art.innerHTML = '<iframe src="' + esc(url) + '" style="width:100%;min-height:80vh;border:none;background:#fff;border-radius:4px;display:block"></iframe>';
-        var iframe = art.querySelector('iframe');
-        iframe.addEventListener('load', function(){
-          try {
-            var h = iframe.contentWindow.document.body.scrollHeight;
-            if(h > 100) iframe.style.height = (h + 50) + 'px';
-          } catch(e){}  // cross-origin — keep min-height
-        });
-        document.getElementById('toc').innerHTML = '<div class="toc-title">HTML 页面</div>';
-        window.scrollTo(0,0);
-        CURRENT = {slug:slug, file:file};
+        window.location.href = url;
         return;
       }
       // MD notes: fetch + marked.js + KaTeX + mermaid + TOC
