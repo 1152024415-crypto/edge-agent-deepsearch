@@ -121,6 +121,23 @@ NOTES_HTML = r"""<!doctype html>
       var art = document.querySelector('#art');
       art.innerHTML = '<div style="color:var(--faint);font-family:IBM Plex Mono,monospace">loading…</div>';
       var url = 'notes/' + encodeURIComponent(slug) + '/' + encodeURIComponent(file);
+      // HTML notes: load in iframe (self-contained page with own styles/JS)
+      if(file.endsWith('.html')){
+        LAST_RAW = '';
+        art.innerHTML = '<iframe src="' + esc(url) + '" style="width:100%;min-height:80vh;border:none;background:#fff;border-radius:4px;display:block"></iframe>';
+        var iframe = art.querySelector('iframe');
+        iframe.addEventListener('load', function(){
+          try {
+            var h = iframe.contentWindow.document.body.scrollHeight;
+            if(h > 100) iframe.style.height = (h + 50) + 'px';
+          } catch(e){}  // cross-origin — keep min-height
+        });
+        document.getElementById('toc').innerHTML = '<div class="toc-title">HTML 页面</div>';
+        window.scrollTo(0,0);
+        CURRENT = {slug:slug, file:file};
+        return;
+      }
+      // MD notes: fetch + marked.js + KaTeX + mermaid + TOC
       fetch(url).then(function(res){
         if(!res.ok){art.innerHTML = '<p>加载失败 (' + res.status + ')：' + esc(url) + '</p>';return null;}
         return res.text();

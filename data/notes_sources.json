@@ -22,5 +22,11 @@
     "slug": "mhl-control",
     "source": "C:/Users/11520/Documents/学习/Multi-Head-Latent-Control论文精读",
     "desc": "Multi-Head-Latent-Control (MLC) 论文精读——多头潜变量控制,高效注意力+潜变量条件生成,降推理成本"
+  },
+  {
+    "name": "RuView AI 原理",
+    "slug": "ruview",
+    "source": "C:/Users/11520/Documents/学习/output/ruview",
+    "desc": "RuView 用 Wi-Fi CSI + AI 完成存在/动作/人体姿态感知——输入、模型架构、训练、输出、部署详解(含 HTML 互动页面)"
   }
 ]

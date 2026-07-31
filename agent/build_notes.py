@@ -31,6 +31,19 @@ def note_title(md_path: Path) -> str:
     return md_path.stem
 
 
+def html_title(html_path: Path) -> str:
+    """Extract <title> from an HTML file; fall back to filename stem."""
+    try:
+        import re
+        text = html_path.read_text(encoding="utf-8", errors="ignore")
+        m = re.search(r"<title[^>]*>([^<]+)</title>", text, re.I)
+        if m:
+            return m.group(1).strip()
+    except Exception:
+        pass
+    return html_path.stem
+
+
 def ingest_collection(coll: dict) -> dict:
     src = Path(coll["source"])
     slug = coll["slug"]
@@ -54,7 +67,7 @@ def ingest_collection(coll: dict) -> dict:
     # image dir (e.g. AMD note's slide webp). os.walk not needed here — rglob
     # under a known image dir is safe.
     SKIP_DIRS = {".venv", ".git", "node_modules", "__pycache__"}
-    note_files = sorted(src.glob("*.md"))
+    note_files = sorted(list(src.glob("*.md")) + list(src.glob("*.html")))
     img_files = []
     for img_dir_name in ("images", "assets"):
         img_dir = src / img_dir_name
@@ -63,7 +76,10 @@ def ingest_collection(coll: dict) -> dict:
     img_files += sorted(p for p in src.glob("*") if p.is_file() and p.suffix.lower() in IMG_EXT)
     for p in note_files:
         shutil.copy2(p, dest / p.name)
-        notes.append({"title": note_title(p), "file": p.name})
+        if p.suffix.lower() == ".html":
+            notes.append({"title": html_title(p), "file": p.name, "type": "html"})
+        else:
+            notes.append({"title": note_title(p), "file": p.name, "type": "md"})
     for p in img_files:
         if any(part in SKIP_DIRS for part in p.parts):
             continue
@@ -71,6 +87,17 @@ def ingest_collection(coll: dict) -> dict:
             shutil.copy2(p, dest / p.name)
         except OSError:
             pass  # skip inaccessible files (broken symlinks under images/)
+    # Also copy assets/ preserving subdir so HTML notes' relative paths
+    # (e.g. assets/x.png) resolve. The flat copies above are for md notes
+    # (notes_page rewrites img src to basename); HTML pages in an iframe
+    # resolve relative to their own location (dest/xxx.html → dest/assets/x.png).
+    for img_dir_name in ("images", "assets"):
+        img_dir = src / img_dir_name
+        if img_dir.is_dir():
+            dest_img = dest / img_dir_name
+            if dest_img.exists():
+                shutil.rmtree(dest_img, ignore_errors=True)
+            shutil.copytree(img_dir, dest_img, dirs_exist_ok=True)
     print(f"[NOTES] {slug}: {len(notes)} note(s), images copied -> {dest}")
     return {"name": coll.get("name", slug), "slug": slug,
             "desc": coll.get("desc", ""), "notes": notes}
