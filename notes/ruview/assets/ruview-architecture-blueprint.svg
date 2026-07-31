@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1024" viewBox="0 0 1536 1024" role="img" aria-labelledby="title desc">
+  <title id="title">RuView runtime architecture blueprint</title>
+  <desc id="desc">A code-native architecture diagram showing the live Wi-Fi CSI path, ESP32 processing tiers, Rust sensing server, rule-first classification, optional adaptive classifier, two optional pose AI branches, outputs, and training control plane.</desc>
+  <defs>
+    <pattern id="paperGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#d7cbb5" stroke-width="1" opacity=".42"/>
+    </pattern>
+    <marker id="arrowInk" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#18333d"/>
+    </marker>
+    <marker id="arrowRust" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#ad4c2c"/>
+    </marker>
+    <marker id="arrowResearch" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#64777b"/>
+    </marker>
+    <style>
+      .title{font:900 42px Georgia,"Noto Serif CJK SC",serif;fill:#18333d;letter-spacing:-1px}
+      .subtitle{font:500 17px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#53686d}
+      .kicker{font:800 12px Consolas,monospace;fill:#ad4c2c;letter-spacing:2px}
+      .layer{font:800 12px Consolas,monospace;fill:#ad4c2c;letter-spacing:1.5px}
+      .boxTitle{font:800 18px Georgia,"Noto Serif CJK SC",serif;fill:#18333d}
+      .boxBody{font:500 13px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#53686d}
+      .mini{font:700 11px Consolas,monospace;fill:#53686d;letter-spacing:.5px}
+      .whiteTitle{font:800 17px Georgia,"Noto Serif CJK SC",serif;fill:#f8f3e9}
+      .whiteBody{font:500 12px "Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#e8f0ec}
+      .live{fill:#fbf7ee;stroke:#18333d;stroke-width:2}
+      .edge{fill:#e1ece6;stroke:#23665f;stroke-width:2}
+      .conditional{fill:#ad4c2c;stroke:#7f341f;stroke-width:2}
+      .research{fill:#f4efe4;stroke:#64777b;stroke-width:2;stroke-dasharray:9 7}
+      .output{fill:#18333d;stroke:#18333d;stroke-width:2}
+      .train{fill:#f4e4c4;stroke:#b17b29;stroke-width:2}
+      .line{fill:none;stroke:#18333d;stroke-width:2.4;marker-end:url(#arrowInk)}
+      .lineRust{fill:none;stroke:#ad4c2c;stroke-width:2.4;marker-end:url(#arrowRust)}
+      .lineResearch{fill:none;stroke:#64777b;stroke-width:2.2;stroke-dasharray:9 7;marker-end:url(#arrowResearch)}
+      .bus{fill:none;stroke:#18333d;stroke-width:2.4}
+    </style>
+  </defs>
+
+  <rect width="1536" height="1024" fill="#f4efe4"/>
+  <image href="ruview-architecture-paper-base.png" width="1536" height="1024" preserveAspectRatio="none"/>
+  <rect width="1536" height="1024" fill="#f4efe4" opacity=".12"/>
+  <rect x="34" y="34" width="1468" height="956" fill="none" stroke="#18333d" stroke-width="2"/>
+
+  <text x="76" y="86" class="kicker">RUVIEW / SOURCE-ALIGNED SYSTEM MAP</text>
+  <text x="76" y="139" class="title">Wi-Fi CSI 感知与 AI 插入点</text>
+  <text x="76" y="174" class="subtitle">实线 = 当前主链路 · 砖红 = 已接入但可选 · 虚线 = 姿态 AI 的目标插入点（当前未接入主服务）</text>
+
+  <g transform="translate(1122 72)">
+    <line x1="0" y1="0" x2="54" y2="0" class="line"/>
+    <text x="66" y="5" class="mini">LIVE</text>
+    <line x1="0" y1="32" x2="54" y2="32" class="lineRust"/>
+    <text x="66" y="37" class="mini">OPTIONAL / WIRED</text>
+    <line x1="0" y1="64" x2="54" y2="64" class="lineResearch"/>
+    <text x="66" y="69" class="mini">RESEARCH BRANCH</text>
+  </g>
+
+  <text x="76" y="231" class="layer">01 / PHYSICAL + EDGE</text>
+  <rect x="76" y="252" width="172" height="112" class="live"/>
+  <text x="96" y="284" class="boxTitle">Wi-Fi AP / Tx</text>
+  <text x="96" y="312" class="boxBody">持续发包</text>
+  <text x="96" y="335" class="boxBody">固定信道与功率更稳定</text>
+
+  <rect x="287" y="252" width="172" height="112" class="live"/>
+  <text x="307" y="284" class="boxTitle">Room Channel</text>
+  <text x="307" y="312" class="boxBody">墙体 / 家具 / 人体</text>
+  <text x="307" y="335" class="boxBody">共同形成多径环境</text>
+
+  <rect x="498" y="235" width="236" height="146" class="edge"/>
+  <text x="520" y="270" class="boxTitle">ESP32 CSI Node / Rx</text>
+  <text x="520" y="298" class="boxBody">接收 Wi-Fi 帧并读取 I/Q</text>
+  <text x="520" y="322" class="boxBody">形成子载波幅度与相位</text>
+  <text x="520" y="354" class="mini">~20 Hz / channel</text>
+
+  <path d="M248 308H287" class="line"/>
+  <path d="M459 308H498" class="line"/>
+
+  <rect x="76" y="407" width="206" height="110" class="edge"/>
+  <text x="96" y="440" class="boxTitle">Tier 0 · Raw CSI</text>
+  <text x="96" y="468" class="boxBody">I/Q 原始帧透传</text>
+  <text x="96" y="492" class="mini">ADR-018 RAW</text>
+
+  <rect x="308" y="407" width="206" height="110" class="edge"/>
+  <text x="328" y="440" class="boxTitle">Tier 1 · DSP</text>
+  <text x="328" y="468" class="boxBody">相位展开 / 方差 / Top-K</text>
+  <text x="328" y="492" class="mini">FILTER + COMPRESS</text>
+
+  <rect x="540" y="407" width="206" height="110" class="edge"/>
+  <text x="560" y="440" class="boxTitle">Tier 2 · Rules</text>
+  <text x="560" y="468" class="boxBody">存在 / 呼吸 / 跌倒</text>
+  <text x="560" y="492" class="mini">NO TRAINED MODEL</text>
+
+  <path d="M616 381V395H179V407" class="bus"/>
+  <path d="M616 395H411V407" class="bus"/>
+  <path d="M616 395H643V407" class="bus"/>
+
+  <rect x="785" y="282" width="168" height="82" class="live"/>
+  <text x="805" y="315" class="boxTitle">ADR-018 UDP</text>
+  <text x="805" y="341" class="boxBody">frames / vitals / features</text>
+  <path d="M734 308H785" class="line"/>
+
+  <text x="988" y="231" class="layer">02 / RUST SENSING SERVER</text>
+  <rect x="988" y="252" width="222" height="112" class="live"/>
+  <text x="1008" y="284" class="boxTitle">Decode + Node State</text>
+  <text x="1008" y="312" class="boxBody">协议解析 / 节点状态</text>
+  <text x="1008" y="336" class="boxBody">时间窗 / 帧历史</text>
+  <path d="M953 323H988" class="line"/>
+
+  <rect x="1242" y="252" width="218" height="112" class="live"/>
+  <text x="1262" y="284" class="boxTitle">Calibrate + Fuse</text>
+  <text x="1262" y="312" class="boxBody">基线 / 滤波 / 多节点融合</text>
+  <text x="1262" y="336" class="boxBody">归一化 CSI 时间窗</text>
+  <path d="M1210 308H1242" class="line"/>
+
+  <text x="785" y="407" class="layer">03 / DECISION CORE</text>
+  <rect x="785" y="429" width="196" height="108" class="live"/>
+  <text x="805" y="462" class="boxTitle">Feature Extractor</text>
+  <text x="805" y="489" class="boxBody">7 个服务特征</text>
+  <text x="805" y="512" class="boxBody">+ 8 个幅度统计 = 15D</text>
+
+  <rect x="1012" y="429" width="202" height="108" class="live"/>
+  <text x="1032" y="462" class="boxTitle">Rule Engine</text>
+  <text x="1032" y="489" class="boxBody">基线 → EMA → 阈值</text>
+  <text x="1032" y="512" class="boxBody">→ 连续帧去抖</text>
+
+  <polygon points="1265,429 1385,429 1445,483 1385,537 1265,537 1205,483" class="live"/>
+  <text x="1252" y="474" class="boxTitle">Model loaded?</text>
+  <text x="1283" y="500" class="mini">YES / NO</text>
+
+  <path d="M1351 364V398H883V429" class="line"/>
+  <path d="M981 483H1012" class="line"/>
+  <path d="M1214 483H1205" class="line"/>
+
+  <rect x="1012" y="574" width="316" height="112" class="conditional"/>
+  <text x="1034" y="610" class="whiteTitle">Adaptive Classifier</text>
+  <text x="1034" y="638" class="whiteBody">15D → 多分类逻辑回归 → 4 类状态</text>
+  <text x="1034" y="663" class="whiteBody">adaptive_override · 覆盖 label / presence</text>
+  <path d="M1325 537V552H1170V574" class="lineRust"/>
+
+  <rect x="1363" y="574" width="97" height="112" class="output"/>
+  <text x="1380" y="610" class="whiteTitle">Final</text>
+  <text x="1380" y="637" class="whiteBody">state</text>
+  <text x="1380" y="660" class="whiteBody">confidence</text>
+  <path d="M1328 630H1363" class="lineRust"/>
+  <path d="M1445 483H1477V555H1411V574" class="line"/>
+  <text x="1452" y="470" class="mini">NO</text>
+  <text x="1328" y="559" class="mini">YES</text>
+
+  <text x="76" y="575" class="layer">04 / OPTIONAL POSE AI — PARALLEL, NOT AFTER CLASSIFIER</text>
+  <rect x="76" y="598" width="310" height="124" class="research"/>
+  <text x="98" y="634" class="boxTitle">Pose Cog 插入点</text>
+  <text x="98" y="662" class="boxBody">归一化幅度窗 [1, 56, 20]</text>
+  <text x="98" y="685" class="boxBody">→ 17 个二维关节 + confidence</text>
+  <text x="98" y="706" class="mini">SEPARATE / STUB / NOT WIRED</text>
+
+  <rect x="424" y="598" width="338" height="124" class="research"/>
+  <text x="446" y="634" class="boxTitle">Full DensePose 插入点</text>
+  <text x="446" y="662" class="boxBody">幅度 + 相位 + 多节点 CSI 张量</text>
+  <text x="446" y="685" class="boxBody">→ keypoints + body parts + UV</text>
+  <text x="446" y="706" class="mini">RESEARCH / NOT WIRED TO SERVER</text>
+
+  <path d="M1351 364V558H386V598" class="lineResearch"/>
+  <path d="M1351 364V558H593V598" class="lineResearch"/>
+
+  <rect x="780" y="598" width="200" height="124" class="live"/>
+  <text x="802" y="634" class="boxTitle">Result Assembler</text>
+  <text x="802" y="662" class="boxBody">state + vitals + pose</text>
+  <text x="802" y="685" class="boxBody">当前 keypoints: None</text>
+
+  <path d="M386 660H780" class="lineResearch"/>
+  <path d="M762 660H780" class="lineResearch"/>
+  <path d="M1411 686V706H1000V660H980" class="line"/>
+
+  <rect x="1120" y="720" width="340" height="84" class="output"/>
+  <text x="1142" y="751" class="whiteTitle">Publication + Integrations</text>
+  <text x="1142" y="778" class="whiteBody">Web · REST · WS · MQTT · Home Assistant</text>
+  <path d="M980 660H1088V762H1120" class="line"/>
+
+  <text x="76" y="793" class="layer">05 / TRAINING + MODEL CONTROL PLANE</text>
+  <rect x="76" y="840" width="224" height="96" class="train"/>
+  <text x="98" y="870" class="boxTitle">Record + Label</text>
+  <text x="98" y="897" class="boxBody">CSI 状态 / 相机姿态真值</text>
+  <text x="98" y="919" class="mini">DATASET</text>
+
+  <rect x="344" y="840" width="224" height="96" class="train"/>
+  <text x="366" y="870" class="boxTitle">Train / Validate</text>
+  <text x="366" y="897" class="boxBody">LR / Cog / DensePose</text>
+  <text x="366" y="919" class="mini">ROOM + SUBJECT SPLIT</text>
+
+  <rect x="612" y="840" width="224" height="96" class="train"/>
+  <text x="634" y="870" class="boxTitle">Model Artifact</text>
+  <text x="634" y="897" class="boxBody">weights / safetensors / RVF</text>
+  <text x="634" y="919" class="mini">VERSIONED FILE</text>
+
+  <rect x="880" y="840" width="224" height="96" class="train"/>
+  <text x="902" y="870" class="boxTitle">Runtime Loader</text>
+  <text x="902" y="897" class="boxBody">有模型启用 AI；否则走规则</text>
+  <text x="902" y="919" class="mini">FAIL-SAFE MAINLINE</text>
+
+  <path d="M300 888H344" class="line"/>
+  <path d="M568 888H612" class="line"/>
+  <path d="M836 888H880" class="line"/>
+  <path d="M992 840V818H1088V700H1170V686" class="lineRust"/>
+  <path d="M992 840V818H231V722" class="lineResearch"/>
+  <path d="M992 840V818H593V722" class="lineResearch"/>
+
+  <text x="76" y="956" class="mini">SOURCE BASELINE: RuView commit 90b29595fbeb · solid path verified in firmware + sensing-server · pose branches show insertion contracts, not claimed live output</text>
+</svg>

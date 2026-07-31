@@ -1,0 +1,90 @@
+[
+  {
+    "temp": "tmp-01-data-pipeline.png",
+    "final": "01-data-pipeline.png",
+    "height": 873,
+    "width": 956,
+    "x": 273,
+    "y": 0
+  },
+  {
+    "temp": "tmp-02-csi-frame.png",
+    "final": "02-csi-frame.png",
+    "height": 547,
+    "width": 956,
+    "x": 273,
+    "y": 526
+  },
+  {
+    "temp": "tmp-03-rules-and-classifier.png",
+    "final": "03-rules-and-classifier.png",
+    "height": 1055,
+    "width": 956,
+    "x": 273,
+    "y": 545
+  },
+  {
+    "temp": "tmp-04-adaptive-classifier.png",
+    "final": "04-adaptive-classifier.png",
+    "height": 1247,
+    "width": 956,
+    "x": 273,
+    "y": 353
+  },
+  {
+    "temp": "tmp-05-cog-input-model.png",
+    "final": "05-cog-input-model.png",
+    "height": 587,
+    "width": 956,
+    "x": 273,
+    "y": 523
+  },
+  {
+    "temp": "tmp-06-cog-output-accuracy.png",
+    "final": "06-cog-output-accuracy.png",
+    "height": 669,
+    "width": 956,
+    "x": 273,
+    "y": 465
+  },
+  {
+    "temp": "tmp-07-densepose-model.png",
+    "final": "07-densepose-model.png",
+    "height": 736,
+    "width": 956,
+    "x": 273,
+    "y": 432
+  },
+  {
+    "temp": "tmp-08-training-pipeline.png",
+    "final": "08-training-pipeline.png",
+    "height": 526,
+    "width": 956,
+    "x": 273,
+    "y": 538
+  },
+  {
+    "temp": "tmp-09-deployment-basics.png",
+    "final": "09-deployment-basics.png",
+    "height": 516,
+    "width": 956,
+    "x": 273,
+    "y": 542
+  },
+  {
+    "temp": "tmp-10-signal-change-table.png",
+    "final": "10-signal-change-table.png",
+    "height": 411,
+    "width": 956,
+    "x": 273,
+    "y": 594
+  },
+  {
+    "temp": "tmp-11-project-maturity.png",
+    "final": "11-project-maturity.png",
+    "height": 489,
+    "width": 956,
+    "x": 273,
+    "y": 555
+  }
+]

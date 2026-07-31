@@ -1,0 +1,158 @@
+[
+  {
+    "temp": "view-01-data-pipeline.png",
+    "final": "01-data-pipeline.png",
+    "height": 861,
+    "scrollY": 3524.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-02-csi-frame.png",
+    "final": "02-csi-frame.png",
+    "height": 535,
+    "scrollY": 4595.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-03-rules-and-classifier.png",
+    "final": "03-rules-and-classifier.png",
+    "height": 1061,
+    "scrollY": 11005,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-04-adaptive-features.png",
+    "final": "04-adaptive-features.png",
+    "height": 514,
+    "scrollY": 15116.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-05-adaptive-model-output.png",
+    "final": "05-adaptive-model-output.png",
+    "height": 593,
+    "scrollY": 15802.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-06-cog-input-model.png",
+    "final": "06-cog-input-model.png",
+    "height": 575,
+    "scrollY": 17872.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-07-cog-output-accuracy.png",
+    "final": "07-cog-output-accuracy.png",
+    "height": 657,
+    "scrollY": 18974,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-08-densepose-model.png",
+    "final": "08-densepose-model.png",
+    "height": 724,
+    "scrollY": 20879,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-09-training-pipeline.png",
+    "final": "09-training-pipeline.png",
+    "height": 514,
+    "scrollY": 22923,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-10-deployment-basics.png",
+    "final": "10-deployment-basics.png",
+    "height": 504,
+    "scrollY": 24616.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-11-signal-change-table.png",
+    "final": "11-signal-change-table.png",
+    "height": 399,
+    "scrollY": 25375.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  },
+  {
+    "temp": "view-12-project-maturity.png",
+    "final": "12-project-maturity.png",
+    "height": 477,
+    "scrollY": 26395.5,
+    "viewport": [
+      1280,
+      1100
+    ],
+    "width": 944,
+    "x": 279,
+    "y": 0
+  }
+]

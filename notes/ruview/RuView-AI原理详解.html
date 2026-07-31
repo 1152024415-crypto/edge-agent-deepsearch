@@ -1,0 +1,4061 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RuView 如何用 Wi‑Fi CSI 和 AI 完成存在、动作与人体姿态感知：输入、模型架构、训练、输出、部署和当前完成度详解。">
+  <meta name="color-scheme" content="light">
+  <title>RuView 如何使用 AI｜从 Wi‑Fi 波形到人体姿态</title>
+  <script>document.documentElement.classList.add("js");</script>
+  <style>
+    :root {
+      --paper: #f4efe4;
+      --paper-strong: #ece3d2;
+      --paper-soft: #fbf8f1;
+      --ink: #152d38;
+      --ink-2: #36505a;
+      --muted: #687b80;
+      --rust: #b84d2a;
+      --rust-dark: #85361e;
+      --teal: #1f6a65;
+      --teal-soft: #d9e8e2;
+      --amber: #e0a23c;
+      --green: #36704e;
+      --line: #cfc2aa;
+      --line-dark: #a99777;
+      --danger-soft: #f2d8ce;
+      --shadow: 0 18px 50px rgba(34, 45, 45, .11);
+      --serif: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", SimSun, serif;
+      --sans: "Microsoft YaHei UI", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      --mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      --rail: 238px;
+      --content: 920px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 28px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(21, 45, 56, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 45, 56, .035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 28px 28px;
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.82;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+      color: var(--paper-soft);
+      background: var(--rust);
+    }
+
+    a { color: inherit; }
+    button { font: inherit; }
+
+    :focus-visible {
+      outline: 3px solid var(--rust);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 10px;
+      left: 10px;
+      padding: 8px 14px;
+      color: #fff;
+      background: var(--ink);
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .reading-progress {
+      position: fixed;
+      z-index: 80;
+      inset: 0 0 auto;
+      height: 4px;
+      background: var(--rust);
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    .rail {
+      position: fixed;
+      z-index: 50;
+      inset: 0 auto 0 0;
+      width: var(--rail);
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      background: rgba(244, 239, 228, .94);
+      backdrop-filter: blur(12px);
+      scrollbar-width: thin;
+    }
+
+    .rail-inner {
+      display: flex;
+      min-height: 100%;
+      flex-direction: column;
+      padding: 30px 20px 24px;
+    }
+
+    .mark {
+      display: grid;
+      width: 64px;
+      height: 64px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      box-shadow: 6px 6px 0 var(--rust);
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.06em;
+    }
+
+    .rail-kicker {
+      margin: 24px 0 8px;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .rail-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .toc {
+      display: grid;
+      gap: 2px;
+      margin-top: 34px;
+    }
+
+    .toc a {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 5px;
+      align-items: center;
+      min-height: 37px;
+      border-left: 2px solid transparent;
+      padding: 6px 8px 6px 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-decoration: none;
+      transition: .18s ease;
+    }
+
+    .toc a::before {
+      content: attr(data-no);
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .toc a:hover,
+    .toc a.active {
+      border-left-color: var(--rust);
+      color: var(--ink);
+      background: rgba(184, 77, 42, .08);
+    }
+
+    .rail-note {
+      margin: auto 0 0;
+      padding-top: 28px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .rail-note code {
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .page {
+      margin-left: var(--rail);
+      overflow: hidden;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 720px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(110deg, rgba(31, 106, 101, .11), transparent 45%),
+        linear-gradient(300deg, rgba(184, 77, 42, .09), transparent 38%);
+    }
+
+    .hero-inner {
+      position: relative;
+      display: grid;
+      width: min(1180px, calc(100% - 80px));
+      min-height: 720px;
+      margin: 0 auto;
+      grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr);
+      gap: 64px;
+      align-items: center;
+      padding: 78px 0 64px;
+    }
+
+    .eyebrow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 24px;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 42px;
+      height: 2px;
+      background: var(--rust);
+      content: "";
+    }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(48px, 7vw, 94px);
+      font-weight: 900;
+      letter-spacing: -.06em;
+      line-height: .98;
+    }
+
+    h1 .accent {
+      display: block;
+      margin-top: .16em;
+      color: var(--rust);
+    }
+
+    .deck {
+      max-width: 700px;
+      margin: 30px 0 0;
+      color: var(--ink-2);
+      font-family: var(--serif);
+      font-size: clamp(19px, 2vw, 25px);
+      line-height: 1.65;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 22px;
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .hero-meta span::before {
+      width: 7px;
+      height: 7px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 500px;
+    }
+
+    .signal-sheet {
+      position: absolute;
+      inset: 44px 0 auto 0;
+      min-height: 390px;
+      border: 1px solid var(--line-dark);
+      background: rgba(251, 248, 241, .78);
+      box-shadow: var(--shadow);
+      transform: rotate(2deg);
+    }
+
+    .signal-sheet::before {
+      position: absolute;
+      inset: 14px;
+      border: 1px solid var(--line);
+      content: "";
+      pointer-events: none;
+    }
+
+    .signal-sheet svg {
+      display: block;
+      width: 100%;
+      height: 250px;
+      margin-top: 42px;
+    }
+
+    .signal-caption {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 28px;
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .06em;
+    }
+
+    .hero-stamp {
+      position: absolute;
+      right: -10px;
+      bottom: 36px;
+      display: grid;
+      width: 132px;
+      height: 132px;
+      place-items: center;
+      border: 2px solid var(--rust);
+      border-radius: 50%;
+      color: var(--rust);
+      background: var(--paper);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      line-height: 1.45;
+      text-align: center;
+      text-transform: uppercase;
+      transform: rotate(-10deg);
+    }
+
+    .article {
+      width: min(var(--content), calc(100% - 72px));
+      margin: 0 auto;
+      padding: 80px 0 120px;
+    }
+
+    .lead {
+      margin: 0 0 28px;
+      color: var(--ink-2);
+      font-family: var(--serif);
+      font-size: 22px;
+      line-height: 1.75;
+    }
+
+    .dropcap::first-letter {
+      float: left;
+      margin: .12em .12em 0 0;
+      color: var(--rust);
+      font-family: var(--serif);
+      font-size: 4.2em;
+      font-weight: 900;
+      line-height: .72;
+    }
+
+    .section {
+      position: relative;
+      padding: 88px 0 12px;
+    }
+
+    .section + .section {
+      border-top: 1px solid var(--line);
+    }
+
+    .section-no {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .section-no::after {
+      width: 54px;
+      height: 1px;
+      background: var(--rust);
+      content: "";
+    }
+
+    h2 {
+      max-width: 800px;
+      margin: 0 0 32px;
+      font-size: clamp(36px, 5vw, 62px);
+      font-weight: 900;
+      letter-spacing: -.045em;
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin: 46px 0 14px;
+      font-size: clamp(23px, 3vw, 31px);
+      letter-spacing: -.025em;
+      line-height: 1.3;
+    }
+
+    p { margin: 0 0 22px; }
+
+    strong { color: var(--ink); }
+
+    code {
+      border-radius: 3px;
+      padding: .08em .32em;
+      color: var(--rust-dark);
+      background: rgba(184, 77, 42, .08);
+      font-family: var(--mono);
+      font-size: .88em;
+    }
+
+    .quick-answer {
+      position: relative;
+      margin: 36px 0 8px;
+      border: 2px solid var(--ink);
+      padding: 34px 38px 32px;
+      background: var(--paper-soft);
+      box-shadow: 9px 9px 0 var(--teal);
+    }
+
+    .quick-answer::before {
+      position: absolute;
+      top: -13px;
+      left: 28px;
+      padding: 2px 10px;
+      color: #fff;
+      background: var(--ink);
+      content: "先说结论";
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .quick-answer p {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 21px;
+      line-height: 1.75;
+    }
+
+    .margin-note {
+      margin: 28px 0;
+      border-left: 4px solid var(--amber);
+      padding: 19px 24px;
+      color: var(--ink-2);
+      background: rgba(224, 162, 60, .11);
+    }
+
+    .margin-note strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--rust-dark);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .06em;
+    }
+
+    .rule-engine {
+      margin: 58px 0 44px;
+      border-block: 2px solid var(--ink);
+      padding: 30px 0 34px;
+    }
+
+    .rule-engine-head {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 28px;
+      align-items: start;
+      margin-bottom: 28px;
+    }
+
+    .rule-engine-kicker {
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      line-height: 1.55;
+      text-transform: uppercase;
+    }
+
+    .rule-engine-head h3 {
+      margin: 0 0 9px;
+      font-size: 32px;
+    }
+
+    .rule-engine-head p {
+      max-width: 680px;
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .rule-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border: 1px solid var(--line-dark);
+      background: var(--paper-soft);
+    }
+
+    .rule-stage {
+      position: relative;
+      min-height: 155px;
+      border-right: 1px solid var(--line);
+      padding: 18px 15px 16px;
+    }
+
+    .rule-stage:last-child { border-right: 0; }
+    .rule-stage:nth-child(3) { border-right: 0; }
+    .rule-stage:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+
+    .rule-stage::after {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      right: -12px;
+      display: grid;
+      width: 23px;
+      height: 23px;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      color: var(--rust);
+      background: var(--paper-soft);
+      content: "→";
+      font-family: var(--mono);
+      font-size: 13px;
+      transform: translateY(-50%);
+    }
+
+    .rule-stage:last-child::after { display: none; }
+    .rule-stage:nth-child(3)::after { display: none; }
+
+    .rule-stage small {
+      display: block;
+      margin-bottom: 19px;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      line-height: 1.45;
+      text-transform: uppercase;
+    }
+
+    .rule-stage b {
+      display: block;
+      margin-bottom: 8px;
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .rule-stage span {
+      display: block;
+      color: var(--ink-2);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .rule-stage.ai {
+      color: #fff;
+      background: var(--teal);
+    }
+
+    .rule-stage.ai small,
+    .rule-stage.ai b,
+    .rule-stage.ai span { color: inherit; }
+
+    .rule-stage.ai span { opacity: .82; }
+
+    .rule-stage.ai code {
+      color: #fff;
+      background: rgba(255, 255, 255, .12);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .rule-branch {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 28px;
+      border: 1px solid var(--line-dark);
+      border-top: 0;
+      padding: 17px 20px;
+      color: var(--ink-2);
+      background: rgba(31, 106, 101, .07);
+      font-size: 13px;
+    }
+
+    .rule-branch strong {
+      color: var(--teal);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .rule-split {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 34px;
+      margin-top: 34px;
+    }
+
+    .rule-split h4,
+    .scenario h4 {
+      margin: 0 0 12px;
+      font-family: var(--serif);
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .rule-split p {
+      margin-bottom: 15px;
+      color: var(--ink-2);
+      font-size: 14px;
+      line-height: 1.78;
+    }
+
+    .threshold-scale {
+      display: grid;
+      grid-template-columns: 16% 32% 32% 20%;
+      min-height: 58px;
+      margin-top: 18px;
+      border: 1px solid var(--line-dark);
+    }
+
+    .threshold-scale span {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid rgba(251, 248, 241, .6);
+      padding: 7px;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .threshold-scale span:last-child { border-right: 0; }
+    .threshold-scale span:nth-child(1) { background: #77868a; }
+    .threshold-scale span:nth-child(2) { background: var(--teal); }
+    .threshold-scale span:nth-child(3) { background: var(--rust); }
+    .threshold-scale span:nth-child(4) { background: var(--rust-dark); }
+
+    .score-ledger {
+      display: grid;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 154px 1fr 38px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .score-row b {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: -.01em;
+    }
+
+    .score-track {
+      height: 10px;
+      background: var(--paper-strong);
+    }
+
+    .score-track i {
+      display: block;
+      width: var(--score);
+      height: 100%;
+      background: var(--rust);
+    }
+
+    .score-row:nth-child(2) .score-track i { background: var(--teal); }
+    .score-row:nth-child(3) .score-track i { background: var(--amber); }
+    .score-row:nth-child(4) .score-track i { background: var(--ink-2); }
+
+    .score-row em {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-style: normal;
+      text-align: right;
+    }
+
+    .rule-caution {
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+      padding-top: 13px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .rule-examples {
+      margin: 56px 0 18px;
+    }
+
+    .rule-examples > h3 { margin-bottom: 8px; }
+
+    .rule-examples > p {
+      max-width: 760px;
+      color: var(--ink-2);
+    }
+
+    .scenario-stack {
+      margin-top: 30px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .scenario {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 28px;
+      border-top: 1px solid var(--line-dark);
+      padding: 30px 0 32px;
+    }
+
+    .scenario:first-child { border-top: 2px solid var(--ink); }
+
+    .scenario-index {
+      color: var(--rust);
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -.05em;
+      line-height: .9;
+    }
+
+    .scenario-index small {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .08em;
+      line-height: 1.5;
+      text-transform: uppercase;
+    }
+
+    .scenario > div:last-child > p {
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .scenario-steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin: 20px 0 16px;
+      border-block: 1px solid var(--line);
+    }
+
+    .scenario-step {
+      min-height: 138px;
+      border-right: 1px solid var(--line);
+      padding: 14px 13px 13px 0;
+    }
+
+    .scenario-step + .scenario-step { padding-left: 13px; }
+    .scenario-step:last-child { border-right: 0; }
+
+    .scenario-step b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .scenario-step span {
+      display: block;
+      color: var(--ink-2);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .math-callout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin: 16px 0;
+      border-left: 4px solid var(--teal);
+      padding: 15px 18px;
+      background: rgba(31, 106, 101, .08);
+    }
+
+    .math-callout span {
+      color: var(--ink-2);
+      font-size: 13px;
+    }
+
+    .math-callout code {
+      color: var(--teal);
+      background: transparent;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .scenario-limit {
+      margin: 0;
+      border-left: 3px solid var(--amber);
+      padding-left: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.72;
+    }
+
+    .rule-boundary {
+      margin-top: 36px;
+      border: 1px solid var(--ink);
+      padding: 24px 26px 22px;
+      background: var(--paper-soft);
+      box-shadow: 7px 7px 0 var(--paper-strong);
+    }
+
+    .rule-boundary h4 {
+      margin: 0 0 13px;
+      font-family: var(--serif);
+      font-size: 22px;
+    }
+
+    .rule-boundary p { margin: 0; }
+
+    .architecture-figure {
+      width: min(1180px, calc(100vw - var(--rail) - 72px));
+      margin: 42px 0 54px 50%;
+      border-block: 2px solid var(--ink);
+      padding: 16px 0 14px;
+      transform: translateX(-50%);
+    }
+
+    .architecture-figure > a:first-child {
+      position: relative;
+      display: block;
+      border: 1px solid var(--line-dark);
+      background: var(--paper-soft);
+      box-shadow: 10px 10px 0 var(--paper-strong);
+    }
+
+    .architecture-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .figure-zoom {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      border: 1px solid var(--paper-soft);
+      padding: 7px 10px;
+      color: var(--paper-soft);
+      background: rgba(21, 45, 56, .92);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .05em;
+    }
+
+    .architecture-figure figcaption {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .architecture-figure figcaption a {
+      color: var(--rust-dark);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-decoration: underline;
+      text-underline-offset: .3em;
+    }
+
+    .architecture-thesis {
+      display: grid;
+      grid-template-columns: 155px 1fr;
+      gap: 30px;
+      margin: 46px 0;
+      border-block: 2px solid var(--ink);
+      padding: 28px 0;
+    }
+
+    .architecture-thesis > span {
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      line-height: 1.55;
+      text-transform: uppercase;
+    }
+
+    .architecture-thesis strong {
+      display: block;
+      margin-bottom: 10px;
+      font-family: var(--serif);
+      font-size: clamp(25px, 3vw, 36px);
+      line-height: 1.28;
+    }
+
+    .architecture-thesis p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .architecture-ledger {
+      margin: 28px 0 48px;
+      border-top: 2px solid var(--ink);
+    }
+
+    .architecture-row {
+      display: grid;
+      grid-template-columns: 64px 180px 1fr 155px;
+      gap: 20px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding: 20px 0;
+    }
+
+    .architecture-row > b {
+      color: var(--rust);
+      font-family: var(--serif);
+      font-size: 31px;
+      line-height: 1;
+    }
+
+    .architecture-row h4 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 19px;
+      line-height: 1.35;
+    }
+
+    .architecture-row p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .architecture-row > small {
+      border-left: 2px solid var(--teal);
+      padding-left: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      line-height: 1.6;
+      text-transform: uppercase;
+    }
+
+    .execution-trace {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin: 26px 0 20px;
+      border: 1px solid var(--line-dark);
+      background: var(--paper-soft);
+    }
+
+    .execution-step {
+      position: relative;
+      min-height: 205px;
+      border-right: 1px solid var(--line);
+      padding: 18px 16px;
+    }
+
+    .execution-step:last-child { border-right: 0; }
+
+    .execution-step::after {
+      position: absolute;
+      z-index: 2;
+      top: 52%;
+      right: -12px;
+      display: grid;
+      width: 23px;
+      height: 23px;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      color: var(--rust);
+      background: var(--paper-soft);
+      content: "→";
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .execution-step:last-child::after { display: none; }
+
+    .execution-step > b {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .07em;
+    }
+
+    .execution-step strong {
+      display: block;
+      margin-bottom: 8px;
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .execution-step p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 12px;
+      line-height: 1.68;
+    }
+
+    .execution-step.optional {
+      color: var(--paper-soft);
+      background: var(--rust);
+    }
+
+    .execution-step.optional > b,
+    .execution-step.optional strong,
+    .execution-step.optional p,
+    .execution-step.optional code { color: inherit; }
+
+    .execution-step.optional p { opacity: .86; }
+
+    .execution-step.optional code { background: rgba(255, 255, 255, .13); }
+
+    .classifier-fork {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 18px 0 46px;
+      border-block: 1px solid var(--line);
+    }
+
+    .classifier-fork > div {
+      padding: 18px 22px 18px 0;
+    }
+
+    .classifier-fork > div + div {
+      border-left: 1px solid var(--line);
+      padding: 18px 0 18px 22px;
+    }
+
+    .classifier-fork b {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--teal);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+
+    .classifier-fork p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+    }
+
+    .ai-insertion-layout {
+      display: grid;
+      grid-template-columns: 1fr 54px 1fr;
+      gap: 22px;
+      align-items: stretch;
+      margin: 28px 0 20px;
+    }
+
+    .ai-insertion {
+      border: 2px dashed var(--line-dark);
+      padding: 26px 24px 22px;
+      background: rgba(251, 248, 241, .56);
+    }
+
+    .ai-insertion > small {
+      display: block;
+      margin-bottom: 13px;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .ai-insertion h4 {
+      margin: 0 0 12px;
+      font-family: var(--serif);
+      font-size: 24px;
+    }
+
+    .ai-insertion p {
+      color: var(--ink-2);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .ai-insertion dl {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 7px 12px;
+      margin: 18px 0 0;
+      border-top: 1px solid var(--line);
+      padding-top: 15px;
+      font-size: 12px;
+    }
+
+    .ai-insertion dt {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .ai-insertion dd { margin: 0; }
+
+    .parallel-mark {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      line-height: 1.4;
+      text-align: center;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+
+    .parallel-statement {
+      margin: 0 0 48px;
+      border-left: 4px solid var(--rust);
+      padding: 18px 22px;
+      color: var(--ink-2);
+      background: rgba(184, 77, 42, .08);
+      font-family: var(--serif);
+      font-size: 19px;
+      line-height: 1.65;
+    }
+
+    .module-map {
+      margin-top: 25px;
+      border-top: 2px solid var(--ink);
+    }
+
+    .module-row {
+      display: grid;
+      grid-template-columns: 230px 1fr 135px;
+      gap: 24px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding: 18px 0;
+    }
+
+    .module-row code {
+      overflow-wrap: anywhere;
+      font-size: 11px;
+    }
+
+    .module-row p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .module-status {
+      border-left: 2px solid var(--teal);
+      padding-left: 11px;
+      color: var(--teal);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      line-height: 1.55;
+      text-transform: uppercase;
+    }
+
+    .module-status.research {
+      border-left-color: var(--line-dark);
+      color: var(--muted);
+    }
+
+    abbr[title] {
+      text-decoration: underline dotted var(--rust);
+      text-decoration-thickness: 1px;
+      text-underline-offset: .2em;
+      cursor: help;
+    }
+
+    .term-ref {
+      color: var(--rust-dark);
+      font-weight: 800;
+      text-decoration: underline dotted currentColor;
+      text-underline-offset: .2em;
+    }
+
+    .term-starter {
+      margin: 54px 0 46px;
+      border-block: 2px solid var(--ink);
+      padding: 28px 0 8px;
+    }
+
+    .term-starter-head {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 22px;
+    }
+
+    .term-starter-head span {
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .term-starter-head h3 {
+      margin: 0 0 8px;
+      font-size: 29px;
+    }
+
+    .term-starter-head p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 14px;
+    }
+
+    .term-core-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+    }
+
+    .term-core {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 18px;
+      min-height: 150px;
+      border-bottom: 1px solid var(--line);
+      padding: 20px 18px 18px 0;
+    }
+
+    .term-core:nth-child(odd) {
+      border-right: 1px solid var(--line);
+      padding-right: 22px;
+    }
+
+    .term-core:nth-child(even) { padding-left: 22px; }
+
+    .term-name abbr,
+    .term-name b {
+      display: block;
+      color: var(--rust);
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 900;
+      line-height: 1.1;
+      text-decoration: none;
+    }
+
+    .term-name span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .term-core p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .term-core p strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin: 30px 0;
+    }
+
+    .essay-box {
+      border-top: 3px solid var(--ink);
+      padding: 22px 22px 18px;
+      background: rgba(251, 248, 241, .7);
+    }
+
+    .essay-box h3 {
+      margin: 0 0 10px;
+      font-size: 23px;
+    }
+
+    .essay-box p {
+      margin-bottom: 10px;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .essay-box small {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .pipeline {
+      position: relative;
+      display: grid;
+      gap: 12px;
+      margin: 38px 0;
+    }
+
+    .pipe-step {
+      display: grid;
+      grid-template-columns: 58px 170px 1fr;
+      gap: 18px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding: 18px 12px 18px 0;
+    }
+
+    .pipe-step:last-child { border-bottom: 0; }
+
+    .pipe-no {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border: 1px solid var(--line-dark);
+      border-radius: 50%;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pipe-step h3 {
+      margin: 7px 0 0;
+      font-family: var(--sans);
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .pipe-step p {
+      margin: 2px 0 0;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .pipe-step.ai {
+      border: 1px solid var(--teal);
+      padding: 18px;
+      background: var(--teal-soft);
+    }
+
+    .pipe-step.ai .pipe-no {
+      color: #fff;
+      border-color: var(--teal);
+      background: var(--teal);
+    }
+
+    .csi-figure {
+      display: grid;
+      margin: 42px 0;
+      border: 1px solid var(--line-dark);
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      background: var(--paper-soft);
+    }
+
+    .csi-chart {
+      min-height: 350px;
+      border-right: 1px solid var(--line);
+      padding: 26px;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 32px, rgba(21,45,56,.06) 33px),
+        repeating-linear-gradient(90deg, transparent 0 44px, rgba(21,45,56,.06) 45px);
+    }
+
+    .subcarrier-row {
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      gap: 6px;
+      align-items: end;
+      height: 210px;
+      padding: 10px 8px 0;
+    }
+
+    .subcarrier-row i {
+      position: relative;
+      display: block;
+      height: var(--h);
+      min-height: 18px;
+      background: var(--teal);
+    }
+
+    .subcarrier-row i::after {
+      position: absolute;
+      inset: 7px 0 auto;
+      height: 2px;
+      background: rgba(255,255,255,.65);
+      content: "";
+      transform: rotate(var(--phase));
+    }
+
+    .chart-axis {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 22px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .csi-copy { padding: 30px; }
+
+    .csi-copy h3 { margin: 0 0 15px; }
+
+    .csi-copy p {
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .formula {
+      margin: 20px 0;
+      border: 1px dashed var(--line-dark);
+      padding: 15px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .route-lab {
+      margin: 44px 0;
+      border: 1px solid var(--line-dark);
+      background: var(--paper-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .route-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line-dark);
+    }
+
+    .route-tabs button {
+      min-height: 84px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      padding: 14px;
+      color: var(--ink-2);
+      background: transparent;
+      cursor: pointer;
+      font-weight: 800;
+      transition: .18s ease;
+    }
+
+    .route-tabs button:last-child { border-right: 0; }
+
+    .route-tabs button span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+    }
+
+    .route-tabs button:hover { background: rgba(31, 106, 101, .07); }
+
+    .route-tabs button[aria-selected="true"] {
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .route-tabs button[aria-selected="true"] span { color: #f0b060; }
+
+    .route-panel {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 24px;
+      min-height: 230px;
+      align-items: center;
+      padding: 34px;
+    }
+
+    .js .route-panel[hidden] { display: none; }
+
+    .route-badge {
+      display: grid;
+      width: 132px;
+      height: 132px;
+      place-items: center;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      color: var(--teal);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .route-panel h3 { margin: 0 0 8px; }
+
+    .route-panel p {
+      margin: 0 0 10px;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .status {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+      border: 1px solid currentColor;
+      border-radius: 99px;
+      padding: 4px 10px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .status::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      content: "";
+    }
+
+    .status.partial { color: #9b6112; }
+    .status.research { color: var(--rust); }
+
+    .comparison {
+      width: 100%;
+      margin: 34px 0;
+      border-collapse: collapse;
+      background: rgba(251, 248, 241, .75);
+      font-size: 14px;
+    }
+
+    .comparison th,
+    .comparison td {
+      border-bottom: 1px solid var(--line);
+      padding: 14px 16px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .comparison th {
+      color: var(--paper-soft);
+      background: var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .05em;
+    }
+
+    .comparison tr:last-child td { border-bottom: 0; }
+    .comparison td:first-child { font-weight: 800; }
+
+    .arch {
+      display: grid;
+      gap: 14px;
+      margin: 34px 0;
+      padding: 30px;
+      background: var(--ink);
+      color: #eef0e9;
+    }
+
+    .arch-row {
+      display: grid;
+      grid-template-columns: 1fr 44px 1fr 44px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .arch-row.long {
+      grid-template-columns: 1fr 38px 1fr 38px 1fr 38px 1fr;
+    }
+
+    .arch-node {
+      min-height: 96px;
+      border: 1px solid rgba(255,255,255,.28);
+      padding: 15px;
+      background: rgba(255,255,255,.045);
+    }
+
+    .arch-node.accent {
+      color: #fff;
+      border-color: #e6b565;
+      background: rgba(224,162,60,.14);
+    }
+
+    .arch-node strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .arch-node small {
+      display: block;
+      color: #afc1c3;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .arch-arrow {
+      color: #e6b565;
+      font-family: var(--mono);
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .arch-caption {
+      margin: 4px 0 0;
+      color: #aebfc0;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 28px 0;
+      counter-reset: features;
+    }
+
+    .feature-grid div {
+      position: relative;
+      min-height: 90px;
+      border: 1px solid var(--line);
+      padding: 18px 14px 12px 44px;
+      background: rgba(251, 248, 241, .68);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.45;
+      counter-increment: features;
+    }
+
+    .feature-grid div::before {
+      position: absolute;
+      top: 16px;
+      left: 14px;
+      color: var(--rust);
+      content: counter(features, decimal-leading-zero);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .feature-grid div small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .output-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 26px 0;
+    }
+
+    .output-strip div {
+      border-top: 4px solid var(--rust);
+      padding: 14px 12px;
+      background: var(--paper-soft);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .code-block {
+      position: relative;
+      overflow-x: auto;
+      margin: 28px 0;
+      border-left: 5px solid var(--rust);
+      padding: 24px 26px;
+      color: #dce8e6;
+      background: #102a34;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.75;
+      white-space: pre;
+    }
+
+    .code-block::before {
+      display: block;
+      margin-bottom: 12px;
+      color: #e3ac50;
+      content: attr(data-label);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .1em;
+    }
+
+    .tensor {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 34px 0;
+    }
+
+    .tensor-card {
+      position: relative;
+      min-height: 160px;
+      border: 1px solid var(--line-dark);
+      padding: 20px 18px;
+      background: var(--paper-soft);
+    }
+
+    .tensor-card::after {
+      position: absolute;
+      top: 50%;
+      right: -14px;
+      z-index: 2;
+      width: 28px;
+      color: var(--rust);
+      content: "→";
+      font-family: var(--mono);
+      font-size: 20px;
+      text-align: center;
+      transform: translateY(-50%);
+    }
+
+    .tensor-card:last-child::after { display: none; }
+
+    .tensor-card b {
+      display: block;
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .tensor-card strong {
+      display: block;
+      margin: 9px 0;
+      font-size: 15px;
+    }
+
+    .tensor-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .skeleton {
+      position: relative;
+      width: 230px;
+      height: 310px;
+      margin: 26px auto 12px;
+    }
+
+    .skeleton .joint {
+      position: absolute;
+      z-index: 2;
+      width: 13px;
+      height: 13px;
+      border: 3px solid var(--paper-soft);
+      border-radius: 50%;
+      background: var(--rust);
+      box-shadow: 0 0 0 1px var(--rust);
+      transform: translate(-50%, -50%);
+    }
+
+    .skeleton .bone {
+      position: absolute;
+      z-index: 1;
+      height: 3px;
+      background: var(--teal);
+      transform-origin: left center;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 26px 0;
+    }
+
+    .metric {
+      border: 1px solid var(--line-dark);
+      padding: 22px 18px;
+      background: var(--paper-soft);
+      text-align: center;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--rust);
+      font-family: var(--serif);
+      font-size: 37px;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .maturity {
+      display: grid;
+      gap: 1px;
+      margin: 34px 0;
+      border: 1px solid var(--line-dark);
+      background: var(--line);
+    }
+
+    .maturity-row {
+      display: grid;
+      grid-template-columns: 180px 130px 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 19px;
+      background: var(--paper-soft);
+    }
+
+    .maturity-row strong { font-size: 14px; }
+    .maturity-row p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .timeline {
+      position: relative;
+      margin: 34px 0;
+      padding-left: 42px;
+    }
+
+    .timeline::before {
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      left: 14px;
+      width: 2px;
+      background: var(--line-dark);
+      content: "";
+    }
+
+    .time-item {
+      position: relative;
+      padding: 0 0 28px 12px;
+    }
+
+    .time-item::before {
+      position: absolute;
+      top: 8px;
+      left: -34px;
+      width: 12px;
+      height: 12px;
+      border: 3px solid var(--paper);
+      border-radius: 50%;
+      background: var(--rust);
+      box-shadow: 0 0 0 1px var(--rust);
+      content: "";
+    }
+
+    .time-item h3 {
+      margin: 0 0 6px;
+      font-family: var(--sans);
+      font-size: 17px;
+    }
+
+    .time-item p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 14px;
+    }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 34px 0;
+    }
+
+    .decision article {
+      border: 1px solid var(--line-dark);
+      padding: 24px;
+      background: var(--paper-soft);
+    }
+
+    .decision article:first-child { border-top: 6px solid var(--green); }
+    .decision article:last-child { border-top: 6px solid var(--rust); }
+    .decision h3 { margin: 0 0 10px; }
+    .decision ul { margin-bottom: 0; }
+
+    ul, ol { padding-left: 1.35em; }
+    li { margin: 8px 0; }
+    li::marker { color: var(--rust); font-weight: 800; }
+
+    details {
+      border-top: 1px solid var(--line);
+      padding: 16px 2px;
+    }
+
+    details:last-child { border-bottom: 1px solid var(--line); }
+
+    summary {
+      cursor: pointer;
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    details p {
+      margin: 12px 0 3px;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .term-index {
+      margin: 34px 0 62px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .term-entry {
+      display: grid;
+      grid-template-columns: 150px 230px 1fr;
+      gap: 20px;
+      align-items: start;
+      border-top: 1px solid var(--line);
+      padding: 16px 4px;
+      scroll-margin-top: 34px;
+    }
+
+    .term-entry:first-child { border-top: 2px solid var(--ink); }
+
+    .term-entry dt {
+      margin: 0;
+      color: var(--rust-dark);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .term-entry dt abbr { text-decoration: none; }
+
+    .term-entry .full-name {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .term-entry dd {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .term-entry dd strong {
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 10px;
+      margin: 30px 0;
+    }
+
+    .source-link {
+      display: grid;
+      grid-template-columns: 46px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      border: 1px solid var(--line);
+      padding: 15px 17px;
+      background: rgba(251, 248, 241, .72);
+      text-decoration: none;
+      transition: .18s ease;
+    }
+
+    .source-link:hover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+      transform: translateX(4px);
+    }
+
+    .source-link .source-no {
+      color: var(--rust);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .source-link strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .source-link small {
+      display: block;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .source-link .arrow {
+      color: var(--rust);
+      font-family: var(--mono);
+    }
+
+    .closing {
+      margin-top: 80px;
+      border: 2px solid var(--ink);
+      padding: 42px;
+      background: var(--paper-soft);
+      box-shadow: 10px 10px 0 var(--rust);
+    }
+
+    .closing h2 {
+      margin-bottom: 20px;
+      font-size: clamp(31px, 4vw, 48px);
+    }
+
+    .closing p:last-child { margin-bottom: 0; }
+
+    .page-footer {
+      margin-left: var(--rail);
+      border-top: 1px solid var(--line);
+      padding: 34px 40px;
+      color: var(--muted);
+      background: var(--paper-strong);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .back-top {
+      position: fixed;
+      z-index: 45;
+      right: 22px;
+      bottom: 22px;
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border: 1px solid var(--ink);
+      color: #fff;
+      background: var(--ink);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: .2s ease;
+      pointer-events: none;
+    }
+
+    .back-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    @media (max-width: 1100px) {
+      :root { --rail: 205px; }
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        padding-top: 68px;
+      }
+      .hero-visual {
+        width: min(560px, 100%);
+        min-height: 410px;
+      }
+      .signal-sheet { min-height: 340px; }
+      .signal-sheet svg { height: 200px; }
+      .tensor { grid-template-columns: repeat(2, 1fr); }
+      .tensor-card:nth-child(2)::after { display: none; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .arch-row.long { grid-template-columns: 1fr 34px 1fr; }
+      .arch-row.long .arch-node:nth-of-type(3),
+      .arch-row.long .arch-arrow:nth-of-type(3) { margin-top: 8px; }
+      .rule-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .rule-stage:nth-child(3) { border-right: 0; }
+      .rule-stage:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+      .rule-stage:nth-child(3)::after { display: none; }
+      .architecture-row { grid-template-columns: 54px 155px 1fr 130px; gap: 16px; }
+      .module-row { grid-template-columns: 200px 1fr 115px; gap: 18px; }
+    }
+
+    @media (max-width: 820px) {
+      body { font-size: 16px; }
+      .rail {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .rail-inner {
+        display: block;
+        min-height: 0;
+        padding: 10px 14px;
+      }
+      .mark, .rail-kicker, .rail-title, .rail-note { display: none; }
+      .toc {
+        display: flex;
+        gap: 4px;
+        margin: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .toc::-webkit-scrollbar { display: none; }
+      .toc a {
+        display: block;
+        min-width: max-content;
+        min-height: 34px;
+        border: 1px solid transparent;
+        padding: 7px 10px;
+      }
+      .toc a::before { margin-right: 5px; }
+      .toc a:hover, .toc a.active {
+        border-color: var(--rust);
+        border-left-color: var(--rust);
+      }
+      .page, .page-footer { margin-left: 0; }
+      .hero-inner {
+        width: min(100% - 36px, 680px);
+        min-height: 0;
+        padding: 64px 0 38px;
+      }
+      h1 { font-size: clamp(48px, 14vw, 76px); }
+      .hero-visual { min-height: 380px; }
+      .article { width: min(100% - 36px, 680px); padding-top: 50px; }
+      .section { padding-top: 68px; }
+      .two-col, .decision, .csi-figure { grid-template-columns: 1fr; }
+      .term-starter-head { grid-template-columns: 135px 1fr; }
+      .term-core { grid-template-columns: 95px 1fr; }
+      .term-entry { grid-template-columns: 110px 190px 1fr; gap: 14px; }
+      .csi-chart { border-right: 0; border-bottom: 1px solid var(--line); }
+      .pipe-step { grid-template-columns: 50px 140px 1fr; gap: 10px; }
+      .route-panel { grid-template-columns: 120px 1fr; }
+      .route-badge { width: 105px; height: 105px; }
+      .output-strip { grid-template-columns: repeat(2, 1fr); }
+      .arch-row,
+      .arch-row.long {
+        grid-template-columns: 1fr;
+      }
+      .arch-arrow { transform: rotate(90deg); }
+      .maturity-row { grid-template-columns: 1fr; gap: 8px; }
+      .rule-engine-head,
+      .rule-branch {
+        grid-template-columns: 120px 1fr;
+        gap: 20px;
+      }
+      .rule-split { grid-template-columns: 1fr; }
+      .scenario-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .scenario-step:nth-child(2) { border-right: 0; }
+      .scenario-step:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .architecture-figure { width: 100%; }
+      .architecture-thesis { grid-template-columns: 120px 1fr; gap: 22px; }
+      .architecture-row {
+        grid-template-columns: 48px 145px 1fr;
+      }
+      .architecture-row > small { grid-column: 3; }
+      .execution-trace { grid-template-columns: 1fr; }
+      .execution-step {
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 17px 20px;
+      }
+      .execution-step:last-child { border-bottom: 0; }
+      .execution-step::after { display: none; }
+      .execution-step > b { margin-bottom: 7px; }
+      .ai-insertion-layout { grid-template-columns: 1fr; }
+      .parallel-mark {
+        writing-mode: horizontal-tb;
+        min-height: 34px;
+      }
+      .module-row { grid-template-columns: 185px 1fr; }
+      .module-status { grid-column: 2; }
+    }
+
+    @media (max-width: 560px) {
+      .hero-inner, .article { width: calc(100% - 28px); }
+      .hero { min-height: 0; }
+      .hero-inner { gap: 6px; padding-top: 48px; }
+      h1 { font-size: 47px; }
+      .deck { font-size: 18px; }
+      .hero-meta { display: grid; gap: 8px; }
+      .hero-visual { min-height: 320px; }
+      .signal-sheet { inset: 35px 8px auto 0; min-height: 270px; }
+      .signal-sheet svg { height: 150px; margin-top: 33px; }
+      .signal-caption { margin: 0 17px; font-size: 8px; }
+      .hero-stamp {
+        right: 0;
+        bottom: 10px;
+        width: 92px;
+        height: 92px;
+        font-size: 8px;
+      }
+      .lead { font-size: 19px; }
+      .quick-answer { padding: 30px 22px 23px; }
+      .quick-answer p { font-size: 18px; }
+      .term-starter-head { grid-template-columns: 1fr; gap: 6px; }
+      .term-core-grid { grid-template-columns: 1fr; }
+      .term-core,
+      .term-core:nth-child(odd),
+      .term-core:nth-child(even) {
+        grid-template-columns: 90px 1fr;
+        min-height: 0;
+        border-right: 0;
+        padding: 18px 0;
+      }
+      .term-entry {
+        grid-template-columns: 90px 1fr;
+        gap: 5px 14px;
+        padding: 14px 0;
+      }
+      .term-entry .full-name { grid-column: 2; }
+      .term-entry dd { grid-column: 2; }
+      h2 { font-size: 36px; }
+      h3 { margin-top: 36px; }
+      .pipe-step,
+      .pipe-step.ai {
+        grid-template-columns: 44px 1fr;
+        padding: 15px 10px;
+      }
+      .pipe-step p { grid-column: 2; }
+      .pipe-no { width: 38px; height: 38px; }
+      .csi-chart { min-height: 270px; padding: 18px 10px; }
+      .subcarrier-row { height: 165px; gap: 4px; }
+      .route-tabs { grid-template-columns: 1fr; }
+      .route-tabs button {
+        min-height: 60px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .route-panel { display: block; padding: 24px 20px; }
+      .route-badge {
+        width: auto;
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 0;
+        padding: 8px;
+      }
+      .rule-engine-head,
+      .rule-branch,
+      .scenario {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .rule-flow { grid-template-columns: 1fr; }
+      .rule-stage {
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 17px 18px;
+      }
+      .rule-stage:nth-child(3) { border-bottom: 1px solid var(--line); }
+      .rule-stage:last-child { border-bottom: 0; }
+      .rule-stage::after { display: none; }
+      .rule-stage small { margin-bottom: 7px; }
+      .rule-branch { padding: 15px 18px; }
+      .score-row { grid-template-columns: 123px 1fr 31px; gap: 7px; }
+      .threshold-scale { grid-template-columns: repeat(2, 1fr); }
+      .threshold-scale span { min-height: 50px; }
+      .threshold-scale span:nth-child(2) { border-right: 0; }
+      .scenario-index { font-size: 38px; }
+      .scenario-steps { grid-template-columns: 1fr; }
+      .scenario-step,
+      .scenario-step + .scenario-step {
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 13px 0;
+      }
+      .scenario-step:last-child { border-bottom: 0; }
+      .math-callout { grid-template-columns: 1fr; gap: 4px; }
+      .math-callout code { font-size: 15px; }
+      .architecture-figure figcaption,
+      .architecture-thesis,
+      .classifier-fork,
+      .architecture-row,
+      .module-row {
+        grid-template-columns: 1fr;
+      }
+      .architecture-figure figcaption { gap: 8px; }
+      .architecture-thesis { gap: 8px; }
+      .architecture-row { gap: 8px; }
+      .architecture-row > b { font-size: 25px; }
+      .architecture-row > small,
+      .module-status { grid-column: 1; }
+      .classifier-fork > div { padding: 16px 0; }
+      .classifier-fork > div + div {
+        border-top: 1px solid var(--line);
+        border-left: 0;
+        padding: 16px 0;
+      }
+      .ai-insertion { padding: 22px 18px 18px; }
+      .parallel-statement { font-size: 17px; }
+      .feature-grid, .tensor, .metric-row { grid-template-columns: 1fr; }
+      .tensor-card::after { display: none; }
+      .comparison {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .arch { margin-inline: -14px; padding: 20px 14px; }
+      .output-strip { grid-template-columns: 1fr; }
+      .source-link { grid-template-columns: 35px 1fr; }
+      .source-link .arrow { display: none; }
+      .closing { padding: 28px 22px; }
+      .back-top { right: 14px; bottom: 14px; }
+    }
+
+    @media print {
+      .rail, .reading-progress, .back-top { display: none; }
+      .page, .page-footer { margin-left: 0; }
+      .hero { min-height: auto; }
+      .hero-inner { min-height: auto; }
+      .route-panel[hidden] { display: grid !important; }
+      a { text-decoration: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="reading-progress" aria-hidden="true"></div>
+
+  <aside class="rail" aria-label="文章目录">
+    <div class="rail-inner">
+      <a class="mark" href="#top" aria-label="回到文章开头">RV</a>
+      <p class="rail-kicker">Research notes / 01</p>
+      <p class="rail-title">RuView AI<br>原理与工程实现</p>
+      <nav class="toc">
+        <a href="#quick-answer" data-no="01">先说结论</a>
+        <a href="#pipeline" data-no="02">完整数据流</a>
+        <a href="#architecture" data-no="03">系统架构</a>
+        <a href="#dsp-vs-ai" data-no="04">DSP 与 AI</a>
+        <a href="#adaptive" data-no="05">自适应分类</a>
+        <a href="#pose-cog" data-no="06">轻量姿态</a>
+        <a href="#densepose" data-no="07">DensePose</a>
+        <a href="#training" data-no="08">如何训练</a>
+        <a href="#deployment" data-no="09">部署条件</a>
+        <a href="#reality-check" data-no="10">完成度判断</a>
+        <a href="#glossary" data-no="11">术语与证据</a>
+      </nav>
+      <p class="rail-note">
+        分析基线<br>
+        <code>90b29595fbeb</code><br>
+        origin/main · 2026-07-29
+      </p>
+    </div>
+  </aside>
+
+  <div class="page" id="top">
+    <header class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">RuView 技术拆解 · AI 专题</div>
+          <h1>Wi‑Fi 看不见人，<span class="accent">AI 如何看懂人？</span></h1>
+          <p class="deck">从 ESP32（一类自带 Wi‑Fi 的微控制器芯片）采集的 CSI（信道状态信息）复数波形，到“有人、在动、人体 17 个关节、身体表面区域”，一篇讲清 RuView 的 AI（人工智能）输入、模型、训练、输出、部署方式与真实完成度。</p>
+          <div class="hero-meta">
+            <span>约 18 分钟阅读</span>
+            <span>面向初学者</span>
+            <span>依据源码核对</span>
+            <span>离线单文件</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Wi-Fi 子载波被人体扰动后形成波形，AI 从波形中推断人体语义的示意图">
+          <div class="signal-sheet">
+            <svg viewBox="0 0 520 250" role="img" aria-label="多条 Wi-Fi 子载波波形">
+              <defs>
+                <pattern id="minorGrid" width="26" height="25" patternUnits="userSpaceOnUse">
+                  <path d="M 26 0 L 0 0 0 25" fill="none" stroke="#b9ad97" stroke-width=".55" opacity=".55"/>
+                </pattern>
+                <linearGradient id="fadeRust" x1="0" x2="1">
+                  <stop offset="0" stop-color="#1f6a65"/>
+                  <stop offset=".58" stop-color="#1f6a65"/>
+                  <stop offset=".72" stop-color="#b84d2a"/>
+                  <stop offset="1" stop-color="#b84d2a"/>
+                </linearGradient>
+              </defs>
+              <rect width="520" height="250" fill="url(#minorGrid)"/>
+              <g fill="none" stroke="url(#fadeRust)" stroke-width="2.3">
+                <path d="M0 55 C35 27 57 84 92 53 S151 20 184 55 S243 90 274 52 S334 21 365 56 S429 88 520 45"/>
+                <path d="M0 93 C39 70 60 114 99 91 S158 67 190 94 S239 115 279 88 S337 61 370 95 S428 123 520 82" opacity=".75"/>
+                <path d="M0 137 C28 116 63 158 93 137 S149 110 183 137 S240 159 274 135 S329 108 366 139 S429 160 520 126" opacity=".55"/>
+                <path d="M0 183 C31 166 65 199 99 181 S156 164 188 185 S244 201 279 179 S340 160 373 186 S430 204 520 172" opacity=".4"/>
+              </g>
+              <path d="M351 26 C339 62 337 91 350 117 C366 149 362 189 345 227" fill="none" stroke="#b84d2a" stroke-width="11" opacity=".13"/>
+              <circle cx="351" cy="26" r="10" fill="#b84d2a" opacity=".18"/>
+              <text x="376" y="41" fill="#85361e" font-family="Consolas,monospace" font-size="10">human disturbance</text>
+            </svg>
+            <div class="signal-caption">
+              <span>SUBCARRIERS / TIME</span>
+              <span>I/Q → AMP + PHASE</span>
+            </div>
+          </div>
+          <div class="hero-stamp">Source<br>checked<br>not hype</div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="article">
+      <section class="section" id="quick-answer">
+        <span class="section-no">01 / Quick answer</span>
+        <h2>先建立一个不容易误解的全局认识</h2>
+        <p class="lead dropcap">RuView 的核心，不是让 ESP32 像摄像头一样“拍到”人，而是把人体对无线信道造成的细微扰动变成可以计算的 CSI 时间序列，再用信号处理和机器学习把这串波形翻译成人能理解的状态。</p>
+
+        <div class="quick-answer">
+          <p><strong>最准确的一句话是：</strong>RuView 是一个“无线感知平台”。ESP32 负责采集 Wi‑Fi CSI，边缘固件和 Rust 服务负责清洗、校准与提取特征，AI 只在需要把复杂波形映射成“行为类别”或“人体姿态”时介入。</p>
+        </div>
+
+        <div class="term-starter" id="term-starter">
+          <div class="term-starter-head">
+            <span>Beginner first</span>
+            <div>
+              <h3>继续阅读前，先认识最常见的 8 个词</h3>
+              <p>后面再次出现这些缩写时，就不再每次重复全称。拿不准时，可以回到这里，或查看文末的完整术语表。</p>
+            </div>
+          </div>
+
+          <div class="term-core-grid">
+            <article class="term-core" data-term="ESP32">
+              <div class="term-name">
+                <b>ESP32</b>
+                <span>Espressif chip family</span>
+              </div>
+              <p><strong>微控制器芯片。</strong>可以理解成一台很小、很省电的计算机，自带 Wi‑Fi。RuView 让它负责接收 Wi‑Fi 数据包，并从中读取 CSI。</p>
+            </article>
+
+            <article class="term-core" data-term="CSI">
+              <div class="term-name">
+                <abbr title="Channel State Information">CSI</abbr>
+                <span>Channel State Information</span>
+              </div>
+              <p><strong>信道状态信息。</strong>它记录 Wi‑Fi 信号经过房间后，在多个子载波上分别衰减多少、相位改变多少。人体运动会让这些数值发生变化。</p>
+            </article>
+
+            <article class="term-core" data-term="OFDM">
+              <div class="term-name">
+                <abbr title="Orthogonal Frequency Division Multiplexing">OFDM</abbr>
+                <span>Orthogonal Frequency Division Multiplexing</span>
+              </div>
+              <p><strong>正交频分复用。</strong>把一条宽的 Wi‑Fi 信道拆成许多较窄的“小通道”同时传数据，这些小通道就是子载波。</p>
+            </article>
+
+            <article class="term-core" data-term="I/Q">
+              <div class="term-name">
+                <abbr title="In-phase / Quadrature">I/Q</abbr>
+                <span>In-phase / Quadrature</span>
+              </div>
+              <p><strong>同相分量和正交分量。</strong>这是表示无线复数信号的两个数。利用它们可以计算信号的幅度和相位。</p>
+            </article>
+
+            <article class="term-core" data-term="DSP">
+              <div class="term-name">
+                <abbr title="Digital Signal Processing">DSP</abbr>
+                <span>Digital Signal Processing</span>
+              </div>
+              <p><strong>数字信号处理。</strong>不用模型“猜”，而是用滤波、频谱、均值、方差和阈值等数学方法清洗并分析波形。</p>
+            </article>
+
+            <article class="term-core" data-term="BPM">
+              <div class="term-name">
+                <abbr title="Beats Per Minute">BPM</abbr>
+                <span>Beats Per Minute</span>
+              </div>
+              <p><strong>每分钟次数。</strong>心率 72 BPM 表示心脏每分钟跳约 72 次；呼吸 15 BPM 表示每分钟呼吸约 15 次。</p>
+            </article>
+
+            <article class="term-core" data-term="RSSI">
+              <div class="term-name">
+                <abbr title="Received Signal Strength Indicator">RSSI</abbr>
+                <span>Received Signal Strength Indicator</span>
+              </div>
+              <p><strong>接收信号强度指示。</strong>它大致表示“收到的 Wi‑Fi 有多强”，通常是一个总强度值，信息量比 CSI 少很多。</p>
+            </article>
+
+            <article class="term-core" data-term="AP">
+              <div class="term-name">
+                <abbr title="Access Point">AP</abbr>
+                <span>Access Point</span>
+              </div>
+              <p><strong>无线接入点。</strong>通常就是路由器里负责发射 Wi‑Fi 的部分。在 RuView 场景中，它为感知持续提供无线数据包。</p>
+            </article>
+          </div>
+        </div>
+
+        <p>因此，“RuView 用到 AI 吗？”答案是<strong>用到了，但不是每一步都用 AI，也不是仓库里出现模型代码就代表完整姿态识别已经接入主服务</strong>。从当前源码看，它同时保留了三条不同成熟度的 AI 路线：</p>
+
+        <div class="route-lab">
+          <div class="route-tabs" role="tablist" aria-label="选择 AI 路线">
+            <button id="tab-adaptive" role="tab" aria-selected="true" aria-controls="route-adaptive" data-route="adaptive">
+              <span>ROUTE A · LIVE</span>
+              在线自适应分类器
+            </button>
+            <button id="tab-pose" role="tab" aria-selected="false" aria-controls="route-pose" data-route="pose">
+              <span>ROUTE B · COG</span>
+              轻量姿态 Cog
+            </button>
+            <button id="tab-densepose" role="tab" aria-selected="false" aria-controls="route-densepose" data-route="densepose">
+              <span>ROUTE C · RESEARCH</span>
+              完整 DensePose
+            </button>
+          </div>
+
+          <div class="route-panel" id="route-adaptive" role="tabpanel" aria-labelledby="tab-adaptive" data-panel="adaptive">
+            <div class="route-badge">15-D<br>FEATURES<br>→ 4 CLASSES</div>
+            <div>
+              <span class="status">主链路已接入</span>
+              <h3>在线自适应分类器：先解决“这里到底是什么状态”</h3>
+              <p>输入是 15 维统计特征，模型是多分类逻辑回归，输出默认是 absent、present_still、present_moving、active。它能在本地录制少量样本后快速训练，并覆盖原来的规则分类结果。</p>
+            </div>
+          </div>
+
+          <div class="route-panel" id="route-pose" role="tabpanel" aria-labelledby="tab-pose" data-panel="pose" hidden>
+            <div class="route-badge">56 × 20<br>AMPLITUDE<br>→ 17 × 2</div>
+            <div>
+              <span class="status partial">独立组件可运行</span>
+              <h3>轻量姿态 Cog：用小模型直接回归 17 个关节</h3>
+              <p>输入是第一个节点 56 个子载波、20 帧的幅度窗口，经过三层一维卷积和两层全连接，输出 17 个二维关键点。仓库有真实权重，但现有公开基准仍很低，适合看作验证链路的原型。</p>
+            </div>
+          </div>
+
+          <div class="route-panel" id="route-densepose" role="tabpanel" aria-labelledby="tab-densepose" data-panel="densepose" hidden>
+            <div class="route-badge">AMP + PHASE<br>→ HEATMAP<br>+ PART + UV</div>
+            <div>
+              <span class="status research">研究架构 / 未完整接线</span>
+              <h3>完整 DensePose：目标是从 CSI 生成骨架与人体表面</h3>
+              <p>它把幅度与相位翻译成伪图像，送入 ResNet 风格骨干网络，再并行预测关键点热图、24 个身体部位及 UV 坐标。训练和推理框架存在，但主 sensing server 目前没有完整接上这条模型链路。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="margin-note">
+          <strong>阅读时最重要的判断标准</strong>
+          看一个功能是否“真的用了 AI”，不要只看页面上是否显示了骨架，也不要只看有没有 <code>model</code> 参数。要继续追踪：模型输入在哪里生成、权重在哪里加载、推理函数是否在实时路径中被调用、输出是否真正写入 API。RuView 当前的完整姿态链路正是在最后几步还存在明显缺口。
+        </div>
+      </section>
+
+      <section class="section" id="pipeline">
+        <span class="section-no">02 / End-to-end pipeline</span>
+        <h2>从无线电波到 AI 结果，数据究竟走了哪些步骤？</h2>
+        <p class="lead">先把整条管线看一遍，再深入模型，会容易很多。RuView 的完整思路可以概括为“激励信道、采集 CSI、做信号处理、构造模型输入、推理、发布语义”。</p>
+
+        <div class="pipeline" aria-label="RuView 端到端数据流程">
+          <div class="pipe-step">
+            <span class="pipe-no">01</span>
+            <h3>Wi‑Fi 链路</h3>
+            <p>路由器、AP（Access Point，无线接入点）或另一个 Wi‑Fi 设备持续发包。直达路径与墙壁、家具、人体形成的反射路径叠加，构成一个随环境变化的多径信道。</p>
+          </div>
+          <div class="pipe-step">
+            <span class="pipe-no">02</span>
+            <h3>ESP32 采集</h3>
+            <p>ESP32 在接收 Wi‑Fi 帧时读取 CSI（Channel State Information，信道状态信息）：每个 OFDM 子载波对应一个复数信道估计，通常以 I/Q 表示。它不是照片，而是一组随时间变化的复数。</p>
+          </div>
+          <div class="pipe-step">
+            <span class="pipe-no">03</span>
+            <h3>边缘 DSP</h3>
+            <p>DSP（Digital Signal Processing，数字信号处理）指用数学方法处理数字波形。固件会做相位展开、均值/方差的流式统计、优选子载波、带通滤波、基线和阈值判断。呼吸、心跳、存在、跌倒的基础结果在这里可以不依赖神经网络完成。</p>
+          </div>
+          <div class="pipe-step">
+            <span class="pipe-no">04</span>
+            <h3>局域网传输</h3>
+            <p>原始 CSI、压缩特征或 Tier 2 生命体征数据按 ADR‑018 相关格式经 UDP 送入 Rust sensing server。ADR 是 Architecture Decision Record（架构决策记录），用于写清技术方案为什么这样设计；UDP 是一种只管快速发送、不保证每包必达的网络传输协议。</p>
+          </div>
+          <div class="pipe-step">
+            <span class="pipe-no">05</span>
+            <h3>Rust 管线</h3>
+            <p>服务端完成解析、节点管理、时间窗口、校准、多节点融合、特征计算和质量评估，为规则算法或模型推理提供稳定输入。</p>
+          </div>
+          <div class="pipe-step ai">
+            <span class="pipe-no">06</span>
+            <h3>AI 推理</h3>
+            <p>根据任务选择 15 维特征分类、56×20 幅度窗口回归，或幅度+相位的完整 DensePose 模型。不同路线的输入、计算量、输出语义和成熟度完全不同。</p>
+          </div>
+          <div class="pipe-step">
+            <span class="pipe-no">07</span>
+            <h3>界面与集成</h3>
+            <p>最终结果通过网页、REST API、WebSocket、MQTT、Home Assistant 等方式暴露。REST API 是程序按网址请求数据的接口；WebSocket 是服务器与网页保持连接、持续推送数据的通道；MQTT 是物联网常用的轻量消息协议；Home Assistant 是开源智能家居平台。</p>
+          </div>
+        </div>
+
+        <h3>CSI 到底是什么样的数据？</h3>
+        <p>在 OFDM（Orthogonal Frequency Division Multiplexing，正交频分复用）Wi‑Fi 中，一个宽带信道被拆成许多窄带子载波同时传输。接收端会估计每个子载波经历了多大的衰减和多大的相位偏移。某一时刻第 <em>k</em> 个子载波的 CSI 可写成复数 <code>Hₖ = Iₖ + jQₖ</code>；I/Q 是 In-phase / Quadrature（同相分量和正交分量），由它们可以计算幅度 <code>|Hₖ|</code> 与相位 <code>∠Hₖ</code>。</p>
+
+        <div class="csi-figure">
+          <div class="csi-chart" aria-hidden="true">
+            <div class="subcarrier-row">
+              <i style="--h:58%;--phase:-12deg"></i>
+              <i style="--h:74%;--phase:8deg"></i>
+              <i style="--h:49%;--phase:17deg"></i>
+              <i style="--h:83%;--phase:-8deg"></i>
+              <i style="--h:69%;--phase:-20deg"></i>
+              <i style="--h:91%;--phase:12deg"></i>
+              <i style="--h:61%;--phase:25deg"></i>
+              <i style="--h:76%;--phase:-14deg"></i>
+              <i style="--h:43%;--phase:19deg"></i>
+              <i style="--h:68%;--phase:6deg"></i>
+              <i style="--h:86%;--phase:-19deg"></i>
+              <i style="--h:56%;--phase:11deg"></i>
+              <i style="--h:72%;--phase:-5deg"></i>
+              <i style="--h:64%;--phase:20deg"></i>
+            </div>
+            <div class="chart-axis">
+              <span>SC −28</span>
+              <span>56 个有效子载波</span>
+              <span>SC +28</span>
+            </div>
+          </div>
+          <div class="csi-copy">
+            <h3>一帧 CSI ≈ 一排信道探针</h3>
+            <p>每根柱子可以理解为一个子载波的幅度，柱子内部的小斜线代表相位。人体移动、呼吸或姿势变化会同时扰动多个子载波，而且这种扰动带有时间结构。</p>
+            <div class="formula">I/Q<br>↓<br>amplitude = √(I² + Q²)<br>phase = atan2(Q, I)</div>
+            <p>AI 的工作不是识别某一根柱子，而是学习“很多子载波在一段时间内怎样一起变化”。</p>
+          </div>
+        </div>
+
+        <p>这也解释了为什么模型输入通常是一个窗口而不是单帧：单帧更像无线环境的一个瞬时快照，而走路、呼吸、坐下、跌倒都需要通过时间上的连续变化来区分。</p>
+      </section>
+
+      <section class="section" id="architecture">
+        <span class="section-no">03 / System architecture</span>
+        <h2>项目架构：一条规则主链路，三个彼此独立的 AI 决策位置</h2>
+        <p class="lead">RuView 不是“ESP32 把数据直接送进一个大模型”。它更像一套分层的感知系统：无线链路制造可观测信号，ESP32 负责采集与低成本处理，Rust 服务负责时间窗、校准、融合和规则判断；AI 以可选分支插入不同位置，并分别解决“粗状态分类”与“人体姿态恢复”两类问题。</p>
+
+        <figure class="architecture-figure">
+          <a href="assets/ruview-architecture-paper.png" target="_blank" aria-label="打开 RuView 架构图原尺寸图片">
+            <img src="assets/ruview-architecture-paper.png" alt="RuView Wi-Fi CSI 感知、规则分类器与两个可选姿态 AI 插入点架构图" width="1536" height="1024">
+            <span class="figure-zoom">点击查看 1536 × 1024 原图 ↗</span>
+          </a>
+          <figcaption>
+            <span>图 1 · RuView 运行时与训练控制面。实线表示当前可运行主链路，砖红表示已接入但只有加载模型才执行的分类器，虚线表示两条姿态 AI 的目标插入位置。背景纸张与分区质感由图像模型生成，模块、文字和连线由代码精确覆盖。</span>
+            <a href="assets/ruview-architecture-blueprint.svg" target="_blank">打开可缩放 SVG 蓝图 ↗</a>
+          </figcaption>
+        </figure>
+
+        <div class="architecture-thesis">
+          <span>核心判断<br>one live + two optional</span>
+          <div>
+            <strong>一个已接入分类器 + 两个可选姿态模型</strong>
+            <p>在线自适应分类器已经进入 sensing server 的实时状态路径；Pose Cog 和完整 DensePose 则是两条不同复杂度的姿态分支。它们共享前面的 CSI 采集与校准基础，但输入张量、输出语义、运行位置和当前完成度不同。</p>
+          </div>
+        </div>
+
+        <h3>1. 从硬件到接口：六层主链路</h3>
+        <div class="architecture-ledger" id="architecture-mainline">
+          <div class="architecture-row">
+            <b>01</b>
+            <h4>无线物理层</h4>
+            <p>AP 或另一个 Wi‑Fi 设备持续发包。直达波与墙壁、家具、人体反射波叠加，形成随环境变化的多径信道。这里的输出不是图像，而是接收端能够估计的信道变化。</p>
+            <small>Input: packets<br>Output: multipath channel</small>
+          </div>
+          <div class="architecture-row">
+            <b>02</b>
+            <h4>ESP32 边缘层</h4>
+            <p>Wi‑Fi 驱动读取 CSI。Tier 0 保留原始 I/Q；Tier 1 做相位展开、在线统计、Top‑K 和压缩；Tier 2 增加呼吸、存在和跌倒等规则。Tier 2 固件没有训练神经网络。</p>
+            <small>Firmware<br>Hard real-time edge</small>
+          </div>
+          <div class="architecture-row">
+            <b>03</b>
+            <h4>协议与传输层</h4>
+            <p>原始帧、压缩帧、特征或生命体征按 ADR‑018 相关格式通过 UDP 发送。UDP 只解决低延迟搬运，不负责校准、分类或姿态推理。</p>
+            <small>ADR-018<br>UDP / LAN</small>
+          </div>
+          <div class="architecture-row">
+            <b>04</b>
+            <h4>Rust 感知服务</h4>
+            <p><code>wifi-densepose-sensing-server</code> 解析数据包，维护每个节点的历史帧、RSSI 和状态，完成基线学习、滤波、多节点融合、时间窗构造与特征提取。</p>
+            <small>Decode<br>Calibrate / fuse / window</small>
+          </div>
+          <div class="architecture-row">
+            <b>05</b>
+            <h4>决策与推理层</h4>
+            <p>规则引擎先产生 absent、present_still、present_moving、active。若加载自适应模型，再用 15 维特征覆盖粗状态；若接入姿态模型，则从 CSI 时间窗并行产生关键点或 DensePose 输出。</p>
+            <small>Rules first<br>Optional model branches</small>
+          </div>
+          <div class="architecture-row">
+            <b>06</b>
+            <h4>发布与集成层</h4>
+            <p>结果组装器把状态、生命体征、节点质量和可选姿态写入统一结果，再通过网页、REST API、WebSocket、MQTT 与 Home Assistant 暴露给上层应用。</p>
+            <small>Web / REST / WS<br>MQTT / HA</small>
+          </div>
+        </div>
+
+        <h3 id="classifier-execution">2. 一帧数据到达后：规则和分类器怎样执行？</h3>
+        <p>这里不是两个算法同时投票，而是<strong>规则 → 可选分类器覆盖</strong>。规则永远提供基础结果；分类器只有在模型已经加载时才执行，并成为最终粗状态的决定者。</p>
+
+        <div class="execution-trace" aria-label="规则和可选分类器的运行顺序">
+          <div class="execution-step">
+            <b>STEP 01</b>
+            <strong>更新时间窗</strong>
+            <p>解析新 CSI 帧，写入节点历史；得到当前子载波幅度、RSSI 和可用于频域分析的连续窗口。</p>
+          </div>
+          <div class="execution-step">
+            <b>STEP 02</b>
+            <strong>提取证据</strong>
+            <p>计算方差、运动/呼吸频带功率、频谱总功率、主频率、变化点和幅度分布统计。</p>
+          </div>
+          <div class="execution-step">
+            <b>STEP 03</b>
+            <strong>规则先分类</strong>
+            <p>扣除环境基线，EMA 平滑，再按阈值产生四档状态；要求连续多帧一致才切换，避免边界抖动。</p>
+          </div>
+          <div class="execution-step optional">
+            <b>STEP 04 · OPTIONAL</b>
+            <strong><code>adaptive_override</code></strong>
+            <p>存在模型时，将 7 个服务特征和 8 个幅度统计组成 15D 向量，用多分类逻辑回归重新给标签。</p>
+          </div>
+          <div class="execution-step">
+            <b>STEP 05</b>
+            <strong>组装并发布</strong>
+            <p>写入最终 motion_level、presence 和 confidence，再和生命体征、节点信息一起送往 API 与网页。</p>
+          </div>
+        </div>
+
+        <div class="classifier-fork">
+          <div>
+            <b>未加载分类器模型</b>
+            <p>步骤 04 直接跳过。规则结果就是最终结果，所以 RuView 在没有任何训练文件时仍能完成基本存在与活动等级判断。</p>
+          </div>
+          <div>
+            <b>已经加载分类器模型</b>
+            <p>模型覆盖动作标签和 presence；最终置信度采用 <code>0.7 × 模型置信度 + 0.3 × 规则置信度</code>。分类器改变的是边界，不会增加“走路、吃饭”等新语义。</p>
+          </div>
+        </div>
+
+        <h3 id="ai-insertion-points">3. 两个可选姿态 AI 究竟插在哪里？</h3>
+        <p>这两个模型都应连接在“CSI 已经校准、归一化并形成时间窗”之后，以及“结果组装与接口发布”之前。它们不需要先得到 absent 或 active 才能推理，粗状态最多可以作为节省计算的门控条件，而不是姿态网络的输入。</p>
+
+        <div class="ai-insertion-layout">
+          <article class="ai-insertion">
+            <small>Optional branch B · edge sidecar</small>
+            <h4>Cog 插入点</h4>
+            <p>取第一个感知节点的 56 个子载波幅度，维护 20 帧窗口，然后运行轻量 Conv1d 网络。按照现有组件形态，它更像 sensing server 旁边的 sidecar（伴随进程）：通过 <code>/api/v1/sensing/latest</code> 读取数据，而不是嵌入服务器内部。</p>
+            <dl>
+              <dt>输入</dt><dd><code>[1, 56, 20]</code> 幅度窗</dd>
+              <dt>输出</dt><dd><code>[17, 2]</code> 二维关节坐标</dd>
+              <dt>位置</dt><dd>归一化幅度窗口之后</dd>
+              <dt>现状</dt><dd>独立 crate；主服务未接线，运行路径仍有 stub</dd>
+            </dl>
+          </article>
+
+          <div class="parallel-mark">parallel<br>branches</div>
+
+          <article class="ai-insertion">
+            <small>Optional branch C · research runtime</small>
+            <h4>DensePose 插入点</h4>
+            <p>需要比 Cog 更丰富的输入：幅度、相位、天线路径、时间窗口，理想情况下还包括多节点融合。translator 先把 CSI 翻译成空间张量，骨干和三个输出头再产生关键点热图、身体部位和 UV 表面坐标。</p>
+            <dl>
+              <dt>输入</dt><dd>幅度 + 相位 + 多节点 CSI 张量</dd>
+              <dt>输出</dt><dd>17 关键点、25 类部位、48 通道 UV</dd>
+              <dt>位置</dt><dd>校准/融合/窗口之后</dd>
+              <dt>现状</dt><dd>训练与推理组件存在；sensing server 尚未依赖完整 NN crate</dd>
+            </dl>
+          </article>
+        </div>
+
+        <p class="parallel-statement"><strong>两条姿态 AI 是并行分支，不是分类器的后续步骤。</strong>分类器回答“房间处于哪一种粗状态”；Cog 和 DensePose 回答“人体关节或身体表面在哪里”。把它们串起来会错误地让 4 类标签成为姿态模型输入，也会丢掉姿态恢复真正需要的 CSI 时间与空间细节。</p>
+
+        <h3 id="architecture-modules">4. 关键代码模块与当前接线状态</h3>
+        <div class="module-map">
+          <div class="module-row">
+            <code>firmware/esp32-csi-node</code>
+            <p>采集 CSI，执行 Tier 0–2 边缘管线，并发送原始帧、压缩帧、特征或生命体征数据。存在与跌倒主要是校准阈值和相位规则。</p>
+            <span class="module-status">Live foundation</span>
+          </div>
+          <div class="module-row">
+            <code>wifi-densepose-sensing-server</code>
+            <p>系统中枢：协议解析、节点状态、时间窗、基线、融合、特征、规则分类、Web/API 发布和模型加载入口都在这里汇合。</p>
+            <span class="module-status">Live runtime</span>
+          </div>
+          <div class="module-row">
+            <code>adaptive_classifier.rs</code>
+            <p>把 15 维特征送入多分类逻辑回归；实时路径通过 <code>adaptive_override</code> 覆盖规则的粗状态标签。</p>
+            <span class="module-status">Wired optional AI</span>
+          </div>
+          <div class="module-row">
+            <code>cog-pose-estimation</code>
+            <p>轻量 17 关键点组件，面向树莓派/Cognitum 侧车部署。当前能表达目标接口，但不是主 sensing server 的内置推理阶段。</p>
+            <span class="module-status research">Separate / weak / stub</span>
+          </div>
+          <div class="module-row">
+            <code>wifi-densepose-train + nn</code>
+            <p>提供 CSI translator、网络骨干、DensePose 输出头、训练损失和多后端推理抽象；还缺主实时服务的完整依赖与输出接线。</p>
+            <span class="module-status research">Architecture / research</span>
+          </div>
+          <div class="module-row">
+            <code>REST / WebSocket / MQTT / HA</code>
+            <p>消费统一结果。当前主服务多处仍明确写入 <code>pose_keypoints: None</code>，所以网页出现骨架外形不等于已经有真实 CSI 姿态模型输出。</p>
+            <span class="module-status">Publish layer</span>
+          </div>
+        </div>
+
+        <div class="margin-note">
+          <strong>架构上最重要的三个事实</strong>
+          规则是始终可用的安全主链路；分类器是同一粗状态任务的可选替代边界；两条姿态模型是消费 CSI 时间窗的并行高维推理分支。训练和标注属于离线控制面，模型文件经过加载后才影响实时路径，ESP32 不会因为服务器增加了 AI 就自动获得姿态能力。
+        </div>
+      </section>
+
+      <section class="section" id="dsp-vs-ai">
+        <span class="section-no">04 / DSP is not AI</span>
+        <h2>边缘处理很聪明，但大部分并不是神经网络</h2>
+        <p class="lead">RuView 的 ESP32 固件分为 Tier 0、Tier 1、Tier 2。Tier 在这里就是“处理等级”：数字越大，ESP32 本地完成的工作越多。这里有很多“检测”和“估计”，容易让人误以为都由 AI 完成。源码给出的答案更朴素：主要是数字信号处理、在线统计和规则阈值。</p>
+
+        <table class="comparison">
+          <thead>
+            <tr>
+              <th>层级</th>
+              <th>主要工作</th>
+              <th>是否训练模型</th>
+              <th>输出用途</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tier 0</td>
+              <td>原始 CSI 透传，尽量保留 I/Q 数据</td>
+              <td>否</td>
+              <td>服务端研究、训练数据采集</td>
+            </tr>
+            <tr>
+              <td>Tier 1</td>
+              <td>相位展开、Welford 算法（一边接收数据、一边更新均值和方差）、选择 top‑K（选出评分最高的 K 个）子载波、压缩</td>
+              <td>否</td>
+              <td>降低带宽，提供较稳定的特征</td>
+            </tr>
+            <tr>
+              <td>Tier 2</td>
+              <td>呼吸/心跳带通滤波、存在阈值、跌倒相位加速度、多目标槽位启发式</td>
+              <td>否</td>
+              <td>超低延迟本地感知和生命体征包</td>
+            </tr>
+            <tr>
+              <td>AI 路线</td>
+              <td>从人工特征或 CSI 时间窗学习到语义标签、关键点、身体部位</td>
+              <td>是</td>
+              <td>替代复杂规则或完成更高维的映射</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="two-col">
+          <article class="essay-box">
+            <h3>DSP 在做什么</h3>
+            <p>它利用已知的物理和频率规律。例如成年人呼吸大致落在低频范围，心跳落在更高一点的频段；对相应频带滤波，再寻找周期峰值，就可以估算 BPM（Beats Per Minute，每分钟次数）。</p>
+            <small>确定性规则 · 易解释 · 计算量小</small>
+          </article>
+          <article class="essay-box">
+            <h3>AI 在做什么</h3>
+            <p>它从带标签数据里学习边界或映射。例如房间中的 15 个统计量怎样组合最像“静止有人”，或者 56×20 的波形怎样映射为 17 个关节坐标。</p>
+            <small>数据驱动 · 能拟合复杂关系 · 需要训练</small>
+          </article>
+        </div>
+
+        <h3>Tier 2 的四个典型例子</h3>
+        <ul>
+          <li><strong>存在检测：</strong>先学习约 60 秒环境基线，再把相位方差与自适应阈值比较。它是校准后的阈值判断，不是“人在/不在”分类网络。</li>
+          <li><strong>呼吸和心率：</strong>分别关注约 0.1–0.5 Hz 与 0.8–2.0 Hz 附近的变化。Hz（赫兹）表示每秒重复多少次；检测到周期后，再换算成 BPM（每分钟次数）。</li>
+          <li><strong>跌倒：</strong>观察相位变化的加速度是否突然超过阈值。它不理解“躺下”这个语义，只检测快速剧烈扰动。</li>
+          <li><strong>多人数量：</strong>固件会把 top‑K 子载波分组，给出槽位容量式的启发结果。README 明确提醒，这不是经过训练的真实人数计数器。</li>
+        </ul>
+
+        <div class="rule-engine" id="rule-engine">
+          <div class="rule-engine-head">
+            <span class="rule-engine-kicker">Rule engine<br>source walk-through</span>
+            <div>
+              <h3>规则先判断，AI 再复判</h3>
+              <p>这是 RuView 实时链路里最容易被误解的一层。ESP32 和 Rust 服务都各自包含规则；只有加载了自适应模型，最后一步才会调用 AI。下面把源码中的先后顺序摊开来看。</p>
+            </div>
+          </div>
+
+          <div class="rule-flow" aria-label="从 CSI 到规则判断和可选 AI 复判的流程">
+            <div class="rule-stage">
+              <small>01 · measurement</small>
+              <b>CSI 帧</b>
+              <span>多个子载波的 I/Q、幅度和相位随时间连续到达。</span>
+            </div>
+            <div class="rule-stage">
+              <small>02 · device rule</small>
+              <b>ESP32 固件规则</b>
+              <span>滤波、方差、环境校准、存在阈值、呼吸周期和相位加速度。</span>
+            </div>
+            <div class="rule-stage">
+              <small>03 · transport</small>
+              <b>UDP 数据包</b>
+              <span>发送原始帧、压缩帧或生命体征结果；这里负责搬运，不负责理解动作。</span>
+            </div>
+            <div class="rule-stage">
+              <small>04 · feature</small>
+              <b>Rust 特征提取</b>
+              <span>得到方差、运动频带功率、变化点、主频率、RSSI 等数字证据。</span>
+            </div>
+            <div class="rule-stage">
+              <small>05 · server rule</small>
+              <b>Rust 服务端规则</b>
+              <span>减去环境基线、指数平滑、按阈值分成 absent / still / moving / active。</span>
+            </div>
+            <div class="rule-stage ai">
+              <small>06 · optional AI</small>
+              <b><code>adaptive_override</code></b>
+              <span>模型存在时，用 15 维特征重新给标签；模型不存在时，这一步直接跳过。</span>
+            </div>
+          </div>
+
+          <div class="rule-branch">
+            <strong>最后一步如何合并</strong>
+            <span>自适应模型会覆盖原来的动作级别，并重新设置“是否存在”。置信度采用 <strong>70% 模型置信度 + 30% 原规则置信度</strong>。所以 AI 是可选的复判层，不是前面 DSP 和规则能够工作的前提。<code>adaptive_override</code> 是源码里的函数名，意思就是“用自适应模型覆盖原判断”。</span>
+          </div>
+
+          <div class="rule-split">
+            <div>
+              <h4>一条基础状态规则怎样工作？</h4>
+              <p>Rust 服务端先学习安静房间的<strong>基线</strong>——也就是“没有明显人体动作时，系统本来会有多少波动”。它从当前运动分数中扣掉基线，再用 EMA（指数移动平均：新数据占一小部分、历史数据占大部分）让曲线不那么抖。</p>
+              <p>接着把平滑后的分数 <code>sm</code> 与几条<strong>阈值</strong>比较。阈值就是一条人为规定的分界线，并不是模型学出来的参数。</p>
+              <div class="threshold-scale" aria-label="Rust 服务端基础动作等级阈值">
+                <span>≤ 0.04<br>absent</span>
+                <span>0.04–0.12<br>present_still</span>
+                <span>0.12–0.25<br>present_moving</span>
+                <span>&gt; 0.25<br>active</span>
+              </div>
+              <p class="rule-caution">源码还单独用 <code>sm &gt; 0.03</code> 设置 presence（是否存在），并要求新状态连续多帧一致后才切换。这个“去抖”过程能避免分数刚好在边界附近时，页面一秒显示有人、下一秒又显示没人。</p>
+            </div>
+
+            <div>
+              <h4>另一条加权规则怎样工作？</h4>
+              <p>服务端计算人数候选分数时，会先把不同量纲的特征压到 0–1，再做固定加权。它很像打分表，但权重写在代码里，不是神经网络训练出来的：</p>
+              <div class="score-ledger" aria-label="服务端人数候选分数的特征权重">
+                <div class="score-row">
+                  <b>方差 40%</b>
+                  <span class="score-track"><i style="--score:100%"></i></span>
+                  <em>0.40</em>
+                </div>
+                <div class="score-row">
+                  <b>运动频带功率 25%</b>
+                  <span class="score-track"><i style="--score:62.5%"></i></span>
+                  <em>0.25</em>
+                </div>
+                <div class="score-row">
+                  <b>变化点 20%</b>
+                  <span class="score-track"><i style="--score:50%"></i></span>
+                  <em>0.20</em>
+                </div>
+                <div class="score-row">
+                  <b>频谱总功率 15%</b>
+                  <span class="score-track"><i style="--score:37.5%"></i></span>
+                  <em>0.15</em>
+                </div>
+              </div>
+              <p class="rule-caution"><strong>变化点</strong>是统计特征突然换了一种状态的时刻；<strong>运动频带功率</strong>是动作相关频率范围内的能量；<strong>频谱总功率</strong>是把时间波形拆成不同频率后，全部频率能量的汇总。注意：这是单独的“人数候选”评分示例，不是上面 <code>sm</code> 状态分档的同一个公式。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-examples" id="rule-examples">
+          <h3>四个例子：规则究竟看到了什么？</h3>
+          <p>下面不只写结果，而是沿着“环境基线 → 数字证据 → 规则 → 输出”走一遍。为了便于理解，案例名称使用“坐着”“走路”等现实动作，但也会明确标出系统实际知道的范围。</p>
+
+          <div class="scenario-stack">
+            <article class="scenario" id="example-room-state">
+              <div class="scenario-index">01<small>empty → still → walk</small></div>
+              <div>
+                <h4>房间从空，到坐着不动，再到来回走动</h4>
+                <p>系统并不是直接寻找一幅“人形图”，而是比较无线波动相对于安静房间增加了多少。</p>
+                <div class="scenario-steps">
+                  <div class="scenario-step">
+                    <b>空房基线</b>
+                    <span>方差、运动频带功率和变化点都较低，系统先把这层自然噪声记下来。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>坐着不动</b>
+                    <span>人体使多径环境发生变化，但短时间动作较小，平滑分数可能进入 present_still 区间。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>来回走动</b>
+                    <span>多个子载波持续波动，运动频带能量和变化点上升，分数跨过 moving 或 active 阈值。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>规则输出</b>
+                    <span>absent、present_still、present_moving 或 active，并等待连续多帧确认状态变化。</span>
+                  </div>
+                </div>
+                <p class="scenario-limit"><strong>边界：</strong>输出 present_moving 不等于真正理解“走路”。挥手、搬椅子或多人轻微移动也可能产生相近分数。规则知道“波动变强了”，不知道动作的完整语义。</p>
+              </div>
+            </article>
+
+            <article class="scenario" id="example-breathing">
+              <div class="scenario-index">02<small>period → BPM</small></div>
+              <div>
+                <h4>一个相对静止的人，怎样得到 15 BPM？</h4>
+                <p>胸腔起伏会给 CSI 带来很弱但近似周期性的扰动。固件使用<strong>带通滤波</strong>：像只允许指定音域通过的筛子，保留约 0.1–0.5 Hz 的缓慢变化，尽量压低更慢的漂移和更快的动作。</p>
+                <div class="scenario-steps">
+                  <div class="scenario-step">
+                    <b>输入</b>
+                    <span>一段连续相位历史，而不是单独一帧 CSI。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>筛选</b>
+                    <span>只观察呼吸频带，再用过零点或周期性估计寻找重复节奏。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>测得主频</b>
+                    <span>假设最明显的重复频率是 0.25 Hz，也就是每秒 0.25 个周期。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>换算输出</b>
+                    <span>乘以每分钟 60 秒，得到每分钟约 15 次呼吸。</span>
+                  </div>
+                </div>
+                <div class="math-callout">
+                  <span>Hz 是“每秒多少次”；BPM 是“每分钟多少次”。</span>
+                  <code>0.25 Hz × 60 = 15 BPM</code>
+                </div>
+                <p class="scenario-limit"><strong>边界：</strong>这是一种周期估计，不是医疗诊断。大动作会淹没微弱呼吸信号，风扇等周期干扰也可能制造相似节奏，因此还要结合置信度、静止状态和时间窗口。</p>
+              </div>
+            </article>
+
+            <article class="scenario" id="example-fall">
+              <div class="scenario-index">03<small>fast event</small></div>
+              <div>
+                <h4>正常坐下与疑似跌倒，规则怎样区分？</h4>
+                <p>固件计算相邻相位变化的“速度”，再看这个速度改变得有多快；后者就是<strong>相位加速度</strong>。快速跌落往往会造成尖锐峰值，规则会把它与可配置阈值比较。</p>
+                <div class="scenario-steps">
+                  <div class="scenario-step">
+                    <b>正常坐下</b>
+                    <span>通常持续时间较长、变化较平缓，相位加速度峰值可能没有越线。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>快速冲击</b>
+                    <span>短时间内相位速度突变，多个连续帧超过阈值，成为疑似事件。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>去抖与冷却</b>
+                    <span>源码要求连续多帧越线，并设置告警冷却时间，避免一次冲击连续刷屏。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>输出</b>
+                    <span>fall_detected=true；它表达“检测到快速异常扰动”，不是完整姿态结论。</span>
+                  </div>
+                </div>
+                <p class="scenario-limit"><strong>边界：</strong>人猛地坐下、重物掉落或设备被碰撞，也可能越过相同阈值而产生误报；很慢地滑倒又可能没有明显峰值。规则没有看见“人最终躺在地上”，高风险场景仍需要其他传感器或人工确认。</p>
+              </div>
+            </article>
+
+            <article class="scenario" id="example-interference">
+              <div class="scenario-index">04<small>false positive</small></div>
+              <div>
+                <h4>空房里的风扇，为什么可能被认为“有人”？</h4>
+                <p>无线信号只知道环境是否在变化，不天然知道变化由谁造成。风扇、窗帘或扫地机器人，甚至微波炉工作周期和邻近 AP 发射功率变化，都可能让方差或变化点升高。</p>
+                <div class="scenario-steps">
+                  <div class="scenario-step">
+                    <b>真实环境</b>
+                    <span>房间没人，但风扇转动或窗帘摆动持续改变反射路径。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>数字证据</b>
+                    <span>相位方差超过空房基线，运动频带或周期性成分也可能上升。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>规则反应</b>
+                    <span>只要越过阈值，存在或运动标志就可能被点亮。</span>
+                  </div>
+                  <div class="scenario-step">
+                    <b>改进办法</b>
+                    <span>空房重新校准、固定设备位置、收集本房间样本训练自适应分类器，并融合多个节点。</span>
+                  </div>
+                </div>
+                <p class="scenario-limit"><strong>这就是误报：</strong>系统给出“有人/事件发生”的正面结果，但现实中并没有对应目标。自适应基线和本地 AI 可以降低某些固定干扰，不能保证消除所有未知干扰。</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="rule-boundary">
+            <h4>规则能做什么，不能做什么？</h4>
+            <p><strong>擅长：</strong>判断有无明显扰动、静止/移动强弱、估计周期性的呼吸和心率、发现突然冲击。<strong>不擅长：</strong>精确区分走路、坐下、吃饭、穿衣、举左手等语义动作，也不能单靠一个尖峰确认“这个人已经跌倒在地”。后者才是分类模型、姿态模型和多传感器融合要解决的问题。</p>
+          </div>
+        </div>
+
+        <div class="margin-note">
+          <strong>为什么还要保留 DSP？</strong>
+          在 ESP32 上，DSP 具有功耗低、延迟小、没有模型文件、失败模式易解释等优点。它还可以先把海量原始 CSI 压缩成更干净的特征，再交给服务端 AI。工程上最合理的架构通常不是“AI 替换一切”，而是“DSP 负责物理层清洗，AI 负责难以手写规则的语义映射”。
+        </div>
+      </section>
+
+      <section class="section" id="adaptive">
+        <span class="section-no">05 / Route A</span>
+        <h2>在线自适应分类器：RuView 当前最完整的 AI 闭环</h2>
+        <p class="lead">如果把“AI 已经实际进入实时服务”作为标准，那么自适应分类器是最清晰的一条路线：能录数据、从文件名得到标签、训练、保存模型、加载模型，并在实时分类时覆盖原有结果。</p>
+
+        <h3>1. 它的目的是什么？</h3>
+        <p>固定阈值很难适应不同房间。卧室的墙体、AP 距离、家具布局、噪声、节点位置都可能和实验室不同。同一个“运动能量 0.4”，在一个环境中是人在缓慢移动，在另一个环境中可能只是风扇或邻居网络干扰。</p>
+        <p>自适应分类器的目标不是恢复人体骨架，而是用少量本地样本学会<strong>这个具体环境</strong>里的状态边界。默认类别是 <code>absent</code>、<code>present_still</code>、<code>present_moving</code>、<code>active</code>，同时支持从录制文件名称推导动态类别。</p>
+
+        <h3>2. 输入是什么？</h3>
+        <p>模型每次接收一个 <strong>15 维特征</strong>向量。前 7 维来自 sensing server 的聚合分析，后 8 维来自幅度分布统计。它不是直接把原始 I/Q 全部喂给网络，因此训练很快、模型很小。</p>
+
+        <div class="feature-grid" aria-label="自适应分类器的 15 维输入特征">
+          <div>方差<small>整体波动强度</small></div>
+          <div>运动频带功率<small>动作相关频段的能量</small></div>
+          <div>呼吸频带功率<small>缓慢周期变化的能量</small></div>
+          <div>频谱总功率<small>频域整体活动水平</small></div>
+          <div>主频率<small>最明显周期所在频率</small></div>
+          <div>变化点数量<small>统计结构突变次数</small></div>
+          <div>平均 RSSI<small>接收信号强弱</small></div>
+          <div>幅度均值<small>子载波平均幅度</small></div>
+          <div>幅度标准差<small>幅度离散程度</small></div>
+          <div>偏度<small>分布左右不对称性</small></div>
+          <div>峰度<small>分布尖锐程度</small></div>
+          <div>四分位距<small>中间 50% 的跨度</small></div>
+          <div>熵<small>幅度分布复杂度</small></div>
+          <div>最大值<small>最强子载波幅度</small></div>
+          <div>范围<small>最大值减最小值</small></div>
+        </div>
+
+        <h3>3. AI 架构是什么？</h3>
+        <p>这里并不是深层神经网络，而是<strong>多分类逻辑回归</strong>。先用训练集均值和标准差标准化 15 维输入，然后每个类别计算一个线性分数，最后通过 softmax 转成概率。softmax 是一种数学转换：把模型给各类别的原始分数变成总和为 100% 的概率。</p>
+
+        <div class="arch" aria-label="自适应分类器模型架构">
+          <div class="arch-row">
+            <div class="arch-node">
+              <strong>x ∈ R¹⁵</strong>
+              <small>15 个实时统计特征</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">
+              <strong>z = (x − μ) / σ</strong>
+              <small>按训练集均值和标准差归一化</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node accent">
+              <strong>p = softmax(Wz + b)</strong>
+              <small>每个类别一个概率；取最大值作为预测</small>
+            </div>
+          </div>
+          <p class="arch-caption">模型小不等于不是 AI。关键在于 W 和 b 是从带标签数据中优化得到的，而不是人工写死。</p>
+        </div>
+
+        <p>训练使用 SGD（Stochastic Gradient Descent，随机梯度下降），也就是根据预测误差一点点调整模型权重。默认训练 200 个 epoch；一个 epoch 表示“全部训练样本完整学一遍”。batch size 32 表示每次拿 32 条样本算一次更新。初始 learning rate（学习率，也就是每次调整权重的步幅）约 0.1，并逐渐减小。模型连同类别名、标准化参数和权重保存在 <code>data/adaptive_model.json</code> 中。实时推理时，源码会把模型 confidence（置信度，表示模型对自己预测有多确定）与原分类置信度按约 70% / 30% 混合，然后用模型标签覆盖原标签。</p>
+
+        <h3>4. 输出是什么？</h3>
+        <div class="output-strip" aria-label="自适应分类器默认输出类别">
+          <div>absent<br>无人</div>
+          <div>present_still<br>有人静止</div>
+          <div>present_moving<br>有人移动</div>
+          <div>active<br>剧烈活动</div>
+        </div>
+        <p>输出至少包括类别名称与置信度。这种输出特别适合自动化：例如“有人移动”时开灯，“房间持续无人”时关闭空调，或者把类别通过 MQTT 送进 Home Assistant。</p>
+
+        <h3>5. 如何使用？</h3>
+        <p>典型流程是在传感器已稳定工作的前提下，分别录制空房、静坐、行走和较剧烈活动。录制 ID 中写入可识别的标签词，停止录制后调用训练接口。下面是仓库接口所表达的工作流示意：</p>
+
+        <div class="code-block" data-label="LOCAL TRAINING FLOW"># 1. 开始录制空房样本
+POST /api/v1/recording/start
+{"id":"train_absent_room1"}
+
+# 2. 停止录制；再分别录制 still / moving / active
+POST /api/v1/recording/stop
+
+# 3. 从本地录制训练分类器
+POST /api/v1/adaptive/train
+
+# 4. 查看模型是否已加载、类别和样本状态
+GET /api/v1/adaptive/status
+
+# 5. 如需回到原规则分类
+POST /api/v1/adaptive/unload</div>
+
+        <p>这条路线的优势是快、轻、容易针对单个房间适配；局限是它只给粗粒度类别，不能告诉你手臂在哪里，也容易在换房间或移动设备后失效。另外，训练函数报告的 accuracy 是对训练样本本身的正确率，并不等于独立测试集上的泛化能力。真正部署时应该留出一部分不参与训练的数据做验证。</p>
+      </section>
+
+      <section class="section" id="pose-cog">
+        <span class="section-no">06 / Route B</span>
+        <h2>轻量姿态 Cog：把 CSI 时间窗直接变成 17 个关节</h2>
+        <p class="lead">RuView 还提供一个独立的 <code>cog-pose-estimation</code> 组件。Cog 可以理解为可单独安装和运行的小功能模块。它比完整 DensePose 简单得多，但闭环更具体：仓库里有 safetensors 权重文件（安全、只保存模型张量的文件格式）和 ONNX 模型（便于在不同推理框架间交换的通用格式），也记录了真实 Raspberry Pi 5 单板计算机上加载权重的基础运行验证。</p>
+
+        <h3>1. 输入是什么？</h3>
+        <p>这个模型只取<strong>第一个感知节点的幅度</strong>，不使用相位，也不融合多个节点。它从 sensing server 的 <code>/api/v1/sensing/latest</code> 轮询最新数据，默认约每 40 ms 一次，然后维护 20 帧历史窗口。</p>
+
+        <div class="tensor" aria-label="轻量姿态模型张量变化">
+          <div class="tensor-card">
+            <b>RAW SOURCE</b>
+            <strong>CSI amplitude</strong>
+            <p>第一个 ESP32 节点<br>56 个子载波</p>
+          </div>
+          <div class="tensor-card">
+            <b>WINDOW</b>
+            <strong>[1, 56, 20]</strong>
+            <p>batch（一次处理的样本数）× 子载波 × 时间帧</p>
+          </div>
+          <div class="tensor-card">
+            <b>NETWORK HEAD</b>
+            <strong>34 values</strong>
+            <p>每个关节的 x、y 两个值</p>
+          </div>
+          <div class="tensor-card">
+            <b>OUTPUT</b>
+            <strong>[17, 2]</strong>
+            <p>sigmoid 后归一化到 0–1</p>
+          </div>
+        </div>
+
+        <p><code>[1, 56, 20]</code> 是一个 tensor（张量，也就是多维数字数组）的形状，可以这样读：一次推理 1 个样本，每个样本观察 56 个子载波，每个子载波保留最近 20 个时间点。若采样接近 25 Hz，这段窗口覆盖约 0.8 秒。</p>
+
+        <h3>2. 模型架构是什么？</h3>
+        <div class="arch" aria-label="轻量姿态 Cog 网络架构">
+          <div class="arch-row long">
+            <div class="arch-node">
+              <strong>Conv1d 56→64</strong>
+              <small>kernel 3 · dilation 1<br>学习短期局部变化</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">
+              <strong>Conv1d 64→128</strong>
+              <small>kernel 3 · dilation 2<br>扩大时间感受野</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">
+              <strong>Conv1d 128→128</strong>
+              <small>kernel 3 · dilation 4<br>再看更长时间关系</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node accent">
+              <strong>Mean + FC</strong>
+              <small>时间均值 → 128→256→34<br>sigmoid → 17×2</small>
+            </div>
+          </div>
+        </div>
+
+        <p>Conv1d（one-dimensional convolution，一维卷积）会像一个短小的滑动观察窗，沿时间轴寻找局部变化模式。三层卷积的膨胀率从 1、2 到 4，使模型不必堆很多层就能看到更长的变化范围。之后对时间维做平均池化，把 128 通道的时序特征压缩为一个向量；FC（Fully Connected，全连接层）再把所有输入与所有输出相连，最终回归 34 个数。sigmoid（把任意数压到 0–1 范围的函数）再把这些数变成 17 个关节的归一化二维坐标。</p>
+
+        <div class="two-col">
+          <article class="essay-box">
+            <h3>为什么用 Conv1d？</h3>
+            <p>输入本质是“多个子载波随时间变化”，一维卷积适合寻找局部时间模式，参数量远小于大视觉网络，适合树莓派或边缘主机。</p>
+          </article>
+          <article class="essay-box">
+            <h3>为什么最后用 sigmoid？</h3>
+            <p>sigmoid 把每个输出限制在 0–1，表示画布中的归一化 x、y。上层需要结合显示区域尺寸转换为像素坐标。</p>
+          </article>
+        </div>
+
+        <h3>3. 输出长什么样？</h3>
+        <p>模型输出 COCO 风格的 17 个二维关键点。COCO 原本是一个常用视觉数据集和标注规范；这里借用它规定的 17 个人体关节点顺序。把相邻关节连起来，就形成骨架。注意它不是相机拍摄的人像，也没有纹理、衣服或身份信息。</p>
+
+        <div class="skeleton" aria-label="17 个关键点组成的人体骨架示意">
+          <span class="joint" style="left:50%;top:8%"></span>
+          <span class="joint" style="left:44%;top:7%"></span>
+          <span class="joint" style="left:56%;top:7%"></span>
+          <span class="joint" style="left:39%;top:10%"></span>
+          <span class="joint" style="left:61%;top:10%"></span>
+          <span class="joint" style="left:38%;top:29%"></span>
+          <span class="joint" style="left:62%;top:29%"></span>
+          <span class="joint" style="left:27%;top:49%"></span>
+          <span class="joint" style="left:73%;top:49%"></span>
+          <span class="joint" style="left:19%;top:69%"></span>
+          <span class="joint" style="left:81%;top:69%"></span>
+          <span class="joint" style="left:43%;top:57%"></span>
+          <span class="joint" style="left:57%;top:57%"></span>
+          <span class="joint" style="left:40%;top:77%"></span>
+          <span class="joint" style="left:60%;top:77%"></span>
+          <span class="joint" style="left:37%;top:97%"></span>
+          <span class="joint" style="left:63%;top:97%"></span>
+
+          <i class="bone" style="left:44%;top:13%;width:20%;transform:rotate(90deg)"></i>
+          <i class="bone" style="left:38%;top:29%;width:24%;transform:rotate(0deg)"></i>
+          <i class="bone" style="left:38%;top:29%;width:24%;transform:rotate(118deg)"></i>
+          <i class="bone" style="left:27%;top:49%;width:22%;transform:rotate(112deg)"></i>
+          <i class="bone" style="left:62%;top:29%;width:24%;transform:rotate(62deg)"></i>
+          <i class="bone" style="left:73%;top:49%;width:22%;transform:rotate(68deg)"></i>
+          <i class="bone" style="left:38%;top:29%;width:31%;transform:rotate(78deg)"></i>
+          <i class="bone" style="left:62%;top:29%;width:31%;transform:rotate(102deg)"></i>
+          <i class="bone" style="left:43%;top:57%;width:14%;transform:rotate(0deg)"></i>
+          <i class="bone" style="left:43%;top:57%;width:26%;transform:rotate(97deg)"></i>
+          <i class="bone" style="left:40%;top:77%;width:25%;transform:rotate(98deg)"></i>
+          <i class="bone" style="left:57%;top:57%;width:26%;transform:rotate(83deg)"></i>
+          <i class="bone" style="left:60%;top:77%;width:25%;transform:rotate(82deg)"></i>
+        </div>
+
+        <h3>4. 它的准确率怎么样？</h3>
+        <p>仓库的官方基准很坦诚：训练数据只有 1,077 个配对样本，来自约 30 分钟“坐在桌前”的单一场景，并按时间切分训练和评估。结果如下：</p>
+
+        <div class="metric-row">
+          <div class="metric">
+            <strong>3.0%</strong>
+            <span>PCK@20：预测关节距离真值不超过 20 像素的比例</span>
+          </div>
+          <div class="metric">
+            <strong>18.5%</strong>
+            <span>PCK@50：预测关节距离真值不超过 50 像素的比例</span>
+          </div>
+          <div class="metric">
+            <strong>0.0931</strong>
+            <span>归一化 MPJPE：所有关节位置误差的平均值</span>
+          </div>
+        </div>
+
+        <p>PCK 是 Percentage of Correct Keypoints（正确关键点比例），数值越高越好；MPJPE 是 Mean Per Joint Position Error（平均每关节位置误差），数值越低越好。这组结果意味着它已经证明“数据采集 → 训练 → 权重保存 → Candle 推理 → 边缘设备加载”这条工程链路可行，但还不能当作可靠的人体姿态产品。Candle 是 Rust 语言的机器学习推理框架。模型没有单独的置信度输出头；运行时使用固定的 <code>0.185</code> 作为典型置信度，这个值来自验证集 PCK@50，而不是当前这一帧的真实置信度。</p>
+
+        <div class="margin-note">
+          <strong>如何正确理解这个组件</strong>
+          它更像一辆已经能发动、能走通测试道路的原型车，而不是量产车。真正提升效果的瓶颈主要在数据：需要更多动作、更多人员、更多房间、更多设备布局、更多视角和更严格的独立测试集。
+        </div>
+      </section>
+
+      <section class="section" id="densepose">
+        <span class="section-no">07 / Route C</span>
+        <h2>完整 DensePose 架构：项目想达到的更高目标</h2>
+        <p class="lead">轻量 Cog 只回归骨架坐标；完整 DensePose 路线更 ambitious：不仅找出 17 个关节，还希望判断像素属于哪个身体部位，并给出人体表面 UV 坐标。它试图把不可见的无线波形翻译成类似视觉模型可处理的空间表征。</p>
+
+        <h3>1. 输入张量是什么？</h3>
+        <p>默认训练配置以 56 个目标子载波、3×3 发射/接收天线路径和 100 帧时间窗口为核心。模型的 forward（前向计算，也就是把输入送进模型得到预测）接收幅度与相位两个张量，逻辑形态可理解为 <code>[B, T×Tx×Rx, Nsub]</code>：B 是一次处理的样本数，T 是时间帧，Tx/Rx 是发送/接收天线数量，Nsub 是子载波数量。不同硬件原始子载波数量可以不同，例如配置中提到 MM‑Fi 数据集 114、ESP32 HT20 56、HT40 约 192；HT20/HT40 表示约 20 MHz/40 MHz 的 Wi‑Fi 信道宽度。随后再通过插值或选择统一到模型需要的宽度。</p>
+
+        <h3>2. 为什么先翻译成“伪图像”？</h3>
+        <p>CSI 天然不是二维照片：一条轴是天线/时间组合，一条轴是子载波。项目使用 modality translator（模态翻译器，把一种数据形式转成另一种表示）分别编码幅度和相位，再融合为 <code>3×48×48</code> 的空间张量。它不是实际 RGB（红、绿、蓝三颜色通道）图像，但形状像三通道小图，因此后续可以复用成熟的二维卷积骨干与解码头。</p>
+
+        <div class="arch" aria-label="完整 DensePose 模型架构">
+          <div class="arch-row">
+            <div class="arch-node">
+              <strong>Amplitude branch</strong>
+              <small>展平 → FC 512 → 256<br>学习衰减与运动结构</small>
+            </div>
+            <div class="arch-arrow">+</div>
+            <div class="arch-node">
+              <strong>Phase branch</strong>
+              <small>清洗相位 → FC 512 → 256<br>学习路径长度变化</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node accent">
+              <strong>Translator</strong>
+              <small>天线路径注意力 / min-cut<br>融合为 3×48×48 伪图像</small>
+            </div>
+          </div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-row">
+            <div class="arch-node">
+              <strong>Conv refine</strong>
+              <small>卷积细化空间结构</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node accent">
+              <strong>ResNet-like backbone</strong>
+              <small>ResNet 风格骨干网络<br>提取 [B, 256, 12, 12] 特征图</small>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">
+              <strong>Parallel heads</strong>
+              <small>关键点、身体部位、UV 三路输出</small>
+            </div>
+          </div>
+        </div>
+
+        <p>这里的骨干是 ResNet（Residual Network，残差网络）风格。“骨干网络”可以理解为模型的主干特征提取器；残差连接让信息可以跨过若干层直接传递，使较深网络更容易训练。</p>
+
+        <h3>3. 三个输出头分别做什么？</h3>
+
+        <div class="tensor">
+          <div class="tensor-card">
+            <b>BACKBONE</b>
+            <strong>[B, 256, 12, 12]</strong>
+            <p>无线伪图像的高层空间特征</p>
+          </div>
+          <div class="tensor-card">
+            <b>KEYPOINT HEAD</b>
+            <strong>[B, 17, 56, 56]</strong>
+            <p>每个关节一张热图，峰值是最可能位置</p>
+          </div>
+          <div class="tensor-card">
+            <b>PART HEAD</b>
+            <strong>[B, 25, 56, 56]</strong>
+            <p>24 个身体部位 + 1 个背景的 logits（softmax 前的原始分数）</p>
+          </div>
+          <div class="tensor-card">
+            <b>UV HEAD</b>
+            <strong>[B, 48, 56, 56]</strong>
+            <p>24 个部位各自的 U、V 表面坐标</p>
+          </div>
+        </div>
+
+        <p><strong>关键点热图</strong>不是直接输出 x、y，而是在 56×56 网格上为每个关节产生概率峰。<strong>部位分割</strong>为每个网格位置判断背景、头部、躯干、上臂等类别。<strong>UV 坐标</strong>是把人体三维表面“摊平”后的二维坐标，U、V 类似地图上的横纵坐标，使同一个身体部位可以有更细的表面位置。</p>
+
+        <h3>4. 如何训练这个模型？</h3>
+        <p>训练中的 loss（损失）是衡量“预测与正确答案差多远”的数字，越小通常越好。设计上有四类损失：关键点热图用均方误差，身体部位用交叉熵，UV 坐标用 Smooth L1（一种对异常大误差不那么敏感的回归损失），另外还可加入迁移/蒸馏损失，让无线表征靠近教师模型。但当前默认 trainer（训练器）的主循环明确写着 <code>no DensePose GT in this pipeline</code>；GT 是 Ground Truth（真值标签、标准答案），这句话表示该管线没有完整 DensePose 标注，实际只计算关键点损失。</p>
+
+        <h3>5. 推理框架是否存在？</h3>
+        <p><code>wifi-densepose-nn</code> crate 提供 ONNX、tch 和 Candle 等后端抽象。crate 是 Rust 语言中的代码包；tch 是 Rust 调用 PyTorch 底层能力的库；“后端”指真正负责执行模型计算的引擎。泛型管线可以先运行 CSI translator，再产生 DensePose 输出。从组件层面看，模型执行框架是存在的。</p>
+        <p>但主 <code>wifi-densepose-sensing-server</code> 的依赖中没有接入该 crate；当前 <code>main.rs</code> 构造实时更新时多处仍是 <code>pose_keypoints: None</code>。训练 API 内虽有 <code>infer_pose_from_model</code>，在当前代码搜索中主要出现在模块自身和测试位置，没有成为主实时数据路径的完整调用。因此：</p>
+
+        <div class="quick-answer">
+          <p><strong>不能把“完整 DensePose 架构存在”直接等同于“主服务正在用训练好的 DensePose 模型实时输出姿态”。</strong>更准确的表述是：研究架构、训练模块和多后端推理基础设施已经形成，但产品主链路仍需完成模型接线、数据对齐和真实端到端验证。</p>
+        </div>
+      </section>
+
+      <section class="section" id="training">
+        <span class="section-no">08 / Learning from a camera teacher</span>
+        <h2>AI 从哪里学会“这串波形对应这个姿势”？</h2>
+        <p class="lead">CSI 本身没有“左手腕”“右膝盖”这样的标签。要训练姿态模型，必须在同一时刻知道无线信号是什么、真实人体姿态又是什么。RuView 的 ADR‑079 给出的核心方案是：训练时用相机当老师，部署时拿掉相机。</p>
+
+        <div class="timeline">
+          <div class="time-item">
+            <h3>同步采集 CSI 与视频</h3>
+            <p>ESP32 记录无线信道变化，摄像头同时拍摄同一空间。两边都要保留可靠时间戳，否则模型会学到错位的对应关系。</p>
+          </div>
+          <div class="time-item">
+            <h3>视觉教师生成关键点</h3>
+            <p>视频帧通过 MediaPipe 等视觉姿态模型，转成 COCO 风格 17 个关节坐标。原视频不必直接作为无线模型输入。</p>
+          </div>
+          <div class="time-item">
+            <h3>时间对齐并切分窗口</h3>
+            <p>把一段 CSI 窗口与对应时刻的关键点、部位或 UV 标签配对。必须处理采样率差异、丢帧、网络抖动与时钟偏移。</p>
+          </div>
+          <div class="time-item">
+            <h3>训练 CSI → Pose 映射</h3>
+            <p>模型看到的输入只有幅度/相位或其特征；教师标签用于计算损失并反向传播，逐步更新权重。</p>
+          </div>
+          <div class="time-item">
+            <h3>导出权重并离线评估</h3>
+            <p>保留从未参与训练的人员、时间段或房间做验证，计算 PCK、MPJPE、误报率和跨环境性能。</p>
+          </div>
+          <div class="time-item">
+            <h3>部署时移除摄像头</h3>
+            <p>实际运行只需要 Wi‑Fi 发射端、ESP32 接收节点和推理设备。相机是训练阶段的老师，不是持续运行的传感器。</p>
+          </div>
+        </div>
+
+        <h3>为什么训练数据比模型名字更重要？</h3>
+        <p>无线感知对环境非常敏感。相同的人做相同动作，只要 AP 或 ESP32 移动、信道改变、家具调整、门开关状态不同，CSI 分布就可能明显变化。一个在单一桌面场景表现不错的模型，不一定能迁移到卧室、走廊或另一套硬件。</p>
+        <p>高质量数据集至少要覆盖以下变化：</p>
+        <ul>
+          <li>不同身高、体型、衣着与动作速度的人；</li>
+          <li>站、坐、躺、转身、遮挡、多人同时活动等姿势；</li>
+          <li>AP 与接收节点的不同距离、方向、高度和天线布局；</li>
+          <li>不同房间、墙体、家具位置、门窗状态与背景运动；</li>
+          <li>不同 Wi‑Fi 信道、带宽、发包率、RSSI 与射频干扰；</li>
+          <li>按人员或环境划分训练/测试集，防止只记住某次录制。</li>
+        </ul>
+
+        <div class="two-col">
+          <article class="essay-box">
+            <h3>训练阶段</h3>
+            <p>CSI + 摄像头教师 + 时间同步 + GPU/CPU 训练。隐私要求更高，因为存在视频；但可在受控环境中完成，并在生成标签后删除原视频。</p>
+          </article>
+          <article class="essay-box">
+            <h3>部署阶段</h3>
+            <p>持续 Wi‑Fi 数据包 + ESP32 CSI + 本地推理。无需相机，无需把原始波形上传云端，适合隐私敏感空间。</p>
+          </article>
+        </div>
+
+        <p>所谓“无摄像头感知”，准确含义应是<strong>推理部署时无需摄像头</strong>。若要训练高精度人体姿态模型，摄像头或其他高质量姿态传感器仍是非常实用的真值来源。</p>
+      </section>
+
+      <section class="section" id="deployment">
+        <span class="section-no">09 / Deployment reality</span>
+        <h2>Wi‑Fi 要固定吗？要一直开启吗？</h2>
+        <p class="lead">这两个问题直接决定系统能不能稳定工作。答案不是简单的“必须”或“不必须”，而要区分物理上能否运行与工程上能否保持模型准确。</p>
+
+        <div class="decision">
+          <article>
+            <span class="status">推荐固定</span>
+            <h3>发射端和接收端应固定位置</h3>
+            <p>人体动作是在一个既有多径场上造成小扰动。移动 AP 或 ESP32 等于改变了整个“坐标系”和基线，原来的阈值、统计分布、甚至模型权重都可能失效。</p>
+            <ul>
+              <li>固定 AP、ESP32 的位置、朝向和高度；</li>
+              <li>固定 Wi‑Fi 信道和带宽，避免自动换信道；</li>
+              <li>大幅挪动家具后重新校准；</li>
+              <li>跨房间使用时采集新数据并微调或重训。</li>
+            </ul>
+          </article>
+          <article>
+            <span class="status research">连续感知需持续发包</span>
+            <h3>Wi‑Fi 需要在感知期间保持活动</h3>
+            <p>ESP32 只有收到可计算 CSI 的 Wi‑Fi 帧时，才有新的信道观测。没有数据包，就像摄像头没有新帧：模型无法知道环境此刻是否变化。</p>
+            <ul>
+              <li>要实时感知，就要持续、有规律地产生 Wi‑Fi 帧；</li>
+              <li>不一定要求大流量上网，专门的探测包也可以；</li>
+              <li>间歇发包可省电，但时间分辨率会下降；</li>
+              <li>完全关闭发射端后，只能保留最后状态，不能继续检测。</li>
+            </ul>
+          </article>
+        </div>
+
+        <h3>信号强度需要“完全固定”吗？</h3>
+        <p>发射功率最好稳定，但 RSSI 不可能纹丝不动，因为人体存在本来就会让它变化。这里的“固定”指不要让系统配置主动大幅漂移：例如 AP 自动调功率、自动漫游、自动换信道，或者有人把设备从桌上挪到墙边。</p>
+        <p>系统可以通过归一化、环境基线、自适应阈值和本地训练吸收一部分正常波动。但如果链路信噪比太低、强干扰频繁，或者设备位置改变造成传播路径重构，模型看到的就不再是训练时的分布。</p>
+
+        <table class="comparison">
+          <thead>
+            <tr>
+              <th>变化</th>
+              <th>通常影响</th>
+              <th>建议处理</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>人体正常走动</td>
+              <td>这是系统希望观察的信号</td>
+              <td>无需处理</td>
+            </tr>
+            <tr>
+              <td>日常小幅 RSSI 波动</td>
+              <td>可由基线与归一化部分吸收</td>
+              <td>保持稳定发包，监测质量</td>
+            </tr>
+            <tr>
+              <td>移动 AP / ESP32</td>
+              <td>多径结构整体改变</td>
+              <td>重新校准；AI 模型可能需要重训</td>
+            </tr>
+            <tr>
+              <td>更换信道或带宽</td>
+              <td>子载波频点与数量变化</td>
+              <td>固定配置；必要时重新采样和适配输入</td>
+            </tr>
+            <tr>
+              <td>大型家具移动</td>
+              <td>反射路径明显变化</td>
+              <td>重新学习空房基线并验证模型</td>
+            </tr>
+            <tr>
+              <td>Wi‑Fi 停止发包</td>
+              <td>没有新 CSI，感知停止</td>
+              <td>连续任务保持链路活跃</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>AI 应部署在哪里？</h3>
+        <p>ESP32 更适合 Tier 1/2 DSP 和极轻量逻辑；自适应逻辑回归适合直接放在 Rust sensing server；姿态网络通常放在树莓派、Cognitum appliance 或有 CPU/GPU 的本地主机。这样原始数据不必离开局域网，延迟更低，也不依赖云服务。</p>
+      </section>
+
+      <section class="section" id="reality-check">
+        <span class="section-no">10 / What is real today</span>
+        <h2>按当前源码，哪些已完成，哪些还在路上？</h2>
+        <p class="lead">开源项目的 README、架构目标、独立原型和主产品路径可能处在不同阶段。下面的判断依据不是宣传语，而是当前提交中“依赖是否存在、权重是否存在、函数是否被主路径调用、API 是否输出真实结果”。</p>
+
+        <div class="maturity">
+          <div class="maturity-row">
+            <strong>ESP32 CSI 采集</strong>
+            <span class="status">稳定基础</span>
+            <p>能采集 CSI 并按不同 Tier 处理、传输；这是所有上层功能的数据源。</p>
+          </div>
+          <div class="maturity-row">
+            <strong>Tier 1/2 DSP</strong>
+            <span class="status">固件已实现</span>
+            <p>相位、统计、呼吸、心率、存在、跌倒等规则管线存在，但不要称为训练神经网络。</p>
+          </div>
+          <div class="maturity-row">
+            <strong>在线自适应分类</strong>
+            <span class="status">实时已接入</span>
+            <p>15 维特征、训练、保存、加载和实时 override 形成完整闭环，是最适合马上实验的 AI 功能。</p>
+          </div>
+          <div class="maturity-row">
+            <strong>轻量姿态 Cog</strong>
+            <span class="status partial">真实权重 / 低精度</span>
+            <p>独立组件与模型权重存在，也做过 Pi 5 加载验证；公开基准 PCK@50 仅 18.5%，原生实时源整合仍需继续验证。</p>
+          </div>
+          <div class="maturity-row">
+            <strong>完整 DensePose 训练</strong>
+            <span class="status partial">框架存在</span>
+            <p>translator、骨干、三输出头和损失结构存在；当前主训练循环没有完整 DensePose GT，只训练关键点分支。</p>
+          </div>
+          <div class="maturity-row">
+            <strong>主服务实时 DensePose</strong>
+            <span class="status research">未完整接线</span>
+            <p>sensing server 当前没有依赖完整 NN crate，多处实时更新仍写入 pose_keypoints: None，不能据此宣称已完成产品级实时姿态。</p>
+          </div>
+        </div>
+
+        <h3>如果现在要用，应该选哪条路线？</h3>
+        <ul>
+          <li><strong>做房间存在/静止/移动/活动分类：</strong>从在线自适应分类器开始。硬件要求低，最容易形成可验证结果。</li>
+          <li><strong>研究 CSI 到骨架的可行性：</strong>运行轻量姿态 Cog，先复现实验基准，再扩充多场景配对数据。不要先承诺高精度。</li>
+          <li><strong>做真正的无线 DensePose：</strong>把它视为研发项目，需要完成 DensePose GT 数据、主服务模型接线、跨环境数据集与端到端评估。</li>
+          <li><strong>只需呼吸、心率或粗略存在：</strong>优先评估 Tier 2 DSP，未必需要 AI。</li>
+        </ul>
+
+        <div class="quick-answer">
+          <p><strong>RuView 最有价值的地方，不是它已经把所有无线人体感知问题解决了，而是它把硬件采集、边缘 DSP、Rust 服务、训练框架、边缘推理和上层接口放进了一个可继续验证与扩展的平台。</strong></p>
+        </div>
+      </section>
+
+      <section class="section" id="glossary">
+        <span class="section-no">11 / Glossary & evidence</span>
+        <h2>术语速查与源码证据</h2>
+        <p class="lead">最后把文章里最容易混淆的概念收在一起。点击术语可展开解释；证据链接固定到本次分析所用提交，避免以后仓库改动导致描述与代码错位。</p>
+
+        <details>
+          <summary>CSI 与 RSSI 有什么区别？</summary>
+          <p>RSSI 通常只有一个总的接收信号强度值；CSI 会给出多个 OFDM 子载波、可能还有多天线路径上的复数信道响应。RSSI 像“整张照片的平均亮度”，CSI 更像“很多像素随时间的变化”，信息量大得多。</p>
+        </details>
+        <details>
+          <summary>I/Q、幅度和相位是什么关系？</summary>
+          <p>I 与 Q 是复数信号的实部和虚部。由它们可以计算幅度和相位：幅度描述信号被衰减多少，相位描述波形相对移动了多少。人体改变传播路径长度和反射强度，所以两者都会变化。</p>
+        </details>
+        <details>
+          <summary>OFDM 子载波为什么能感知人体？</summary>
+          <p>不同子载波频率略有差别，对多径叠加的响应也略有不同。人体运动会改变一部分反射路径，相当于同时扰动许多窄带探针。观察这些探针在时间上的相关变化，就可以提取动作与生命体征信息。</p>
+        </details>
+        <details>
+          <summary>关键点、部位分割和 DensePose 有什么区别？</summary>
+          <p>关键点只给鼻子、肩、肘、腕、髋、膝、踝等稀疏位置；部位分割给出每个网格属于哪块身体区域；DensePose 进一步为人体表面建立连续 UV 坐标，更接近“身体表面定位”。</p>
+        </details>
+        <details>
+          <summary>本地推理是否意味着完全没有隐私风险？</summary>
+          <p>本地推理避免把数据上传云端，而且无线骨架通常不包含人脸纹理，但它仍能揭示房间占用、作息、动作甚至生命体征。部署时仍应限制访问、保留最少数据、明确告知使用者并做好网络鉴权。</p>
+        </details>
+
+        <h3>完整缩写与专业名词表</h3>
+        <p>按“缩写 / 英文全称 / 白话解释”排列。正文里遇到看不懂的词，可以用浏览器的页面查找功能直接搜索。</p>
+
+        <dl class="term-index" aria-label="RuView 完整术语表">
+          <div class="term-entry" id="term-ai">
+            <dt><abbr title="Artificial Intelligence">AI</abbr></dt>
+            <span class="full-name">Artificial Intelligence</span>
+            <dd><strong>人工智能。</strong>这里主要指从带标签数据中学出分类边界或 CSI 到人体姿态的映射，不代表系统每一步都由神经网络完成。</dd>
+          </div>
+          <div class="term-entry" id="term-esp32">
+            <dt>ESP32</dt>
+            <span class="full-name">Espressif microcontroller family</span>
+            <dd><strong>乐鑫微控制器芯片系列。</strong>像一台自带 Wi‑Fi 的微型低功耗计算机，RuView 用它接收 Wi‑Fi 帧并读取 CSI。</dd>
+          </div>
+          <div class="term-entry" id="term-csi">
+            <dt><abbr title="Channel State Information">CSI</abbr></dt>
+            <span class="full-name">Channel State Information</span>
+            <dd><strong>信道状态信息。</strong>描述各个 Wi‑Fi 子载波经过空间后发生的幅度衰减和相位偏移，是无线感知的主要原始数据。</dd>
+          </div>
+          <div class="term-entry" id="term-ofdm">
+            <dt><abbr title="Orthogonal Frequency Division Multiplexing">OFDM</abbr></dt>
+            <span class="full-name">Orthogonal Frequency Division Multiplexing</span>
+            <dd><strong>正交频分复用。</strong>把一条宽信道拆成许多窄子载波并行传输；CSI 会分别描述这些子载波。</dd>
+          </div>
+          <div class="term-entry" id="term-iq">
+            <dt><abbr title="In-phase / Quadrature">I/Q</abbr></dt>
+            <span class="full-name">In-phase / Quadrature</span>
+            <dd><strong>同相分量和正交分量。</strong>表示复数无线信号的两个数，可以换算成更直观的幅度与相位。</dd>
+          </div>
+          <div class="term-entry" id="term-dsp">
+            <dt><abbr title="Digital Signal Processing">DSP</abbr></dt>
+            <span class="full-name">Digital Signal Processing</span>
+            <dd><strong>数字信号处理。</strong>用滤波、频谱分析、均值、方差、阈值等数学方法处理波形。它可以很智能，但不等于机器学习。</dd>
+          </div>
+          <div class="term-entry" id="term-bpm">
+            <dt><abbr title="Beats Per Minute">BPM</abbr></dt>
+            <span class="full-name">Beats Per Minute</span>
+            <dd><strong>每分钟次数。</strong>心率 72 BPM 表示约每分钟心跳 72 次；呼吸也可用每分钟次数表示。</dd>
+          </div>
+          <div class="term-entry" id="term-hz">
+            <dt><abbr title="Hertz">Hz</abbr></dt>
+            <span class="full-name">Hertz</span>
+            <dd><strong>赫兹。</strong>每秒重复次数。1 Hz 表示每秒发生一次；15 BPM 则相当于 0.25 Hz。</dd>
+          </div>
+          <div class="term-entry" id="term-rssi">
+            <dt><abbr title="Received Signal Strength Indicator">RSSI</abbr></dt>
+            <span class="full-name">Received Signal Strength Indicator</span>
+            <dd><strong>接收信号强度指示。</strong>大致表示接收到的 Wi‑Fi 有多强，通常只有一个总强度值，细节远少于 CSI。</dd>
+          </div>
+          <div class="term-entry" id="term-ap">
+            <dt><abbr title="Access Point">AP</abbr></dt>
+            <span class="full-name">Access Point</span>
+            <dd><strong>无线接入点。</strong>通常是路由器中负责提供 Wi‑Fi 的部分，也可以是专门发包的设备。</dd>
+          </div>
+          <div class="term-entry" id="term-tier">
+            <dt>Tier</dt>
+            <span class="full-name">processing level</span>
+            <dd><strong>处理等级。</strong>RuView 的 Tier 0、1、2 表示 ESP32 本地处理逐级增加，不是模型版本号。</dd>
+          </div>
+          <div class="term-entry" id="term-adr">
+            <dt><abbr title="Architecture Decision Record">ADR</abbr></dt>
+            <span class="full-name">Architecture Decision Record</span>
+            <dd><strong>架构决策记录。</strong>项目用这种文档记录“选了什么技术方案、为什么这样选、有什么后果”。</dd>
+          </div>
+          <div class="term-entry" id="term-udp">
+            <dt><abbr title="User Datagram Protocol">UDP</abbr></dt>
+            <span class="full-name">User Datagram Protocol</span>
+            <dd><strong>用户数据报协议。</strong>一种低开销、低延迟的网络传输方式；发送很快，但协议本身不保证每个数据包必达或按顺序到达。</dd>
+          </div>
+          <div class="term-entry" id="term-api">
+            <dt><abbr title="Application Programming Interface">API</abbr></dt>
+            <span class="full-name">Application Programming Interface</span>
+            <dd><strong>应用程序编程接口。</strong>可以理解为软件留给其他程序使用的“操作入口”和“数据窗口”。</dd>
+          </div>
+          <div class="term-entry" id="term-rest">
+            <dt><abbr title="Representational State Transfer">REST</abbr></dt>
+            <span class="full-name">Representational State Transfer</span>
+            <dd><strong>常见的网页接口设计方式。</strong>客户端通过网址和 GET、POST 等动作读取状态或触发操作。</dd>
+          </div>
+          <div class="term-entry" id="term-websocket">
+            <dt>WebSocket</dt>
+            <span class="full-name">persistent two-way web connection</span>
+            <dd><strong>网页长连接。</strong>建立后服务器可以连续把新数据推给浏览器，不需要浏览器反复刷新询问。</dd>
+          </div>
+          <div class="term-entry" id="term-mqtt">
+            <dt><abbr title="Message Queuing Telemetry Transport">MQTT</abbr></dt>
+            <span class="full-name">Message Queuing Telemetry Transport</span>
+            <dd><strong>轻量物联网消息协议。</strong>设备把消息发布到主题，其他系统订阅主题，适合传递“有人”“跌倒告警”等状态。</dd>
+          </div>
+          <div class="term-entry" id="term-tensor">
+            <dt>Tensor</dt>
+            <span class="full-name">multi-dimensional array</span>
+            <dd><strong>张量。</strong>本质是多维数字数组；例如 <code>[1, 56, 20]</code> 表示 1 个样本、56 个子载波、20 个时间点。</dd>
+          </div>
+          <div class="term-entry" id="term-feature">
+            <dt>Feature</dt>
+            <span class="full-name">measurable input property</span>
+            <dd><strong>特征。</strong>从原始数据中提取、供模型判断的数字，例如方差、运动频带功率、平均 RSSI。</dd>
+          </div>
+          <div class="term-entry" id="term-baseline">
+            <dt>Baseline</dt>
+            <span class="full-name">reference level of the environment</span>
+            <dd><strong>环境基线。</strong>设备、墙体和自然噪声在安静状态下本来就会产生的波动；判断人体变化前，通常先从当前信号中扣掉它。</dd>
+          </div>
+          <div class="term-entry" id="term-threshold">
+            <dt>Threshold</dt>
+            <span class="full-name">decision boundary</span>
+            <dd><strong>阈值。</strong>一条用来切换判断结果的分界线，例如分数超过 0.12 就从“静止有人”进入“有人移动”。</dd>
+          </div>
+          <div class="term-entry" id="term-bandpass">
+            <dt>Band-pass</dt>
+            <span class="full-name">band-pass filter</span>
+            <dd><strong>带通滤波。</strong>只让指定频率范围通过的信号处理方法；RuView 用它从复杂波形中突出呼吸或心率频带。</dd>
+          </div>
+          <div class="term-entry" id="term-change-point">
+            <dt>Change point</dt>
+            <span class="full-name">statistical regime change</span>
+            <dd><strong>变化点。</strong>均值、方差等统计规律突然改变的时刻。短时间出现很多变化点，通常意味着环境或动作正在快速变化。</dd>
+          </div>
+          <div class="term-entry" id="term-phase-acceleration">
+            <dt>Phase accel.</dt>
+            <span class="full-name">phase acceleration</span>
+            <dd><strong>相位加速度。</strong>相位变化速度再次发生变化的快慢；快速冲击会产生尖峰，但尖峰本身不能证明一定发生了人体跌倒。</dd>
+          </div>
+          <div class="term-entry" id="term-false-positive">
+            <dt>False positive</dt>
+            <span class="full-name">positive result without the target event</span>
+            <dd><strong>误报 / 假阳性。</strong>系统报告“有人”或“跌倒”，但现实中目标事件没有发生，例如风扇扰动被判断为有人。</dd>
+          </div>
+          <div class="term-entry" id="term-softmax">
+            <dt>Softmax</dt>
+            <span class="full-name">score-to-probability function</span>
+            <dd><strong>分数转概率函数。</strong>把多个类别的原始分数转换为总和为 100% 的概率，方便选择最可能的类别。</dd>
+          </div>
+          <div class="term-entry" id="term-logits">
+            <dt>Logits</dt>
+            <span class="full-name">raw class scores</span>
+            <dd><strong>类别原始分数。</strong>它们还不是概率；通常再经过 softmax，才变成便于理解的类别概率。</dd>
+          </div>
+          <div class="term-entry" id="term-epoch">
+            <dt>Epoch</dt>
+            <span class="full-name">one full pass over training data</span>
+            <dd><strong>一轮完整训练。</strong>全部训练样本都被模型学习一遍，算作 1 个 epoch。</dd>
+          </div>
+          <div class="term-entry" id="term-batch">
+            <dt>Batch</dt>
+            <span class="full-name">group of samples processed together</span>
+            <dd><strong>一小批样本。</strong>batch size 32 表示一次用 32 条样本计算误差并更新模型。</dd>
+          </div>
+          <div class="term-entry" id="term-sgd">
+            <dt><abbr title="Stochastic Gradient Descent">SGD</abbr></dt>
+            <span class="full-name">Stochastic Gradient Descent</span>
+            <dd><strong>随机梯度下降。</strong>一种训练方法：观察模型误差，沿着让误差减小的方向逐步调整权重。</dd>
+          </div>
+          <div class="term-entry" id="term-conv1d">
+            <dt>Conv1d</dt>
+            <span class="full-name">one-dimensional convolution</span>
+            <dd><strong>一维卷积。</strong>用一个短滑动窗口沿时间序列扫描，寻找呼吸、移动等局部变化模式。</dd>
+          </div>
+          <div class="term-entry" id="term-fc">
+            <dt><abbr title="Fully Connected">FC</abbr></dt>
+            <span class="full-name">Fully Connected layer</span>
+            <dd><strong>全连接层。</strong>每个输入都可以影响每个输出，常用于把提取好的特征转换成最终分类或坐标。</dd>
+          </div>
+          <div class="term-entry" id="term-coco">
+            <dt>COCO</dt>
+            <span class="full-name">Common Objects in Context</span>
+            <dd><strong>常用视觉数据集与标注规范。</strong>RuView 提到的 COCO 17 关键点，主要指采用了它规定的人体关节名称和顺序。</dd>
+          </div>
+          <div class="term-entry" id="term-pck">
+            <dt><abbr title="Percentage of Correct Keypoints">PCK</abbr></dt>
+            <span class="full-name">Percentage of Correct Keypoints</span>
+            <dd><strong>正确关键点比例。</strong>PCK@50 表示预测关节距离真值不超过 50 像素的比例，越高越好。</dd>
+          </div>
+          <div class="term-entry" id="term-mpjpe">
+            <dt><abbr title="Mean Per Joint Position Error">MPJPE</abbr></dt>
+            <span class="full-name">Mean Per Joint Position Error</span>
+            <dd><strong>平均每关节位置误差。</strong>把所有关节的位置误差取平均，通常越低越好；比较时必须确认单位与归一化方式一致。</dd>
+          </div>
+          <div class="term-entry" id="term-onnx">
+            <dt><abbr title="Open Neural Network Exchange">ONNX</abbr></dt>
+            <span class="full-name">Open Neural Network Exchange</span>
+            <dd><strong>通用模型交换格式。</strong>让在一种工具中训练的模型更容易换到其他推理引擎运行。</dd>
+          </div>
+          <div class="term-entry" id="term-safetensors">
+            <dt>safetensors</dt>
+            <span class="full-name">safe tensor weight format</span>
+            <dd><strong>模型权重文件格式。</strong>主要保存张量数据，不执行任意代码，加载通常更安全、更直接。</dd>
+          </div>
+          <div class="term-entry" id="term-candle">
+            <dt>Candle</dt>
+            <span class="full-name">Rust machine-learning framework</span>
+            <dd><strong>Rust 机器学习框架。</strong>可以在 Rust 程序中加载权重并运行神经网络推理。</dd>
+          </div>
+          <div class="term-entry" id="term-uv">
+            <dt><abbr title="surface U/V coordinates">UV</abbr></dt>
+            <span class="full-name">surface U/V coordinates</span>
+            <dd><strong>人体表面坐标。</strong>把三维人体表面摊平成二维地图后，用 U、V 表示横纵位置。</dd>
+          </div>
+          <div class="term-entry" id="term-gt">
+            <dt><abbr title="Ground Truth">GT</abbr></dt>
+            <span class="full-name">Ground Truth</span>
+            <dd><strong>真值标签、标准答案。</strong>训练和评估时用来与模型预测比较，例如由相机教师生成的正确关节位置。</dd>
+          </div>
+          <div class="term-entry" id="term-tx-rx">
+            <dt><abbr title="Transmit / Receive">Tx / Rx</abbr></dt>
+            <span class="full-name">Transmit / Receive</span>
+            <dd><strong>发送 / 接收。</strong>Tx 通常表示发射天线或发射端，Rx 表示接收天线或接收端。</dd>
+          </div>
+          <div class="term-entry" id="term-ht">
+            <dt>HT20 / HT40</dt>
+            <span class="full-name">20 MHz / 40 MHz channel width</span>
+            <dd><strong>Wi‑Fi 信道带宽配置。</strong>宽度不同会影响可见子载波数量和模型输入，切换后通常需要重新校准或适配。</dd>
+          </div>
+          <div class="term-entry" id="term-resnet">
+            <dt>ResNet</dt>
+            <span class="full-name">Residual Network</span>
+            <dd><strong>残差神经网络。</strong>通过跳跃连接让较深网络更容易训练；RuView 的完整模型使用 ResNet 风格骨干提取空间特征。</dd>
+          </div>
+          <div class="term-entry" id="term-loss">
+            <dt>Loss</dt>
+            <span class="full-name">training error objective</span>
+            <dd><strong>损失函数。</strong>把预测与标准答案之间的差异变成一个数，训练过程会尝试让它越来越小。</dd>
+          </div>
+          <div class="term-entry" id="term-cpu-gpu">
+            <dt>CPU / GPU</dt>
+            <span class="full-name">Central / Graphics Processing Unit</span>
+            <dd><strong>中央处理器 / 图形处理器。</strong>CPU 擅长通用任务；GPU 擅长大量并行计算，常用于加速神经网络训练和推理。</dd>
+          </div>
+          <div class="term-entry" id="term-crate">
+            <dt>Crate</dt>
+            <span class="full-name">Rust package</span>
+            <dd><strong>Rust 代码包。</strong>类似其他语言中的库或模块；RuView 把不同能力拆在多个 crate 中。</dd>
+          </div>
+        </dl>
+
+        <div id="sources">
+          <h3>本次分析使用的官方代码与文档</h3>
+          <p>版本：<code>90b29595fbebf5c7b0356fa260332fcc674760ef</code>，本地 <code>main</code> 与 <code>origin/main</code> 已核对一致。下列链接联网时可打开 GitHub 对应文件。</p>
+
+          <div class="source-list">
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/firmware/esp32-csi-node/README.md#L122-L193" target="_blank" rel="noreferrer">
+              <span class="source-no">01</span>
+              <span><strong>ESP32 CSI 固件 Tier 0–2</strong><small>firmware/esp32-csi-node/README.md</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/v2/crates/wifi-densepose-sensing-server/src/adaptive_classifier.rs" target="_blank" rel="noreferrer">
+              <span class="source-no">02</span>
+              <span><strong>在线自适应分类器</strong><small>adaptive_classifier.rs</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/v2/crates/cog-pose-estimation/src/inference.rs" target="_blank" rel="noreferrer">
+              <span class="source-no">03</span>
+              <span><strong>轻量姿态 Cog 推理实现</strong><small>cog-pose-estimation/src/inference.rs</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/docs/benchmarks/pose-estimation-cog.md" target="_blank" rel="noreferrer">
+              <span class="source-no">04</span>
+              <span><strong>轻量姿态模型官方基准</strong><small>docs/benchmarks/pose-estimation-cog.md</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/v2/crates/wifi-densepose-train/src/model.rs" target="_blank" rel="noreferrer">
+              <span class="source-no">05</span>
+              <span><strong>完整 DensePose 模型架构</strong><small>wifi-densepose-train/src/model.rs</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/v2/crates/wifi-densepose-train/src/config.rs" target="_blank" rel="noreferrer">
+              <span class="source-no">06</span>
+              <span><strong>训练模型默认张量配置</strong><small>wifi-densepose-train/src/config.rs</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/docs/adr/ADR-079-camera-ground-truth-training.md" target="_blank" rel="noreferrer">
+              <span class="source-no">07</span>
+              <span><strong>摄像头教师与配对训练方案</strong><small>ADR-079-camera-ground-truth-training.md</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView" target="_blank" rel="noreferrer">
+              <span class="source-no">08</span>
+              <span><strong>RuView 官方代码仓库</strong><small>github.com/ruvnet/RuView</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/firmware/esp32-csi-node/main/edge_processing.c#L1143-L1210" target="_blank" rel="noreferrer">
+              <span class="source-no">09</span>
+              <span><strong>ESP32 存在与跌倒规则实现</strong><small>edge_processing.c</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/v2/crates/wifi-densepose-sensing-server/src/csi.rs#L500-L607" target="_blank" rel="noreferrer">
+              <span class="source-no">10</span>
+              <span><strong>Rust 状态分档与 AI 覆盖顺序</strong><small>csi.rs · raw_classify / adaptive_override</small></span>
+              <span class="arrow">↗</span>
+            </a>
+            <a class="source-link" href="https://github.com/ruvnet/RuView/blob/90b29595fbebf5c7b0356fa260332fcc674760ef/v2/crates/wifi-densepose-sensing-server/src/csi.rs#L805-L816" target="_blank" rel="noreferrer">
+              <span class="source-no">11</span>
+              <span><strong>人数候选分数的固定权重</strong><small>csi.rs · compute_person_score</small></span>
+              <span class="arrow">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="closing">
+          <h2>真正理解 RuView，要把“无线、DSP、AI、产品接线”分开看</h2>
+          <p>无线链路提供可观测性，ESP32 把物理信道变成数据，DSP 清理数据并提取可靠低级特征，AI 把复杂模式翻译成更高层语义，最后主服务和 API 决定这些能力是否真正成为可用产品。</p>
+          <p>在当前版本里，存在与活动分类最接近可直接落地；轻量姿态已经有真实模型但精度有限；完整 DensePose 则更像一套正在被补齐的数据、训练与推理架构。用这样的分层视角看项目，既不会低估它的平台价值，也不会被尚未完成的目标误导。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="page-footer">
+    RuView AI 原理详解 · 基于官方仓库提交 90b29595fbeb · 页面无外部运行时依赖，可离线保存与阅读
+  </footer>
+
+  <button class="back-top" type="button" aria-label="回到顶部">↑</button>
+
+  <script>
+    (() => {
+      const progress = document.querySelector(".reading-progress");
+      const backTop = document.querySelector(".back-top");
+      const tocLinks = [...document.querySelectorAll(".toc a")];
+      const sections = tocLinks
+        .map((link) => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      const updateProgress = () => {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
+        progress.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+        backTop.classList.toggle("visible", window.scrollY > 720);
+      };
+
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      updateProgress();
+
+      const sectionObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        tocLinks.forEach((link) => {
+          const active = link.getAttribute("href") === `#${visible.target.id}`;
+          link.classList.toggle("active", active);
+          if (active) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        });
+      }, { rootMargin: "-18% 0px -68% 0px", threshold: [0, .15, .4] });
+
+      sections.forEach((section) => sectionObserver.observe(section));
+
+      const tabs = [...document.querySelectorAll("[data-route]")];
+      const panels = [...document.querySelectorAll("[data-panel]")];
+
+      const selectRoute = (route) => {
+        tabs.forEach((tab) => {
+          const selected = tab.dataset.route === route;
+          tab.setAttribute("aria-selected", String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+        });
+        panels.forEach((panel) => {
+          panel.hidden = panel.dataset.panel !== route;
+        });
+      };
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => selectRoute(tab.dataset.route));
+        tab.addEventListener("keydown", (event) => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+          event.preventDefault();
+          let next = index;
+          if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+          if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+          if (event.key === "Home") next = 0;
+          if (event.key === "End") next = tabs.length - 1;
+          tabs[next].focus();
+          selectRoute(tabs[next].dataset.route);
+        });
+      });
+
+      backTop.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    })();
+  </script>
+</body>
+</html>

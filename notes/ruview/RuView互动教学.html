@@ -1,0 +1,1334 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RuView 无线感知互动教学：Wi-Fi CSI、系统架构、DSP 与 AI，以及实际部署条件。">
+  <title>RuView 无线感知课｜离线互动版</title>
+  <style>
+    :root {
+      --paper: #f3eddf;
+      --paper-deep: #e6dcc8;
+      --ink: #102b38;
+      --muted: #52666e;
+      --copper: #b6532f;
+      --signal: #326c58;
+      --line: #cfc1a8;
+      --white: #fffaf0;
+      --rail: 190px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 30px;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(rgba(16, 43, 56, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 43, 56, .035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 24px 24px;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { color: inherit; font: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    :focus-visible {
+      outline: 3px solid var(--copper);
+      outline-offset: 3px;
+    }
+
+    .progress {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 50;
+      height: 4px;
+      background: var(--copper);
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    .rail {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 30;
+      width: var(--rail);
+      border-right: 1px solid var(--line);
+      background: rgba(243, 237, 223, .94);
+      padding: 30px 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: grid;
+      width: 50px;
+      height: 50px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      box-shadow: 5px 5px 0 var(--copper);
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .rail nav {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-top: 54px;
+    }
+
+    .rail nav a {
+      display: grid;
+      grid-template-columns: 25px 1fr;
+      min-height: 42px;
+      align-items: center;
+      border-left: 2px solid transparent;
+      padding: 8px 8px 8px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      transition: .16s ease;
+    }
+
+    .rail nav a span {
+      color: var(--copper);
+      font: 700 10px Consolas, monospace;
+    }
+
+    .rail nav a.active,
+    .rail nav a:hover {
+      border-left-color: var(--copper);
+      background: rgba(182, 83, 47, .08);
+      color: var(--ink);
+    }
+
+    .shell {
+      margin-left: var(--rail);
+      overflow: hidden;
+    }
+
+    section, footer {
+      width: min(1120px, calc(100% - 72px));
+      margin: 0 auto;
+    }
+
+    section {
+      min-height: 720px;
+      padding: 100px 0 112px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      grid-template-rows: auto auto;
+      gap: 44px 64px;
+      min-height: 100vh;
+      align-items: center;
+      padding-top: 70px;
+    }
+
+    .kicker, .eyebrow {
+      margin: 0 0 16px;
+      color: var(--copper);
+      font: 700 11px Consolas, monospace;
+      letter-spacing: .13em;
+    }
+
+    h1, h2, h3 {
+      font-family: Georgia, "Songti SC", "STSong", serif;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(52px, 6vw, 92px);
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+
+    h1 em {
+      color: var(--copper);
+      font-weight: inherit;
+    }
+
+    .lead {
+      max-width: 650px;
+      margin: 30px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    .start {
+      display: inline-flex;
+      min-height: 50px;
+      align-items: center;
+      gap: 22px;
+      margin-top: 30px;
+      background: var(--ink);
+      box-shadow: 5px 5px 0 var(--copper);
+      color: var(--white);
+      padding: 0 22px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .instrument {
+      border: 1px solid var(--ink);
+      background: rgba(255, 250, 240, .55);
+      box-shadow: 13px 13px 0 rgba(16, 43, 56, .1);
+    }
+
+    .instrument-head {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--ink);
+      padding: 12px 16px;
+      font: 700 10px Consolas, monospace;
+      letter-spacing: .1em;
+    }
+
+    .live::before {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 7px;
+      border-radius: 50%;
+      background: var(--signal);
+      box-shadow: 0 0 0 4px rgba(50, 108, 88, .14);
+      content: "";
+    }
+
+    .room {
+      position: relative;
+      min-height: 370px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, transparent 49.8%, rgba(16, 43, 56, .1) 50%, transparent 50.2%),
+        linear-gradient(transparent 49.8%, rgba(16, 43, 56, .1) 50%, transparent 50.2%);
+      background-size: 60px 60px;
+    }
+
+    .tx, .rx {
+      position: absolute;
+      top: 48%;
+      z-index: 3;
+      display: grid;
+      width: 56px;
+      height: 56px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      font: 700 12px Consolas, monospace;
+    }
+
+    .tx { left: 8%; }
+    .rx { right: 8%; }
+
+    .human {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 4;
+      width: 56px;
+      height: 110px;
+      transform: translate(-50%, -50%);
+    }
+
+    .human::before {
+      position: absolute;
+      top: 0;
+      left: 14px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--copper);
+      content: "";
+    }
+
+    .human::after {
+      position: absolute;
+      top: 33px;
+      left: 5px;
+      width: 46px;
+      height: 74px;
+      border-radius: 45% 45% 17% 17%;
+      background: var(--copper);
+      content: "";
+    }
+
+    .ray {
+      position: absolute;
+      z-index: 1;
+      left: 14%;
+      height: 2px;
+      background: var(--signal);
+      transform-origin: left;
+    }
+
+    .r1 { top: 55%; width: 72%; }
+    .r2 { top: 52%; width: 48%; transform: rotate(-39deg); }
+    .r3 { top: 56%; width: 56%; transform: rotate(32deg); }
+
+    .readout {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--ink);
+    }
+
+    .readout div { padding: 15px; }
+    .readout div + div { border-left: 1px solid var(--ink); }
+    .readout span { display: block; color: var(--muted); font-size: 10px; }
+    .readout strong { display: block; margin-top: 5px; font-size: 13px; }
+
+    .one-line {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      border-top: 1px solid var(--ink);
+      padding-top: 22px;
+    }
+
+    .one-line span {
+      font: 700 11px Consolas, monospace;
+      letter-spacing: .12em;
+    }
+
+    .one-line p {
+      max-width: 850px;
+      margin: 0;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: clamp(18px, 2vw, 26px);
+      line-height: 1.55;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 1.4fr .6fr;
+      gap: 22px 60px;
+      align-items: end;
+      margin-bottom: 56px;
+    }
+
+    .section-head .eyebrow { grid-column: 1 / -1; margin-bottom: -4px; }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(40px, 4.8vw, 69px);
+      line-height: 1.02;
+      letter-spacing: -.045em;
+    }
+
+    .section-head > p:last-child {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .lab {
+      border: 1px solid var(--ink);
+      background: rgba(255, 250, 240, .58);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .controls button {
+      min-height: 50px;
+      border: 0;
+      border-right: 1px solid var(--ink);
+      background: transparent;
+      padding: 0 22px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .controls button.selected {
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: clamp(300px, 36vw, 450px);
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--ink);
+    }
+
+    .compare article {
+      display: flex;
+      min-height: 145px;
+      gap: 18px;
+      padding: 25px;
+    }
+
+    .compare article + article { border-left: 1px solid var(--ink); }
+
+    .metric {
+      flex: 0 0 auto;
+      display: grid;
+      width: 54px;
+      height: 54px;
+      place-items: center;
+      border: 1px solid var(--ink);
+      font: 700 12px Consolas, monospace;
+    }
+
+    .metric.green {
+      border-radius: 50%;
+      background: var(--signal);
+      color: var(--white);
+    }
+
+    .compare h3 { margin: 0 0 7px; font-size: 24px; }
+    .compare p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    .formula {
+      max-width: 820px;
+      margin: 32px 0 0 auto;
+      border-left: 3px solid var(--copper);
+      padding: 10px 0 10px 22px;
+      line-height: 1.8;
+    }
+
+    .formula code {
+      color: var(--copper);
+      font: 700 13px Consolas, monospace;
+    }
+
+    .multipath {
+      border: 1px solid var(--ink);
+      background: var(--paper-deep);
+    }
+
+    .path-stage {
+      position: relative;
+      min-height: 440px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(16, 43, 56, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 43, 56, .045) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .stage-tx, .stage-rx {
+      position: absolute;
+      top: 54%;
+      z-index: 5;
+      display: grid;
+      width: 72px;
+      height: 72px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stage-tx { left: 7%; }
+    .stage-rx { right: 7%; }
+
+    .stage-human {
+      position: absolute;
+      top: 37%;
+      left: 51%;
+      z-index: 5;
+      width: 66px;
+      height: 145px;
+    }
+
+    .stage-human::before {
+      display: block;
+      width: 34px;
+      height: 34px;
+      margin: auto;
+      border-radius: 50%;
+      background: var(--copper);
+      content: "";
+    }
+
+    .stage-human::after {
+      display: block;
+      width: 64px;
+      height: 102px;
+      margin: 7px auto;
+      border-radius: 45% 45% 17% 17%;
+      background: var(--copper);
+      content: "";
+    }
+
+    .stage-ray {
+      position: absolute;
+      z-index: 2;
+      left: 13%;
+      height: 2px;
+      transform-origin: left;
+    }
+
+    .direct { top: 62%; width: 74%; background: var(--ink); }
+    .reflect-a { top: 60%; width: 45%; background: var(--signal); transform: rotate(-42deg); }
+    .reflect-b { top: 18%; left: 44%; width: 49%; background: var(--signal); transform: rotate(42deg); }
+    .disturb-a { top: 61%; width: 40%; background: var(--copper); transform: rotate(-8deg); }
+    .disturb-b { top: 55%; left: 55%; width: 33%; background: var(--copper); transform: rotate(13deg); }
+
+    .physics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--ink);
+      list-style: none;
+    }
+
+    .physics li {
+      display: flex;
+      gap: 12px;
+      padding: 21px;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .physics li + li { border-left: 1px solid var(--ink); }
+    .physics b { color: var(--copper); font: 700 12px Consolas, monospace; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border: 1px solid var(--ink);
+      background: rgba(255, 250, 240, .5);
+    }
+
+    .flow article {
+      position: relative;
+      min-height: 180px;
+      padding: 22px 16px;
+    }
+
+    .flow article + article { border-left: 1px solid var(--ink); }
+    .flow article:not(:last-child)::after {
+      position: absolute;
+      top: 20px;
+      right: -9px;
+      z-index: 3;
+      background: var(--paper);
+      color: var(--copper);
+      content: "→";
+      font-weight: 700;
+    }
+
+    .flow span { color: var(--copper); font: 700 10px Consolas, monospace; }
+    .flow h3 { margin: 42px 0 9px; font-size: 17px; line-height: 1.25; }
+    .flow p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+
+    .switcher {
+      display: grid;
+      grid-template-columns: .75fr 1.25fr;
+      min-height: 430px;
+      border: 1px solid var(--ink);
+    }
+
+    .tabs {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--ink);
+    }
+
+    .tabs button {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      align-items: center;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      padding: 17px 21px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tabs button:last-child { border-bottom: 0; }
+    .tabs button span { color: var(--copper); font: 700 10px Consolas, monospace; }
+    .tabs button.selected { background: var(--ink); color: var(--white); }
+
+    .detail {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      padding: 44px;
+    }
+
+    .detail::after {
+      position: absolute;
+      right: -35px;
+      bottom: -70px;
+      color: rgba(182, 83, 47, .12);
+      content: attr(data-mark);
+      font-family: Georgia, serif;
+      font-size: 210px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .detail > * { position: relative; z-index: 1; max-width: 580px; }
+    .detail h3 { margin: 0; font-size: clamp(30px, 3.4vw, 45px); }
+    .detail p { color: var(--muted); font-size: 13px; line-height: 1.85; }
+    .detail dl { margin: 22px 0 0; border-top: 1px solid var(--line); padding-top: 17px; }
+    .detail dt { color: var(--copper); font: 700 10px Consolas, monospace; letter-spacing: .1em; }
+    .detail dd { margin: 6px 0 0; font-size: 13px; font-weight: 700; }
+
+    .crates {
+      display: grid;
+      grid-template-columns: 1fr 45px 1.15fr 45px 1fr;
+      align-items: center;
+    }
+
+    .crate-column {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .crate-column > span {
+      color: var(--copper);
+      font: 700 10px Consolas, monospace;
+      letter-spacing: .14em;
+    }
+
+    .crate {
+      min-height: 84px;
+      border: 1px solid var(--ink);
+      background: rgba(255, 250, 240, .52);
+      padding: 15px;
+    }
+
+    .crate.core {
+      border-left: 5px solid var(--signal);
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .crate code { overflow-wrap: anywhere; font: 700 11px Consolas, monospace; }
+    .crate p { margin: 8px 0 0; color: var(--muted); font-size: 11px; }
+    .crate.core p { color: rgba(255, 250, 240, .68); }
+    .arrow { color: var(--copper); font-size: 32px; text-align: center; }
+
+    .pipeline {
+      border: 1px solid var(--ink);
+    }
+
+    .pipeline .controls button { min-width: 170px; }
+
+    .pipeline-body {
+      min-height: 360px;
+      padding: 42px;
+      background:
+        linear-gradient(rgba(16, 43, 56, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 43, 56, .035) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .pipeline-body h3 { margin: 0; font-size: clamp(30px, 3.5vw, 46px); }
+    .pipeline-body > code {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      margin: 31px 0 22px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      padding: 13px 17px;
+      overflow-x: auto;
+      color: var(--copper);
+      font: 700 12px Consolas, monospace;
+      white-space: nowrap;
+    }
+
+    .pipeline-body p { max-width: 750px; color: var(--muted); font-size: 13px; line-height: 1.85; }
+    .tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; }
+    .tags span { border: 1px solid var(--ink); padding: 7px 10px; font-size: 10px; font-weight: 700; }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin-bottom: 38px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+    }
+
+    .answers article { background: var(--paper); padding: 32px; }
+    .answers h3 { margin: 0; font-size: 28px; line-height: 1.25; }
+    .answers p { color: var(--muted); font-size: 13px; line-height: 1.85; }
+
+    .scenario .detail { min-height: 380px; justify-content: flex-start; }
+
+    .verdict {
+      width: fit-content;
+      margin-bottom: 24px;
+      border: 1px solid currentColor;
+      padding: 7px 10px;
+      color: var(--copper);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .sources {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--ink);
+      list-style: none;
+    }
+
+    .sources li {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      align-items: center;
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .sources li > span {
+      color: var(--copper);
+      font: 700 11px Consolas, monospace;
+      text-align: center;
+    }
+
+    .sources a {
+      display: flex;
+      min-height: 84px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-left: 1px solid var(--ink);
+      padding: 17px 24px;
+      transition: .16s ease;
+    }
+
+    .sources a:hover { background: var(--ink); color: var(--white); padding-left: 31px; }
+    .sources strong { font-family: Georgia, "Songti SC", serif; font-size: 21px; }
+    .sources small { color: var(--muted); }
+    .sources a:hover small { color: rgba(255, 250, 240, .7); }
+    .sources a::after { color: var(--copper); content: "↗"; font-size: 20px; }
+
+    footer {
+      display: flex;
+      min-height: 140px;
+      align-items: center;
+      justify-content: space-between;
+      font: 700 10px Consolas, monospace;
+      letter-spacing: .08em;
+    }
+
+    footer a { border-bottom: 1px solid var(--ink); padding: 8px 0; }
+
+    @media (max-width: 980px) {
+      :root { --rail: 0px; }
+
+      .rail {
+        inset: 4px 0 auto;
+        width: 100%;
+        height: 58px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 8px 13px;
+      }
+
+      .brand {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        box-shadow: 3px 3px 0 var(--copper);
+        font-size: 16px;
+      }
+
+      .rail nav {
+        flex-direction: row;
+        margin: 0 0 0 56px;
+        overflow-x: auto;
+      }
+
+      .rail nav a {
+        flex: 0 0 auto;
+        grid-template-columns: 20px 1fr;
+        min-height: 40px;
+        border-left: 0;
+        border-bottom: 2px solid transparent;
+        padding: 6px 9px;
+      }
+
+      .rail nav a.active, .rail nav a:hover {
+        border-left-color: transparent;
+        border-bottom-color: var(--copper);
+      }
+
+      .shell { margin-left: 0; }
+      section { padding-top: 115px; }
+      .hero { padding-top: 125px; }
+    }
+
+    @media (max-width: 790px) {
+      section, footer { width: min(100% - 34px, 680px); }
+      section { min-height: 0; padding-bottom: 82px; }
+      .hero { grid-template-columns: 1fr; }
+      .one-line, .section-head { grid-template-columns: 1fr; }
+      .section-head .eyebrow { grid-column: auto; }
+      .compare, .answers { grid-template-columns: 1fr; }
+      .compare article + article { border-top: 1px solid var(--ink); border-left: 0; }
+      .physics { grid-template-columns: 1fr; }
+      .physics li + li { border-top: 1px solid var(--ink); border-left: 0; }
+      .flow { grid-template-columns: repeat(2, 1fr); }
+      .flow article:nth-child(2n + 1) { border-left: 0; }
+      .flow article { border-bottom: 1px solid var(--line); }
+      .flow article:nth-last-child(-n + 2) { border-bottom: 0; }
+      .switcher { grid-template-columns: 1fr; }
+      .tabs { display: grid; grid-template-columns: 1fr 1fr; border-right: 0; border-bottom: 1px solid var(--ink); }
+      .tabs button { min-height: 80px; border-right: 1px solid var(--line); }
+      .tabs button:nth-child(2n) { border-right: 0; }
+      .crates { grid-template-columns: 1fr; gap: 13px; }
+      .arrow { transform: rotate(90deg); }
+    }
+
+    @media (max-width: 500px) {
+      h1 { font-size: clamp(45px, 15vw, 64px); }
+      h2 { font-size: clamp(36px, 11vw, 52px); }
+      .readout { grid-template-columns: 1fr; }
+      .readout div + div { border-top: 1px solid var(--ink); border-left: 0; }
+      .controls { display: grid; grid-template-columns: 1fr; }
+      .controls button { border-right: 0; border-bottom: 1px solid var(--ink); }
+      .controls button:last-child { border-bottom: 0; }
+      .flow { grid-template-columns: 1fr; }
+      .flow article { border-left: 0 !important; }
+      .flow article:not(:last-child) { border-bottom: 1px solid var(--line); }
+      .flow article::after { display: none; }
+      .tabs { grid-template-columns: 1fr; }
+      .tabs button { border-right: 0; }
+      .detail, .pipeline-body { padding: 27px 21px; }
+      .pipeline .controls button { min-width: 0; }
+      .sources li { grid-template-columns: 52px 1fr; }
+      .sources a { flex-direction: column; align-items: flex-start; padding: 17px; }
+      footer { min-height: 180px; flex-direction: column; justify-content: center; gap: 16px; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <aside class="rail" aria-label="课程目录">
+    <a class="brand" href="#overview">RV</a>
+    <nav>
+      <a href="#overview" class="active"><span>00</span>项目地图</a>
+      <a href="#csi"><span>01</span>CSI 是什么</a>
+      <a href="#physics"><span>02</span>感知原理</a>
+      <a href="#flow"><span>03</span>数据流</a>
+      <a href="#tiers"><span>04</span>ESP32 分级</a>
+      <a href="#architecture"><span>05</span>软件架构</a>
+      <a href="#ai"><span>06</span>DSP 与 AI</a>
+      <a href="#deployment"><span>07</span>部署条件</a>
+      <a href="#sources"><span>08</span>官方资料</a>
+    </nav>
+  </aside>
+
+  <main class="shell">
+    <section class="hero" id="overview">
+      <div>
+        <p class="kicker">RUVIEW FIELD NOTES · 离线互动版</p>
+        <h1>不用摄像头，<br>Wi‑Fi 怎么<em>“看见”</em>人？</h1>
+        <p class="lead">
+          RuView 把 Wi‑Fi 信道的细微变化转换为存在、运动、呼吸乃至姿态信息。
+          它不是读取通信内容，而是测量无线信号穿过空间后发生了什么。
+        </p>
+        <a class="start" href="#csi">开始第一课 <span>↓</span></a>
+      </div>
+
+      <div class="instrument" aria-label="RuView 系统概要">
+        <div class="instrument-head"><span>LIVE CHANNEL</span><span class="live">LOCAL</span></div>
+        <div class="room" aria-hidden="true">
+          <div class="tx">TX</div>
+          <div class="human"></div>
+          <div class="rx">RX</div>
+          <i class="ray r1"></i>
+          <i class="ray r2"></i>
+          <i class="ray r3"></i>
+        </div>
+        <div class="readout">
+          <div><span>输入</span><strong>Wi‑Fi CSI</strong></div>
+          <div><span>处理</span><strong>DSP + AI</strong></div>
+          <div><span>输出</span><strong>空间状态</strong></div>
+        </div>
+      </div>
+
+      <div class="one-line">
+        <span>一句话</span>
+        <p><strong>RuView 是开源无线感知平台：</strong>ESP32 采集 CSI，边缘固件和 Rust 服务处理，网页或 API 输出结果。</p>
+      </div>
+    </section>
+
+    <section id="csi">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 01 · MEASUREMENT</p>
+        <h2>RSSI 只有一个数字，CSI 是一整张频谱指纹</h2>
+        <p>切换空间状态，观察多个 OFDM 子载波如何变化，而 RSSI 仍只是一个汇总强度。</p>
+      </header>
+
+      <div class="lab">
+        <div class="controls" id="signalControls" aria-label="选择空间状态">
+          <button type="button" data-mode="empty">空房间</button>
+          <button type="button" data-mode="breath" class="selected">静坐呼吸</button>
+          <button type="button" data-mode="walk">有人走动</button>
+        </div>
+        <canvas id="signalCanvas" role="img" aria-label="CSI 子载波与 RSSI 对比动画"></canvas>
+        <div class="compare">
+          <article>
+            <span class="metric">1</span>
+            <div><h3>RSSI</h3><p>把全部频率汇总为一个强度值，适合粗略估计远近，但细节很少。</p></div>
+          </article>
+          <article>
+            <span class="metric green">56+</span>
+            <div><h3>CSI</h3><p>保存多个子载波的幅度与相位，更像空间随时间变化的无线指纹。</p></div>
+          </article>
+        </div>
+      </div>
+      <p class="formula">每个子载波可表示为 <code>Hₖ = Iₖ + jQₖ = |Hₖ|eʲᶿ</code>。RuView 关注这些值随时间的协同变化。</p>
+    </section>
+
+    <section id="physics">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 02 · PHYSICS</p>
+        <h2>人体不发射信号，它改变的是传播路径</h2>
+        <p>无线电会直达、反射和绕射。人体移动几厘米，都可能让多条路径的幅度与相位重新叠加。</p>
+      </header>
+
+      <div class="multipath">
+        <div class="path-stage" aria-label="Wi-Fi 多径传播示意图">
+          <div class="stage-tx">发射</div>
+          <div class="stage-human"></div>
+          <div class="stage-rx">接收</div>
+          <i class="stage-ray direct"></i>
+          <i class="stage-ray reflect-a"></i>
+          <i class="stage-ray reflect-b"></i>
+          <i class="stage-ray disturb-a"></i>
+          <i class="stage-ray disturb-b"></i>
+        </div>
+        <ol class="physics">
+          <li><b>1</b>人体移动，部分传播路径长度发生改变。</li>
+          <li><b>2</b>多个子载波出现不同的幅度和相位波纹。</li>
+          <li><b>3</b>连续时间序列形成呼吸、步态或动作模式。</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="flow">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 03 · DATA FLOW</p>
+        <h2>一次感知，从无线数据包走到空间事件</h2>
+        <p>每一层只承担清晰的职责：采集、预处理、传输、推理，再把结果交给界面和自动化系统。</p>
+      </header>
+
+      <div class="flow">
+        <article><span>01</span><h3>Wi‑Fi 链路</h3><p>人体、墙体与家具共同形成多径环境。</p></article>
+        <article><span>02</span><h3>ESP32 采集</h3><p>从数据包提取各子载波 I/Q、幅度和相位。</p></article>
+        <article><span>03</span><h3>边缘处理</h3><p>滤波、基线、特征压缩或轻量推理。</p></article>
+        <article><span>04</span><h3>UDP 协议</h3><p>按 ADR‑018 的统一格式送入局域网。</p></article>
+        <article><span>05</span><h3>Rust 管线</h3><p>校准、融合、DSP 与神经网络推理。</p></article>
+        <article><span>06</span><h3>界面集成</h3><p>Web、API、MQTT 与 Home Assistant。</p></article>
+      </div>
+    </section>
+
+    <section id="tiers">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 04 · EDGE COMPUTING</p>
+        <h2>ESP32 Tier 0–3，是计算位置的四种取舍</h2>
+        <p>点击层级比较带宽、延迟、设备算力与服务端灵活性。</p>
+      </header>
+
+      <div class="switcher">
+        <div class="tabs" id="tierTabs" role="tablist" aria-label="ESP32 处理层级">
+          <button type="button" data-tier="0"><span>Tier 0</span>原始转发</button>
+          <button type="button" data-tier="1" class="selected"><span>Tier 1</span>边缘 DSP</button>
+          <button type="button" data-tier="2"><span>Tier 2</span>边缘推理</button>
+          <button type="button" data-tier="3"><span>Tier 3</span>协同融合</button>
+        </div>
+        <article class="detail" id="tierDetail" data-mark="01" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 05 · SOFTWARE MAP</p>
+        <h2>Rust 工作区把硬件、信号、模型和接口拆成边界</h2>
+        <p>输入适配先统一数据，核心模块完成感知，输出层再把能力交给应用。</p>
+      </header>
+
+      <div class="crates">
+        <div class="crate-column">
+          <span>INPUT</span>
+          <article class="crate"><code>wifi-densepose-hardware</code><p>设备与输入适配</p></article>
+          <article class="crate"><code>wifi-densepose-protocol</code><p>数据协议与帧格式</p></article>
+        </div>
+        <div class="arrow">→</div>
+        <div class="crate-column">
+          <span>PROCESS</span>
+          <article class="crate core"><code>wifi-densepose-signal</code><p>滤波、CSI 与特征</p></article>
+          <article class="crate core"><code>wifi-densepose-core</code><p>领域模型与统一接口</p></article>
+          <article class="crate core"><code>wifi-densepose-neural</code><p>神经网络推理</p></article>
+        </div>
+        <div class="arrow">→</div>
+        <div class="crate-column">
+          <span>OUTPUT</span>
+          <article class="crate"><code>wifi-densepose-api</code><p>HTTP / WebSocket API</p></article>
+          <article class="crate"><code>wifi-densepose-cli</code><p>命令行与运行入口</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 06 · INTELLIGENCE</p>
+        <h2>项目用到了 AI，但 AI 不是所有功能的前提</h2>
+        <p>基础存在、运动和周期检测可以走 DSP；复杂姿态、动作和空间语义更适合学习模型。</p>
+      </header>
+
+      <div class="pipeline">
+        <div class="controls" id="pipelineTabs">
+          <button type="button" data-pipeline="dsp" class="selected">DSP 路线</button>
+          <button type="button" data-pipeline="ai">AI 路线</button>
+        </div>
+        <article class="pipeline-body" id="pipelineBody" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <section id="deployment">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 07 · FIELD CONDITIONS</p>
+        <h2>要固定吗？Wi‑Fi 要一直开启吗？</h2>
+        <p>真正需要维持的是可比较的无线基线和连续的数据包流，而不是永远不变的某个信号强度数字。</p>
+      </header>
+
+      <div class="answers">
+        <article>
+          <p class="eyebrow">问题一 · 固定位置 / 功率</p>
+          <h3>位置尽量固定；功率无需绝对恒定，但要相对稳定。</h3>
+          <p>固定发射端、接收端、朝向和天线。小幅自适应波动可由归一化和基线更新处理；移动设备或大改房间布局后应重新校准。</p>
+        </article>
+        <article>
+          <p class="eyebrow">问题二 · 持续开启</p>
+          <h3>想连续感知，就要连续产生并接收 Wi‑Fi 数据包。</h3>
+          <p>不一定需要互联网，也不要求用户持续上网，但无线发射、ESP32 接收和局域网数据流必须保持工作。停发就没有新的 CSI。</p>
+        </article>
+      </div>
+
+      <div class="switcher scenario">
+        <div class="tabs" id="scenarioTabs" role="tablist" aria-label="部署场景">
+          <button type="button" data-scenario="moved" class="selected"><span>场景 1</span>设备被移动</button>
+          <button type="button" data-scenario="wifi"><span>场景 2</span>Wi‑Fi 关闭</button>
+          <button type="button" data-scenario="internet"><span>场景 3</span>互联网断开</button>
+        </div>
+        <article class="detail" id="scenarioDetail" data-mark="!" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <section id="sources">
+      <header class="section-head">
+        <p class="eyebrow">LESSON 08 · CONTINUE</p>
+        <h2>继续读官方材料，而不是停在概念层</h2>
+        <p>页面可离线阅读；下面的官方资料链接需要联网。</p>
+      </header>
+
+      <ol class="sources">
+        <li><span>01</span><a href="https://github.com/ruvnet/RuView/blob/main/README.md" target="_blank" rel="noreferrer"><strong>RuView README</strong><small>项目定位与能力总览</small></a></li>
+        <li><span>02</span><a href="https://github.com/ruvnet/RuView/blob/main/docs/readme-details.md#system-architecture" target="_blank" rel="noreferrer"><strong>System Architecture</strong><small>官方系统架构说明</small></a></li>
+        <li><span>03</span><a href="https://github.com/ruvnet/RuView/blob/main/v2/crates/README.md" target="_blank" rel="noreferrer"><strong>Rust Crates Guide</strong><small>工作区模块职责</small></a></li>
+        <li><span>04</span><a href="https://github.com/ruvnet/RuView/blob/main/docs/adr/README.md" target="_blank" rel="noreferrer"><strong>Architecture Decisions</strong><small>ADR 与协议设计</small></a></li>
+        <li><span>05</span><a href="https://docs.espressif.com/projects/esp-idf/en/release-v5.5/esp32/api-guides/wifi.html#wi-fi-channel-state-information" target="_blank" rel="noreferrer"><strong>Espressif Wi‑Fi CSI</strong><small>ESP32 CSI 底层原理</small></a></li>
+      </ol>
+    </section>
+
+    <footer>
+      <span>RUVIEW FIELD NOTES · OFFLINE</span>
+      <span>基于 RuView 官方仓库整理 · 2026</span>
+      <a href="#overview">回到开头 ↑</a>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const tierData = [
+        {
+          level: "TIER 0 · 服务端处理",
+          title: "原始转发",
+          body: "ESP32 只采集并转发较完整的 CSI，算法集中在主机上。上行数据量较大，但最适合研究、调试和快速迭代算法。",
+          best: "研究、调试、算法快速迭代"
+        },
+        {
+          level: "TIER 1 · 设备先处理",
+          title: "边缘 DSP",
+          body: "ESP32 先执行滤波、幅相统计和基础特征压缩，再把更紧凑的数据上传。它降低网络带宽，同时保留服务端的算法灵活性。",
+          best: "降低带宽，保留服务端灵活性"
+        },
+        {
+          level: "TIER 2 · 设备直接判断",
+          title: "边缘推理",
+          body: "在设备侧运行轻量分类或检测模型，只上报事件、状态与置信度。它适合低延迟和隐私优先的事件型部署。",
+          best: "低延迟、隐私优先、事件型部署"
+        },
+        {
+          level: "TIER 3 · 多节点协作",
+          title: "协同融合",
+          body: "多个感知节点交换或汇聚特征，再由中心节点进行空间级融合。它能覆盖更大范围并提升复杂环境中的稳健性。",
+          best: "更大范围、更稳健的空间感知"
+        }
+      ];
+
+      const pipelineData = {
+        dsp: {
+          eyebrow: "DETERMINISTIC",
+          title: "DSP：把变化变成指标",
+          formula: "CSI → 去噪 → 基线差分 → 方差 / 频谱 → 阈值",
+          body: "信号处理和规则适合存在检测、运动强度、呼吸频率等目标。它速度快、可解释、对小数据友好，但复杂姿态与跨环境泛化能力有限。",
+          tags: ["低延迟", "可解释", "少数据"]
+        },
+        ai: {
+          eyebrow: "LEARNED",
+          title: "AI：从模式中学习语义",
+          formula: "CSI 窗口 → 特征张量 → 模型 → 类别 / 关键点 / 状态",
+          body: "学习模型可识别更复杂的时空模式，例如动作、姿态或多节点融合，但它依赖有代表性的训练数据、硬件算力和部署环境的一致性。",
+          tags: ["复杂模式", "数据驱动", "需要校准"]
+        }
+      };
+
+      const scenarioData = {
+        moved: {
+          verdict: "还能运行，但旧基线会失真",
+          title: "路由器或接收器被移动",
+          body: "CSI 对传播路径非常敏感。设备位置、朝向、天线、墙体和家具共同构成环境基线。移动硬件会同时改变大量子载波，看起来像空间发生了长期变化。",
+          action: "固定安装；如果设备移动或房间明显改造，重新进行静态校准。"
+        },
+        wifi: {
+          verdict: "不能持续感知",
+          title: "Wi‑Fi 发射完全关闭",
+          body: "RuView 需要不断接收无线数据包，才能形成连续 CSI 时间序列。发射端停机后没有新的信道测量，系统无法继续判断人体变化。",
+          action: "感知期间保持发射端和接收端供电，并维持稳定的数据包流。"
+        },
+        internet: {
+          verdict: "本地感知通常可继续",
+          title: "只有互联网断开",
+          body: "Wi‑Fi 无线链路不等于互联网。只要局域网、发射端、ESP32 和本地 RuView 服务仍在工作，CSI 采集与本地推理不依赖公网。",
+          action: "把关键组件放在同一局域网；云端功能和远程访问会受到影响。"
+        }
+      };
+
+      const tierDetail = document.getElementById("tierDetail");
+      const pipelineBody = document.getElementById("pipelineBody");
+      const scenarioDetail = document.getElementById("scenarioDetail");
+
+      function renderTier(index) {
+        const item = tierData[index];
+        tierDetail.dataset.mark = `0${index}`;
+        tierDetail.innerHTML = `
+          <p class="eyebrow">${item.level}</p>
+          <h3>${item.title}</h3>
+          <p>${item.body}</p>
+          <dl><dt>最适合</dt><dd>${item.best}</dd></dl>
+        `;
+      }
+
+      function renderPipeline(key) {
+        const item = pipelineData[key];
+        pipelineBody.innerHTML = `
+          <p class="eyebrow">${item.eyebrow}</p>
+          <h3>${item.title}</h3>
+          <code>${item.formula}</code>
+          <p>${item.body}</p>
+          <div class="tags">${item.tags.map(tag => `<span>${tag}</span>`).join("")}</div>
+        `;
+      }
+
+      function renderScenario(key) {
+        const item = scenarioData[key];
+        scenarioDetail.innerHTML = `
+          <span class="verdict">${item.verdict}</span>
+          <h3>${item.title}</h3>
+          <p>${item.body}</p>
+          <dl><dt>工程建议</dt><dd>${item.action}</dd></dl>
+        `;
+      }
+
+      function bindSelection(containerId, attribute, render, initial) {
+        const container = document.getElementById(containerId);
+        container.addEventListener("click", event => {
+          const button = event.target.closest("button");
+          if (!button || !container.contains(button)) return;
+          container.querySelectorAll("button").forEach(item => item.classList.remove("selected"));
+          button.classList.add("selected");
+          render(button.dataset[attribute]);
+        });
+        render(initial);
+      }
+
+      bindSelection("tierTabs", "tier", value => renderTier(Number(value)), "1");
+      bindSelection("pipelineTabs", "pipeline", renderPipeline, "dsp");
+      bindSelection("scenarioTabs", "scenario", renderScenario, "moved");
+
+      const canvas = document.getElementById("signalCanvas");
+      const context = canvas.getContext("2d");
+      const controls = document.getElementById("signalControls");
+      let mode = "breath";
+      let animationId = 0;
+      let width = 0;
+      let height = 0;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = rect.width;
+        height = rect.height;
+        canvas.width = Math.max(1, Math.floor(width * ratio));
+        canvas.height = Math.max(1, Math.floor(height * ratio));
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      function drawSignal(time) {
+        context.clearRect(0, 0, width, height);
+        const pad = Math.max(28, width * .055);
+        const top = 35;
+        const bottom = height - 64;
+        const chartHeight = bottom - top;
+        const count = 56;
+        const phase = time / 850;
+        const disturbance = mode === "empty" ? .12 : mode === "breath" ? .46 : 1;
+
+        context.strokeStyle = "rgba(16,43,56,.12)";
+        context.lineWidth = 1;
+        for (let row = 0; row < 5; row += 1) {
+          const y = top + (chartHeight / 4) * row;
+          context.beginPath();
+          context.moveTo(pad, y);
+          context.lineTo(width - pad, y);
+          context.stroke();
+        }
+
+        context.lineCap = "round";
+        for (let i = 0; i < count; i += 1) {
+          const x = pad + ((width - pad * 2) / (count - 1)) * i;
+          const base = .53 + Math.sin(i * .38) * .13 + Math.cos(i * .12 + 1.4) * .08;
+          const breath = Math.sin(phase * .7 + i * .15) * .095 * disturbance;
+          const walk = mode === "walk"
+            ? Math.sin(phase * 2.4 + i * .48) * .18 + Math.cos(phase * 1.3 - i * .27) * .1
+            : 0;
+          const value = Math.max(.12, Math.min(.9, base + breath + walk));
+          const y = bottom - value * chartHeight;
+          context.strokeStyle = mode === "walk"
+            ? `rgba(182,83,47,${.42 + value * .55})`
+            : `rgba(50,108,88,${.42 + value * .55})`;
+          context.lineWidth = Math.max(2, width / 330);
+          context.beginPath();
+          context.moveTo(x, bottom);
+          context.lineTo(x, y);
+          context.stroke();
+        }
+
+        const rssiY = bottom + 29;
+        context.strokeStyle = "rgba(16,43,56,.58)";
+        context.lineWidth = 2;
+        context.beginPath();
+        for (let i = 0; i <= 80; i += 1) {
+          const x = pad + ((width - pad * 2) / 80) * i;
+          const motion = mode === "empty" ? 0 :
+            Math.sin(phase * (mode === "walk" ? 1.8 : .55) + i * .05) * (mode === "walk" ? 3.5 : 1.4);
+          const y = rssiY + motion;
+          if (i === 0) context.moveTo(x, y); else context.lineTo(x, y);
+        }
+        context.stroke();
+
+        context.fillStyle = "rgba(16,43,56,.68)";
+        context.font = "700 11px 'Microsoft YaHei', sans-serif";
+        context.fillText("56 个子载波的变化", pad, 20);
+        context.fillText("RSSI：一个汇总数字", pad, height - 12);
+
+        if (!reducedMotion) animationId = requestAnimationFrame(drawSignal);
+      }
+
+      controls.addEventListener("click", event => {
+        const button = event.target.closest("button");
+        if (!button || !controls.contains(button)) return;
+        controls.querySelectorAll("button").forEach(item => item.classList.remove("selected"));
+        button.classList.add("selected");
+        mode = button.dataset.mode;
+        if (reducedMotion) drawSignal(0);
+      });
+
+      const resizeObserver = new ResizeObserver(() => {
+        resizeCanvas();
+        if (reducedMotion) drawSignal(0);
+      });
+      resizeObserver.observe(canvas);
+      resizeCanvas();
+      drawSignal(reducedMotion ? 0 : performance.now());
+
+      const progress = document.getElementById("progress");
+      const navLinks = Array.from(document.querySelectorAll(".rail nav a"));
+      const sections = navLinks
+        .map(link => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      function updateProgress() {
+        const total = document.documentElement.scrollHeight - innerHeight;
+        progress.style.transform = `scaleX(${total > 0 ? Math.min(scrollY / total, 1) : 0})`;
+      }
+
+      const sectionObserver = new IntersectionObserver(entries => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        navLinks.forEach(link => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${visible.target.id}`);
+        });
+      }, { rootMargin: "-20% 0px -60% 0px", threshold: [.05, .2, .5] });
+
+      sections.forEach(section => sectionObserver.observe(section));
+      addEventListener("scroll", updateProgress, { passive: true });
+      addEventListener("resize", updateProgress);
+      updateProgress();
+
+      addEventListener("beforeunload", () => {
+        cancelAnimationFrame(animationId);
+        resizeObserver.disconnect();
+        sectionObserver.disconnect();
+      });
+    })();
+  </script>
+</body>
+</html>
