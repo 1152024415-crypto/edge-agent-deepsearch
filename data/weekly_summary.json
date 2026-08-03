@@ -1,65 +1,40 @@
 {
-  "overview": "本周端侧 AI 动态(07-25~07-30):Qualcomm 被选为 BMW 集团未来十年数字座舱+自动驾驶首席计算芯片供应商(07-29,端侧/汽车大新闻);NVIDIA Jetson「Build AI Anywhere」端侧计算(07-28)+Nemotron 3 Ultra 开放模型(agentic RTL coding)+Vera CPU 加速芯片设计+Six Agent Harness 能力+NeMo Guardrails 自托管 AI 编码助手+Open Secure AI 联盟;Google Gemini API Managed Agents(Gemini 3.6 Flash+hooks)+Interactions API for Gemini agents GA+Gemini macOS 自然语言;Meta 辅助机器人(匹兹堡大学 SAM/DINO);开源 MediaPipe v1.0.0(Google 端侧 AI 框架里程碑)+ONNX Runtime v1.28.0+nanobot v0.3.0;学术侧 185 篇(arXiv 123+HF 48,含 6 篇 SNN)+28 篇公司项目(Kimi K3/Moonshot 等)+13 官方动态——端侧从汽车芯片、Jetson、agent API、开源框架到神经形态持续推进。",
+  "overview": "本周端侧 AI 动态(07-31~08-03):Qualcomm Dragonwing IQ-9075 端侧 AI 芯片连续发布(Vision AI 流水线 + GenAI RAG/ASR,QIM SDK+Edge Impulse+Qt);NVIDIA 协同设计 AI 模型注意力实现快速交互式长上下文推理 + Video Codec SDK 13.1;Google Gemini Drop July 2026;QwenLM qwen-code v0.21.2/v0.21.3 coding agent CLI;MiniMax cli v1.0.19(Hailuo H3 视频生成);学术侧 68 篇(arXiv 27+HF 33,含 1 篇 SNN/neuromorphic)+9 公司项目+5 官方动态——端侧从 Qualcomm 新芯片、注意力协同设计、coding agent 到神经形态持续推进。窗口仅 4 天(07-31~08-03),08-01/02 HF 无数据,多篇厂 8 月初淡季。",
   "highlights": [
     {
-      "url": "https://www.qualcomm.com/news/releases/2026/07/qualcomm-named-bmw-group-s-lead-compute-silicon-provider-for-dig",
-      "topic": "Qualcomm 被选为 BMW 未来十年首席计算芯片供应商(07-29)",
-      "why": "Qualcomm Snapdragon 驱动 BMW 数字座舱+自动驾驶,未来十年——端侧/汽车计算芯片最大商业落地信号"
+      "url": "https://www.qualcomm.com/developer/blog/2026/07/vision-ai-factorypulse-iq9075-qim-sdk",
+      "topic": "Qualcomm Dragonwing IQ-9075:端侧 Vision AI 流水线(07-31)",
+      "why": "Qualcomm Dragonwing IQ-9075 端侧 AI 芯片上跑 Vision AI 流水线(QIM SDK+Edge Impulse+Qt),端侧视觉 AI 芯片落地"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/build-ai-with-nvidia-jetson/",
-      "topic": "NVIDIA Jetson「Build AI Anywhere」:端侧计算(07-28)",
-      "why": "Jetson 端侧计算平台推广,Build AI Anywhere——端侧算力平台继续下沉"
+      "url": "https://www.qualcomm.com/developer/blog/2026/07/genai-rag-iq9075-factorypulse",
+      "topic": "Qualcomm Dragonwing IQ-9075:端侧 GenAI(RAG+ASR)(07-31)",
+      "why": "Qualcomm 端侧芯片跑 GenAI(RAG+ASR),端侧大模型推理+语音在 Qualcomm 芯片上落地"
     },
     {
-      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/expanding-managed-agents-gemini-api-3-6-flash-hooks/",
-      "topic": "Google Gemini API Managed Agents:3.6 Flash+hooks(07-28)",
-      "why": "Gemini 3.6 Flash 模型发布 + Managed Agents(hooks 等),agent 平台+模型双更新"
+      "url": "https://developer.nvidia.com/blog/co-designing-ai-model-attention-for-fast-interactive-long-context-inference/",
+      "topic": "NVIDIA:协同设计 AI 模型注意力实现快速交互式长上下文推理(07-31)",
+      "why": "模型-硬件协同设计注意力,长上下文推理效率——端侧/边缘长上下文推理优化"
     },
     {
-      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/interactions-api-general-availability/",
-      "topic": "Google Interactions API:Gemini 模型与 agent 的主接口 GA(07-29)",
-      "why": "Interactions API 正式发布,Google 把它定为 Gemini 模型+agent 的主接口——agent 工程基础设施"
+      "url": "https://developer.nvidia.com/blog/nvidia-video-codec-sdk-13-1-zero-copy-transcode-av1-b-frames-and-frame-accurate-seek/",
+      "topic": "NVIDIA Video Codec SDK 13.1:零拷贝转码+AV1 B帧(07-31)",
+      "why": "视频编解码 SDK 更新,端侧视频处理+AI 视觉相关的基础设施"
     },
     {
-      "url": "https://developer.nvidia.com/blog/nvidia-nemotron-3-ultra-leads-open-models-on-accuracy-and-efficiency-in-agentic-rtl-coding/",
-      "topic": "NVIDIA Nemotron 3 Ultra:开放模型 agentic RTL coding 领先(07-26)",
-      "why": "Nemotron 3 Ultra 开放模型,agentic RTL(芯片设计)coding——开放模型+agent+EDA 交叉"
+      "url": "https://blog.google/products-and-platforms/products/gemini/gemini-drop-july-2026/",
+      "topic": "Google Gemini Drop July 2026(07-31)",
+      "why": "Google Gemini 7 月更新,Gemini 应用新功能——端侧/移动 AI 助手迭代"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/vera-cpu-eda/",
-      "topic": "NVIDIA Vera CPU 加速下一代 CPU/GPU 设计(07-26)",
-      "why": "Vera CPU 用于 EDA(芯片设计),用 AI 加速芯片设计——模型-硬件-设计闭环"
+      "url": "https://github.com/QwenLM/qwen-code/releases/tag/v0.21.3",
+      "topic": "QwenLM qwen-code v0.21.3:coding agent CLI 更新(08-01)",
+      "why": "Qwen coding agent CLI 持续迭代,agent 工程工具链"
     },
     {
-      "url": "https://developer.nvidia.com/blog/six-agent-harness-capabilities-for-higher-model-performance/",
-      "topic": "NVIDIA:六大 Agent Harness 能力提升模型性能(07-27)",
-      "why": "agent harness 六大能力框架,agent 工程方法论——模型性能提升的工程路径"
-    },
-    {
-      "url": "https://developer.nvidia.com/blog/how-to-self-host-a-validated-ai-coding-assistant-with-nvidia-nemo-guardrails/",
-      "topic": "NVIDIA:NeMo Guardrails 自托管可验证 AI 编码助手(07-29)",
-      "why": "自托管 AI 编码助手+guardrails,端侧/私有化 agent 编码工具"
-    },
-    {
-      "url": "https://blogs.nvidia.com/blog/open-secure-ai-alliance/",
-      "topic": "NVIDIA 联合行业领袖组建 Open Secure AI 联盟(07-27)",
-      "why": "Open Secure AI 联盟,AI 安全+开放生态——行业级安全标准共建"
-    },
-    {
-      "url": "https://ai.meta.com/blog/assistive-robotics-university-of-pittsburgh-sam-dino/",
-      "topic": "Meta:AI 模型帮匹兹堡大学变革辅助机器人(07-27)",
-      "why": "Meta SAM/DINO 模型用于辅助机器人,具身智能+公益应用"
-    },
-    {
-      "url": "https://github.com/google-ai-edge/mediapipe/releases/tag/v1.0.0",
-      "topic": "MediaPipe v1.0.0:Google 端侧 AI 框架里程碑(07-28)",
-      "why": "MediaPipe 从 v0.10.x 到 1.0——Google 端侧 AI 框架(Gemma/Llama on Android/iOS)的成熟度里程碑"
-    },
-    {
-      "url": "https://github.com/microsoft/onnxruntime/releases/tag/v1.28.0",
-      "topic": "ONNX Runtime v1.28.0:大版本跳版(07-25)",
-      "why": "ONNX Runtime v1.27→v1.28 大版本跳版,工业标准边缘推理引擎持续演进"
+      "url": "https://github.com/MiniMax-AI/cli/releases/tag/v1.0.19",
+      "topic": "MiniMax CLI v1.0.19:Hailuo H3 视频生成支持(08-01)",
+      "why": "MiniMax CLI 加 Hailuo H3 视频生成,模型厂 CLI 工具+新模型能力"
     }
   ]
 }

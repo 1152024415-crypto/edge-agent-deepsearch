@@ -1,162 +1,162 @@
 [
   {
     "rank": 1,
-    "repo": "bitwize-ai/Logue",
-    "url": "https://github.com/bitwize-ai/Logue",
-    "total": "128★",
-    "week": "128",
-    "desc": "Mac 上的隐私优先 AI 会议笔记与写作助手——端侧转录、智能纪要、行动项与 60+ 写作模式"
+    "repo": "Tencent/AngelSpec",
+    "url": "https://github.com/Tencent/AngelSpec",
+    "total": "183★",
+    "week": "183",
+    "desc": "统一的 torch 原生训练框架，支持 MTP 和块并行投机解码。"
   },
   {
     "rank": 2,
-    "repo": "Tencent/AngelSpec",
-    "url": "https://github.com/Tencent/AngelSpec",
-    "total": "94★",
-    "week": "94",
-    "desc": "统一的 torch 原生训练框架，支持 MTP 与块并行投机解码"
+    "repo": "bitwize-ai/Logue",
+    "url": "https://github.com/bitwize-ai/Logue",
+    "total": "134★",
+    "week": "134",
+    "desc": "Mac 端隐私优先的 AI 会议笔记和写作助手：本地转写、智能纪要、待办提取、60+ 写作模式。"
   },
   {
     "rank": 3,
     "repo": "MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
     "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
-    "total": "70★",
-    "week": "70",
-    "desc": "面向 poolside/Laguna-S-2.1-NVFP4 的 vLLM 0.25.1 服务栈，带 DFlash 投机解码"
+    "total": "75★",
+    "week": "75",
+    "desc": "面向 poolside/Laguna-S-2.1-NVFP4 的 vLLM 0.25.1 serving 栈，带 DFlash 投机解码，支持 DGX Spark 和 RTX 6000 PRO。"
   },
   {
     "rank": 4,
-    "repo": "babutree/TTS-API",
-    "url": "https://github.com/babutree/TTS-API",
-    "total": "29★",
-    "week": "29",
-    "desc": "自托管流式 TTS 网关，带 Web UI + REST/WebSocket API，双引擎"
+    "repo": "patchy631/time-to-first-token",
+    "url": "https://github.com/patchy631/time-to-first-token",
+    "total": "53★",
+    "week": "53",
+    "desc": "10 周、每天 30 分钟的 LLM 推理 serving 与优化路线图，覆盖 vLLM、SGLang、量化、投机解码和基准测试。"
   },
   {
     "rank": 5,
-    "repo": "Ali-hey-0/ai-runtime-lab",
-    "url": "https://github.com/Ali-hey-0/ai-runtime-lab",
-    "total": "16★",
-    "week": "16",
-    "desc": "围绕非确定性 LLM 工程化确定性、生产级系统"
+    "repo": "fypklanfanqie/local-llm-with-character-setting-Arknights",
+    "url": "https://github.com/fypklanfanqie/local-llm-with-character-setting-Arknights",
+    "total": "43★",
+    "week": "43",
+    "desc": "一款运行在安卓设备上的 LLM 对话助手应用。你可以自行下载并管理模型，自由定制角色人设，并随时在本地推理（部分机型支持 GPU/NPU 加速）与云端模型之间切换。同时内置 TTS 语音合成功能，让对话更加鲜活。 An Android LLM chat assistant tha"
   },
   {
     "rank": 6,
-    "repo": "YutongChenVictor/NPU-E2E",
-    "url": "https://github.com/YutongChenVictor/NPU-E2E",
-    "total": "16★",
-    "week": "16",
-    "desc": "端到端 NPU：RTL 脉动阵列 → AXI4 SoC → TVM 编译器 → FPGA 推理"
+    "repo": "babutree/TTS-API",
+    "url": "https://github.com/babutree/TTS-API",
+    "total": "33★",
+    "week": "33",
+    "desc": "自托管流式 TTS 网关，带 Web UI 和 REST/WebSocket API：本地 Kokoro CPU 推理 + 微软 Edge 神经语音双引擎。"
   },
   {
     "rank": 7,
-    "repo": "mraza007/minute",
-    "url": "https://github.com/mraza007/minute",
-    "total": "7★",
-    "week": "7",
-    "desc": "macOS 全离线会议笔记——录制、转录、总结"
+    "repo": "YutongChenVictor/NPU-E2E",
+    "url": "https://github.com/YutongChenVictor/NPU-E2E",
+    "total": "26★",
+    "week": "26",
+    "desc": "端到端 NPU：从 RTL 脉动阵列 → AXI4 SoC → TVM 编译器 → FPGA 推理。"
   },
   {
     "rank": 8,
-    "repo": "arkenoi/timeline-export",
-    "url": "https://github.com/arkenoi/timeline-export",
-    "total": "4★",
-    "week": "4",
-    "desc": "端侧 Google 地图时间线的无头可复现导出（Android/redacted）"
+    "repo": "Ali-hey-0/ai-runtime-lab",
+    "url": "https://github.com/Ali-hey-0/ai-runtime-lab",
+    "total": "18★",
+    "week": "18",
+    "desc": "围绕非确定性 LLM 构建确定性、生产级系统：FSM、持久化执行、重试、DAG、agent 运行时等。"
   },
   {
     "rank": 9,
+    "repo": "mraza007/minute",
+    "url": "https://github.com/mraza007/minute",
+    "total": "9★",
+    "week": "9",
+    "desc": "macOS 全离线会议笔记工具：用 Whisper 和本地 LLM 在端上录音、转写、总结，带会议检测。"
+  },
+  {
+    "rank": 10,
+    "repo": "Quor-a/ZorvAI",
+    "url": "https://github.com/Quor-a/ZorvAI",
+    "total": "6★",
+    "week": "6",
+    "desc": "Zorv AI — 安卓 Android 端本地优先的 AI Agent 智能体助手（开源）。多模型对话、人格系统、记忆、语音全双工 TTS/STT、定时任务、可扩展工具链、飞书/QQ/微信接入。Kotlin + Jetpack Compose 开发。"
+  },
+  {
+    "rank": 11,
+    "repo": "tonyd2wild/Inkling-Small-NVFP4-DSpark-BF16-KV-262K-2x-DGX-Spark",
+    "url": "https://github.com/tonyd2wild/Inkling-Small-NVFP4-DSpark-BF16-KV-262K-2x-DGX-Spark",
+    "total": "6★",
+    "week": "6",
+    "desc": "Inkling Small NVFP4 跑在 2 张 DGX Spark 上，TP2 并行、262K 上下文、BF16 KV cache、DSpark 投机解码。"
+  },
+  {
+    "rank": 12,
+    "repo": "Underline-1024/loom-engine",
+    "url": "https://github.com/Underline-1024/loom-engine",
+    "total": "6★",
+    "week": "6",
+    "desc": "用 Rust 写的终端原生叙事引擎和文字 RPG，支持 OpenAI、Anthropic、本地模型等任意 LLM。"
+  },
+  {
+    "rank": 13,
+    "repo": "AAAelina/rikkahub-agent",
+    "url": "https://github.com/AAAelina/rikkahub-agent",
+    "total": "5★",
+    "week": "5",
+    "desc": "RikkaHub Agent：安卓端本地 LLM agent（本地 fork/上传）。"
+  },
+  {
+    "rank": 14,
     "repo": "SaymRuxoTE/EDGE-AI",
     "url": "https://github.com/SaymRuxoTE/EDGE-AI",
     "total": "4★",
     "week": "4",
-    "desc": "从零构建的 C++ AVX2 Transformer 推理引擎"
+    "desc": "从零手写的 C++ AVX2 Transformer 推理引擎。"
   },
   {
-    "rank": 10,
+    "rank": 15,
     "repo": "fxd0h/Axelera-Voyager-Local-Assistant",
     "url": "https://github.com/fxd0h/Axelera-Voyager-Local-Assistant",
     "total": "4★",
     "week": "4",
-    "desc": "Axelera Voyager SDK 与 Metis AIPU 的本地 AI 助手——语义 RAG"
+    "desc": "面向 Axelera Voyager SDK 和 Metis AIPU 的本地 AI 助手：基于公开 Axelera 资料做语义 RAG + 工作流技能，走 MCP。"
   },
   {
-    "rank": 11,
+    "rank": 16,
     "repo": "DngBack/awesome-speculative-decoding",
     "url": "https://github.com/DngBack/awesome-speculative-decoding",
     "total": "4★",
     "week": "4",
-    "desc": "投机解码优秀论文精选列表"
+    "desc": "投机解码方向的精选论文清单。"
   },
   {
-    "rank": 12,
+    "rank": 17,
+    "repo": "Nahid-mahmud555/ai-data-engineering-roadmap",
+    "url": "https://github.com/Nahid-mahmud555/ai-data-engineering-roadmap",
+    "total": "4★",
+    "week": "4",
+    "desc": "从零搭建生产级本地 RAG 管道和数据工程系统，跟着每日实操路线图和代码架构走。"
+  },
+  {
+    "rank": 18,
+    "repo": "eschizoid/stride",
+    "url": "https://github.com/eschizoid/stride",
+    "total": "4★",
+    "week": "4",
+    "desc": "本地优先的多运动训练引擎：把 Strava 数据同步到你自己的 SQLite，确定性计算训练指标，带教练指导。"
+  },
+  {
+    "rank": 19,
     "repo": "mavesensei/commitcraft",
     "url": "https://github.com/mavesensei/commitcraft",
     "total": "4★",
     "week": "4",
-    "desc": "智能约定式提交，双层流水线：本地规则引擎 + LLM 兜底"
+    "desc": "智能约定式 commit，两层管线：本地规则引擎秒处理简单改动，复杂 diff 才调用 LLM。"
   },
   {
-    "rank": 13,
+    "rank": 20,
     "repo": "statico/llmac",
     "url": "https://github.com/statico/llmac",
     "total": "3★",
     "week": "3",
-    "desc": "命令行调用 Apple 端侧 Foundation Models——小、快、无 API key"
-  },
-  {
-    "rank": 14,
-    "repo": "AAAelina/rikkahub-agent",
-    "url": "https://github.com/AAAelina/rikkahub-agent",
-    "total": "3★",
-    "week": "3",
-    "desc": "RikkaHub Agent——端侧 Android LLM agent（本地 fork）"
-  },
-  {
-    "rank": 15,
-    "repo": "ankit1057/sipllm",
-    "url": "https://github.com/ankit1057/sipllm",
-    "total": "3★",
-    "week": "3",
-    "desc": "sipllm——无依赖的 C++17 流式 GGUF LLM 推理引擎，跑得快"
-  },
-  {
-    "rank": 16,
-    "repo": "enkhbold470/memdesk",
-    "url": "https://github.com/enkhbold470/memdesk",
-    "total": "3★",
-    "week": "3",
-    "desc": "每分钟截屏 Mac、端侧 OCR、写一行摘要的本地记忆助手"
-  },
-  {
-    "rank": 17,
-    "repo": "Quor-a/ZorvAI",
-    "url": "https://github.com/Quor-a/ZorvAI",
-    "total": "3★",
-    "week": "3",
-    "desc": "Zorv AI——安卓端本地优先的 AI Agent 助手（开源），多模型对话、人格、记忆、语音双工"
-  },
-  {
-    "rank": 18,
-    "repo": "Underline-1024/loom-engine",
-    "url": "https://github.com/Underline-1024/loom-engine",
-    "total": "3★",
-    "week": "3",
-    "desc": "终端原生叙事引擎与文字 RPG（Rust），配任意 LLM"
-  },
-  {
-    "rank": 19,
-    "repo": "el23ddg/RAG-based-intelligent-data-discovery-engine",
-    "url": "https://github.com/el23ddg/RAG-based-intelligent-data-discovery-engine",
-    "total": "3★",
-    "week": "3",
-    "desc": "全本地开源 RAG 系统：导入 PDF/文本、嵌入、检索"
-  },
-  {
-    "rank": 20,
-    "repo": "eschizoid/stride",
-    "url": "https://github.com/eschizoid/stride",
-    "total": "3★",
-    "week": "3",
-    "desc": "本地优先多运动训练引擎——把 Strava 数据同步到 SQLite"
+    "desc": "命令行调用 Apple 端侧 Foundation Models：小巧、快速、无需 API key，致敬 Simon Willison 的 llm。"
   }
 ]

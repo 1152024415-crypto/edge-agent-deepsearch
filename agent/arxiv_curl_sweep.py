@@ -20,8 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 RUN = ROOT / "research_runs" / "_nodup_placeholder.json"  # nonexistent → no dedup (complete fresh re-sweep of the window)
 OUT = ROOT / ".superpowers" / "sdd" / "arxiv_candidates.json"
 
-WINDOW_LO = "2026-07-25"
-WINDOW_HI = "2026-07-30"
+WINDOW_LO = "2026-07-31"
+WINDOW_HI = "2026-08-03"
 CATS = "(cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.RO OR cat:cs.AR OR cat:cs.DC OR cat:cs.ET OR cat:cs.SY OR cat:cs.NE)"
 
 # (label, search_query_fragment)  -- single words quoted, multi-word via AND
@@ -51,7 +51,7 @@ QUERIES = [
 def curl(query):
     full = f"{query} AND {CATS}"
     sq = urllib.parse.quote(full, safe="")  # encode everything incl. quotes/parens/spaces
-    url = (f"http://export.arxiv.org/api/query?search_query={sq}"
+    url = (f"https://export.arxiv.org/api/query?search_query={sq}"
            f"&max_results=100&sortBy=submittedDate&sortOrder=descending")
     for attempt in range(4):
         try:

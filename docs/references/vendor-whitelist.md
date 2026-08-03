@@ -50,8 +50,9 @@ Qualcomm: `qualcomm.com`
 MediaTek: `mediatek.com`
 Xiaomi: `mi.com`, `xiaomi.com`
 OPPO: `oppo.com`
-vivo: `vivo.com`
+vivo: `vivo.com`, `vivo.com.cn`
 Honor: `honor.com`
 Alibaba/Qwen: `alibabacloud.com`, `qwenlm.github.io`
 Mistral: `mistral.ai`
+Minimax: `minimax.io`
 阶跃星辰 StepFun: `stepfun.com`

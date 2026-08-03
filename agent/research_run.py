@@ -79,6 +79,7 @@ OFFICIAL_SOURCE_DOMAINS = (
     "xiaomi.com",
     "oppo.com",
     "vivo.com",
+    "vivo.com.cn",
     "honor.com",
     "alibabacloud.com",
     "qwenlm.github.io",
@@ -89,6 +90,7 @@ OFFICIAL_SOURCE_DOMAINS = (
     "deepseek.com",
     "api-docs.deepseek.com",
     "stepfun.com",
+    "minimax.io",
 )
 
 ARXIV_URL_RE = re.compile(
