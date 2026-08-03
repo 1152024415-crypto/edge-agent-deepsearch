@@ -25,7 +25,16 @@ WINDOW_HI = "2026-08-03"
 CATS = "(cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.RO OR cat:cs.AR OR cat:cs.DC OR cat:cs.ET OR cat:cs.SY OR cat:cs.NE)"
 
 # (label, search_query_fragment)  -- single words quoted, multi-word via AND
+# Broad category sweeps (no keyword filter, catch ALL recent papers by date)
+# + specific keyword queries for edge-AI topics.
 QUERIES = [
+    # Broad category sweeps — catch all recent papers, not just keyword-matched.
+    # This prevents missing relevant papers (small models, efficient inference, etc.)
+    # whose abstracts don't contain "on-device" or "edge" explicitly.
+    ("cs.AI-broad", "cat:cs.AI"),
+    ("cs.LG-broad", "cat:cs.LG"),
+    ("cs.CL-broad", "cat:cs.CL"),
+    # Specific edge-AI keyword queries (catch explicitly edge papers)
     ("on-device", 'abs:"on-device"'),
     ("edge-computing", 'abs:"edge computing"'),
     ("edge-LLM", "(abs:edge AND abs:LLM)"),

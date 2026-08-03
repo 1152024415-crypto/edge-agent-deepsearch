@@ -88,18 +88,34 @@ def _coerce_authors(v) -> str:
 
 
 def is_edge_text(text: str) -> bool:
+    # Broad edge-AI relevance check — not just device keywords, but the full
+    # tech stack (efficient inference, quantization, pruning, speculative, KV cache,
+    # small models, federated, deployment, etc.). Catches papers relevant to
+    # edge/on-device AI even if they don't explicitly say "on-device".
     return bool(re.search(
         r"on-device|on device|\bedge\b|mobile|embedded|\biot\b|npu|phone|"
         r"microcontroller|neuromorphic|loihi|spinnaker|raspberry|jetson|"
-        r"smartwatch|wearable|drone|robot", text))
+        r"smartwatch|wearable|drone|robot|"
+        r"efficient inference|lightweight|small model|small language|\bsnn\b|"
+        r"quantiz|prun|distill|speculative|kv.?cache|federated|tinyml|"
+        r"model compression|inference acceleration|low.?power|resource.?constrain|"
+        r"edge computing|edge ai|edge inference|mobile inference|"
+        r"spiking neural|spikformer|"
+        r"deploy|runtime|serving|real.?time|latency|throughput|"
+        r"accelerat|hardware.?friendly|co.?design|asic|fpga", text))
 
 
-def convert_arxiv(c: dict) -> dict:
+def convert_arxiv(c: dict) -> dict | None:
     aid = re.sub(r"v\d+$", "", str(c.get("id") or "")).strip()
     title = (c.get("title") or "").strip()
     summary = c.get("abstract") or c.get("summary") or ""
     authors = _coerce_authors(c.get("authors"))
     text = (title + " " + summary).lower()
+    # Filter: only keep arxiv papers with edge-AI relevance (broad sweep catches
+    # ALL cs.AI/cs.LG papers; many are pure theory/cloud/medical — drop those).
+    # HF/vendor/github papers are NOT filtered (they're curated/official).
+    if not is_edge_text(text):
+        return None
     rel = 7 if is_edge_text(text) else 5
     contrib = 5
     tags = auto_tags(title, summary)
@@ -256,7 +272,9 @@ def main() -> int:
     seen_arxiv_ids = {re.sub(r"v\d+$", "", str(c.get("id") or "")) for c in arxiv}
     papers = []
     for c in arxiv:
-        papers.append(convert_arxiv(c))
+        p = convert_arxiv(c)
+        if p:
+            papers.append(p)
     for c in vendor:
         papers.append(convert_vendor(c))
     for c in gh:
