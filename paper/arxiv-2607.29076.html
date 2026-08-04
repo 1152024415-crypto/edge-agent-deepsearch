@@ -7,9 +7,9 @@
 <h1>Selective KV Cache Protection for Noise-Resilient LLM Inference on Analog Compute-In-Memory Systems</h1>
 <div class="meta"><span class="score">12</span> <span class="tier school">学校预印本</span>  2026-07-31 · Yuannuo Feng; Wenyong Zhou; Yuang Ma; Yizhe Chen; Wenshuai Yao; Yuxin Xie; Ngai Wong; Wang Kang / arXiv</div>
 <div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:记忆</span><span class="tag">方向:能耗功耗</span><span class="tag">方向:评测基准</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">模拟存内计算（CIM）阵列是低功耗 LLM 推理的有前景基底，尤其适合权重驻留计算。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">未报告</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">这项工作针对模拟存内计算运行动态注意力时的硬件噪声，只把最脆弱的开头 token 和最近 token 留在高精度数字路径，其余 KV cache 交给低功耗模拟阵列。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">九个 LLM 上，平均困惑度从噪声下的 33.91 降到 11.95，接近无噪声基线 11.06；动态 KV 编程行利用率从 23.1% 提升到 91.2%。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">用 sink token 加滑动近期窗口做分层保护，再由协同调度器安排模拟写入、所有权切换和批量矩阵乘，限制数字路径额外开销。</span></div>
 <div class="score-reason">评分依据：auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.29076" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>
