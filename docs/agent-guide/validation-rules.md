@@ -27,6 +27,7 @@
 21. **标签触发词精度**：`auto_tags` 每条方向 tag 的触发词必须是该架构/方法的特定词，不许用**伞词**当唯一触发词。`neuromorphic` 是超集（含 Ising 机/事件硬件/memristor，不全是 SNN）；`spike-based`/`spiking neuron` 可能是生物学放电（神经科学）。`方向:SNN` 必须用 `spiking neural network`/`\bsnn\b`/`spikformer`/`spiking transformer`/`spiking neuron model`。通则：新增 tag 前想「会不会匹配到别的领域」（SLM=Small/Speech、quantization 量化 BERT、neuromorphic≠SNN）。
 22. **中文摘要机械门**：每条 `abstract` 必须是可直接阅读的中文「这是什么」（至少 8 个中文字符）。英文 abstract 原文不能发布；`abstract`/`effects`/`mechanism` 禁止出现 `auto-converted`、`votes=`、`待核实`、`精修待补` 等内部流程文字。
 23. **推荐策展机械门**：自动汇集一律 `纳入`，不得按标题关键词自动推荐。只有主 agent 读过来源后可改为 `推荐`；每条推荐必须填写中文 `recommendation_reason`（至少 8 个中文字符、无内部占位词）。构建产物有内容时至少有 1 条合格推荐，否则 `gate_release` 阻止部署。
+24. **推荐项目名机械门**：自动汇集 `title_zh` 一律留空；主 agent 晋升推荐时必须填写简短中文项目名（至少 2 个中文字符、总长不超过 40 字、无内部占位词）。`title_zh` 回答“它叫什么”，不得与回答“它做什么”的 `abstract` 完全相同。推荐卡固定按项目名 → 介绍 → 关键词 → 推荐理由 → 英文原标题展示。
 
 ## 评分口径参考
 
@@ -45,7 +46,7 @@
 python agent/validate_research_run.py research_runs/<run_id>.json
 ```
 
-自动校验覆盖：必填字段、中文 `abstract`、推荐条目的中文 `recommendation_reason`、内部占位词、`source_tier` 枚举、`tags` 词表、`date` 7 天窗口、`score`=2 维之和、官方域名、github URL、vendors 非空、**死链检查**、**arXiv date 核对**、跨 run 去重 warning。
+自动校验覆盖：必填字段、中文 `abstract`、推荐条目的中文 `title_zh` 和 `recommendation_reason`、内部占位词、`source_tier` 枚举、`tags` 词表、`date` 7 天窗口、`score`=2 维之和、官方域名、github URL、vendors 非空、**死链检查**、**arXiv date 核对**、跨 run 去重 warning。
 
 ### 内容抽检（半自动）
 
@@ -65,6 +66,6 @@ python agent/validate_research_run.py research_runs/<run_id>.json
 - 字段缺失：要求子 agent 补全。
 - 效果缺失：保留时必须写 `未报告`。
 - 英文摘要或内部占位词：回到原文，用中文重写后再验证。
-- 推荐缺少具体中文理由：降级为 `纳入`，或由主 agent 阅读来源后补全，不能拿 `score_reason` 顶替。
+- 推荐缺少简短中文项目名或具体中文理由：降级为 `纳入`，或由主 agent 阅读来源后补全；不能拿 abstract 冒充项目名，也不能拿 `score_reason` 顶替推荐理由。
 
 不能为了凑数量发布不合格内容。本周合格内容不足就少收。

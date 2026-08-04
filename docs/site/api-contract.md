@@ -23,6 +23,7 @@ Response:
       "id": "fresh-edge-agent-paper",
       "run_id": "run-20260625-120000",
       "title": "Fresh Edge Agent Paper",
+      "title_zh": "端侧智能体规划框架",
       "abstract": "这项工作让端侧智能体在手机本地完成规划与执行。",
       "effects": "在真实手机上将推理延迟降低了 23%。",
       "mechanism": "通过压缩本地记忆和规划执行循环减少资源开销。",
@@ -81,6 +82,7 @@ Request:
     {
       "id": "fresh-edge-agent-paper",
       "title": "Fresh Edge Agent Paper",
+      "title_zh": "端侧智能体规划框架",
       "abstract": "这项工作让端侧智能体在手机本地完成规划与执行。",
       "effects": "在真实手机上将推理延迟降低了 23%。",
       "mechanism": "通过压缩本地记忆和规划执行循环减少资源开销。",

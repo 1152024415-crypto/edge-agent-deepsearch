@@ -14,7 +14,7 @@
   → 发起调研子agent(prompt必须注入research-prompt.md全文+硬约束)
   → 子agent产出 research_runs/run-<week>.json
   → validate: 结构+死链(自动拦)+7天窗口+2维加总+arXiv date核对+跨run去重
-  → 主agent抽检来源并策展推荐(中文摘要+为什么值得看；自动脚本不得按关键词推荐)
+  → 主agent抽检来源并策展推荐(中文项目名+摘要+为什么值得看；自动脚本不得按关键词推荐)
   → publish → 服务器upsert → 展示最新run(标签筛选)
   → 详情页: 短摘要+标签+原文链接(无6段整理,整理agent已停用)
   → 错误沉淀: AGENTS教训+validate规则+research-prompt强化
@@ -30,8 +30,8 @@
 | 3 | 发起调研子 agent，**prompt 必须注入 research-prompt.md 全文 + 硬约束**（不许自写简化版） | 流程强制 |
 | 4 | 子 agent 用 MCP+websearch 广搜集本周论文+大厂官方+开源大项目，产出易读版 abstract/effects/mechanism + 2维 + tags + source_tier + open_source + vendors（arXiv date 取自元数据）；搜集结果统一标 `纳入` | agent |
 | 5 | 保存 `research_runs/run-YYYYMMDD-HHMMSS.json` | 主 agent |
-| 6 | 主 agent 读来源后，从完整收录中挑选值得优先看的条目，补中文 `recommendation_reason` 并排序；不设固定推荐比例 | 主 agent |
-| 7 | `python agent/validate_research_run.py`：中文摘要/推荐理由 + 内部占位词 + 结构 + 7天窗口 + 2维加总=score + source_tier/tags + **HTTP 死链检查** + **arXiv date 核对** + 跨run去重warning | **自动拦** |
+| 6 | 主 agent 读来源后，从完整收录中挑选值得优先看的条目，补简短中文 `title_zh` 和中文 `recommendation_reason` 并排序；不设固定推荐比例 | 主 agent |
+| 7 | `python agent/validate_research_run.py`：中文项目名/摘要/推荐理由 + 内部占位词 + 结构 + 7天窗口 + 2维加总=score + source_tier/tags + **HTTP 死链检查** + **arXiv date 核对** + 跨run去重warning | **自动拦** |
 | 8 | validate 失败：修正或丢弃，**不许凑数** | 流程 |
 | 9 | 主 agent 抽检 `source_tier=官方动态` 和 `开源大项目` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
 | 10 | `python agent/publish_results.py --server <URL>` | 主 agent |
@@ -64,7 +64,7 @@
 **闭环验证（分层）**：
 - **快验证**（每次改 harness 后）：跑 `tests/test_research_pipeline.py` + `test_build` + `app/gates/gate_all.py`，确认代码层规则生效
 - **慢验证**（新策略上线时）：跑一次真调研，确认死链拦、research-prompt 用、易读版产出、不凑数
-- **渲染验证**（每次 publish/deploy 后必做，不只 curl+tests）：用 chrome-devtools 加载线上页（profile 被锁就 `taskkill //F //IM chrome.exe` 杀掉重连），`ignoreCache` 硬刷新，三查：(1) DOM 渲染对——`#recommendations .rec-item`、`#papers .row` 数、band 折叠态、标签栏、weekly/trending 渲染条数；(2) 读内容质量——推荐卡首眼是中文「这是什么」+具体「为什么值得看」，英文只在小号原标题；weekly 的 topic/why、论文中文摘要真的看内容不是数条数；(3) `list_console_messages` 查 error/404。curl 对 ≠ 渲染对，tests 过 ≠ 页面好。
+- **渲染验证**（每次 publish/deploy 后必做，不只 curl+tests）：用 chrome-devtools 加载线上页（profile 被锁就 `taskkill //F //IM chrome.exe` 杀掉重连），`ignoreCache` 硬刷新，三查：(1) DOM 渲染对——`#recommendations .rec-item`、`#papers .row` 数、band 折叠态、标签栏、weekly/trending 渲染条数；(2) 读内容质量——推荐卡严格按中文项目名 → 介绍 → 关键词 → 为什么值得看 → 小号英文原标题展示，不能把介绍冒充项目名；weekly 的 topic/why、论文中文摘要真的看内容不是数条数；(3) `list_console_messages` 查 error/404。curl 对 ≠ 渲染对，tests 过 ≠ 页面好。
 
 ## 6. 调度
 
@@ -89,7 +89,7 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 - **死链检查**：每个 paper_url 发 HTTP HEAD，HEAD 失败 fallback GET；超时/网络不可达记 alive + warning 不 fail；只有 404 才 fail；每 URL 超时 5s
 - **arXiv date 核对**：paper_url 是 arXiv 时查 arXiv API 取真实提交日，与 JSON date 不一致 fail（防旧论文改日期充本周）；离线 warning 跳过
 - **跨 run 去重**：读 data/.last_run_papers.json，命中上次 run 的 id 给 warning（不 fail，相邻两周窗口有合法重叠）
-- **推荐可读性**：每条 abstract 至少 8 个中文字符；推荐条目必须有至少 8 个中文字符的 recommendation_reason；读者字段含 auto-converted/votes=/待核实/精修待补等内部占位词直接 fail
+- **推荐可读性**：每条 abstract 至少 8 个中文字符；推荐条目必须有 2 个以上中文字符且不超过 40 字的 `title_zh`（不得等于 abstract）以及至少 8 个中文字符的 recommendation_reason；读者字段含 auto-converted/votes=/待核实/精修待补等内部占位词直接 fail
 - **构建发布门**：当前周非空时至少 1 条人工精选，自动汇集不能按关键词晋升推荐；gate_release 在真实 `site/index.html` 上复核
 
 **半自动抽检**（主 agent publish 前对官方动态/开源大项目条目）：
@@ -194,7 +194,7 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 - tags 1-8 个（取自 data/tags.yaml 词表，多标签）
 - vendors 附证据（OpenReview/Google Scholar/arXiv PDF 机构页）
 - abstract/effects/mechanism 用大白话中文重写（轻量，1-2 句，不写详细分析）
-- 自动汇集的 recommendation 一律为纳入；逐篇读来源后再选推荐，并写中文 recommendation_reason
+- 自动汇集的 recommendation 一律为纳入且 `title_zh` 留空；逐篇读来源后再选推荐，并写简短中文项目名和中文 recommendation_reason
 - 2 维加总 = score
 
 结果：全量发布为 research run JSON（有多少收多少，不凑数也不设上限）

@@ -27,7 +27,7 @@
 11. **open_source**：bool，有开源仓库/数据集/模型开源 true，否则 false。同等条件下开源优先。
 12. **多标签 tags**：每条 1-8 个标签，格式 `维度:值`（如 `方向:端侧agent`/`硬件:NPU`/`模型:Llama`），取自 `data/tags.yaml` 词表（人读版 `docs/references/tag-taxonomy.md`，4 维：方向/应用/硬件/模型），多标签，一个工作可挂多个（如「端侧 VLM 量化部署」挂 `方向:端侧agent`+`方向:多模态`+`方向:量化`+`方向:编译部署`）。方向/应用/硬件为受控词表（必须命中），模型为半自由（starter 列表，新模型可提议后加入）。词表外的标签先加进 `data/tags.yaml` 再用，不许私自用词表外的标签。
 13. **首页字段人类可读**：`abstract`/`effects`/`mechanism` 用中文短句给人看（这是什么/有什么结果/怎么做到的），每段 1-2 句，避免论文腔。`abstract` 不得保留英文原文；`effects` 必须来自原文，没有报告写 `未报告`，不许编造。读者字段禁止出现 `auto-converted`、`votes=`、`待核实`、`精修待补` 等内部流程文字。
-14. **推荐必须由主 agent 策展**：搜集子 agent 和自动脚本对所有条目一律写 `recommendation="纳入"`、`recommendation_reason=""`，不许仅因标题命中 on-device/KV cache/量化等关键词自动推荐。主 agent 读过来源后再选值得优先看的条目，数量按本周质量决定；每条推荐必须补一句中文 `recommendation_reason`，具体说明为什么值得优先看。
+14. **推荐必须由主 agent 策展**：搜集子 agent 和自动脚本对所有条目一律写 `title_zh=""`、`recommendation="纳入"`、`recommendation_reason=""`，不许仅因标题命中 on-device/KV cache/量化等关键词自动推荐。主 agent 读过来源后再选值得优先看的条目，数量按本周质量决定；每条推荐必须补一个 40 字以内的简短中文项目名 `title_zh` 和一句中文 `recommendation_reason`。项目名回答“它叫什么”，不得直接复制回答“它做什么”的 abstract。
 15. **不凑数**：本周合格内容不足就少收，不拿学术充大厂，不拿不确定链接凑数。
 
 # 搜集（分层，详见 `docs/harness.md` 第 11 节 + `docs/references/mcp-setup.md`）
@@ -66,7 +66,7 @@ fetch 18 家大厂官方博客 URL 找过去 7 天动态，命中官方域名才
 
 # 输出
 
-按 `docs/agent-guide/output-contract.md` 的 JSON 结构输出，不要输出 markdown 表格、不要 1-5 分评分。每条含：`id`/`title`/`abstract`/`effects`/`mechanism`/`paper_url`/`date`/`score`+`score_relevance`+`score_contribution`/`source_tier`/`open_source`/`tags`/`score_reason`/`authors`/`vendors`/`venue`/`recommendation`/`recommendation_reason`。搜集子 agent 统一输出 `recommendation="纳入"`、`recommendation_reason=""`，只产 JSON，不改代码、网页、服务器。
+按 `docs/agent-guide/output-contract.md` 的 JSON 结构输出，不要输出 markdown 表格、不要 1-5 分评分。每条含：`id`/`title`/`title_zh`/`abstract`/`effects`/`mechanism`/`paper_url`/`date`/`score`+`score_relevance`+`score_contribution`/`source_tier`/`open_source`/`tags`/`score_reason`/`authors`/`vendors`/`venue`/`recommendation`/`recommendation_reason`。搜集子 agent 统一输出 `title_zh=""`、`recommendation="纳入"`、`recommendation_reason=""`，只产 JSON，不改代码、网页、服务器。
 
 # 关键技术分支（搜词与打标参考）
 

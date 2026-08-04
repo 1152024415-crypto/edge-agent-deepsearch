@@ -29,6 +29,7 @@ When this skill triggers, read these files before editing or publishing:
 - `tags`: 1-8 tags from `data/tags.yaml` (multi-label, one work can carry many).
 - `open_source`: bool facet.
 - `recommendation`: automatic collection always writes `纳入`; only the main agent may promote an item to `推荐` after reading the source.
+- `title_zh`: automatic collection writes an empty string; required as a short Chinese project/content name when `recommendation=推荐`.
 - `recommendation_reason`: required readable Chinese when `recommendation=推荐`; explains why a reader should prioritize it.
 - `date`: must be within the past 7 days; for arXiv URLs validate cross-checks the real submitted date.
 - No `detail` / 6-segment deep analysis — the detail agent is discontinued. Detail page shows short summary + tags + source link.
@@ -40,7 +41,7 @@ Follow these steps end to end. They mirror `docs/harness.md` section 3 and `AGEN
 1. **Read the strong-entry docs first** (see First Read above). Skipping these means missing the standard and fabricating dead links.
 2. **Check the time window**: read `data/.last_run`. Only run if ≥7 days passed; if less, say "本周已调研" and stop. The collection window is the past 7 days.
 3. **Spawn the research subagent**: the prompt must inject the full text of `docs/agent-guide/research-prompt.md` plus the hard constraints. **The main agent must not write its own simplified prompt.** The subagent collects broadly via arXiv MCP + HuggingFace MCP + GitHub MCP + websearch (see `docs/references/mcp-setup.md`). No hard quantity target — collect as many qualified items as there are (adaptive: broaden/rewrite a query if it returns too few). **The subagent must report per-vendor blog-check results** (which of the 18 vendors + model labs were checked, in-window posts found), not just "0 官方动态" — 0 requires evidence, not assertion.
-4. **Save and curate the output**: the main agent filters + scores + tags the candidates (not delegated) and saves all qualified papers as `research_runs/run-YYYYMMDD-HHMMSS.json` (no padding, no hard cap). Automatic collection keeps every item at `recommendation=纳入`; after reading sources, the main agent selects this week's priority items and gives each a specific Chinese `recommendation_reason`. The subagent only produces JSON; it does not edit code, pages, or the server.
+4. **Save and curate the output**: the main agent filters + scores + tags the candidates (not delegated) and saves all qualified papers as `research_runs/run-YYYYMMDD-HHMMSS.json` (no padding, no hard cap). Automatic collection keeps every item at `recommendation=纳入` and `title_zh=""`; after reading sources, the main agent selects this week's priority items and gives each a short Chinese `title_zh` plus a specific Chinese `recommendation_reason`. The subagent only produces JSON; it does not edit code, pages, or the server.
 5. **Validate**: `python agent/validate_research_run.py research_runs/<run_id>.json`. Checks readable Chinese abstracts, Chinese recommendation reasons, internal placeholder markers, structure, 7-day window, 2-dim score sum, source_tier, tags taxonomy, official-domain / github-URL rules, HTTP dead links, **arXiv submitted-date cross-check**, and cross-run dedup warning.
 6. **Spot-check**: before publishing, fetch every `source_tier=官方动态` and `source_tier=开源大项目` URL and compare page content vs title/abstract. Drop mismatches.
 7. **Write the editorial weekly_summary**: `data/weekly_summary.json` is an **independent editorial product**, NOT a slice of the run. `highlights` must be editorial news (vendor blogs/dynamics/industry events with **external URLs**, ≥5). Do NOT fill highlights with `paper_id` links to the run's top papers — that duplicates the paper list. Write from the `官方动态` tier + judgment. If `官方动态` count is 0, you have NOT collected vendor blogs — go back to step 3 and collect them, or write per-vendor evidence to `data/weeks/<label>-no-vendor.md`.
@@ -74,7 +75,7 @@ Follow these steps end to end. They mirror `docs/harness.md` section 3 and `AGEN
 - `paper_url` must match the paper/official source title and abstract.
 - `effects` must come from the source; write `未报告` if not reported.
 - Every item: 1-8 tags from `data/tags.yaml`, one `source_tier`, 2-dim score summing to `score`.
-- Page-facing `abstract`/`effects`/`mechanism`/`recommendation_reason` must be short, readable Chinese and contain no internal workflow markers. `score_reason` is scoring/audit evidence and must never substitute for recommendation copy.
+- Page-facing `title_zh`/`abstract`/`effects`/`mechanism`/`recommendation_reason` must be short, readable Chinese and contain no internal workflow markers. A recommended `title_zh` is a name (2+ CJK, at most 40 characters), not a copied abstract. `score_reason` is scoring/audit evidence and must never substitute for recommendation copy.
 - Automatic converters never set `推荐` from keywords. The main agent curates priority items after reading sources and writes `recommendation_reason` for each one.
 - Research subagents do not edit code, docs, server files, or static pages.
 - The server does not search the web; it only accepts validated research runs.

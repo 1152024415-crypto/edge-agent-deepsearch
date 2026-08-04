@@ -21,7 +21,7 @@ prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束。*
 - 用 arXiv MCP + HF Daily Papers MCP + GitHub MCP + websearch 广搜集（详见 `mcp-setup.md`），**不定硬数量目标，有多少合格收多少**。某 query 返回过少就自行放宽/换词。
 - 不限论文，官方动态/开源大项目重大更新/技术博客都要（B 档边界：技术可迁移但作者必须提到端侧场景）。
 - 过滤 GUI agent、过滤常见方法无创新。
-- 每篇给 2 维评分 + 多标签 tags + source_tier + open_source + 大白话 abstract/effects/mechanism；搜集阶段统一 `recommendation=纳入`、`recommendation_reason=""`。
+- 每篇给 2 维评分 + 多标签 tags + source_tier + open_source + 大白话 abstract/effects/mechanism；搜集阶段统一 `title_zh=""`、`recommendation=纳入`、`recommendation_reason=""`。
 - arXiv date 取自元数据，不许自填。
 - 输出符合 `output-contract.md`。子 agent 只产 JSON，不改代码/网页/服务器。
 
@@ -33,7 +33,7 @@ research_runs/run-YYYYMMDD-HHMMSS.json
 
 ## 5. 主 agent 筛选 + 评分（不交给子 agent）
 
-主 agent 亲自在候选上做：日期过滤 7 天 → 关键词粗筛 → 过滤 GUI → 过滤常见方法 → affiliation 粗筛 → 死链检查 → 去重 → 2 维评分 + tags + source_tier。合格的全收，列表轻量罗列不写详细分析，可以多一些。完成全量收录后，主 agent 再逐条挑选本周值得优先看的内容，改为 `recommendation=推荐` 并写具体中文 `recommendation_reason`；不设推荐比例，不能按关键词自动晋升。
+主 agent 亲自在候选上做：日期过滤 7 天 → 关键词粗筛 → 过滤 GUI → 过滤常见方法 → affiliation 粗筛 → 死链检查 → 去重 → 2 维评分 + tags + source_tier。合格的全收，列表轻量罗列不写详细分析，可以多一些。完成全量收录后，主 agent 再逐条挑选本周值得优先看的内容，改为 `recommendation=推荐`，填写 40 字以内的中文项目名 `title_zh` 和具体中文 `recommendation_reason`；`title_zh` 不能直接复制 abstract。不设推荐比例，不能按关键词自动晋升。
 
 ## 6. 本地校验
 
@@ -41,7 +41,7 @@ research_runs/run-YYYYMMDD-HHMMSS.json
 python agent/validate_research_run.py research_runs/run-YYYYMMDD-HHMMSS.json
 ```
 
-校验：必填字段、中文摘要、推荐理由、内部占位词、source_tier 枚举、tags 词表、date 7 天窗口、score=2 维之和、官方域名、github URL、vendors 非空、死链检查、**arXiv date 核对**、跨 run 去重 warning。失败处理：date 与 arXiv 不一致改成真实提交日或丢弃；死链/内容不对题丢弃；英文摘要回到原文中文重写；推荐理由缺失则补全或降为纳入。不凑数。
+校验：必填字段、中文项目名/摘要/推荐理由、内部占位词、source_tier 枚举、tags 词表、date 7 天窗口、score=2 维之和、官方域名、github URL、vendors 非空、死链检查、**arXiv date 核对**、跨 run 去重 warning。失败处理：date 与 arXiv 不一致改成真实提交日或丢弃；死链/内容不对题丢弃；英文摘要回到原文中文重写；推荐缺少项目名或理由则补全或降为纳入。不凑数。
 
 ## 7. 内容抽检
 

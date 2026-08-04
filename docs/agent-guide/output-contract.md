@@ -24,6 +24,7 @@ research_runs/<run_id>.json
 |---|---|---|
 | `id` | string | 稳定唯一 id，建议小写 kebab-case |
 | `title` | string | 论文/动态标题 |
+| `title_zh` | string | 自动搜集时为空；主 agent 推荐时填写 40 字以内的简短中文项目名，回答「它叫什么」，不能复制 abstract |
 | `abstract` | string | agent 大白话整理版。回答「这是什么」，中文短句重写，不搬原文 |
 | `effects` | string | agent 大白话整理版。回答「有什么结果」，只写最关键结果；必须来自原文，没有报告写 `未报告` |
 | `mechanism` | string | agent 大白话整理版。回答「怎么做到的」，普通话解释核心方法 |
@@ -67,6 +68,7 @@ research_runs/<run_id>.json
     {
       "id": "curator-on-device-memory-2026",
       "title": "Forget to Improve: On-Device LLM-Agent Continual Learning via Budget-Curated Memory",
+      "title_zh": "端侧智能体预算记忆管理",
       "abstract": "用一个「每字节净价值」分数管理端侧 agent 的经验记忆生命周期，在 RAM 和能耗预算下做裁剪、共享和信任门控。",
       "effects": "Jetson 测试床上内存减 2.7 倍、上行链路减 2.4 倍，注入攻击成功率从 0.75 降到 0，任务准确率从 0.528 升到 0.605。",
       "mechanism": "每条记忆按价值减危害的每字节净分评分，KEEP/SHARE/TRUST 三个决策分别在 RAM、上行链路、来源维度门控，实现亚线性上下文增长。",
@@ -92,21 +94,22 @@ research_runs/<run_id>.json
 
 ## 首页可读性要求
 
-`abstract`、`effects`、`mechanism`、`recommendation_reason` 是读者可见字段，必须由 agent 用大白话中文整理，写给人看，不复制原文：
+`title_zh`、`abstract`、`effects`、`mechanism`、`recommendation_reason` 是读者可见字段，必须由 agent 用大白话中文整理，写给人看，不复制原文：
 
+- `title_zh` 页面显示为中文项目名：回答「它叫什么」，至少 2 个中文字符、总长不超过 40 字；不能直接复制 abstract。自动搜集阶段留空，只有主 agent 策展推荐时填写。
 - `abstract` 页面显示为「这是什么」：一句话说明这条内容解决什么问题。
 - `effects` 页面显示为「有什么结果」：只写最关键结果；没有量化结果写 `未报告`，不许编造或推测。
 - `mechanism` 页面显示为「怎么做到的」：普通话解释核心方法，不堆术语。
 - `score_reason` 必须中文优先，解释为什么这个分 + affiliation 证据来源。
 - `recommendation_reason` 页面显示为「值得优先看」：只能在主 agent 读过来源并确认价值后填写，不能复述标题，不能写评分流水账。
-- 四个读者字段都禁止粘贴英文 abstract、官方通稿原文或内部流程文字（如 `auto-converted`、`votes=`、`待核实`、`精修待补`）。
+- 五个读者字段都禁止粘贴英文 abstract、官方通稿原文或内部流程文字（如 `auto-converted`、`votes=`、`待核实`、`精修待补`）。
 
 ## 推荐策展规则
 
-- 自动汇集脚本和搜集子 agent 对所有条目一律输出 `recommendation: "纳入"`、`recommendation_reason: ""`，不得按标题关键词自动晋升。
-- 主 agent 完成全量筛选后，再逐条判断哪些内容值得优先看；推荐数量不设固定比例，按本周实际质量决定并排序。
-- 只要本周有可发布内容，发布产物至少应有 1 条人工精选；每条推荐都必须有中文 `abstract` 和中文 `recommendation_reason`。
-- `title` 保留原文以便核对来源；推荐卡片把中文 `abstract` 作为主信息，英文原标题仅作次级参考。
+- 自动汇集脚本和搜集子 agent 对所有条目一律输出 `title_zh: ""`、`recommendation: "纳入"`、`recommendation_reason: ""`，不得按标题关键词自动晋升。
+- 主 agent 完成全量筛选后，再逐条判断哪些内容值得优先看；推荐数量不设固定比例，按本周实际质量决定并排序，同时填写 `title_zh` 和 `recommendation_reason`。
+- 只要本周有可发布内容，发布产物至少应有 1 条人工精选；每条推荐都必须有中文 `title_zh`、中文 `abstract` 和中文 `recommendation_reason`。
+- `title` 保留原文以便核对来源；推荐卡片固定按中文 `title_zh` 项目名 → `abstract` 介绍 → `tags` 关键词 → `recommendation_reason` → 英文原标题展示。
 
 ## 校验
 
@@ -116,4 +119,4 @@ research_runs/<run_id>.json
 python agent/validate_research_run.py research_runs/<run_id>.json
 ```
 
-校验内容：必填字段、中文 `abstract`、推荐条目的中文 `recommendation_reason`、内部占位词拦截、`source_tier` 枚举、`tags` 词表、`date` 7 天窗口、`score`=2 维之和、`source_tier=官方动态` 官方域名、`source_tier=开源大项目` github URL、`source_tier=公司项目` vendors 非空、**paper_url HTTP 死链检查**、**arXiv URL 提交日核对**（防 date 漂移）、**跨 run 去重 warning**（命中上次 run 的 id 提醒，不 fail）。校验失败不能发布。
+校验内容：必填字段、中文 `abstract`、推荐条目的中文 `title_zh` 和 `recommendation_reason`、内部占位词拦截、`source_tier` 枚举、`tags` 词表、`date` 7 天窗口、`score`=2 维之和、`source_tier=官方动态` 官方域名、`source_tier=开源大项目` github URL、`source_tier=公司项目` vendors 非空、**paper_url HTTP 死链检查**、**arXiv URL 提交日核对**（防 date 漂移）、**跨 run 去重 warning**（命中上次 run 的 id 提醒，不 fail）。校验失败不能发布。

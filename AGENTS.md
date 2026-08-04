@@ -62,8 +62,8 @@
 2. 检查 `data/.last_run`：读上次调研时间戳，距本次 ≥7 天才跑；<7 天提示"本周已调研"并停止。防重复跑、防拿旧 run 充本周。
 3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（B 档边界、官方域名白名单、7 天窗口、多标签 tags、source_tier、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
 4. 子 agent 用 arXiv MCP + HF Daily Papers MCP + GitHub MCP + websearch 广搜集本周（过去 7 天）端侧 agent 论文 + 18 家大厂官方动态 + 开源大项目 release，产出易读版 `abstract`/`effects`/`mechanism` + 2 维打分 + `tags` + `source_tier` + `open_source` + `vendors`。arXiv date 取自元数据。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
-5. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`。自动汇集的条目必须全部保持 `recommendation=纳入`；主 agent 读过来源后再挑选本周值得优先看的条目，填写具体中文 `recommendation_reason`，推荐数量按实际质量决定。
-6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：中文摘要/推荐理由 + 内部占位词 + 结构 + 7 天窗口 + 2 维加总 = score + source_tier/tags 校验 + HTTP 死链检查 + arXiv date 核对 + 跨 run 去重 warning。校验失败自动拦。
+5. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`。自动汇集的条目必须全部保持 `title_zh=""`、`recommendation=纳入`；主 agent 读过来源后再挑选本周值得优先看的条目，填写简短中文项目名 `title_zh` 和具体中文 `recommendation_reason`，推荐数量按实际质量决定。
+6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：中文项目名/摘要/推荐理由 + 内部占位词 + 结构 + 7 天窗口 + 2 维加总 = score + source_tier/tags 校验 + HTTP 死链检查 + arXiv date 核对 + 跨 run 去重 warning。校验失败自动拦。
 7. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
 8. publish 前主 agent 抽检 `source_tier=官方动态` 和 `source_tier=开源大项目` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 9. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
@@ -96,7 +96,7 @@
 - **官方域名硬约束**：非论文条目必须命中官方域名（见 `docs/references/vendor-whitelist.md`），非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
 - **多标签 tags**：每条 1-8 个标签，格式 `维度:值`（4 维：方向/应用/硬件/模型，如 `方向:端侧agent`/`硬件:NPU`/`模型:Llama`），取自 `data/tags.yaml` 词表（人读版 `docs/references/tag-taxonomy.md`），多标签，一个工作可挂多个（如「端侧 VLM 量化部署」挂 `方向:端侧agent`+`方向:多模态`+`方向:量化`+`方向:编译部署`）。页面按 4 维 faceted 筛选展示，不是非此即彼。方向/应用/硬件为受控词表，模型为半自由。词表外标签先加进 `data/tags.yaml` 再用。
 - **首页字段人类可读**：`abstract`/`effects`/`mechanism` 用中文短句给人看（这是什么/有什么结果/怎么做到的），详细技术分解放 wiki，不塞首页。
-- **推荐是主 agent 的编辑判断**：自动脚本和搜集子 agent 只做完整收录，一律 `recommendation=纳入`；不得因为标题命中 on-device/KV cache/量化等关键词自动晋升。主 agent 逐条读来源后决定推荐数量和排序，每条推荐必须有具体中文 `recommendation_reason`。推荐卡以中文 `abstract` 为主，英文 `title` 只作原标题核对。
+- **推荐是主 agent 的编辑判断**：自动脚本和搜集子 agent 只做完整收录，一律 `title_zh=""`、`recommendation=纳入`；不得因为标题命中 on-device/KV cache/量化等关键词自动晋升。主 agent 逐条读来源后决定推荐数量和排序，每条推荐必须有 40 字以内的中文项目名 `title_zh` 和具体中文 `recommendation_reason`。推荐卡按中文项目名 → 中文 `abstract` 介绍 → tags 关键词 → 推荐理由 → 小号英文原标题展示；项目名不得直接复制 abstract。
 - **keywords 已并入 tags**：原 keywords 字段取消，统一用 `tags`（受控词表）。
 - **MCP 配置**：arXiv MCP / HuggingFace Daily Papers MCP / GitHub MCP 已沉淀为项目级 `.mcp.json`，配置和工具用法见 `docs/references/mcp-setup.md`。调研 agent 搜集优先用 MCP（arXiv 全量搜 / HF 社区精选 / GitHub 大项目 release），websearch 补充搜大厂官网。
 - **开源大项目白名单**：GitHub MCP 只收 `docs/references/big-projects-whitelist.md` 内业界认可大项目（vLLM/SGLang/llama.cpp/ExecuTorch/ADK/TensorRT 等），非白名单小仓不收。
@@ -111,7 +111,7 @@
 - `paper_url` 必须和论文标题、摘要匹配。
 - `effects` 必须来自论文原文；没有报告写 `未报告`。
 - 发布前必须跑 `validate_research_run.py`。
-- **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、推荐中文摘要/理由缺失或含内部占位词、非空周报 0 推荐、内链 404、热点复读论文列表、0 官方动态静默。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
+- **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、推荐中文项目名/摘要/理由缺失或含内部占位词、项目名复用介绍、非空周报 0 推荐、内链 404、热点复读论文列表、0 官方动态静默。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
 - `data/weekly_summary.json` 是**独立编辑产物**，不是 run 的派生字段。`highlights` 必须是编辑性新闻（厂商博客/动态/行业事件，带**外部 URL**，≥5 条），不许用 run 的 paper_id 切 top N 填充——那会让热点复读下面的论文列表。流程顺序：先采厂商动态（`官方动态`）→ 再写 weekly_summary（从新闻 + 判断）→ run 论文列表是另一层。
 - **0 官方动态是流程告警，不是可接受结果**。research-prompt 强制查 18 厂博客 + 模型实验室博客（DeepSeek/Moonshot/Zhipu/Minimax/百川）。run 里 `官方动态` count==0 时，必须要么去补采，要么在 `data/weeks/<label>-no-vendor.md` 写明逐厂证据（哪厂查了、在窗内是否有端侧文），不许静默接受 0。
 - 修改完成前至少跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py`。
@@ -144,3 +144,4 @@
 - [2026-07-30] 论文/开源项目/公司项目 abstract 全英文——`output-contract.md` 明确要「大白话中文整理版，不搬原文」，但 `build_run_week.py` auto-convert 用 `first_sentence(summary)` 截 arxiv/HF **英文原文**首句，违反 spec（score_reason 自己写了「精修大白话待补」一直没补）。根因：auto-convert 是脚本不能翻译，LLM 翻译步骤缺失。修复：build_run_week 出 run JSON 后派 subagent 把英文 abstract 翻成中文大白话（1-2 句"这是什么"风格）写回 run JSON，再 validate/publish。**spec 要中文的，脚本做不到的，必须有 LLM 步骤兜底，不能留 TODO 不补。**
 - [2026-07-30] github trending 每次要手动跑——gate_release `check_trending_freshness` 只拦过期不自动刷，`collect_github_trending.py` 靠主 agent 手动跑（gate FAIL 才补）。根因：trending 刷新不在刷新流程里。修复：`agent/refresh_trending.py`（collect + 转 top20 一步）作为**主 agent 每次周刷新的固定步骤**（build_run_week 后、翻译 subagent 前），`refresh_trending` 拿英文 desc → 翻译 subagent 把 trending desc + run abstract 翻中文。**不进 auto-deploy**（auto-deploy 的 refresh 会覆盖翻译 subagent 的中文 desc——refresh 拿英文 GitHub 描述，翻译要 LLM 在 refresh 之后）。gate 兜底（mtime>7d FAIL 提醒主 agent 补刷）。
 - [2026-08-04] 推荐区把英文原标题当主信息，还把 `score_reason` 的 `auto-converted`/`votes=`/`待核实` 等流水线文字直接展示；同时 `build_run_week.py` 仅凭标题关键词自动推荐，导致弱相关内容挤进首屏。根因：完整收录和编辑推荐共用字段、页面层级反了、中文要求只有文档没有机械门。修复：推荐卡改为中文 `abstract` 主信息 + 中文 `recommendation_reason` + 小号原标题；自动汇集一律 `纳入`，只允许主 agent 阅读来源后晋升；validate 与 gate_release 双层拦英文摘要、缺失理由和内部占位词。**今后凡读者可见的内容契约，都必须同时落到 prompt、schema/存储、测试和真实构建 gate，不能只修页面或只写文档。**
+- [2026-08-04] 中文摘要虽然解决了英文难读，但把“项目介绍”直接放到卡片第一视觉层，读者仍要读完一句话才知道条目叫什么。根因：数据里没有独立的中文项目名，页面只能拿 abstract 冒充标题。修复：新增 `title_zh` 全链路字段；推荐时由主 agent 编写简短中文名称，卡片固定按名称→介绍→关键词→理由→原标题展示；validate 与 gate_release 拦缺失、过长和直接复制 abstract。**名称和介绍是两个不同的内容契约，不能靠前端截句或同一字段兼任。**
