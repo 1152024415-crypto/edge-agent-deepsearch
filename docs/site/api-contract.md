@@ -23,9 +23,9 @@ Response:
       "id": "fresh-edge-agent-paper",
       "run_id": "run-20260625-120000",
       "title": "Fresh Edge Agent Paper",
-      "abstract": "paper abstract",
-      "effects": "reported effect",
-      "mechanism": "how it works",
+      "abstract": "这项工作让端侧智能体在手机本地完成规划与执行。",
+      "effects": "在真实手机上将推理延迟降低了 23%。",
+      "mechanism": "通过压缩本地记忆和规划执行循环减少资源开销。",
       "paper_url": "https://arxiv.org/abs/2606.12345",
       "date": "2026-06-24",
       "score": 14,
@@ -40,7 +40,8 @@ Response:
       "authors": "",
       "vendors": "",
       "venue": "",
-      "recommendation": "纳入",
+      "recommendation": "推荐",
+      "recommendation_reason": "端侧收益明确，并在真实设备上给出了可核验的改善。",
       "updated_at": "2026-06-25T04:00:00+00:00"
     }
   ]
@@ -80,9 +81,9 @@ Request:
     {
       "id": "fresh-edge-agent-paper",
       "title": "Fresh Edge Agent Paper",
-      "abstract": "paper abstract",
-      "effects": "reported effect",
-      "mechanism": "how it works",
+      "abstract": "这项工作让端侧智能体在手机本地完成规划与执行。",
+      "effects": "在真实手机上将推理延迟降低了 23%。",
+      "mechanism": "通过压缩本地记忆和规划执行循环减少资源开销。",
       "paper_url": "https://arxiv.org/abs/2606.12345",
       "date": "2026-06-24",
       "score": 14,
@@ -93,7 +94,9 @@ Request:
       "open_source": false,
       "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
       "insight_person": "",
-      "wiki_url": ""
+      "wiki_url": "",
+      "recommendation": "推荐",
+      "recommendation_reason": "端侧收益明确，并在真实设备上给出了可核验的改善。"
     }
   ]
 }

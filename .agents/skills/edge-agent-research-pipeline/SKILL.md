@@ -28,6 +28,8 @@ When this skill triggers, read these files before editing or publishing:
 - `source_tier` facet: `官方动态` / `公司项目` / `学校顶会` / `学校预印本` / `开源大项目` (replaces old source_type + is_major_vendor_official).
 - `tags`: 1-8 tags from `data/tags.yaml` (multi-label, one work can carry many).
 - `open_source`: bool facet.
+- `recommendation`: automatic collection always writes `纳入`; only the main agent may promote an item to `推荐` after reading the source.
+- `recommendation_reason`: required readable Chinese when `recommendation=推荐`; explains why a reader should prioritize it.
 - `date`: must be within the past 7 days; for arXiv URLs validate cross-checks the real submitted date.
 - No `detail` / 6-segment deep analysis — the detail agent is discontinued. Detail page shows short summary + tags + source link.
 
@@ -38,14 +40,14 @@ Follow these steps end to end. They mirror `docs/harness.md` section 3 and `AGEN
 1. **Read the strong-entry docs first** (see First Read above). Skipping these means missing the standard and fabricating dead links.
 2. **Check the time window**: read `data/.last_run`. Only run if ≥7 days passed; if less, say "本周已调研" and stop. The collection window is the past 7 days.
 3. **Spawn the research subagent**: the prompt must inject the full text of `docs/agent-guide/research-prompt.md` plus the hard constraints. **The main agent must not write its own simplified prompt.** The subagent collects broadly via arXiv MCP + HuggingFace MCP + GitHub MCP + websearch (see `docs/references/mcp-setup.md`). No hard quantity target — collect as many qualified items as there are (adaptive: broaden/rewrite a query if it returns too few). **The subagent must report per-vendor blog-check results** (which of the 18 vendors + model labs were checked, in-window posts found), not just "0 官方动态" — 0 requires evidence, not assertion.
-4. **Save the output**: the main agent filters + scores + tags the candidates (not delegated) and saves all qualified papers as `research_runs/run-YYYYMMDD-HHMMSS.json` (no padding, no hard cap — the list is lightweight, just titles + short summary + tags). The subagent only produces JSON; it does not edit code, pages, or the server.
-5. **Validate**: `python agent/validate_research_run.py research_runs/<run_id>.json`. Checks structure, 7-day window, 2-dim score sum, source_tier, tags taxonomy, official-domain / github-URL rules, HTTP dead links, **arXiv submitted-date cross-check**, and cross-run dedup warning.
+4. **Save and curate the output**: the main agent filters + scores + tags the candidates (not delegated) and saves all qualified papers as `research_runs/run-YYYYMMDD-HHMMSS.json` (no padding, no hard cap). Automatic collection keeps every item at `recommendation=纳入`; after reading sources, the main agent selects this week's priority items and gives each a specific Chinese `recommendation_reason`. The subagent only produces JSON; it does not edit code, pages, or the server.
+5. **Validate**: `python agent/validate_research_run.py research_runs/<run_id>.json`. Checks readable Chinese abstracts, Chinese recommendation reasons, internal placeholder markers, structure, 7-day window, 2-dim score sum, source_tier, tags taxonomy, official-domain / github-URL rules, HTTP dead links, **arXiv submitted-date cross-check**, and cross-run dedup warning.
 6. **Spot-check**: before publishing, fetch every `source_tier=官方动态` and `source_tier=开源大项目` URL and compare page content vs title/abstract. Drop mismatches.
 7. **Write the editorial weekly_summary**: `data/weekly_summary.json` is an **independent editorial product**, NOT a slice of the run. `highlights` must be editorial news (vendor blogs/dynamics/industry events with **external URLs**, ≥5). Do NOT fill highlights with `paper_id` links to the run's top papers — that duplicates the paper list. Write from the `官方动态` tier + judgment. If `官方动态` count is 0, you have NOT collected vendor blogs — go back to step 3 and collect them, or write per-vendor evidence to `data/weeks/<label>-no-vendor.md`.
 8. **Start the server** (if not running): `python app/server.py --host 127.0.0.1 --port 8001`
 9. **Publish**: `python agent/publish_results.py research_runs/<run_id>.json --server http://127.0.0.1:8001` (writes `data/.last_run_papers.json` for next-run dedup + triggers gh-pages deploy).
 10. **See it on the page** (do NOT skip — assertIn tests don't catch functional regressions): open `http://127.0.0.1:8001/` (or the built `site/index.html`), and with chrome-devtools **click every link type** — row, weekly-highlight, week-switcher (both directions), back-link, notes — each must resolve to 200 content, not 404. Compare highlights to last week: are they editorial news (external URLs), or paper-list duplicates?
-11. **Run the release gate** (hard blocker): `python app/gates/gate_all.py`. `gate_release.py` checks the built `site/` + `data/` for: __PAPERS__ contract (dict, no runtime injection), internal-link 200s (no 404 detail/week pages), editorial highlights (≥5 external URLs, not paper duplicates), and ≥1 官动态 (else per-vendor evidence file). **If gate_release FAILs, do not deploy.**
+11. **Run the release gate** (hard blocker): `python app/gates/gate_all.py`. `gate_release.py` checks the built `site/` + `data/` for: __PAPERS__ contract (dict, no runtime injection), readable Chinese recommendation copy with at least one curated recommendation when the run is non-empty, internal-link 200s, editorial highlights (≥5 external URLs, not paper duplicates), and ≥1 官方动态 (else per-vendor evidence file). **If gate_release FAILs, do not deploy.**
 12. **Close the loop**: update `data/.last_run` to this research time (ISO 8601). Fold this week's mistakes into `AGENTS.md` lessons, `validation-rules.md`, and `research-prompt.md`.
 
 ## Project Boundaries
@@ -72,7 +74,8 @@ Follow these steps end to end. They mirror `docs/harness.md` section 3 and `AGEN
 - `paper_url` must match the paper/official source title and abstract.
 - `effects` must come from the source; write `未报告` if not reported.
 - Every item: 1-8 tags from `data/tags.yaml`, one `source_tier`, 2-dim score summing to `score`.
-- Page-facing `abstract`/`effects`/`mechanism`/`score_reason` must be short, readable Chinese.
+- Page-facing `abstract`/`effects`/`mechanism`/`recommendation_reason` must be short, readable Chinese and contain no internal workflow markers. `score_reason` is scoring/audit evidence and must never substitute for recommendation copy.
+- Automatic converters never set `推荐` from keywords. The main agent curates priority items after reading sources and writes `recommendation_reason` for each one.
 - Research subagents do not edit code, docs, server files, or static pages.
 - The server does not search the web; it only accepts validated research runs.
 - No padding: if this week's quality content is thin, collect fewer items.

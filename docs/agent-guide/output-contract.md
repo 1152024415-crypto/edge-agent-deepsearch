@@ -47,6 +47,7 @@ research_runs/<run_id>.json
 | `vendors` | string | 机构/厂商。`source_tier=公司项目` 必填公司英文名（如 `Kuaishou` / `ByteDance` / `Tencent`），并附证据来源写在 `score_reason`。当前 run 的 affiliation 核实 defer：未识别公司的论文一律标 `学校预印本`，公司论文待识别 |
 | `venue` | string | arXiv / OpenReview / ACL / CVF 等 |
 | `recommendation` | string | 默认 `纳入` |
+| `recommendation_reason` | string | `recommendation=推荐` 时必填：一句中文说明「为什么值得优先看」；`纳入` 时留空 |
 
 ## source_tier 口径
 
@@ -82,7 +83,8 @@ research_runs/<run_id>.json
       "wiki_url": "",
       "authors": "Beining Wu; Zihao Ding; Jun Huang; Yanxiao Zhao",
       "venue": "arXiv",
-      "recommendation": "纳入"
+      "recommendation": "推荐",
+      "recommendation_reason": "直接解决端侧智能体的长期记忆膨胀问题，并在 Jetson 真机上同时验证了内存、通信和安全收益。"
     }
   ]
 }
@@ -90,13 +92,21 @@ research_runs/<run_id>.json
 
 ## 首页可读性要求
 
-`abstract`、`effects`、`mechanism` 是首页展示字段，必须由 agent 用大白话中文整理，写给人看，不复制原文：
+`abstract`、`effects`、`mechanism`、`recommendation_reason` 是读者可见字段，必须由 agent 用大白话中文整理，写给人看，不复制原文：
 
 - `abstract` 页面显示为「这是什么」：一句话说明这条内容解决什么问题。
 - `effects` 页面显示为「有什么结果」：只写最关键结果；没有量化结果写 `未报告`，不许编造或推测。
 - `mechanism` 页面显示为「怎么做到的」：普通话解释核心方法，不堆术语。
 - `score_reason` 必须中文优先，解释为什么这个分 + affiliation 证据来源。
-- 三字段都禁止粘贴论文 abstract 原文或官方通稿原文。
+- `recommendation_reason` 页面显示为「值得优先看」：只能在主 agent 读过来源并确认价值后填写，不能复述标题，不能写评分流水账。
+- 四个读者字段都禁止粘贴英文 abstract、官方通稿原文或内部流程文字（如 `auto-converted`、`votes=`、`待核实`、`精修待补`）。
+
+## 推荐策展规则
+
+- 自动汇集脚本和搜集子 agent 对所有条目一律输出 `recommendation: "纳入"`、`recommendation_reason: ""`，不得按标题关键词自动晋升。
+- 主 agent 完成全量筛选后，再逐条判断哪些内容值得优先看；推荐数量不设固定比例，按本周实际质量决定并排序。
+- 只要本周有可发布内容，发布产物至少应有 1 条人工精选；每条推荐都必须有中文 `abstract` 和中文 `recommendation_reason`。
+- `title` 保留原文以便核对来源；推荐卡片把中文 `abstract` 作为主信息，英文原标题仅作次级参考。
 
 ## 校验
 
@@ -106,4 +116,4 @@ research_runs/<run_id>.json
 python agent/validate_research_run.py research_runs/<run_id>.json
 ```
 
-校验内容：必填字段、`source_tier` 枚举、`tags` 词表、`date` 7 天窗口、`score`=2 维之和、`source_tier=官方动态` 官方域名、`source_tier=开源大项目` github URL、`source_tier=公司项目` vendors 非空、**paper_url HTTP 死链检查**、**arXiv URL 提交日核对**（防 date 漂移）、**跨 run 去重 warning**（命中上次 run 的 id 提醒，不 fail）。校验失败不能发布。
+校验内容：必填字段、中文 `abstract`、推荐条目的中文 `recommendation_reason`、内部占位词拦截、`source_tier` 枚举、`tags` 词表、`date` 7 天窗口、`score`=2 维之和、`source_tier=官方动态` 官方域名、`source_tier=开源大项目` github URL、`source_tier=公司项目` vendors 非空、**paper_url HTTP 死链检查**、**arXiv URL 提交日核对**（防 date 漂移）、**跨 run 去重 warning**（命中上次 run 的 id 提醒，不 fail）。校验失败不能发布。

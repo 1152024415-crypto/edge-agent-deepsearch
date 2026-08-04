@@ -116,6 +116,9 @@ def convert_arxiv(path: Path) -> list[dict]:
             "authors": auth_str,
             "vendors": "",
             "venue": "arXiv",
+            # 自动转换只扩充完整收录；推荐必须由主 Agent 阅读来源后策展。
+            "recommendation": "纳入",
+            "recommendation_reason": "",
         })
     return out
 

@@ -44,9 +44,9 @@ def valid_paper(**overrides):
     paper = {
         "id": "fresh-edge-agent-paper",
         "title": "Fresh Edge Agent Paper",
-        "abstract": "A real paper abstract about edge-side agent execution.",
-        "effects": "Reports 23% latency reduction on an on-device benchmark.",
-        "mechanism": "Uses a planner-executor loop with compressed local memory.",
+        "abstract": "这项工作让端侧智能体在设备本地完成规划与执行，减少对云端服务的依赖。",
+        "effects": "在端侧基准上将推理延迟降低了 23%。",
+        "mechanism": "通过规划器与执行器循环，并压缩本地记忆来控制资源开销。",
         "paper_url": "https://openreview.net/forum?id=fresh-edge-agent-paper",
         "date": YESTERDAY,
         "score": 14,
@@ -54,6 +54,8 @@ def valid_paper(**overrides):
         "source_tier": "学校顶会",
         "open_source": False,
         "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
+        "recommendation": "推荐",
+        "recommendation_reason": "端侧收益明确，并在真实设备上给出了可核验的延迟改善。",
         "insight_person": "",
         "wiki_url": "",
     }

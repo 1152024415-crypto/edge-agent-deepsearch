@@ -12,7 +12,7 @@
 
 2. **查时间窗口**：读 `data/.last_run` 里的上次调研时间戳。距本次 ≥7 天才跑；不到 7 天就提示"本周已调研"然后停。防重复跑、防拿旧 run 充本周。
 
-3. **发起调研子 agent**：prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束（B 档边界、官方域名白名单、7 天窗口、多标签 tags、source_tier、不凑数、大白话整理）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏标准，编造 404 链接。
+3. **发起调研子 agent**：prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束（B 档边界、官方域名白名单、7 天窗口、多标签 tags、source_tier、不凑数、大白话整理）。自动搜集只做完整收录，一律标 `纳入`；推荐由主 agent 阅读来源后另行策展并填写中文理由。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏标准，编造 404 链接。
 
 4. **保存产出**：子 agent 输出结构化论文/动态 JSON，主 agent 筛选+评分+打标后存成 `research_runs/run-YYYYMMDD-HHMMSS.json`。子 agent 只产 JSON，不改代码、网页、服务器。
 
