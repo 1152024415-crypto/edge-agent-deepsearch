@@ -37,6 +37,7 @@ def valid_paper(**overrides):
     paper = {
         "id": "fresh-edge-agent-paper",
         "title": "Fresh Edge Agent Paper",
+        "title_zh": "",
         "abstract": "这项工作让端侧智能体在设备本地完成规划与执行，减少对云端服务的依赖。",
         "effects": "在端侧基准上将推理延迟降低了 23%。",
         "mechanism": "通过规划器与执行器循环，并压缩本地记忆来控制资源开销。",
@@ -91,6 +92,7 @@ class ResearchRunValidationTests(unittest.TestCase):
         self.assertEqual(normalized["papers"][0]["paper_url"], "https://openreview.net/forum?id=fresh-edge-agent-paper")
         self.assertEqual(normalized["papers"][0]["source_tier"], "学校顶会")
         self.assertEqual(normalized["papers"][0]["tags"], ["方向:端侧agent", "方向:记忆", "方向:评测基准"])
+        self.assertEqual(normalized["papers"][0]["title_zh"], "")
 
     def test_rejects_old_papers_for_current_week(self):
         path = write_json(run_payload(valid_paper(date="2025-06-17")))
@@ -188,7 +190,11 @@ class ResearchRunValidationTests(unittest.TestCase):
         self.assertIn("中文", str(ctx.exception))
 
     def test_recommended_paper_requires_chinese_recommendation_reason(self):
-        path = write_json(run_payload(valid_paper(recommendation="推荐", recommendation_reason="")))
+        path = write_json(run_payload(valid_paper(
+            title_zh="端侧智能体规划框架",
+            recommendation="推荐",
+            recommendation_reason="",
+        )))
 
         with self.assertRaises(research_run.ValidationError) as ctx:
             research_run.load_and_validate(path, today=TODAY)
@@ -197,6 +203,7 @@ class ResearchRunValidationTests(unittest.TestCase):
 
     def test_rejects_internal_placeholder_in_recommendation_reason(self):
         path = write_json(run_payload(valid_paper(
+            title_zh="端侧智能体规划框架",
             recommendation="推荐",
             recommendation_reason="auto-converted；中文精修待后续补",
         )))
@@ -210,6 +217,7 @@ class ResearchRunValidationTests(unittest.TestCase):
     def test_preserves_valid_chinese_recommendation_reason(self):
         reason = "直接解决端侧智能体的延迟与内存瓶颈，且给出了真实设备上的量化结果。"
         path = write_json(run_payload(valid_paper(
+            title_zh="端侧智能体规划框架",
             recommendation="推荐",
             recommendation_reason=reason,
         )))
@@ -217,6 +225,44 @@ class ResearchRunValidationTests(unittest.TestCase):
         normalized = research_run.load_and_validate(path, today=TODAY)
 
         self.assertEqual(normalized["papers"][0]["recommendation_reason"], reason)
+
+    def test_recommended_paper_requires_short_chinese_title(self):
+        path = write_json(run_payload(valid_paper(
+            recommendation="推荐",
+            recommendation_reason="端侧收益明确，而且给出了真实设备上的验证结果。",
+            title_zh="",
+        )))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("title_zh", str(ctx.exception))
+
+    def test_rejects_abstract_used_as_chinese_title(self):
+        abstract = "这项工作让端侧智能体在手机本地完成规划与执行。"
+        path = write_json(run_payload(valid_paper(
+            abstract=abstract,
+            title_zh=abstract,
+            recommendation="推荐",
+            recommendation_reason="端侧收益明确，而且给出了真实设备上的验证结果。",
+        )))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("title_zh", str(ctx.exception))
+
+    def test_preserves_valid_short_chinese_title(self):
+        title_zh = "端侧智能体规划框架"
+        path = write_json(run_payload(valid_paper(
+            title_zh=title_zh,
+            recommendation="推荐",
+            recommendation_reason="端侧收益明确，而且给出了真实设备上的验证结果。",
+        )))
+
+        normalized = research_run.load_and_validate(path, today=TODAY)
+
+        self.assertEqual(normalized["papers"][0]["title_zh"], title_zh)
 
 
 class BuildRunDefaultsTests(unittest.TestCase):
@@ -258,6 +304,7 @@ class BuildRunDefaultsTests(unittest.TestCase):
             with self.subTest(source=paper["source_tier"]):
                 self.assertEqual(paper["recommendation"], "纳入")
                 self.assertEqual(paper["recommendation_reason"], "")
+                self.assertEqual(paper["title_zh"], "")
 
 
 class StorageMigrationTests(unittest.TestCase):
@@ -367,6 +414,7 @@ class ServerApiTests(unittest.TestCase):
                 reason = "端侧收益明确，并在真实设备上报告了延迟改善，值得优先阅读。"
                 payload = research_run.validate_payload(run_payload(valid_paper(
                     score=14,
+                    title_zh="端侧智能体规划框架",
                     recommendation="推荐",
                     recommendation_reason=reason,
                 )), today=TODAY)

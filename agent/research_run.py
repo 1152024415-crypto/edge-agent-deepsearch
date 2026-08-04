@@ -330,6 +330,18 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str], vocab: dict[str,
         raise ValidationError(f"{paper_id}: missing required fields: {', '.join(missing)}")
 
     abstract = require_reader_facing_chinese(paper.get("abstract"), "abstract", paper_id)
+    title_zh = text_value(paper.get("title_zh"))
+    if title_zh:
+        if len(CJK_RE.findall(title_zh)) < 2:
+            raise ValidationError(
+                f"{paper_id}: title_zh 必须是简短中文项目名（至少 2 个中文字符）"
+            )
+        if len(title_zh) > 40:
+            raise ValidationError(f"{paper_id}: title_zh 不能超过 40 个字符")
+        if INTERNAL_PLACEHOLDER_RE.search(title_zh):
+            raise ValidationError(f"{paper_id}: title_zh 含内部占位/流程标记，不可发布给读者")
+        if title_zh == abstract:
+            raise ValidationError(f"{paper_id}: title_zh 必须是项目名，不能直接复用 abstract")
     for field in ("effects", "mechanism"):
         if INTERNAL_PLACEHOLDER_RE.search(text_value(paper.get(field))):
             raise ValidationError(f"{paper_id}: {field} 含内部占位/流程标记，不可发布给读者")
@@ -337,6 +349,8 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str], vocab: dict[str,
     recommendation = text_value(paper.get("recommendation")) or "纳入"
     if recommendation not in {"纳入", "推荐"}:
         raise ValidationError(f"{paper_id}: recommendation must be 纳入 or 推荐")
+    if recommendation == "推荐" and not title_zh:
+        raise ValidationError(f"{paper_id}: recommendation=推荐 时必须填写 title_zh 中文项目名")
     recommendation_reason = text_value(paper.get("recommendation_reason"))
     if recommendation == "推荐":
         recommendation_reason = require_reader_facing_chinese(
@@ -424,6 +438,7 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str], vocab: dict[str,
     return {
         "id": paper_id,
         "title": text_value(paper.get("title")),
+        "title_zh": title_zh,
         "abstract": abstract,
         "effects": text_value(paper.get("effects")),
         "mechanism": text_value(paper.get("mechanism")),

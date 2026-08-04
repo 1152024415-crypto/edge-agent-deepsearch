@@ -130,6 +130,7 @@ def convert_arxiv(c: dict) -> dict | None:
     return {
         "id": f"arxiv-{aid}",
         "title": title,
+        "title_zh": "",
         "abstract": first_sentence(summary),
         "effects": "未报告",
         "mechanism": "未报告",
@@ -178,7 +179,7 @@ def convert_hf(c: dict, seen_arxiv: set) -> dict | None:
     vendor = detect_affil(authors + " " + title + " " + summary)
     tier = "公司项目" if vendor else "学校预印本"
     return {
-        "id": pid, "title": title,
+        "id": pid, "title": title, "title_zh": "",
         "abstract": first_sentence(summary), "effects": "未报告", "mechanism": "未报告",
         "paper_url": paper_url, "date": (c.get("date") or "")[:10],
         "score": rel + contrib, "score_relevance": rel, "score_contribution": contrib,
@@ -217,6 +218,7 @@ def convert_github(c: dict) -> dict:
     return {
         "id": f"github-{re.sub(r'[^a-z0-9]+','-',(repo+'-'+tag).lower())[:70]}",
         "title": title,
+        "title_zh": "",
         "abstract": first_sentence(summary) or summary[:160],
         "effects": "未报告", "mechanism": "未报告",
         "paper_url": url, "date": (c.get("date") or "")[:10],
@@ -243,6 +245,7 @@ def convert_vendor(c: dict) -> dict:
     return {
         "id": f"vendor-{re.sub(r'[^a-z0-9]+','-',(vendor+'-'+title).lower())[:70]}",
         "title": title,
+        "title_zh": "",
         "abstract": first_sentence(summary) or summary[:160],
         "effects": "未报告", "mechanism": "未报告",
         "paper_url": url, "date": (c.get("date") or "")[:10],

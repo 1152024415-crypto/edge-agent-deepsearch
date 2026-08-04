@@ -101,6 +101,7 @@ def convert_arxiv(path: Path) -> list[dict]:
         out.append({
             "id": f"arxiv-{aid}",
             "title": p.get("title", "").strip(),
+            "title_zh": "",
             "abstract": first_sentence(summary),
             "effects": "未报告",
             "mechanism": "未报告",
