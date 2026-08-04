@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>ResKV: Reconstructing Omitted Attention Contributions for Fixed-Budget KV Cache Compression</h1>
-<div class="meta"><span class="score">12</span> <span class="tier school">学校预印本</span>  2026-07-31 · Yuhang Zhan; Lisi Chen; Shuo Shang / arXiv</div>
+<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span>  2026-07-31 · Yuhang Zhan; Lisi Chen; Shuo Shang / arXiv</div>
 <div class="tags"><span class="tag">方向:KV cache</span><span class="tag">方向:记忆</span><span class="tag">方向:评测基准</span><span class="tag">应用:长上下文推理</span></div>
 <div class="field"><span class="label">这是什么</span><span class="text">ResKV 在固定 KV 预算里保留一块精确主缓存，再用紧凑残差缓存重建被淘汰 token 对注意力分子和分母的贡献，减少长上下文压缩造成的信息丢失。</span></div>
 <div class="field"><span class="label">有什么结果</span><span class="text">在 LongBench 和 RULER、多种模型与缓存预算上，相同保留预算下普遍优于代表性压缩基线，同时保持压缩解码的峰值内存和吞吐效率。</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">残差条目与主缓存一起参加同一次 softmax 归一化；离线代理分配每层每头的残差预算，解码时再用动态门按查询调整残差贡献。</span></div>
-<div class="score-reason">评分依据：auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补</div>
+<div class="score-reason">评分依据：固定 KV 预算直接对应端侧长上下文的内存约束；通过残差缓存重建注意力质量，并同时验证内存与解码吞吐，创新和实用性兼具。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.29591" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>
