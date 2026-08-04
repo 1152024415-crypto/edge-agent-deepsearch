@@ -96,6 +96,12 @@ OFFICIAL_SOURCE_DOMAINS = (
 ARXIV_URL_RE = re.compile(
     r"^https?://(?:www\.)?arxiv\.org/(?:abs|pdf)/([^/?#]+)", re.IGNORECASE
 )
+CJK_RE = re.compile(r"[\u3400-\u9fff]")
+INTERNAL_PLACEHOLDER_RE = re.compile(
+    r"auto[- ]?converted|待核实|待后续补|精修.{0,12}待补|votes\s*=",
+    re.IGNORECASE,
+)
+MIN_CHINESE_CHARS = 8
 
 
 class ValidationError(Exception):
@@ -136,6 +142,18 @@ def bool_value(value) -> bool:
     if isinstance(value, bool):
         return value
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
+def require_reader_facing_chinese(value, field: str, paper_id: str) -> str:
+    """Validate text shown directly to readers on the recommendation surface."""
+    text = text_value(value)
+    if len(CJK_RE.findall(text)) < MIN_CHINESE_CHARS:
+        raise ValidationError(
+            f"{paper_id}: {field} 必须是可直接阅读的中文内容（至少 {MIN_CHINESE_CHARS} 个中文字符）"
+        )
+    if INTERNAL_PLACEHOLDER_RE.search(text):
+        raise ValidationError(f"{paper_id}: {field} 含内部占位/流程标记，不可发布给读者")
+    return text
 
 
 STRICT_TAG_DIMS = {"方向", "应用", "硬件"}
@@ -311,6 +329,20 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str], vocab: dict[str,
     if missing:
         raise ValidationError(f"{paper_id}: missing required fields: {', '.join(missing)}")
 
+    abstract = require_reader_facing_chinese(paper.get("abstract"), "abstract", paper_id)
+    for field in ("effects", "mechanism"):
+        if INTERNAL_PLACEHOLDER_RE.search(text_value(paper.get(field))):
+            raise ValidationError(f"{paper_id}: {field} 含内部占位/流程标记，不可发布给读者")
+
+    recommendation = text_value(paper.get("recommendation")) or "纳入"
+    if recommendation not in {"纳入", "推荐"}:
+        raise ValidationError(f"{paper_id}: recommendation must be 纳入 or 推荐")
+    recommendation_reason = text_value(paper.get("recommendation_reason"))
+    if recommendation == "推荐":
+        recommendation_reason = require_reader_facing_chinese(
+            recommendation_reason, "recommendation_reason", paper_id
+        )
+
     if paper_id in seen_ids:
         raise ValidationError(f"{paper_id}: duplicate paper id")
     seen_ids.add(paper_id)
@@ -392,7 +424,7 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str], vocab: dict[str,
     return {
         "id": paper_id,
         "title": text_value(paper.get("title")),
-        "abstract": text_value(paper.get("abstract")),
+        "abstract": abstract,
         "effects": text_value(paper.get("effects")),
         "mechanism": text_value(paper.get("mechanism")),
         "paper_url": paper_url,
@@ -409,7 +441,8 @@ def normalize_paper(raw: dict, today: date, seen_ids: set[str], vocab: dict[str,
         "authors": authors,
         "vendors": vendors,
         "venue": text_value(paper.get("venue")),
-        "recommendation": text_value(paper.get("recommendation")) or "纳入",
+        "recommendation": recommendation,
+        "recommendation_reason": recommendation_reason,
     }
 
 

@@ -39,6 +39,7 @@ PAPER_COLUMNS = (
     "vendors",
     "venue",
     "recommendation",
+    "recommendation_reason",
     "detail",
     "updated_at",
 )
@@ -98,6 +99,7 @@ def init_db(db_path: Path) -> None:
                     vendors TEXT,
                     venue TEXT,
                     recommendation TEXT,
+                    recommendation_reason TEXT NOT NULL DEFAULT '',
                     detail TEXT,
                     updated_at TEXT NOT NULL
                 )
@@ -118,6 +120,8 @@ def init_db(db_path: Path) -> None:
                 conn.execute("ALTER TABLE papers ADD COLUMN detail TEXT")
             if "recommendation" not in columns:
                 conn.execute("ALTER TABLE papers ADD COLUMN recommendation TEXT")
+            if "recommendation_reason" not in columns:
+                conn.execute("ALTER TABLE papers ADD COLUMN recommendation_reason TEXT NOT NULL DEFAULT ''")
 
 
 def upsert_run(db_path: Path, payload: dict) -> dict:
@@ -151,13 +155,14 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                         id, run_id, title, abstract, effects, mechanism, paper_url, date, score,
                         score_relevance, score_contribution, score_reason, source_tier, open_source,
                         tags, insight_person, wiki_url, authors, vendors, venue, recommendation,
+                        recommendation_reason,
                         updated_at
                     )
                     VALUES (
                         :id, :run_id, :title, :abstract, :effects, :mechanism, :paper_url, :date,
                         :score, :score_relevance, :score_contribution, :score_reason, :source_tier,
                         :open_source, :tags, :insight_person, :wiki_url, :authors, :vendors, :venue,
-                        :recommendation, :updated_at
+                        :recommendation, :recommendation_reason, :updated_at
                     )
                     ON CONFLICT(id) DO UPDATE SET
                         run_id = excluded.run_id,
@@ -180,6 +185,7 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                         vendors = excluded.vendors,
                         venue = excluded.venue,
                         recommendation = excluded.recommendation,
+                        recommendation_reason = excluded.recommendation_reason,
                         updated_at = excluded.updated_at
                     """,
                     values,

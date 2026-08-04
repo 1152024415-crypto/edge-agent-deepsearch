@@ -105,32 +105,6 @@ def is_edge_text(text: str) -> bool:
         r"accelerat|hardware.?friendly|co.?design|asic|fpga", text))
 
 
-def is_core_edge_title(title: str) -> bool:
-    """Check if the TITLE is genuinely about edge/on-device AI.
-
-    Used for recommendation: papers whose title has core edge-AI terms
-    (on-device, edge, mobile, NPU, quantization, pruning, speculative,
-    KV cache, SNN, neuromorphic, TinyML, federated, IoT, Jetson, etc.)
-    are genuinely focused on edge AI → 推荐.
-    Papers with edge keywords only in abstract but generic title → 纳入.
-    This gives cross-tier differentiation: a 学校预印本 about "On-Device LLM"
-    gets 推荐, while a 官方动态 about "Video Codec SDK" gets 纳入.
-    """
-    t = title.lower()
-    return bool(re.search(
-        r"on-device|on device|\bedge\b|mobile|embedded|npu|"
-        r"microcontroller|neuromorphic|loihi|spinnaker|raspberry|jetson|"
-        r"iot|tinyml|federated|"
-        r"quantiz|prun|distill|speculative|kv.?cache|"
-        r"spiking|snn|spikformer|"
-        r"lightweight|small model|small language|slm|"
-        r"low.?power|low.?latency|resource.?constrain|"
-        r"edge computing|edge ai|edge inference|mobile inference|"
-        r"in-memory|compute-in-memory|memristor|crossbar|"
-        r"fpga|asic|hardware.?friendly|co.?design|"
-        r"edge device|edge deploy|mobile deploy|on-chip", t))
-
-
 def convert_arxiv(c: dict) -> dict | None:
     aid = re.sub(r"v\d+$", "", str(c.get("id") or "")).strip()
     title = (c.get("title") or "").strip()
@@ -171,7 +145,9 @@ def convert_arxiv(c: dict) -> dict | None:
         "authors": authors,
         "vendors": vendor or "",
         "venue": "arXiv",
-        "recommendation": "推荐" if is_core_edge_title(title) else "纳入",
+        # 自动汇集只负责扩充完整收录；“推荐”必须由主 Agent 阅读后人工判断。
+        "recommendation": "纳入",
+        "recommendation_reason": "",
     }
 
 
@@ -210,7 +186,7 @@ def convert_hf(c: dict, seen_arxiv: set) -> dict | None:
         "source_tier": tier,
         "open_source": bool(re.search(r"github\.com|github\.io", summary, re.I)),
         "tags": tags, "authors": authors, "vendors": vendor or "",
-        "venue": "HuggingFace Daily", "recommendation": "推荐" if is_core_edge_title(title) else "纳入",
+        "venue": "HuggingFace Daily", "recommendation": "纳入", "recommendation_reason": "",
     }
 
 
@@ -248,7 +224,7 @@ def convert_github(c: dict) -> dict:
         "score_reason": c.get("summary", "")[:120] or "GitHub 白名单大项目本周 release",
         "source_tier": tier, "open_source": True,
         "tags": tags, "authors": owner, "vendors": vendor,
-        "venue": "GitHub", "recommendation": "推荐" if is_core_edge_title(title) else "纳入",
+        "venue": "GitHub", "recommendation": "纳入", "recommendation_reason": "",
     }
 
 
@@ -274,7 +250,7 @@ def convert_vendor(c: dict) -> dict:
         "score_reason": f"{vendor} 官方动态（命中官方域名白名单）",
         "source_tier": "官方动态", "open_source": False,
         "tags": tags, "authors": vendor, "vendors": vendor,
-        "venue": vendor, "recommendation": "推荐" if is_core_edge_title(title) else "纳入",
+        "venue": vendor, "recommendation": "纳入", "recommendation_reason": "",
     }
 
 

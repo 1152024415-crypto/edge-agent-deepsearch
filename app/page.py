@@ -54,14 +54,16 @@ INDEX_HTML = """<!doctype html>
     .rec-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
     .rec-item{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:12px 0 11px;border-bottom:1px solid rgba(255,255,255,.12);color:inherit;text-decoration:none;min-width:0}
     .rec-item:nth-last-child(-n+2){border-bottom:0}
-    .rec-item:hover .rec-title{color:#ffb27d}
+    .rec-item:hover .rec-summary{color:#ffb27d}
     .rec-rank{font-family:"IBM Plex Mono",monospace;font-size:18px;line-height:1;color:#f0783c;padding-top:2px}
     .rec-body{min-width:0}
     .rec-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11px;color:#b8c7cf;margin-bottom:4px}
     .rec-tier{color:#f6c5a8}
     .rec-score{color:#fffaf2;font-weight:600}
-    .rec-title{display:block;color:#fffaf2;font-weight:600;font-size:13.5px;line-height:1.35;transition:color .12s}
-    .rec-reason{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#d2dce1;font-size:13px;line-height:1.5;margin-top:4px}
+    .rec-summary{display:block;color:#fffaf2;font-weight:600;font-size:14px;line-height:1.45;transition:color .12s}
+    .rec-why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#d2dce1;font-size:12.5px;line-height:1.5;margin-top:5px}
+    .rec-why b{color:#f6c5a8;font-weight:500}
+    .rec-original{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#91a3ad;font-size:10.5px;line-height:1.4;margin-top:5px}
     .rec-empty{position:relative;z-index:1;color:#cbd5da;font-size:13px;padding:15px 0 2px}
     .rec-more{position:relative;z-index:1;display:block;margin:11px auto 0;border:1px solid rgba(255,178,125,.72);border-radius:3px;background:transparent;color:#ffd0b0;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:7px 14px;cursor:pointer}
     .rec-more:hover{background:#c2410c;color:#fff;border-color:#c2410c}
@@ -265,14 +267,14 @@ INDEX_HTML = """<!doctype html>
       const previewLabel=SHOW_ALL_RECOMMENDED?`已展开 ${recommended.length} 条`:`首屏精选 ${Math.min(recommended.length,REC_PREVIEW)} 条`;
       const shown=SHOW_ALL_RECOMMENDED?recommended:recommended.slice(0,REC_PREVIEW);
       const items=shown.map((p,i)=>{
-        const raw=(p.score_reason||'').trim();
-        const reason=(raw&&!/待补|未报告/.test(raw)?raw:(p.abstract||'').trim())||'进入本周 Agent 推荐';
+        const summary=(p.abstract||'').trim()||'暂无中文摘要';
+        const reason=(p.recommendation_reason||'').trim()||'该条目由 Agent 选为本周优先阅读';
         return `<a class="rec-item" href="/paper/${escapeAttr(p.id)}" onclick="openDetail('${escapeAttr(p.id)}');return false;">
           <span class="rec-rank">${String(i+1).padStart(2,'0')}</span>
-          <span class="rec-body"><span class="rec-meta"><span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-title">${escapeHtml(p.title)}</span><span class="rec-reason">${escapeHtml(reason)}</span></span>
+          <span class="rec-body"><span class="rec-meta"><span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-summary">${escapeHtml(summary)}</span><span class="rec-why"><b>值得优先看：</b>${escapeHtml(reason)}</span><span class="rec-original">原标题：${escapeHtml(p.title)}</span></span>
         </a>`;
       }).join('');
-      el.innerHTML=`<header class="rec-head"><div><div class="rec-kicker">agent curation · ranked first</div><h2>Agent 本周推荐 <span class="rec-count">· ${previewLabel} · 共推荐 ${countLabel} 条</span></h2></div><p class="rec-note">完整收录仍保留在下方；这里仅把 Agent 判断更值得优先阅读的内容排到前面。</p></header>`+
+      el.innerHTML=`<header class="rec-head"><div><div class="rec-kicker">Agent 精选 · 推荐优先</div><h2>Agent 本周推荐 <span class="rec-count">· ${previewLabel} · 共推荐 ${countLabel} 条</span></h2></div><p class="rec-note">完整收录仍保留在下方；这里仅把 Agent 判断更值得优先阅读的内容排到前面。</p></header>`+
         (items?`<div class="rec-grid">${items}</div>`:'<div class="rec-empty">当前搜索或标签筛选下没有 Agent 推荐，完整结果仍在下方。</div>')+
         (recommended.length>REC_PREVIEW?`<button class="rec-more" id="rec-toggle">${SHOW_ALL_RECOMMENDED?'收起推荐':'查看其余 '+(recommended.length-REC_PREVIEW)+' 条'}</button>`:'');
     }

@@ -26,6 +26,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 MIN_EXTERNAL_HIGHLIGHTS = 5
+MIN_CHINESE_CHARS = 8
+CJK_RE = re.compile(r"[\u3400-\u9fff]")
+INTERNAL_PLACEHOLDER_RE = re.compile(
+    r"auto[- ]?converted|待核实|待后续补|精修.{0,12}待补|votes\s*=",
+    re.IGNORECASE,
+)
 
 _PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(.+?);\s*window\.__WEEKLY__", re.S)
 # render_page inlines with NO spaces around '=': `window.__WEEKS__=[`. The server.py
@@ -63,7 +69,7 @@ def check_contract(root: Path, errors: list) -> None:
                      "into static page — render_page must strip the server injection block")
 
 
-def _paper_ids_from_index(root: Path) -> list:
+def _papers_from_index(root: Path) -> list[dict]:
     idx = root / "site" / "index.html"
     if not idx.exists():
         return []
@@ -72,10 +78,41 @@ def _paper_ids_from_index(root: Path) -> list:
         return []
     try:
         val = json.loads(m.group(1))
-        return [p.get("id") for p in (val.get("papers", []) if isinstance(val, dict) else val)
-                if isinstance(p, dict) and p.get("id")]
+        papers = val.get("papers", []) if isinstance(val, dict) else val
+        return [p for p in papers if isinstance(p, dict)]
     except Exception:
         return []
+
+
+def _paper_ids_from_index(root: Path) -> list:
+    return [p.get("id") for p in _papers_from_index(root) if p.get("id")]
+
+
+def _has_readable_chinese(value) -> bool:
+    return len(CJK_RE.findall(str(value or ""))) >= MIN_CHINESE_CHARS
+
+
+def check_recommendation_readability(root: Path, errors: list) -> None:
+    """Current built recommendations must be curated Chinese reader copy."""
+    papers = _papers_from_index(root)
+    if not papers:
+        return  # the contract gate reports missing/broken paper data
+    recommendations = [p for p in papers if p.get("recommendation") == "推荐"]
+    if not recommendations:
+        _err(errors, "当前周有内容但没有推荐条目 — 发布前至少人工精选 1 条并填写中文推荐理由")
+        return
+    for paper in recommendations:
+        pid = paper.get("id") or "<missing-id>"
+        abstract = str(paper.get("abstract") or "")
+        reason = str(paper.get("recommendation_reason") or "")
+        if not _has_readable_chinese(abstract):
+            _err(errors, f"{pid}: 推荐条目的 abstract 必须是可直接阅读的中文摘要")
+        elif INTERNAL_PLACEHOLDER_RE.search(abstract):
+            _err(errors, f"{pid}: abstract 含内部占位/流程标记")
+        if not _has_readable_chinese(reason):
+            _err(errors, f"{pid}: recommendation_reason 缺失或不是可直接阅读的中文理由")
+        elif INTERNAL_PLACEHOLDER_RE.search(reason):
+            _err(errors, f"{pid}: recommendation_reason 含内部占位/流程标记")
 
 
 def check_links(root: Path, errors: list) -> None:
@@ -182,6 +219,7 @@ def _read_json(path: Path, default=None):
 def run_all(root: Path) -> list:
     errors = []
     check_contract(root, errors)
+    check_recommendation_readability(root, errors)
     check_links(root, errors)
     check_highlights(root, errors)
     check_vendor_tier(root, errors)
