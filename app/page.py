@@ -43,16 +43,50 @@ INDEX_HTML = """<!doctype html>
     .sort button{border:1px solid var(--rule);background:#fbfcfd;color:var(--muted);font-family:inherit;font-size:11px;padding:3px 8px;border-radius:3px;cursor:pointer}
     .sort button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
+    /* agent-ranked recommendations — the primary desktop reading path */
+    .recommendations{position:relative;overflow:hidden;background:var(--ink);color:#f4f0e8;border:1px solid #203642;border-radius:7px;padding:17px 19px 15px;margin-bottom:16px}
+    .recommendations::after{content:"";position:absolute;right:-90px;top:-110px;width:280px;height:280px;border:1px solid rgba(194,65,12,.35);border-radius:50%;box-shadow:0 0 0 34px rgba(194,65,12,.08),0 0 0 68px rgba(194,65,12,.04);pointer-events:none}
+    .rec-head{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.14)}
+    .rec-kicker{font-family:"IBM Plex Mono",monospace;font-size:10px;line-height:1.2;color:#f2a16f;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px}
+    .rec-head h2{margin:0;font-size:20px;line-height:1.2;font-weight:700;letter-spacing:.2px;color:#fffaf2}
+    .rec-count{font-family:"IBM Plex Mono",monospace;color:#ffb27d;font-weight:600;margin-left:5px}
+    .rec-note{max-width:430px;margin:0;color:#d5dfe4;font-size:13px;line-height:1.5;text-align:right}
+    .rec-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
+    .rec-item{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:12px 0 11px;border-bottom:1px solid rgba(255,255,255,.12);color:inherit;text-decoration:none;min-width:0}
+    .rec-item:nth-last-child(-n+2){border-bottom:0}
+    .rec-item:hover .rec-title{color:#ffb27d}
+    .rec-rank{font-family:"IBM Plex Mono",monospace;font-size:18px;line-height:1;color:#f0783c;padding-top:2px}
+    .rec-body{min-width:0}
+    .rec-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11px;color:#b8c7cf;margin-bottom:4px}
+    .rec-tier{color:#f6c5a8}
+    .rec-score{color:#fffaf2;font-weight:600}
+    .rec-title{display:block;color:#fffaf2;font-weight:600;font-size:13.5px;line-height:1.35;transition:color .12s}
+    .rec-reason{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#d2dce1;font-size:13px;line-height:1.5;margin-top:4px}
+    .rec-empty{position:relative;z-index:1;color:#cbd5da;font-size:13px;padding:15px 0 2px}
+    .rec-more{position:relative;z-index:1;display:block;margin:11px auto 0;border:1px solid rgba(255,178,125,.72);border-radius:3px;background:transparent;color:#ffd0b0;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:7px 14px;cursor:pointer}
+    .rec-more:hover{background:#c2410c;color:#fff;border-color:#c2410c}
+
     /* weekly highlights */
-    .weekly{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--amber);border-radius:6px;padding:14px 16px;margin-bottom:16px}
-    .weekly-title{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
-    .weekly-ov{font-size:13px;color:var(--ink);line-height:1.6;margin-bottom:8px}
-    .weekly-hl{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--hair)}
+    .weekly{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 15px;margin-bottom:18px}
+    .weekly-title{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;font-weight:600}
+    .weekly-ov{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:12.5px;color:var(--ink);line-height:1.55;margin-bottom:6px;max-width:1000px}
+    .weekly-hl{display:grid;grid-template-columns:18px minmax(180px,auto) 1fr;gap:7px;align-items:baseline;padding:5px 0;border-top:1px solid var(--hair)}
     .weekly-hl:first-of-type{border-top:none}
     .weekly-num{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--amber);font-weight:600;min-width:16px}
     .weekly-topic{font-weight:600;font-size:13px;color:var(--ink);text-decoration:none}
     .weekly-topic:hover{color:var(--amber)}
-    .weekly-why{color:var(--muted);font-size:12px;line-height:1.45}
+    .weekly-why{color:var(--muted);font-size:12px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .weekly-more{border-top:1px solid var(--hair);margin-top:2px;padding-top:2px}
+    .weekly-more summary{list-style:none;cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--amber);padding:5px 0 1px}
+    .weekly-more summary::-webkit-details-marker{display:none}
+    .weekly-more[open] summary{margin-bottom:2px}
+
+    /* complete weekly scan */
+    .all-research{margin-top:2px}
+    .all-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:2px 1px 9px;border-bottom:1px solid var(--rule)}
+    .all-kicker{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);letter-spacing:.8px;text-transform:uppercase}
+    .all-head h2{margin:2px 0 0;font-size:18px;line-height:1.25}
+    .all-summary{font-size:12px;color:var(--muted);margin:0;text-align:right}
     /* filter */
     .filter{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:10px 12px;margin-bottom:16px}
     .dim-group{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:5px}
@@ -149,22 +183,33 @@ INDEX_HTML = """<!doctype html>
         </div>
       </div>
     </header>
-    <div class="tabs" id="tabs"></div>
+    <section class="recommendations" id="recommendations" aria-live="polite"></section>
     <section class="weekly" id="weekly"></section>
-    <div class="filter" id="filter"></div>
-    <div id="papers"></div>
-    <div id="trending"></div>
+    <section class="all-research" id="all-research">
+      <header class="all-head">
+        <div><div class="all-kicker">complete weekly scan</div><h2>完整调研</h2></div>
+        <p class="all-summary" id="all-summary"></p>
+      </header>
+      <div class="tabs" id="tabs"></div>
+      <div class="filter" id="filter"></div>
+      <div id="papers"></div>
+      <div id="trending"></div>
+    </section>
     <div id="overlay" class="overlay hidden" onclick="if(event.target===this)closeDetail()"></div>
   </main>
   <script>
-    let ALL=[], ACTIVE=new Set(), Q="", SORT="score";
+    let ALL=[], ACTIVE=new Set(), Q="", SORT="score", SHOW_ALL_RECOMMENDED=false;
+    const REC_PREVIEW=6;
+    const WEEKLY_PREVIEW=3;
     const TIER=[["官方动态","--amber"],["开源大项目","--green"],["公司项目","--blue"],["学校顶会","--purple"],["学校预印本","--slate"]];
+    const isRecommended=p=>p.recommendation==='推荐';
+    const hasContent=v=>v&&v!=='未报告';
 
     async function loadPapers(){
       const res = await fetch("/api/papers");
       const data = await res.json();
       ALL=data.papers||[];
-      renderFilter(); renderPapers();
+      renderFilter(); renderRadar();
       attachSpy();
       document.querySelector("#summary").innerHTML=`<b>${ALL.length}</b> signals · 7-day window · <b>${range()}</b>`;
     }
@@ -173,14 +218,18 @@ INDEX_HTML = """<!doctype html>
       const w = await wr.json();
       const el=document.querySelector("#weekly");
       if(!w||!w.highlights||!w.highlights.length){el.innerHTML="";return;}
+      const rows=(items,start)=>items.map((h,i)=>{
+        const a=h.url
+          ?`<a class="weekly-topic" href="${escapeAttr(h.url)}" target="_blank" rel="noopener">${escapeHtml(h.topic)}</a>`
+          :`<a class="weekly-topic" href="/paper/${escapeAttr(h.paper_id)}">${escapeHtml(h.topic)}</a>`;
+        return `<div class="weekly-hl"><span class="weekly-num">${start+i+1}</span>${a}<span class="weekly-why">— ${escapeHtml(h.why)}</span></div>`;
+      }).join("");
+      const first=w.highlights.slice(0,WEEKLY_PREVIEW);
+      const rest=w.highlights.slice(WEEKLY_PREVIEW);
       el.innerHTML=`<div class="weekly-title">本周热点 · weekly signals</div>`+
         (w.overview?`<div class="weekly-ov">${escapeHtml(w.overview)}</div>`:"")+
-        w.highlights.map((h,i)=>{
-          const a=h.url
-            ?`<a class="weekly-topic" href="${escapeAttr(h.url)}" target="_blank" rel="noopener">${escapeHtml(h.topic)}</a>`
-            :`<a class="weekly-topic" href="/paper/${escapeAttr(h.paper_id)}">${escapeHtml(h.topic)}</a>`;
-          return `<div class="weekly-hl"><span class="weekly-num">${i+1}</span>${a}<span class="weekly-why">— ${escapeHtml(h.why)}</span></div>`;
-        }).join("");
+        rows(first,0)+
+        (rest.length?`<details class="weekly-more"><summary>展开其余 ${rest.length} 条热点 ↓</summary>${rows(rest,WEEKLY_PREVIEW)}</details>`:"");
     }
     function range(){const d=ALL.map(p=>p.date).sort();return d.length?`${d[0]} → ${d[d.length-1]}`:'';}
 
@@ -202,6 +251,39 @@ INDEX_HTML = """<!doctype html>
       return l;
     }
     function sigBars(s){const n=Math.min(5,Math.max(1,Math.ceil(s/4)));const hi=s>=14;let r="";for(let i=0;i<5;i++)r+=`<i class="${i<n?'on':''} ${hi?'hi':''}"></i>`;return r;}
+
+    function renderRecommendations(){
+      const el=document.querySelector("#recommendations");
+      if(!ALL.length){el.hidden=true;return;}
+      el.hidden=false;
+      const total=ALL.filter(isRecommended).length;
+      const recommended=visible().filter(isRecommended).sort((a,b)=>{
+        const tierDiff=TIER.findIndex(([t])=>t===a.source_tier)-TIER.findIndex(([t])=>t===b.source_tier);
+        return tierDiff||b.score-a.score||b.date.localeCompare(a.date);
+      });
+      const countLabel=recommended.length===total?`${total}`:`${recommended.length}/${total}`;
+      const previewLabel=SHOW_ALL_RECOMMENDED?`已展开 ${recommended.length} 条`:`首屏精选 ${Math.min(recommended.length,REC_PREVIEW)} 条`;
+      const shown=SHOW_ALL_RECOMMENDED?recommended:recommended.slice(0,REC_PREVIEW);
+      const items=shown.map((p,i)=>{
+        const raw=(p.score_reason||'').trim();
+        const reason=(raw&&!/待补|未报告/.test(raw)?raw:(p.abstract||'').trim())||'进入本周 Agent 推荐';
+        return `<a class="rec-item" href="/paper/${escapeAttr(p.id)}" onclick="openDetail('${escapeAttr(p.id)}');return false;">
+          <span class="rec-rank">${String(i+1).padStart(2,'0')}</span>
+          <span class="rec-body"><span class="rec-meta"><span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-title">${escapeHtml(p.title)}</span><span class="rec-reason">${escapeHtml(reason)}</span></span>
+        </a>`;
+      }).join('');
+      el.innerHTML=`<header class="rec-head"><div><div class="rec-kicker">agent curation · ranked first</div><h2>Agent 本周推荐 <span class="rec-count">· ${previewLabel} · 共推荐 ${countLabel} 条</span></h2></div><p class="rec-note">完整收录仍保留在下方；这里仅把 Agent 判断更值得优先阅读的内容排到前面。</p></header>`+
+        (items?`<div class="rec-grid">${items}</div>`:'<div class="rec-empty">当前搜索或标签筛选下没有 Agent 推荐，完整结果仍在下方。</div>')+
+        (recommended.length>REC_PREVIEW?`<button class="rec-more" id="rec-toggle">${SHOW_ALL_RECOMMENDED?'收起推荐':'查看其余 '+(recommended.length-REC_PREVIEW)+' 条'}</button>`:'');
+    }
+
+    function renderRadar(){
+      renderRecommendations();
+      renderPapers();
+      const matching=visible();
+      const recCount=matching.filter(isRecommended).length;
+      document.querySelector("#all-summary").textContent=`当前 ${matching.length} 条 · ${recCount} 条推荐已在上方展示 · 下方 ${matching.length-recCount} 条不重复`;
+    }
 
     function renderRow(p){
       const hi=p.score>=14;
@@ -231,8 +313,8 @@ INDEX_HTML = """<!doctype html>
         <h2>${escapeHtml(p.title)}</h2>
         ${tags?`<div class="tags">${tags}</div>`:''}
         <div class="abs">${escapeHtml(p.abstract||'')}</div>
-        ${p.effects?`<div class="field"><b>effects</b>${escapeHtml(p.effects)}</div>`:''}
-        ${p.mechanism?`<div class="field"><b>mechanism</b>${escapeHtml(p.mechanism)}</div>`:''}
+        ${hasContent(p.effects)?`<div class="field"><b>effects</b>${escapeHtml(p.effects)}</div>`:''}
+        ${hasContent(p.mechanism)?`<div class="field"><b>mechanism</b>${escapeHtml(p.mechanism)}</div>`:''}
         ${p.score_reason?`<div class="field"><b>评分依据</b>${escapeHtml(p.score_reason)}</div>`:''}
         ${p.authors?`<div class="field"><b>authors</b>${escapeHtml(p.authors)}</div>`:''}
         ${p.vendors?`<div class="field"><b>vendors</b>${escapeHtml(p.vendors)}</div>`:''}
@@ -246,8 +328,8 @@ INDEX_HTML = """<!doctype html>
     document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDetail();});
 
     function renderPapers(){
-      const l=visible(),el=document.querySelector("#papers");
-      if(!l.length){el.innerHTML='<div class="empty">no signal — 调整筛选或搜索</div>';renderTabs({});return;}
+      const l=visible().filter(p=>!isRecommended(p)),el=document.querySelector("#papers");
+      if(!l.length){el.innerHTML=`<div class="empty">${visible().length?'当前结果均已在 Agent 推荐中展示':'no signal — 调整筛选或搜索'}</div>`;renderTabs({});return;}
       const g={};l.forEach(p=>{(g[p.source_tier]=g[p.source_tier]||[]).push(p)});
       const COLLAPSE=25;  // sections with more rows than this start collapsed
       el.innerHTML=TIER.filter(([t])=>g[t]).map(([t,c])=>{
@@ -289,10 +371,11 @@ INDEX_HTML = """<!doctype html>
       attachSpy();
     }
 
-    document.querySelector("#filter").addEventListener("click",e=>{const b=e.target.closest(".ftag");if(!b)return;const t=b.dataset.tag;ACTIVE.has(t)?ACTIVE.delete(t):ACTIVE.add(t);renderFilter();renderPapers();});
-    document.querySelector("#search").addEventListener("input",e=>{Q=e.target.value.trim();renderPapers();});
-    document.querySelector("#sort-score").addEventListener("click",()=>{SORT="score";document.querySelector("#sort-score").classList.add("on");document.querySelector("#sort-date").classList.remove("on");renderPapers();});
-    document.querySelector("#sort-date").addEventListener("click",()=>{SORT="date";document.querySelector("#sort-date").classList.add("on");document.querySelector("#sort-score").classList.remove("on");renderPapers();});
+    document.querySelector("#recommendations").addEventListener("click",e=>{const b=e.target.closest("#rec-toggle");if(!b)return;SHOW_ALL_RECOMMENDED=!SHOW_ALL_RECOMMENDED;renderRecommendations();});
+    document.querySelector("#filter").addEventListener("click",e=>{const b=e.target.closest(".ftag");if(!b)return;const t=b.dataset.tag;ACTIVE.has(t)?ACTIVE.delete(t):ACTIVE.add(t);renderFilter();renderRadar();});
+    document.querySelector("#search").addEventListener("input",e=>{Q=e.target.value.trim();SHOW_ALL_RECOMMENDED=false;renderRadar();});
+    document.querySelector("#sort-score").addEventListener("click",()=>{SORT="score";document.querySelector("#sort-score").classList.add("on");document.querySelector("#sort-date").classList.remove("on");renderRadar();});
+    document.querySelector("#sort-date").addEventListener("click",()=>{SORT="date";document.querySelector("#sort-date").classList.add("on");document.querySelector("#sort-score").classList.remove("on");renderRadar();});
 
     // sticky tab bar: click → expand + scroll to section
     document.querySelector("#tabs").addEventListener("click",e=>{
@@ -320,6 +403,7 @@ INDEX_HTML = """<!doctype html>
       }).join('');
     }
     document.querySelector('#week-switch').addEventListener('change',e=>{if(e.target.value&&e.target.value!==location.pathname)location.href=e.target.value;});
+    window.addEventListener("pageshow",renderWeekSwitch);
     renderWeekSwitch();
     loadPapers().catch(e=>{document.querySelector("#summary").textContent=`读取失败：${e}`;});
     loadWeekly().catch(()=>{});
