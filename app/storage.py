@@ -21,6 +21,7 @@ PAPER_COLUMNS = (
     "id",
     "run_id",
     "title",
+    "title_zh",
     "abstract",
     "effects",
     "mechanism",
@@ -81,6 +82,7 @@ def init_db(db_path: Path) -> None:
                     id TEXT PRIMARY KEY,
                     run_id TEXT NOT NULL,
                     title TEXT NOT NULL,
+                    title_zh TEXT NOT NULL DEFAULT '',
                     abstract TEXT NOT NULL,
                     effects TEXT NOT NULL,
                     mechanism TEXT NOT NULL,
@@ -122,6 +124,8 @@ def init_db(db_path: Path) -> None:
                 conn.execute("ALTER TABLE papers ADD COLUMN recommendation TEXT")
             if "recommendation_reason" not in columns:
                 conn.execute("ALTER TABLE papers ADD COLUMN recommendation_reason TEXT NOT NULL DEFAULT ''")
+            if "title_zh" not in columns:
+                conn.execute("ALTER TABLE papers ADD COLUMN title_zh TEXT NOT NULL DEFAULT ''")
 
 
 def upsert_run(db_path: Path, payload: dict) -> dict:
@@ -152,14 +156,14 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                 conn.execute(
                     """
                     INSERT INTO papers (
-                        id, run_id, title, abstract, effects, mechanism, paper_url, date, score,
+                        id, run_id, title, title_zh, abstract, effects, mechanism, paper_url, date, score,
                         score_relevance, score_contribution, score_reason, source_tier, open_source,
                         tags, insight_person, wiki_url, authors, vendors, venue, recommendation,
                         recommendation_reason,
                         updated_at
                     )
                     VALUES (
-                        :id, :run_id, :title, :abstract, :effects, :mechanism, :paper_url, :date,
+                        :id, :run_id, :title, :title_zh, :abstract, :effects, :mechanism, :paper_url, :date,
                         :score, :score_relevance, :score_contribution, :score_reason, :source_tier,
                         :open_source, :tags, :insight_person, :wiki_url, :authors, :vendors, :venue,
                         :recommendation, :recommendation_reason, :updated_at
@@ -167,6 +171,7 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                     ON CONFLICT(id) DO UPDATE SET
                         run_id = excluded.run_id,
                         title = excluded.title,
+                        title_zh = excluded.title_zh,
                         abstract = excluded.abstract,
                         effects = excluded.effects,
                         mechanism = excluded.mechanism,

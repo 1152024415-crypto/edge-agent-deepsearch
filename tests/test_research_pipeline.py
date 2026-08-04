@@ -329,6 +329,29 @@ class StorageMigrationTests(unittest.TestCase):
             self.assertEqual(migrated["title"], "Fresh Edge Agent Paper")
             self.assertEqual(migrated["recommendation_reason"], "")
 
+    def test_legacy_database_adds_title_zh_without_losing_rows(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            db_path = Path(tmpdir) / "legacy.sqlite"
+            storage_app.init_db(db_path)
+            storage_app.upsert_run(
+                db_path,
+                research_run.validate_payload(run_payload(valid_paper()), today=TODAY, skip_network=True),
+            )
+            with closing(sqlite3.connect(db_path)) as conn:
+                columns_before = {row[1] for row in conn.execute("PRAGMA table_info(papers)")}
+                if "title_zh" in columns_before:
+                    conn.execute("ALTER TABLE papers DROP COLUMN title_zh")
+                    conn.commit()
+                columns_before = {row[1] for row in conn.execute("PRAGMA table_info(papers)")}
+            self.assertNotIn("title_zh", columns_before)
+
+            storage_app.init_db(db_path)
+
+            migrated = storage_app.get_paper(db_path, "fresh-edge-agent-paper")
+            self.assertIsNotNone(migrated)
+            self.assertEqual(migrated["title"], "Fresh Edge Agent Paper")
+            self.assertEqual(migrated["title_zh"], "")
+
 
 class AutoDeployGateTests(unittest.TestCase):
     def test_ghpages_deploy_stops_when_release_gate_fails(self):
@@ -412,9 +435,10 @@ class ServerApiTests(unittest.TestCase):
             try:
                 base_url = f"http://127.0.0.1:{httpd.server_port}"
                 reason = "端侧收益明确，并在真实设备上报告了延迟改善，值得优先阅读。"
+                title_zh = "端侧智能体规划框架"
                 payload = research_run.validate_payload(run_payload(valid_paper(
                     score=14,
-                    title_zh="端侧智能体规划框架",
+                    title_zh=title_zh,
                     recommendation="推荐",
                     recommendation_reason=reason,
                 )), today=TODAY)
@@ -433,6 +457,7 @@ class ServerApiTests(unittest.TestCase):
         self.assertEqual(papers_result["papers"][0]["score"], 14)
         self.assertEqual(papers_result["papers"][0]["source_tier"], "学校顶会")
         self.assertEqual(papers_result["papers"][0]["tags"], ["方向:端侧agent", "方向:记忆", "方向:评测基准"])
+        self.assertEqual(papers_result["papers"][0]["title_zh"], title_zh)
         self.assertEqual(papers_result["papers"][0]["recommendation_reason"], reason)
 
     def test_server_lists_only_latest_research_run(self):
