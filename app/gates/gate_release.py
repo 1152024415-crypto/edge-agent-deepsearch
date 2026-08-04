@@ -103,8 +103,15 @@ def check_recommendation_readability(root: Path, errors: list) -> None:
         return
     for paper in recommendations:
         pid = paper.get("id") or "<missing-id>"
+        title_zh = str(paper.get("title_zh") or "").strip()
         abstract = str(paper.get("abstract") or "")
         reason = str(paper.get("recommendation_reason") or "")
+        if len(CJK_RE.findall(title_zh)) < 2 or len(title_zh) > 40:
+            _err(errors, f"{pid}: title_zh 缺失或不是 40 字以内的简短中文项目名")
+        elif INTERNAL_PLACEHOLDER_RE.search(title_zh):
+            _err(errors, f"{pid}: title_zh 含内部占位/流程标记")
+        elif title_zh == abstract.strip():
+            _err(errors, f"{pid}: title_zh 不能直接复用项目介绍 abstract")
         if not _has_readable_chinese(abstract):
             _err(errors, f"{pid}: 推荐条目的 abstract 必须是可直接阅读的中文摘要")
         elif INTERNAL_PLACEHOLDER_RE.search(abstract):

@@ -41,6 +41,7 @@ class GateReleaseTest(unittest.TestCase):
             "papers": [{
                 "id": "arxiv-x1", "source_tier": "官方动态",
                 "recommendation": "推荐",
+                "title_zh": "端侧智能体推理框架",
                 "abstract": "这项工作让端侧智能体在手机上更快完成推理，并减少运行内存。",
                 "recommendation_reason": "端侧收益明确，而且给出了真实设备上的验证结果。",
             }],
@@ -58,6 +59,7 @@ class GateReleaseTest(unittest.TestCase):
         # built index: dict __PAPERS__, no server injection
         _write(self.root, "site/index.html",
                '<script>window.__PAPERS__={"papers": [{"id": "arxiv-x1", "recommendation": "推荐", '
+               '"title_zh": "端侧智能体推理框架", '
                '"abstract": "这项工作让端侧智能体在手机上更快完成推理，并减少运行内存。", '
                '"recommendation_reason": "端侧收益明确，而且给出了真实设备上的验证结果。"}]};'
                'window.__WEEKLY__={"overview":"","highlights":[]};'
@@ -156,6 +158,7 @@ class GateReleaseTest(unittest.TestCase):
         self._seed_good()
         _write(self.root, "site/index.html",
                '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               '"title_zh":"端侧智能体推理框架",'
                '"abstract":"English-only edge AI summary.",'
                '"recommendation_reason":"端侧收益明确，而且给出了真实设备上的验证结果。"}]};'
                'window.__WEEKLY__={};window.__TRENDING__={};'
@@ -169,6 +172,7 @@ class GateReleaseTest(unittest.TestCase):
         self._seed_good()
         _write(self.root, "site/index.html",
                '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               '"title_zh":"端侧智能体推理框架",'
                '"abstract":"这项工作让端侧智能体在手机上更快完成推理。",'
                '"recommendation_reason":""}]};'
                'window.__WEEKLY__={};window.__TRENDING__={};'
@@ -177,6 +181,34 @@ class GateReleaseTest(unittest.TestCase):
         errs = gr.run_all(self.root)
 
         self.assertTrue(any("recommendation_reason" in e for e in errs), errs)
+
+    def test_fail_when_recommendation_title_zh_is_missing(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               '"title_zh":"",'
+               '"abstract":"这项工作让端侧智能体在手机上更快完成推理。",'
+               '"recommendation_reason":"端侧收益明确，而且给出了真实设备上的验证结果。"}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("title_zh" in e for e in errs), errs)
+
+    def test_fail_when_title_zh_repeats_abstract(self):
+        self._seed_good()
+        abstract = "这是一条可以直接阅读的中文项目介绍。"
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               f'"title_zh":"{abstract}","abstract":"{abstract}",'
+               '"recommendation_reason":"端侧收益明确，而且给出了真实设备上的验证结果。"}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("title_zh" in e and "介绍" in e for e in errs), errs)
 
     def test_pass_when_zero_vendor_but_evidence_file_exists(self):
         self._seed_good()

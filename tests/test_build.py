@@ -44,6 +44,7 @@ def valid_paper(**overrides):
     paper = {
         "id": "fresh-edge-agent-paper",
         "title": "Fresh Edge Agent Paper",
+        "title_zh": "端侧智能体规划框架",
         "abstract": "这项工作让端侧智能体在设备本地完成规划与执行，减少对云端服务的依赖。",
         "effects": "在端侧基准上将推理延迟降低了 23%。",
         "mechanism": "通过规划器与执行器循环，并压缩本地记忆来控制资源开销。",
