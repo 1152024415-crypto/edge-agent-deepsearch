@@ -54,14 +54,35 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
 
     def test_recommendation_explanation_text_is_desktop_readable(self):
         self.assertIn(".rec-note{max-width:430px;margin:0;color:#d5dfe4;font-size:13px", INDEX_HTML)
-        self.assertIn(".rec-summary{display:block;color:#fffaf2", INDEX_HTML)
+        self.assertIn(".rec-title{display:block;color:#fffaf2;font-weight:700;font-size:16px", INDEX_HTML)
+        self.assertIn(".rec-summary{display:-webkit-box", INDEX_HTML)
 
     def test_recommendation_card_prioritizes_chinese_summary_and_reason(self):
+        self.assertIn('class="rec-title"', INDEX_HTML)
         self.assertIn('class="rec-summary"', INDEX_HTML)
+        self.assertIn('class="rec-tags"', INDEX_HTML)
         self.assertIn('class="rec-why"', INDEX_HTML)
         self.assertIn('class="rec-original"', INDEX_HTML)
+        self.assertIn("关键词", INDEX_HTML)
         self.assertIn("值得优先看：", INDEX_HTML)
         self.assertIn("原标题：", INDEX_HTML)
+
+    def test_recommendation_card_reads_name_intro_keywords_then_reason(self):
+        start = INDEX_HTML.index("function renderRecommendations()")
+        end = INDEX_HTML.index("function renderRadar()", start)
+        recommendation_renderer = INDEX_HTML[start:end]
+
+        title_pos = recommendation_renderer.index('class="rec-title"')
+        summary_pos = recommendation_renderer.index('class="rec-summary"')
+        tags_pos = recommendation_renderer.index('class="rec-tags"')
+        why_pos = recommendation_renderer.index('class="rec-why"')
+        original_pos = recommendation_renderer.index('class="rec-original"')
+
+        self.assertLess(title_pos, summary_pos)
+        self.assertLess(summary_pos, tags_pos)
+        self.assertLess(tags_pos, why_pos)
+        self.assertLess(why_pos, original_pos)
+        self.assertIn("p.title_zh", recommendation_renderer)
 
     def test_recommendation_card_never_exposes_internal_score_reason(self):
         start = INDEX_HTML.index("function renderRecommendations()")

@@ -54,14 +54,18 @@ INDEX_HTML = """<!doctype html>
     .rec-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
     .rec-item{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:12px 0 11px;border-bottom:1px solid rgba(255,255,255,.12);color:inherit;text-decoration:none;min-width:0}
     .rec-item:nth-last-child(-n+2){border-bottom:0}
-    .rec-item:hover .rec-summary{color:#ffb27d}
+    .rec-item:hover .rec-title{color:#ffb27d}
     .rec-rank{font-family:"IBM Plex Mono",monospace;font-size:18px;line-height:1;color:#f0783c;padding-top:2px}
     .rec-body{min-width:0}
     .rec-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11px;color:#b8c7cf;margin-bottom:4px}
     .rec-tier{color:#f6c5a8}
     .rec-score{color:#fffaf2;font-weight:600}
-    .rec-summary{display:block;color:#fffaf2;font-weight:600;font-size:14px;line-height:1.45;transition:color .12s}
-    .rec-why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#d2dce1;font-size:12.5px;line-height:1.5;margin-top:5px}
+    .rec-title{display:block;color:#fffaf2;font-weight:700;font-size:16px;line-height:1.35;letter-spacing:.1px;transition:color .12s}
+    .rec-summary{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#dbe3e7;font-weight:400;font-size:12.75px;line-height:1.5;margin-top:4px}
+    .rec-tags{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:7px}
+    .rec-tags b{font-family:"IBM Plex Mono",monospace;color:#91a3ad;font-size:10px;font-weight:500;margin-right:2px}
+    .rec-tag{font-family:"IBM Plex Mono",monospace;color:#c9d5db;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:1px 6px;font-size:10px;line-height:1.45}
+    .rec-why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#d2dce1;font-size:12.5px;line-height:1.5;margin-top:7px}
     .rec-why b{color:#f6c5a8;font-weight:500}
     .rec-original{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#91a3ad;font-size:10.5px;line-height:1.4;margin-top:5px}
     .rec-empty{position:relative;z-index:1;color:#cbd5da;font-size:13px;padding:15px 0 2px}
@@ -248,7 +252,7 @@ INDEX_HTML = """<!doctype html>
 
     function visible(){
       let l=ALL.filter(p=>ACTIVE.size===0||(p.tags||[]).some(t=>ACTIVE.has(t)));
-      if(Q){const q=Q.toLowerCase();l=l.filter(p=>(p.title+p.abstract+(p.tags||[]).join()+p.vendors).toLowerCase().includes(q));}
+      if(Q){const q=Q.toLowerCase();l=l.filter(p=>((p.title_zh||'')+p.title+p.abstract+(p.tags||[]).join()+p.vendors).toLowerCase().includes(q));}
       l.sort((a,b)=>SORT==="score"?b.score-a.score||b.date.localeCompare(a.date):b.date.localeCompare(a.date));
       return l;
     }
@@ -267,11 +271,13 @@ INDEX_HTML = """<!doctype html>
       const previewLabel=SHOW_ALL_RECOMMENDED?`已展开 ${recommended.length} 条`:`首屏精选 ${Math.min(recommended.length,REC_PREVIEW)} 条`;
       const shown=SHOW_ALL_RECOMMENDED?recommended:recommended.slice(0,REC_PREVIEW);
       const items=shown.map((p,i)=>{
+        const titleZh=(p.title_zh||'').trim()||p.title;
         const summary=(p.abstract||'').trim()||'暂无中文摘要';
+        const tags=(p.tags||[]).map(t=>`<span class="rec-tag">${escapeHtml(val(t))}</span>`).join('');
         const reason=(p.recommendation_reason||'').trim()||'该条目由 Agent 选为本周优先阅读';
         return `<a class="rec-item" href="/paper/${escapeAttr(p.id)}" onclick="openDetail('${escapeAttr(p.id)}');return false;">
           <span class="rec-rank">${String(i+1).padStart(2,'0')}</span>
-          <span class="rec-body"><span class="rec-meta"><span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-summary">${escapeHtml(summary)}</span><span class="rec-why"><b>值得优先看：</b>${escapeHtml(reason)}</span><span class="rec-original">原标题：${escapeHtml(p.title)}</span></span>
+          <span class="rec-body"><span class="rec-meta"><span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-title">${escapeHtml(titleZh)}</span><span class="rec-summary">${escapeHtml(summary)}</span><span class="rec-tags"><b>关键词</b>${tags}</span><span class="rec-why"><b>值得优先看：</b>${escapeHtml(reason)}</span><span class="rec-original">原标题：${escapeHtml(p.title)}</span></span>
         </a>`;
       }).join('');
       el.innerHTML=`<header class="rec-head"><div><div class="rec-kicker">Agent 精选 · 推荐优先</div><h2>Agent 本周推荐 <span class="rec-count">· ${previewLabel} · 共推荐 ${countLabel} 条</span></h2></div><p class="rec-note">完整收录仍保留在下方；这里仅把 Agent 判断更值得优先阅读的内容排到前面。</p></header>`+
