@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "agent"))  # agent/
 
 import publish_results
 import research_run
+import build_run_week
 from app import server as server_app
 
 
@@ -32,9 +33,9 @@ def valid_paper(**overrides):
     paper = {
         "id": "fresh-edge-agent-paper",
         "title": "Fresh Edge Agent Paper",
-        "abstract": "A real paper abstract about edge-side agent execution.",
-        "effects": "Reports 23% latency reduction on an on-device benchmark.",
-        "mechanism": "Uses a planner-executor loop with compressed local memory.",
+        "abstract": "这项工作让端侧智能体在设备本地完成规划与执行，减少对云端服务的依赖。",
+        "effects": "在端侧基准上将推理延迟降低了 23%。",
+        "mechanism": "通过规划器与执行器循环，并压缩本地记忆来控制资源开销。",
         "paper_url": "https://openreview.net/forum?id=fresh-edge-agent-paper",
         "date": YESTERDAY,
         "score": 14,
@@ -42,6 +43,8 @@ def valid_paper(**overrides):
         "source_tier": "学校顶会",
         "open_source": False,
         "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
+        "recommendation": "纳入",
+        "recommendation_reason": "",
         "insight_person": "",
         "wiki_url": "",
     }
@@ -171,6 +174,87 @@ class ResearchRunValidationTests(unittest.TestCase):
         normalized = research_run.load_and_validate(path, today=TODAY)
         self.assertEqual(normalized["papers"][0]["source_tier"], "学校预印本")
 
+    def test_rejects_english_only_reader_summary(self):
+        path = write_json(run_payload(valid_paper(abstract="An English-only abstract about edge AI.")))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("abstract", str(ctx.exception))
+        self.assertIn("中文", str(ctx.exception))
+
+    def test_recommended_paper_requires_chinese_recommendation_reason(self):
+        path = write_json(run_payload(valid_paper(recommendation="推荐", recommendation_reason="")))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("recommendation_reason", str(ctx.exception))
+
+    def test_rejects_internal_placeholder_in_recommendation_reason(self):
+        path = write_json(run_payload(valid_paper(
+            recommendation="推荐",
+            recommendation_reason="auto-converted；中文精修待后续补",
+        )))
+
+        with self.assertRaises(research_run.ValidationError) as ctx:
+            research_run.load_and_validate(path, today=TODAY)
+
+        self.assertIn("recommendation_reason", str(ctx.exception))
+        self.assertIn("内部占位", str(ctx.exception))
+
+    def test_preserves_valid_chinese_recommendation_reason(self):
+        reason = "直接解决端侧智能体的延迟与内存瓶颈，且给出了真实设备上的量化结果。"
+        path = write_json(run_payload(valid_paper(
+            recommendation="推荐",
+            recommendation_reason=reason,
+        )))
+
+        normalized = research_run.load_and_validate(path, today=TODAY)
+
+        self.assertEqual(normalized["papers"][0]["recommendation_reason"], reason)
+
+
+class BuildRunDefaultsTests(unittest.TestCase):
+    def test_automatic_converters_never_promote_by_keyword(self):
+        common_title = "On-Device Edge Agent with KV Cache Compression"
+        converted = [
+            build_run_week.convert_arxiv({
+                "id": "2608.00001",
+                "title": common_title,
+                "abstract": "An on-device agent compresses its KV cache for mobile inference.",
+                "authors": "Example University",
+                "date": YESTERDAY,
+            }),
+            build_run_week.convert_hf({
+                "id": "hf-edge",
+                "title": common_title,
+                "abstract": "An on-device agent compresses its KV cache for mobile inference.",
+                "paper_url": "https://huggingface.co/papers/edge-agent",
+                "date": YESTERDAY,
+            }, set()),
+            build_run_week.convert_github({
+                "repo": "example/edge-agent",
+                "tag": "v1.0.0",
+                "title": common_title,
+                "summary": "On-device agent inference release.",
+                "release_url": "https://github.com/example/edge-agent/releases/tag/v1.0.0",
+                "date": YESTERDAY,
+            }),
+            build_run_week.convert_vendor({
+                "vendor": "Qualcomm",
+                "title": common_title,
+                "summary": "On-device agent inference update.",
+                "url": "https://www.qualcomm.com/example",
+                "date": YESTERDAY,
+            }),
+        ]
+
+        for paper in converted:
+            with self.subTest(source=paper["source_tier"]):
+                self.assertEqual(paper["recommendation"], "纳入")
+                self.assertEqual(paper["recommendation_reason"], "")
+
 
 class DeadLinkValidationTests(unittest.TestCase):
     def test_rejects_dead_paper_url(self):
@@ -232,7 +316,12 @@ class ServerApiTests(unittest.TestCase):
             thread.start()
             try:
                 base_url = f"http://127.0.0.1:{httpd.server_port}"
-                payload = research_run.validate_payload(run_payload(valid_paper(score=14)), today=TODAY)
+                reason = "端侧收益明确，并在真实设备上报告了延迟改善，值得优先阅读。"
+                payload = research_run.validate_payload(run_payload(valid_paper(
+                    score=14,
+                    recommendation="推荐",
+                    recommendation_reason=reason,
+                )), today=TODAY)
 
                 publish_result = publish_results.publish_payload(base_url, payload)
                 with request.urlopen(f"{base_url}/api/papers", timeout=5) as resp:
@@ -248,6 +337,7 @@ class ServerApiTests(unittest.TestCase):
         self.assertEqual(papers_result["papers"][0]["score"], 14)
         self.assertEqual(papers_result["papers"][0]["source_tier"], "学校顶会")
         self.assertEqual(papers_result["papers"][0]["tags"], ["方向:端侧agent", "方向:记忆", "方向:评测基准"])
+        self.assertEqual(papers_result["papers"][0]["recommendation_reason"], reason)
 
     def test_server_lists_only_latest_research_run(self):
         with tempfile.TemporaryDirectory() as tmpdir:

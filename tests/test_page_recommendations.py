@@ -54,7 +54,26 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
 
     def test_recommendation_explanation_text_is_desktop_readable(self):
         self.assertIn(".rec-note{max-width:430px;margin:0;color:#d5dfe4;font-size:13px", INDEX_HTML)
-        self.assertIn("color:#d2dce1;font-size:13px;line-height:1.5", INDEX_HTML)
+        self.assertIn(".rec-summary{display:block;color:#fffaf2", INDEX_HTML)
+
+    def test_recommendation_card_prioritizes_chinese_summary_and_reason(self):
+        self.assertIn('class="rec-summary"', INDEX_HTML)
+        self.assertIn('class="rec-why"', INDEX_HTML)
+        self.assertIn('class="rec-original"', INDEX_HTML)
+        self.assertIn("值得优先看：", INDEX_HTML)
+        self.assertIn("原标题：", INDEX_HTML)
+
+    def test_recommendation_card_never_exposes_internal_score_reason(self):
+        start = INDEX_HTML.index("function renderRecommendations()")
+        end = INDEX_HTML.index("function renderRadar()", start)
+        recommendation_renderer = INDEX_HTML[start:end]
+
+        self.assertNotIn("score_reason", recommendation_renderer)
+        self.assertIn("recommendation_reason", recommendation_renderer)
+
+    def test_recommendation_kicker_is_chinese(self):
+        self.assertIn("Agent 精选 · 推荐优先", INDEX_HTML)
+        self.assertNotIn("agent curation · ranked first", INDEX_HTML)
 
 
 if __name__ == "__main__":

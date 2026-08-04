@@ -38,7 +38,12 @@ class GateReleaseTest(unittest.TestCase):
         _write(self.root, "data/weeks/2026-07-02.json", json.dumps({
             "label": "2026-07-02", "title": "07-02~07-09",
             "range": {"start": "2026-07-02", "end": "2026-07-09"},
-            "papers": [{"id": "arxiv-x1", "source_tier": "官方动态"}],
+            "papers": [{
+                "id": "arxiv-x1", "source_tier": "官方动态",
+                "recommendation": "推荐",
+                "abstract": "这项工作让端侧智能体在手机上更快完成推理，并减少运行内存。",
+                "recommendation_reason": "端侧收益明确，而且给出了真实设备上的验证结果。",
+            }],
             "weekly": {"overview": "(07-02~07-09)", "highlights": []},
             "trending": {"items": []},
         }, ensure_ascii=False))
@@ -52,7 +57,9 @@ class GateReleaseTest(unittest.TestCase):
             {"overview": "(07-02~07-09)", "highlights": hl}, ensure_ascii=False))
         # built index: dict __PAPERS__, no server injection
         _write(self.root, "site/index.html",
-               '<script>window.__PAPERS__={"papers": [{"id": "arxiv-x1"}]};'
+               '<script>window.__PAPERS__={"papers": [{"id": "arxiv-x1", "recommendation": "推荐", '
+               '"abstract": "这项工作让端侧智能体在手机上更快完成推理，并减少运行内存。", '
+               '"recommendation_reason": "端侧收益明确，而且给出了真实设备上的验证结果。"}]};'
                'window.__WEEKLY__={"overview":"","highlights":[]};'
                'window.__TRENDING__={"items":[]};'
                'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
@@ -131,6 +138,45 @@ class GateReleaseTest(unittest.TestCase):
             ensure_ascii=False))
         errs = gr.run_all(self.root)
         self.assertTrue(any("官方动态" in e for e in errs), errs)
+
+    # ---- recommendation readability ----
+    def test_fail_when_current_build_has_no_recommendations(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"纳入",'
+               '"abstract":"这是一条中文摘要。","recommendation_reason":""}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("推荐" in e and "至少" in e for e in errs), errs)
+
+    def test_fail_when_recommendation_summary_is_english_only(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               '"abstract":"English-only edge AI summary.",'
+               '"recommendation_reason":"端侧收益明确，而且给出了真实设备上的验证结果。"}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("abstract" in e and "中文" in e for e in errs), errs)
+
+    def test_fail_when_recommendation_reason_is_missing(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               '"abstract":"这项工作让端侧智能体在手机上更快完成推理。",'
+               '"recommendation_reason":""}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("recommendation_reason" in e for e in errs), errs)
 
     def test_pass_when_zero_vendor_but_evidence_file_exists(self):
         self._seed_good()
