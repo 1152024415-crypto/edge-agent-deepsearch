@@ -145,7 +145,7 @@ def convert_arxiv(c: dict) -> dict | None:
         "authors": authors,
         "vendors": vendor or "",
         "venue": "arXiv",
-        "recommendation": "纳入",
+        "recommendation": "推荐" if (rel + contrib >= 13 or (tier == "公司项目" and rel >= 7)) else "纳入",
     }
 
 
@@ -184,7 +184,7 @@ def convert_hf(c: dict, seen_arxiv: set) -> dict | None:
         "source_tier": tier,
         "open_source": bool(re.search(r"github\.com|github\.io", summary, re.I)),
         "tags": tags, "authors": authors, "vendors": vendor or "",
-        "venue": "HuggingFace Daily", "recommendation": "纳入",
+        "venue": "HuggingFace Daily", "recommendation": "推荐" if (rel + contrib >= 13 or tier == "公司项目") else "纳入",
     }
 
 
@@ -222,7 +222,7 @@ def convert_github(c: dict) -> dict:
         "score_reason": c.get("summary", "")[:120] or "GitHub 白名单大项目本周 release",
         "source_tier": tier, "open_source": True,
         "tags": tags, "authors": owner, "vendors": vendor,
-        "venue": "GitHub", "recommendation": "纳入",
+        "venue": "GitHub", "recommendation": "推荐",
     }
 
 
@@ -248,7 +248,7 @@ def convert_vendor(c: dict) -> dict:
         "score_reason": f"{vendor} 官方动态（命中官方域名白名单）",
         "source_tier": "官方动态", "open_source": False,
         "tags": tags, "authors": vendor, "vendors": vendor,
-        "venue": vendor, "recommendation": "纳入",
+        "venue": vendor, "recommendation": "推荐",
     }
 
 
