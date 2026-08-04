@@ -97,6 +97,8 @@
     .tier{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);flex-shrink:0}
     .date{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);flex-shrink:0}
     .open{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--green);font-weight:600;flex-shrink:0}
+    .rec-badge{font-family:"IBM Plex Mono",monospace;font-size:10px;color:#fff;background:var(--amber);font-weight:600;flex-shrink:0;padding:1px 6px;border-radius:3px}
+    .row.rec{border-left:3px solid var(--amber);padding-left:10px}
     .ttl{font-weight:600;font-size:13.5px;flex:1;min-width:160px}
     .row:hover .ttl{color:var(--amber)}
     .tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
@@ -201,10 +203,12 @@
 
     function renderRow(p){
       const hi=p.score>=14;
+      const rec=p.recommendation==='推荐';
       const tags=(p.tags||[]).map(t=>`<span class="tag" data-dim="${dim(t)}">${escapeHtml(val(t))}</span>`).join("");
-      return`<a class="row${hi?' hi':''}" href="../paper/${escapeAttr(p.id)}.html" onclick="openDetail('${escapeAttr(p.id)}');return false;">
+      return`<a class="row${hi?' hi':''}${rec?' rec':''}" href="../paper/${escapeAttr(p.id)}.html" onclick="openDetail('${escapeAttr(p.id)}');return false;">
         <span class="sig"><span class="sig-n${hi?' hi':''}">${p.score}</span><span class="sig-bars">${sigBars(p.score)}</span></span>
         <span class="tier">${escapeHtml(p.source_tier||'')}</span>
+        ${rec?'<span class="rec-badge">推荐</span>':''}
         ${p.open_source?'<span class="open">OSS</span>':''}
         <span class="date">${p.date}</span>
         <span class="ttl">${escapeHtml(p.title)}</span>
