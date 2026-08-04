@@ -63,7 +63,7 @@ INDEX_HTML = """<!doctype html>
     .rec-summary{display:block;color:#fffaf2;font-weight:600;font-size:14px;line-height:1.45;transition:color .12s}
     .rec-why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#d2dce1;font-size:12.5px;line-height:1.5;margin-top:5px}
     .rec-why b{color:#f6c5a8;font-weight:500}
-    .rec-original{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#91a3ad;font-size:10.5px;line-height:1.4;margin-top:5px}
+    .rec-original{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#91a3ad;font-size:10.5px;line-height:1.4;margin-top:5px}
     .rec-empty{position:relative;z-index:1;color:#cbd5da;font-size:13px;padding:15px 0 2px}
     .rec-more{position:relative;z-index:1;display:block;margin:11px auto 0;border:1px solid rgba(255,178,125,.72);border-radius:3px;background:transparent;color:#ffd0b0;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:7px 14px;cursor:pointer}
     .rec-more:hover{background:#c2410c;color:#fff;border-color:#c2410c}

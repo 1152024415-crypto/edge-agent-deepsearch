@@ -75,6 +75,11 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
         self.assertIn("Agent 精选 · 推荐优先", INDEX_HTML)
         self.assertNotIn("agent curation · ranked first", INDEX_HTML)
 
+    def test_original_title_keeps_up_to_two_lines(self):
+        self.assertIn(".rec-original{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2", INDEX_HTML)
+        original_style = INDEX_HTML.split(".rec-original{", 1)[1].split("}", 1)[0]
+        self.assertNotIn("white-space:nowrap", original_style)
+
 
 if __name__ == "__main__":
     unittest.main()

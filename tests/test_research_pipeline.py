@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import json
+import sqlite3
+import subprocess
 import sys
 import tempfile
 import threading
 import unittest
+from contextlib import closing
 from datetime import date, timedelta
 from pathlib import Path
 from unittest import mock
@@ -16,6 +19,7 @@ import publish_results
 import research_run
 import build_run_week
 from app import server as server_app
+from app import storage as storage_app
 
 
 TODAY = date.today()
@@ -254,6 +258,50 @@ class BuildRunDefaultsTests(unittest.TestCase):
             with self.subTest(source=paper["source_tier"]):
                 self.assertEqual(paper["recommendation"], "纳入")
                 self.assertEqual(paper["recommendation_reason"], "")
+
+
+class StorageMigrationTests(unittest.TestCase):
+    def test_legacy_database_adds_recommendation_reason_without_losing_rows(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            db_path = Path(tmpdir) / "legacy.sqlite"
+            storage_app.init_db(db_path)
+            storage_app.upsert_run(
+                db_path,
+                research_run.validate_payload(run_payload(valid_paper()), today=TODAY, skip_network=True),
+            )
+            with closing(sqlite3.connect(db_path)) as conn:
+                conn.execute("ALTER TABLE papers DROP COLUMN recommendation_reason")
+                conn.commit()
+                columns_before = {row[1] for row in conn.execute("PRAGMA table_info(papers)")}
+            self.assertNotIn("recommendation_reason", columns_before)
+
+            storage_app.init_db(db_path)
+
+            migrated = storage_app.get_paper(db_path, "fresh-edge-agent-paper")
+            self.assertIsNotNone(migrated)
+            self.assertEqual(migrated["title"], "Fresh Edge Agent Paper")
+            self.assertEqual(migrated["recommendation_reason"], "")
+
+
+class AutoDeployGateTests(unittest.TestCase):
+    def test_ghpages_deploy_stops_when_release_gate_fails(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            (root / "site").mkdir()
+            calls = []
+
+            def fake_run(command, **_kwargs):
+                calls.append(command)
+                if any(str(part).endswith("gate_all.py") for part in command):
+                    return subprocess.CompletedProcess(command, 1, stdout="gate failed", stderr="")
+                return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+            with mock.patch.object(server_app, "ROOT", root), \
+                    mock.patch("app.server.subprocess.run", side_effect=fake_run):
+                server_app._deploy_to_ghpages()
+
+        self.assertTrue(any(any(str(part).endswith("gate_all.py") for part in cmd) for cmd in calls))
+        self.assertFalse(any(cmd and cmd[0] == "git" for cmd in calls), calls)
 
 
 class DeadLinkValidationTests(unittest.TestCase):

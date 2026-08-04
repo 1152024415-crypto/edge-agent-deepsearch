@@ -55,6 +55,14 @@ def _deploy_to_ghpages() -> None:
         if not site_dir.exists():
             print("[DEPLOY] site/ missing after build", flush=True)
             return
+        gate = subprocess.run(
+            [sys.executable, str(ROOT / "app" / "gates" / "gate_all.py")],
+            cwd=str(ROOT), capture_output=True, text=True, timeout=120,
+        )
+        if gate.returncode != 0:
+            details = "\n".join(part.strip() for part in (gate.stdout, gate.stderr) if part.strip())
+            print(f"[DEPLOY] release gate failed; push blocked:\n{details}", flush=True)
+            return
         subprocess.run(
             ["git", "fetch", "origin", "gh-pages"],
             cwd=str(ROOT), capture_output=True, text=True, timeout=30,
