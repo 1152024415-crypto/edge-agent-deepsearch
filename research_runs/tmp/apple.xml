@@ -1,0 +1,92 @@
+
+  <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+      <title>Apple Machine Learning Research</title>
+      <link>https://machinelearning.apple.com</link>
+      <description>Apple machine learning teams are engaged in state of the art research in machine learning and artificial intelligence. Learn about the latest advancements.</description>
+      <language>en</language>
+      <lastBuildDate>Tue, 21 Jul 2026 00:00:00 GMT</lastBuildDate>
+      <atom:link href="https://machinelearning.apple.com/rss.xml" rel="self" type="application/rss+xml"/>
+      
+  <item>
+    <guid>environment-free</guid>
+    <title>Environment-free Synthetic Data Generation for API-Calling Agents</title>
+    <link>https://machinelearning.apple.com/research/environment-free</link>
+    <description>Training API-calling large language model (LLM) agents demands massive amounts of high-quality trajectories. However, collecting such data at scale typically requires fully implemented environments with executable APIs and realistic, pre-populated backend databases, creating a major bottleneck for scalability. To overcome this, we propose an environment-free synthetic data generation approach that leverages LLMs as on-the-fly digital world models. Given only API specifications, our method generates trajectories mimicking interactions between an agent and a stateful environment. Specifically…</description>
+    <pubDate>Tue, 21 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>calibrated-sparse-attention</guid>
+    <title>Accelerating Text-to-Video Generation with Calibrated Sparse Attention</title>
+    <link>https://machinelearning.apple.com/research/calibrated-sparse-attention</link>
+    <description>Recent diffusion models enable high-quality video generation, but suffer from slow runtimes. The large transformer-based backbones used in these models are bottlenecked by spatiotemporal attention. In this paper, we identify that a significant fraction of token-to-token connections consistently yield negligible scores across various inputs, and their patterns often repeat across queries. Thus, the attention computation in these cases can be skipped with little to no effect on the result. This observation continues to hold for connections among local token blocks. Motivated by this, we…</description>
+    <pubDate>Tue, 21 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>rayrope-projective-ray</guid>
+    <title>RayRoPE: Projective Ray Positional Encoding for Multi-View Attention</title>
+    <link>https://machinelearning.apple.com/research/rayrope-projective-ray</link>
+    <description>We study positional encodings for multi-view transformers that process tokens from a set of posed input images, and seek a mechanism that encodes patches uniquely, allows SE(3)-invariant attention with multi-frequency similarity, and can be adaptive to the geometry of the underlying scene. We find that prior (absolute or relative) encoding schemes for multi-view attention do not meet the above desiderata, and present RayRoPE to address this gap. RayRoPE represents patch positions based on associated rays but leverages a predicted point along the ray instead of the direction for a…</description>
+    <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>lvsum-video-summarization</guid>
+    <title>LVSum: A Benchmark for Timestamp-Aware Long Video Summarization</title>
+    <link>https://machinelearning.apple.com/research/lvsum-video-summarization</link>
+    <description>Long video summarization presents significant challenges for multimodal large language models (MLLMs), particularly in maintaining temporal fidelity over extended durations and producing summaries that are both semantically and temporally grounded. We introduce LVSum, a human-annotated benchmark for evaluating long-form video summarization with fine-grained temporal alignment. LVSum comprises 72 diverse videos spanning 13 domains with an average duration of 16 minutes, each annotated with up to 10 human-generated summaries containing temporal references. We conduct a comprehensive evaluation…</description>
+    <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>length-value-model</guid>
+    <title>Length Value Model: Scalable Value Pretraining for Token-Level Length Modeling</title>
+    <link>https://machinelearning.apple.com/research/length-value-model</link>
+    <description>Token serves as the fundamental unit of computation in modern autoregressive models, and generation length directly influences both inference cost and reasoning performance. Despite its importance, existing approaches lack fine-grained length modeling, operating primarily at the coarse-grained sequence level. In this paper, we introduce the Length Value Model (LenVM), a token-level framework that models the remaining generation length at each decoding step. By formulating length modeling as a value estimation problem and assigning a constant negative reward to each generated token, LenVM…</description>
+    <pubDate>Mon, 20 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>unlearning-free-low-influence</guid>
+    <title>When Unlearning Is Free: Leveraging Low Influence Points to Reduce Computational Costs</title>
+    <link>https://machinelearning.apple.com/research/unlearning-free-low-influence</link>
+    <description>As concerns around data privacy in machine learning grow, the ability to unlearn—or remove—specific data points from trained models becomes increasingly important. While state-of-the-art unlearning methods have emerged in response, they typically treat all points in the forget set equally. In this work, we challenge this approach by asking: do points that have a negligible impact on the model’s learning need to be removed? Through a comparative analysis of influence functions across language and vision tasks, we identify subsets of training data with negligible impact on model outputs…</description>
+    <pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>visual-concept-inference</guid>
+    <title>Show Me Examples: Inferring Visual Concepts from Image Sets</title>
+    <link>https://machinelearning.apple.com/research/visual-concept-inference</link>
+    <description>Vision-language models (VLMs) can follow complex textual instructions, yet they struggle to reason from purely visual context. In particular, current models fail to infer shared concepts from sets of example images and apply them to new inputs. We introduce Visual Concept Inference from Sets (VICIS), a task that evaluates this capability. Given a small context set of images sharing a concept and a query image, the model must generate new images that preserve the context-defined concept while remaining consistent with the query. We show that state-of-the-art VLMs perform poorly on this task…</description>
+    <pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>location-invariant-functions</guid>
+    <title>Location-Invariant Properties of Functions Versus Properties of Distributions: United in Testing but Separated in Verification</title>
+    <link>https://machinelearning.apple.com/research/location-invariant-functions</link>
+    <description>A property of functions is called location-invariant (or symmetric) if it can be characterized in terms of the frequencies in which each value occurs in the function, regardless of the locations in which each value occurs. It is known that the (query) complexity of testing location-invariant properties of functions is closely related to the (sample) complexity of testing the (corresponding properties of the) corresponding distributions. The main message of the current work is that this close relationship is not maintained in the context of verification. This holds both when considering…</description>
+    <pubDate>Thu, 16 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>interactive-proofs-distribution-properties</guid>
+    <title>Interactive Proofs for General Distribution Properties</title>
+    <link>https://machinelearning.apple.com/research/interactive-proofs-distribution-properties</link>
+    <description>Suppose Alice has collected a small number of samples from an unknown distribution, and would like to learn about the distribution. Bob, an untrusted data analyst, claims to have run a sophisticated data analysis on the distribution and makes assertions about its properties. When and how is it possible for Alice to efficiently verify Bob’s claims (using fewer resources than would be needed to run the analysis herself)? We construct interactive proof systems for general distribution properties that can be decided by bounded-depth circuits. Taking N to be an upper bound on the distribution’s…</description>
+    <pubDate>Thu, 16 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+  <item>
+    <guid>doubly-sublinear-interactive-proofs</guid>
+    <title>Doubly Sub-linear Interactive Proofs of Proximity</title>
+    <link>https://machinelearning.apple.com/research/doubly-sublinear-interactive-proofs</link>
+    <description>We study doubly sub-linear interactive proofs of proximity (dsIPPs): proofs that are ultra-fast to generate, and can be used to prove approximate assertions about a huge input. Proof generation is ultra-fast in the sense that it only requires reading a small (sub-linear) portion of the input. Approximate verification of the proof is even faster (reading an even smaller portion of the input). Similarly to the property testing literature, approximate verification means the sublinear-time honest prover can make the verifier accept each input in the property, but no prover can fool the verifier…</description>
+    <pubDate>Thu, 16 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+
+    </channel>
+  </rss>

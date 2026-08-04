@@ -1,0 +1,434 @@
+[
+  {
+    "id": "2607.03118",
+    "title": "Vidu S1: A Real-Time Interactive Video Generation Model",
+    "abstract": "Vidu S1 is a real-time interactive video generation model that supports voice-controlled digital character animation with infinite-length output and high frame rate on consumer hardware.",
+    "authors": "Jintao Zhang, Kai Jiang, Jintao Chen, Xu Wang, Yang Luo, Yuji Wang, Dechuang Chen, Jungang Li, Chengyang Ye, Marco Chen, Hongzhou Zhu, Min Zhao, Yuxuan Jiang, Zhengkun Huang, Chendong Xiang, Kaiwen Zheng, Haoxu Wang, Xiaohang Wang, Qi Jia, Xin Chen, Yimin Chen, Youhe Jiang, Fangcheng Fu, Zhijie Deng, Fan Bao, Jianfei Chen, Jun Zhu",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.03118",
+    "votes": 138
+  },
+  {
+    "id": "2603.29616",
+    "title": "Video-Oasis: Rethinking Evaluation of Video Understanding",
+    "abstract": "Video-Oasis diagnostics reveal that half of existing video benchmarks can be solved without visual input, exposing significant capability gaps in current video understanding models.",
+    "authors": "Geuntaek Lim, Sungjune Park, Jaeyun Lee, Inwoong Lee, Taeoh Kim, Dongyoon Wee, Minho Shim, Yukyung Choi",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2603.29616",
+    "votes": 64
+  },
+  {
+    "id": "2601.16211",
+    "title": "Why Can't I Open My Drawer? Mitigating Object-Driven Shortcuts in Zero-Shot Compositional Action Recognition",
+    "abstract": "RCORE addresses object-driven shortcuts in zero-shot compositional action recognition by using co-occurrence prior regularization and temporal order regularization to improve compositional generalization.",
+    "authors": "Geo Ahn, Inwoong Lee, Taeoh Kim, Minho Shim, Dongyoon Wee, Jinwoo Choi",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2601.16211",
+    "votes": 54
+  },
+  {
+    "id": "2607.08758",
+    "title": "Ideas Have Genomes: Benchmarking Scientific Lineage Reasoning and Lineage-Grounded Idea Generation",
+    "abstract": "A benchmark for scientific lineage reasoning and idea generation is introduced, organizing scientific works as genetic-like Idea Genome objects and evaluating both reasoning and generation capabilities.",
+    "authors": "Yifan Zhou, Qihao Yang, Yan Li, Donggang Li, Xiru Hu, Hokin Deng, Ziyang Gong, Xuanyi Zhou, Huacan Wang, Xiangchao Yan, Wanghan Xu, Wenlong Zhang, Shaofeng Zhang, Yue Zhou, Yifan Yang, Zhihang Zhong, Xue Yang",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.08758",
+    "votes": 39
+  },
+  {
+    "id": "2607.08770",
+    "title": "LongE2V: Long-Horizon Event-based Video Reconstruction, Prediction, and Frame Interpolation with Video Diffusion Models",
+    "abstract": "LongE2V enables high-quality video recovery from sparse event streams by leveraging pre-trained video diffusion priors and addressing temporal stability and frame interpolation challenges.",
+    "authors": "Cheng-De Fan, Chun-Wei Tuan Mu, Chen-Wei Chang, Chin-Yang Lin, Kun-Ru Wu, Yu-Chee Tseng, Yu-Lun Liu",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.08770",
+    "votes": 34
+  },
+  {
+    "id": "2607.08768",
+    "title": "UniClawBench: A Universal Benchmark for Proactive Agents on Real-World Tasks",
+    "abstract": "UniClawBench introduces a capability-driven benchmark for evaluating proactive agents in real-world environments using live Docker container evaluation and closed-loop assessment with multiple agent roles.",
+    "authors": "Zhekai Chen, Chengqi Duan, Kaiyue Sun, Bohao Li, Yuqing Wang, Manyuan Zhang, Xihui Liu",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.08768",
+    "votes": 34
+  },
+  {
+    "id": "2607.08763",
+    "title": "OpenCoF: Learning to Reason Through Video Generation",
+    "abstract": "OpenCoF framework introduces a reasoning video dataset and model that improve temporal reasoning through diverse supervision and explicit reasoning tokens for visual and textual cues.",
+    "authors": "Xinyan Chen, Ziyu Guo, Renrui Zhang, Dongzhi Jiang, Hongsheng Li",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.08763",
+    "votes": 28
+  },
+  {
+    "id": "2607.07740",
+    "title": "Jet-Long: Efficient Long-Context Extension with Dynamic Bifocal RoPE",
+    "abstract": "A novel zero-shot method called Jet-Long enables efficient long-context processing for large language models by dynamically adapting rescaling factors and utilizing a bifocal attention mechanism that maintains high performance across varying sequence lengths.",
+    "authors": "Haozhan Tang, Zerui Wang, Yuxian Gu, Song Han, Han Cai",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.07740",
+    "votes": 23
+  },
+  {
+    "id": "2607.03803",
+    "title": "CineMobile: On-Device Image-to-Video Diffusion for Cinematic Camera Motion Generation",
+    "abstract": "CineMobile enables efficient image-to-video generation on mobile devices through distillation-guided pruning, diffusion distillation, and hybrid quantization techniques while maintaining visual quality and achieving significant speedup.",
+    "authors": "Xuyao Huang, Zelai Deng, Xu Wang, Xizhong Xiao, Zhijie Deng",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.03803",
+    "votes": 18
+  },
+  {
+    "id": "2607.08716",
+    "title": "Remember When It Matters: Proactive Memory Agent for Long-Horizon Agents",
+    "abstract": "\"Behavioral state decay\" — the fact that an agent's own past decisions, diagnoses, and open subgoals drift out of effective context as the trajectory grows — is something I've definitely felt debugging long-running agents but never had a clean term for. The architecture is refreshingly practical: a separate memory agent that runs alongside the action agent, writing structured updates into a bank the action agent can query.",
+    "authors": "Yifan Wu, Lizhu Zhang, Yuhang Zhou, Mingyi Wang, Bo Peng, Serena Li, Xiangjun Fan, Zhuokai Zhao",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.08716",
+    "votes": 14
+  },
+  {
+    "id": "2607.08526",
+    "title": "A Quantized Native Runtime for On-Device Semantic Audio Generation",
+    "abstract": "We release aria, a native inference engine for audio diffusion models, written from scratch in C with no third-party dependencies. It runs Stable Audio 3 (small-music and medium) end to end, from a text prompt to a stereo WAV, with no Python or deep-learning framework underneath.",
+    "authors": "Matteo Spanio, Antonio Rodà",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.08526",
+    "votes": 4
+  },
+  {
+    "id": "2607.08093",
+    "title": "CausalDS: Benchmarking Causal Reasoning in Data-Science Agents",
+    "abstract": "CausalDS is a benchmark for evaluating causal reasoning in data-science workflows that combines synthetic causal structures with realistic observational data and natural-language stories across Pearl's three rungs of causal inference.",
+    "authors": "Andrej Leban, Yuekai Sun",
+    "date": "2026-07-10",
+    "paper_url": "https://arxiv.org/abs/2607.08093",
+    "votes": 4
+  },
+  {
+    "id": "2607.09024",
+    "title": "Video Generation Models are General-Purpose Vision Learners",
+    "abstract": "",
+    "authors": "Letian Wang, Chuhan Zhang, Rishabh Kabra, Jasper Uijlings, Steven Waslander, Andrew Zisserman, Joao Carreira, Kaiming He, Misha Andriluka, Eduard Gabriel Bazavan, Andrei Zanfir, Cristian Sminchisescu",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.09024",
+    "votes": 71
+  },
+  {
+    "id": "2607.08964",
+    "title": "Long-Horizon-Terminal-Bench: Testing the Limits of Agents on Long-Horizon Terminal Tasks with Dense Reward-Based Grading",
+    "abstract": "",
+    "authors": "Zongxia Li, Zhongzhi Li, Yucheng Shi, Ruhan Wang, Junyao Yang, Zhichao Liu, Xiyang Wu, Anhao Li, Yue Yu, Ninghao Liu, Lichao Sun, Haotao Mi, Leowei Liang",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.08964",
+    "votes": 69
+  },
+  {
+    "id": "2607.09657",
+    "title": "Scalable Visual Pretraining for Language Intelligence",
+    "abstract": "",
+    "authors": "Yiming Zhang, Zhonghan Zhao, Wenwei Zhang, Haiteng Zhao, Tianyang Lin, Yunhua Zhou, Demin Song, Kuikun Liu, Haochen Ye, Haian Huang, Yuzhe Gu, Haijun Lv, Qipeng Guo, Bin Liu, Gaoang Wang, Kai Chen",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.09657",
+    "votes": 53
+  },
+  {
+    "id": "2607.04751",
+    "title": "Trust Region Policy Distillation",
+    "abstract": "",
+    "authors": "Zhengpeng Xie, Li Lyna Zhang, Zeke Xie, Mao Yang",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.04751",
+    "votes": 28
+  },
+  {
+    "id": "2607.07964",
+    "title": "KronQ: LLM Quantization via Kronecker-Factored Hessian",
+    "abstract": "KronQ adds the gradient covariance into the quantization objective via a Kronecker-factored Hessian approximation, which means it actually weighs which output channels matter more for the reconstruction loss. Makes intuitive sense — not all weights pull their weight in the forward pass.",
+    "authors": "Donghyun Lee, Yuhang Li, Ruokai Yin, Priyadarshini Panda",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.07964",
+    "votes": 27
+  },
+  {
+    "id": "2607.08393",
+    "title": "Towards Mechanistically Understanding Why Memorized Knowledge Fails to Generalize in Large Language Model Finetuning",
+    "abstract": "The experiments mainly use Qwen2.5 and LLaMA-3.x models. Although the paper includes a CoT prompting baseline, eliciting step-by-step outputs from a conventional model is not equivalent to evaluating a modern reasoning-oriented model in its native thinking mode.",
+    "authors": "Lu Dai, Ziyang Rao, Yili Wang, Hanqing Wang, Hao Liu, Hui Xiong",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.08393",
+    "votes": 13
+  },
+  {
+    "id": "2607.09415",
+    "title": "Self-Guided Test-Time Training for Long-Context LLMs",
+    "abstract": "",
+    "authors": "Xinyu Zhu, Zhe Xu, Xiaohan Wei, Yunchen Pu, Fei Tian, Chonglin Sun, Kaushik Rangadurai, Hua Zhi, Frank Shyu, Sandeep Pandey, Luke Simon, Yu Meng, Xi Liu",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.09415",
+    "votes": 12
+  },
+  {
+    "id": "2607.06957",
+    "title": "Flow-ERD: Agent-type Aware Flow Matching with Entropy-Regularized Distillation for Diverse Traffic Simulation",
+    "abstract": "Flow-ERD is a multi-agent traffic simulator that combines agent-type aware flow matching with entropy-regularized distillation to achieve both realistic and diverse motion patterns.",
+    "authors": "Seulbin Hwang, Kiyoung Om, Daejung Kim, Jinhan Lee",
+    "date": "2026-07-13",
+    "paper_url": "https://arxiv.org/abs/2607.06957",
+    "votes": 7
+  },
+  {
+    "id": "2607.05394",
+    "title": "Weak-to-Strong Generalization via Direct On-Policy Distillation",
+    "abstract": "Direct On-Policy Distillation transfers reinforcement learning improvements from smaller to larger models by using the policy shift induced by RL as an implicit reward signal, enabling efficient scaling of training without re-running expensive RL on the target model.",
+    "authors": "Shiyuan Feng, Huan-ang Gao, Haohan Chi, Hanlin Wu, Zhilong Zhang, Zheng Jiang, Bingxiang He, Wei-Ying Ma, Ya-Qin Zhang, Hao Zhou",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.05394",
+    "votes": 121
+  },
+  {
+    "id": "2607.10383",
+    "title": "ABot-N1: Toward a General Visual Language Navigation Foundation Model",
+    "abstract": "",
+    "authors": "Ruiyan Gong, Yingnan Guo, Junjun Hu, Jintao Kong, Xiaoxu Leng, Tianlun Li, Weize Li, Fei Liu, Zhicheng Liu, Jia Lu, Minghua Luo, Chenlin Ming, Yanfen Shen, Jiyue Tao, Zhengbo Wang, Mingyang Yin, Minqi Gu, Zihao Guan, Wei Guo, Guoqing Liu, Huachong Pang, Menglin Yang, Zeqian Ye, Xiaoxiao Geng, Zhining Gu, Honglin Han, Di Jing, Hongyu Pan, Mingchao Sun, Kuan Yang, Jianfang Zhang, Yanghong Chen, Ye He, Wei Mei, Jiahao Shi, Xiangpo Yang, Yanqing Zhu, Yang Cai, Jingjing Ma, Shihui Su, Zixiao Tang, Linbo Zheng, Zedong Chu, Xiaolong Wu, Ziqiao Li, Mu Xu",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.10383",
+    "votes": 93
+  },
+  {
+    "id": "2607.10350",
+    "title": "ABot-AgentOS: A General Robotic Agent OS with Lifelong Multi-modal Memory",
+    "abstract": "We present ABot-AgentOS, a general robotic Agent Operating System that sits above low-level controllers and provides a deliberative agent layer for scene-conditioned planning, context-isolated skill execution, multi-stage verification, multi-modal memory, and edge-cloud collaboration. To evaluate such systems, we introduce EmbodiedWorldBench, an executable benchmark with 16 indoor, outdoor, and hybrid scenes, four difficulty levels, and over 200 tasks involving navigation, object search, NPC dialogue, dynamic events, and trace-grounded scoring.",
+    "authors": "Jiayi Tian, Shiao Liu, Yuting Xu, Jia Lu, Zihao Guan, Honglin Han, Di Yang, Minqi Gu, Yifei Qian, Tianlin Zhang, Yanqing Zhu, Zeqian Ye, Menglin Yang, Fei Wang, Xu Hu, Xiuxian Li, Wei Zhang, Shihui Su, Yiyan Ji, Jingbo Wang, Ziteng Feng, Jiaheng Liu, Zhaoxiang Zhang, Xiaolong Wu, Zixiao Tang, Zhining Gu, Yang Cai, Linbo Zheng, Jingjing Ma, Mingyang Yin, Zedong Chu, Ziqiao Li, Mu Xu",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.10350",
+    "votes": 77
+  },
+  {
+    "id": "2607.09125",
+    "title": "4D Human-Scene Reconstruction from Low-Overlap Captures",
+    "abstract": "Four cameras around a room, roughly 90° apart, with barely any overlap between neighboring views. COLMAP doesn't even register them.",
+    "authors": "Minhyuk Hwang, Sangmin Kim, Seunguk Do, Daneul Kim, Jaesik Park",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.09125",
+    "votes": 47
+  },
+  {
+    "id": "2607.11487",
+    "title": "LightMem-Ego: Your AI Memory for Everyday Life",
+    "abstract": "LightMem-Ego: Bringing lifelong memory to AI assistants on smartphones and AI glasses, enabling them to see, remember, and help with your daily life.",
+    "authors": "Yijun Chen, Boyi Xiao, Yixian Zhao, Haoting Xia, Buqiang Xu, Jizhan Fang, Yanya Li, Yaqi Zheng, Xuehai Wang, Zirui Xue, Liuxin Zhang, Hui Li, Ningyu Zhang",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.11487",
+    "votes": 40
+  },
+  {
+    "id": "2607.11643",
+    "title": "Xiaomi-Robotics-U0: Unified Embodied Synthesis with World Foundation Model",
+    "abstract": "",
+    "authors": "Xinghang Li, Jun Guo, Qiwei Li, Long Qian, Hang Lai, Yueze Wang, Hongyu Yan, Jiahang Cao, Xi Chen, Jingen Qu, Jiaxi Song, Nan Sun, Hanye Zhao, Futeng Liu, Wanli Peng, Heyun Wang, Yunhong Wang, Caoyu Xia, Jack Zhao, Diyun Xiang, Hangjun Ye, Heng Qu, Huaping Liu, Jason Li",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.11643",
+    "votes": 34
+  },
+  {
+    "id": "2607.11250",
+    "title": "Multi-Agent LLMs Fail to Explore Each Other",
+    "abstract": "We find that current LLM agents, including frontier models, often fail to systematically explore their peers. Instead, they prematurely commit to a small number of agents, producing myopic and highly polarized interaction patterns.",
+    "authors": "Hyeong Kyu Choi, Jiatong Li, Wendi Li, Xin Eric Wang, Sharon Li",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.11250",
+    "votes": 11
+  },
+  {
+    "id": "2607.11736",
+    "title": "MET: Theory-Grounded and Culture-Aware Multilingual Moral Reasoning",
+    "abstract": "Multilingual moral reasoning has 2 gaps: 1) evaluation datasets that rely on direct translation instead of cultural adaptation, and 2) no adaptive, theory-grounded reasoning methods. We address these with MCLASH (a new evaluation dataset), MET (a theory-grounded reasoning method), and MET-D (adding self-distillation on top of MET).",
+    "authors": "Ayoung Lee, Ryan Kwon, Yunxiang Zhang, Yuxuan Liu, Peter Railton, Lu Wang",
+    "date": "2026-07-14",
+    "paper_url": "https://arxiv.org/abs/2607.11736",
+    "votes": 8
+  },
+  {
+    "id": "2607.12463",
+    "title": "Function-Aware Fill-in-the-Middle as Mid-Training for Coding Agent Foundation Models",
+    "abstract": "We introduce function-aware fill-in-the-middle (FIM) mid-training for coding agent foundation models. We argue that, rather than relying solely on scaling synthetic agent trajectories during post-training, one should exploit the structure already present in ordinary code: a function call site (call → return → downstream usage) is structurally isomorphic to a coding agent step (action → observation → continuation), making source code an internet-scale supply of agent-relevant training signal.",
+    "authors": "Yubo Wang, Jiarong Liang, Yuxuan Zhang, Xuye Liu, Cong Wei, Yuyu Zhang, Ping Nie, Wenhu Chen",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2607.12463",
+    "votes": 91
+  },
+  {
+    "id": "2607.05382",
+    "title": "Search Beyond What Can Be Taught: Evolving the Knowledge Boundary in Agentic Visual Generation",
+    "abstract": "",
+    "authors": "Haozhe Wang, Weijia Feng, Jinpeng Yu, Che Liu, Ping Nie, Fangzhen Lin, Jiaming Liu, Ruihua Huang, Jimmy Lin, Wenhu Chen, Cong Wei",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2607.05382",
+    "votes": 73
+  },
+  {
+    "id": "2607.11886",
+    "title": "Read It Back: Pretrained MLLMs Are Zero-Shot Reward Models for Text-to-Image Generation",
+    "abstract": "",
+    "authors": "Runhui Huang, Qihui Zhang, Zhe Liu, Yu Gao, Jie Wu, Hengshuang Zhao",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2607.11886",
+    "votes": 71
+  },
+  {
+    "id": "2607.10400",
+    "title": "SynthDocBench: Controlled Benchmark for Long-Context Visual Document Understanding",
+    "abstract": "Long-context visual document understanding benchmarks often entangle document length, layout, modality, and reasoning difficulty, making it difficult to diagnose why vision-language models fail.",
+    "authors": "Abhigya Verma, Khyati Mahajan, Amit Kumar Saha, Shruthan Radhakrishna, Sagar Davasam, Vikas Yadav, Sai Rajeswar Mudumba",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2607.10400",
+    "votes": 64
+  },
+  {
+    "id": "2607.08317",
+    "title": "Blind-Spots-Bench: Evaluating Blind Spots in Multimodal Models",
+    "abstract": "",
+    "authors": "Matteo Santelmo, Xiuying Wei, Israa Fakih, Felix Bauer, Juan Garcia Giraldo, Chengkun Li, Etienne Bamas, Emmanuel Abbé",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2607.08317",
+    "votes": 26
+  },
+  {
+    "id": "2607.10522",
+    "title": "Towards Autonomous and Auditable Medical Imaging Model Development",
+    "abstract": "Large language model (LLM) agents are beginning to automate machine learning engineering (MLE) by coupling planning, code execution, debugging, and empirical feedback. Translating this capability to medical imaging remains difficult because each task imposes modality-specific experimentation and strict requirements for validation protocols and prediction artifacts.",
+    "authors": "Shengyuan Liu, Jia-Xuan Jiang, Boyun Zheng, Cheng Wang, Zipei Wang, Wentao Pan, Hongtao Wu, Houwen Peng, Yu Gu, Lichao Sun, Yixuan Yuan",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2607.10522",
+    "votes": 12
+  },
+  {
+    "id": "2603.28583",
+    "title": "Navigating the Mirage: A Dual-Path Agentic Framework for Robust Misleading Chart Question Answering",
+    "abstract": "",
+    "authors": "Yanjie Zhang, Yafei Li, Rui Sheng, Zixin Chen, Yanna Lin, Huamin Qu, Lei Chen, Yushi Sun",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2603.28583",
+    "votes": 7
+  },
+  {
+    "id": "2607.11111",
+    "title": "Know Before Fix: QA-Driven Repository Knowledge Acquisition for Software Issue Resolution",
+    "abstract": "ACQUIRE introduces a QA-driven knowledge acquisition paradigm that explicitly identifies and resolves an agent's repository understanding gaps before patch generation, replacing unguided pre-repair exploration with structured, evidence-grounded knowledge acquisition for more accurate software issue resolution.",
+    "authors": "Haotian Lin, Silin Chen, Xiaodong Gu, Yuling Shi, Chengxi Pan, Jiaqi Ge, Mengfan Li, Jianghong Huang, Mengchieh Chuang, Beijun Shen, Haibing Guan",
+    "date": "2026-07-15",
+    "paper_url": "https://arxiv.org/abs/2607.11111",
+    "votes": 7
+  },
+  {
+    "id": "2607.13285",
+    "title": "Harness Handbook: Making Evolving Agent Harnesses Readable, Navigable, and Editable",
+    "abstract": "",
+    "authors": "Ruhan Wang, Yucheng Shi, Zongxia Li, Zhongzhi Li, Yue Yu, Junyao Yang, Kishan Panaganti, Haitao Mi, Dongruo Zhou, Leoweiliang",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.13285",
+    "votes": 169
+  },
+  {
+    "id": "2607.13125",
+    "title": "Boogu-Image-0.1: Boosting Open-Source Unified Multimodal Understanding and Generation",
+    "abstract": "Boogu-Image-0.1 is a strongly competitive Apache-2.0 open-source unified image generation and editing model family, including Base, Turbo, Edit, and other variants that provide stable, practical capabilities for high-quality text-to-image generation, fast generation, image editing, and Chinese-English text rendering, with performance that matches top closed-source models in many scenarios.",
+    "authors": "Guoxuan Chen, Chufeng Xiao, Haoran Yang, Siyue Xie, Binxiao Huang, Ming Zhang, Cheuk Him Chau, Xinyu Fu, Yingzhao Lian, Tom S.Y. Li, Jintao Lin, Bowen Dong, Zian Qian, Yuhao Liu, Yuxuan Hu, Weikang Shi, Bin Zou, Bowen Zheng, Haoxuan Che, Chang Chen, Yuyang He, Heyang Sun, Tianyu Huang, Chong Hou Choi, Cheng Gong, Han Shi, Haoli Bai, Xihui Liu, Hongsheng Li, Qifeng Chen, Chao Huang, Rui Liu, Chenyang Lei",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.13125",
+    "votes": 110
+  },
+  {
+    "id": "2607.12395",
+    "title": "Ring-Zero: Scaling Zero RL to a Trillion Parameters for Emergent Reasoning",
+    "abstract": "",
+    "authors": "Xinyu Tang, Qianggang Cao, Yurou Liu, Yuliang Zhan, Xiaochong Lan, Yifan Li, Yuchen Yan, Han Peng, Zican Dong, Zhenduo Zhang, Tianshu Wang, Xinyu Kong, Zujie Wen, Wayne Xin Zhao, Zhiqiang Zhang, Jun Zhou",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.12395",
+    "votes": 80
+  },
+  {
+    "id": "2607.13639",
+    "title": "OvisOCR2 Technical Report",
+    "abstract": "",
+    "authors": "Shiyin Lu, Yinglun Li, Yu Xia, Yuhui Chen, An-Yang Ji, Jun-Peng Jiang, Qing-Guo Chen, Jianshan Zhao, En Lin, Haijun Li, Cheng Qin, Zhao Xu, Weihua Luo",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.13639",
+    "votes": 43
+  },
+  {
+    "id": "2607.13104",
+    "title": "Self-Improvements in Modern Agentic Systems: A Survey",
+    "abstract": "We present a unified framework for self-improving agents, defining an agent as a foundation model plus scaffolding and organizing existing methods by what is improved: the foundation model or the scaffolding, including prompts, memory, tools, and control logic.",
+    "authors": "Zhe Ren, Yimeng Chen, Dandan Guo, Guowei Rong, Tonghui Li, R. B. Xiong, Qingfeng Lan, Wenyi Wang, Li Nanbo, Yibo Yang, Mingchen Zhuge, Jürgen Schmidhuber",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.13104",
+    "votes": 14
+  },
+  {
+    "id": "2607.13124",
+    "title": "ShortOPD: Recovering Pruned LLMs with Short-to-Long On-Policy Distillation",
+    "abstract": "We hope structured pruning research will move beyond multiple-choice benchmarks and pay greater attention to recovering free-form generation capabilities. In this work, we introduce ShortOPD to restore the generative performance of pruned models.",
+    "authors": "Qingyu Zhang, Qianhao Yuan, Hongyu Lin, Yaojie Lu, Xianpei Han, Le Sun, Xiang Li, Ming Xu, Jiarui Li, Xiuyin Zhao",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.13124",
+    "votes": 12
+  },
+  {
+    "id": "2607.12752",
+    "title": "Hallo4D: Multi-Modal Hallucination Mitigation for Consistent Spatio-Temporal Generation",
+    "abstract": "Hallo4D is a model-agnostic framework for reducing spatial and temporal hallucinations in 3D and 4D generation. Instead of retraining the underlying generator, it uses multimodal LLMs to detect inconsistencies across views and frames, summarize the observed issues, and guide consensus-based corrections.",
+    "authors": "Hongbo Wang, Huaibo Huang, Jie Cao, Jin Liu, Haoyang Tong, Ran He",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.12752",
+    "votes": 11
+  },
+  {
+    "id": "2607.13705",
+    "title": "AgentCompass: A Unified Evaluation Infrastructure for Agent Capabilities",
+    "abstract": "",
+    "authors": "Kai Chen, Zichen Ding, Jiaye Ge, Shufan Jiang, Mo Li, Qingqiu Li, Zehao Li, Zonglin Li, Tiaohao Liang, Shudong Liu, Zerun Ma, Zixing Shang, Wenhui Tian, Zun Wang, Liwei Wu, Zhenyu Wu, Jun Xu, Bowen Yang, Dingbo Yuan, Qi Zhang, Songyang Zhang, Peiheng Zhou, Dongsheng Zhu",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.13705",
+    "votes": 9
+  },
+  {
+    "id": "2607.12747",
+    "title": "Tracing Agentic Failure from the Flow of Success",
+    "abstract": "When an LLM agent fails on a long-horizon task, pinpointing which step caused the failure is hard. Existing approaches either rely on expensive prompting pipelines or require costly step-level annotated failure data to train on.",
+    "authors": "Samuel Yeh, Yiwen Zhu, Shaleen Deep, Sharon Li",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.12747",
+    "votes": 9
+  },
+  {
+    "id": "2607.13027",
+    "title": "PalmClaw: A Native On-Device Agent Framework for Mobile Phones",
+    "abstract": "",
+    "authors": "",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.13027",
+    "votes": 6
+  },
+  {
+    "id": "2607.07702",
+    "title": "From Noisy Traces to Root Causes: Structural Trajectory Analysis and Causal Extraction for Agent Optimization",
+    "abstract": "",
+    "authors": "",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2607.07702",
+    "votes": 5
+  },
+  {
+    "id": "2605.10834",
+    "title": "From Controlled to the Wild: Evaluation of Pentesting Agents for the Real-World",
+    "abstract": "",
+    "authors": "",
+    "date": "2026-07-16",
+    "paper_url": "https://arxiv.org/abs/2605.10834",
+    "votes": 3
+  }
+]

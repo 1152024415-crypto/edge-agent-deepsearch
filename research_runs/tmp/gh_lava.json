@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Lava",
+    "full_name": "lava-nc/lava",
+    "stargazers_count": 739,
+    "pushed_at": "2026-05-13",
+    "language": "Jupyter Notebook",
+    "license": "NOASSERTION",
+    "archived": true,
+    "description": "A Software Framework for Neuromorphic Computing"
+  }
+]

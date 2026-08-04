@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RADAR · SNN 洞察</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    :root{--bg:#eef1f3;--panel:#ffffff;--ink:#0b1a24;--muted:#5a6b78;--faint:#8a99a6;--rule:#d4dae0;--hair:#e3e8ec;--amber:#c2410c;--green:#15803d}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans","PingFang SC","Noto Sans SC",system-ui,sans-serif;font-size:14.5px;line-height:1.7}
+    main{max-width:1180px;margin:0 auto;padding:18px 22px 80px}
+    a{color:var(--amber);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .scope{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    h1{margin:0;font-family:"IBM Plex Mono",monospace;font-size:20px;font-weight:600;letter-spacing:1.5px}
+    h1 .sub{font-family:"IBM Plex Sans",sans-serif;font-weight:500;font-size:13px;color:var(--muted);letter-spacing:0;margin-left:8px}
+    .back{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint)}
+    .sweep{height:2px;margin:10px -16px -12px;background:linear-gradient(90deg,transparent,var(--hair) 20%,var(--hair) 80%,transparent);position:relative;overflow:hidden}
+    .sweep::after{content:"";position:absolute;inset:0;width:30%;background:linear-gradient(90deg,transparent,var(--amber),transparent);animation:sweep 3.2s linear infinite}
+    @keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
+    @media(prefers-reduced-motion:reduce){.sweep::after{animation:none;opacity:.5}}
+    .layout{display:grid;grid-template-columns:230px 1fr;gap:16px;align-items:start}
+    .toc{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:12px 10px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+    .toc-title{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px 8px;border-bottom:1px solid var(--hair);margin-bottom:6px}
+    .toc a{display:block;padding:4px 8px;font-size:12.5px;color:var(--muted);border-radius:3px;line-height:1.4}
+    .toc a:hover{background:var(--hair);color:var(--ink)}
+    .toc a.active{background:#fbeae3;color:var(--amber);font-weight:600}
+    .art{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:22px 28px;min-height:60vh}
+    .art:empty::before{content:"loading…";color:var(--faint);font-family:"IBM Plex Mono",monospace}
+    .art h1{font-family:"IBM Plex Sans",sans-serif;font-size:22px;letter-spacing:0;margin:0 0 6px;border-bottom:1px solid var(--rule);padding-bottom:8px}
+    .art h2{font-size:18px;margin:26px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--hair);scroll-margin-top:20px}
+    .art h3{font-size:15px;margin:18px 0 6px;color:var(--ink)}
+    .art p{margin:8px 0}
+    .art ul,.art ol{margin:8px 0;padding-left:22px}
+    .art li{margin:3px 0}
+    .art blockquote{margin:10px 0;padding:6px 14px;border-left:3px solid var(--amber);background:#fdf3ee;color:var(--muted);border-radius:0 4px 4px 0}
+    .art code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:var(--hair);padding:1px 5px;border-radius:3px}
+    .art pre{background:#0b1a24;color:#dbe4ea;padding:12px 14px;border-radius:5px;overflow:auto;margin:10px 0}
+    .art pre code{background:none;padding:0;color:inherit;font-size:12.5px}
+    .art img{max-width:100%;height:auto;border:1px solid var(--hair);border-radius:4px;margin:8px 0}
+    .art table{border-collapse:collapse;margin:10px 0;width:100%;font-size:12.5px}
+    .art th,.art td{border:1px solid var(--rule);padding:5px 9px;text-align:left}
+    .art th{background:var(--hair)}
+    .art hr{border:none;border-top:1px solid var(--rule);margin:18px 0}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.toc{position:static;max-height:none}}
+  </style>
+</head>
+<body>
+  <main>
+    <header class="scope">
+      <h1>RADAR<span class="sub">SNN 洞察 · spiking neural networks</span></h1>
+      <a class="back" href="index.html">← 返回雷达</a>
+      <div class="sweep"></div>
+    </header>
+    <div class="layout">
+      <aside class="toc" id="toc"></aside>
+      <article class="art" id="art"></article>
+    </div>
+  </main>
+  <script>
+    var MD_URL = 'snn/SNN-insight.md';
+    function render(md){
+      var art = document.getElementById('art');
+      art.innerHTML = marked.parse(md);
+      var toc = document.getElementById('toc');
+      var heads = art.querySelectorAll('h2');
+      var html = '<div class="toc-title">sections</div>';
+      for(var i=0;i<heads.length;i++){
+        var h = heads[i];
+        if(!h.id) h.id = 'sec-' + i;
+        html += '<a href="#' + h.id + '" data-target="' + h.id + '">' + h.innerText.replace(/^\d+\.?\s*/,'').slice(0,40) + '</a>';
+      }
+      toc.innerHTML = html;
+      if(window.renderMathInElement){
+        renderMathInElement(art, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+      }
+      var links = toc.querySelectorAll('a');
+      if('IntersectionObserver' in window){
+        var obs = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            if(en.isIntersecting){
+              var id = en.target.id;
+              links.forEach(function(l){l.classList.toggle('active', l.getAttribute('data-target')===id);});
+            }
+          });
+        },{rootMargin:'-20% 0px -70% 0px'});
+        heads.forEach(function(h){obs.observe(h);});
+      }
+    }
+    fetch(MD_URL).then(function(r){
+      if(!r.ok){document.getElementById('art').innerHTML='<p>加载失败 ('+r.status+')：'+MD_URL+'</p>';return '';}
+      return r.text();
+    }).then(function(md){if(md)render(md);}).catch(function(e){
+      document.getElementById('art').innerHTML='<p>加载出错：'+String(e)+'</p>';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "snnTorch",
+    "full_name": "jeshraghian/snntorch",
+    "stargazers_count": 2012,
+    "pushed_at": "2026-06-29",
+    "language": "Python",
+    "license": "MIT",
+    "archived": false,
+    "description": "Deep and online learning with spiking neural networks in Python"
+  }
+]
