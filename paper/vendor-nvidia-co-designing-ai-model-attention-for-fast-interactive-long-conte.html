@@ -6,7 +6,7 @@
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>Co-Designing AI Model Attention for Fast, Interactive Long-Context Inference</h1>
 <div class="meta"><span class="score">10</span> <span class="tier">官方动态</span>  2026-07-31 · NVIDIA / NVIDIA</div>
-<div class="tags"><span class="vendor-tag">NVIDIA</span><span class="tag">方向:端侧agent</span><span class="tag">硬件:GPU</span><span class="tag">应用:长上下文推理</span></div>
+<div class="tags"><span class="vendor-tag">NVIDIA</span><span class="tag">硬件:GPU</span><span class="tag">应用:长上下文推理</span></div>
 <div class="field"><span class="label">这是什么</span><span class="text">分析组大小、头维度和序列长度如何影响注意力机制在预填充（计算密集）和解码（内存密集）阶段的性能，提出四条模型设计准则：增大组数 G 提升解码效率、选用 128/256 头维度对齐 GPU 瓦片、压缩有效 KV 状态、按 KV 头数选并行策略，强调注意力设计方式正成为决定推理性能的关键。</span></div>
 <div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
 <div class="field"><span class="label">怎么做到</span><span class="text">联合调整分组数量、注意力头维度、有效键值状态和并行策略，使预填充计算与解码访存更匹配 GPU 硬件。</span></div>

@@ -56,6 +56,7 @@
     .rec-rank{font-family:"IBM Plex Mono",monospace;font-size:18px;line-height:1;color:#f0783c;padding-top:2px}
     .rec-body{min-width:0}
     .rec-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11px;color:#b8c7cf;margin-bottom:4px}
+    .rec-edge-scope{color:#172a34;background:#ffd0b0;border:1px solid #ffe2cf;border-radius:3px;padding:1px 6px;font-weight:700;letter-spacing:.2px}
     .rec-tier{color:#f6c5a8}
     .rec-score{color:#fffaf2;font-weight:600}
     .rec-title{display:block;color:#fffaf2;font-weight:700;font-size:16px;line-height:1.35;letter-spacing:.1px;transition:color .12s}
@@ -208,6 +209,9 @@
     const REC_PREVIEW=6;
     const WEEKLY_PREVIEW=3;
     const TIER=[["官方动态","--amber"],["开源大项目","--green"],["公司项目","--blue"],["学校顶会","--purple"],["学校预印本","--slate"]];
+    const EDGE_AGENT_PRIORITY={"手机":0,"PC":1,"其他端侧":2,"非端侧Agent":3};
+    const EDGE_AGENT_LABELS={"手机":"手机端 Agent","PC":"PC 端 Agent","其他端侧":"其他端侧 Agent"};
+    const edgeAgentPriority=p=>EDGE_AGENT_PRIORITY[p.edge_agent_scope]??3;
     const isRecommended=p=>p.recommendation==='推荐';
     const hasContent=v=>v&&v!=='未报告';
 
@@ -262,8 +266,9 @@
       el.hidden=false;
       const total=ALL.filter(isRecommended).length;
       const recommended=visible().filter(isRecommended).sort((a,b)=>{
+        const edgeDiff=edgeAgentPriority(a)-edgeAgentPriority(b);
         const tierDiff=TIER.findIndex(([t])=>t===a.source_tier)-TIER.findIndex(([t])=>t===b.source_tier);
-        return tierDiff||b.score-a.score||b.date.localeCompare(a.date);
+        return edgeDiff||tierDiff||b.score-a.score||b.date.localeCompare(a.date);
       });
       const countLabel=recommended.length===total?`${total}`:`${recommended.length}/${total}`;
       const previewLabel=SHOW_ALL_RECOMMENDED?`已展开 ${recommended.length} 条`:`首屏精选 ${Math.min(recommended.length,REC_PREVIEW)} 条`;
@@ -273,9 +278,10 @@
         const summary=(p.abstract||'').trim()||'暂无中文摘要';
         const tags=(p.tags||[]).map(t=>`<span class="rec-tag">${escapeHtml(val(t))}</span>`).join('');
         const reason=(p.recommendation_reason||'').trim()||'该条目由 Agent 选为本周优先阅读';
+        const edgeScope=EDGE_AGENT_LABELS[p.edge_agent_scope]||'';
         return `<a class="rec-item" href="../paper/${escapeAttr(p.id)}.html" onclick="openDetail('${escapeAttr(p.id)}');return false;">
           <span class="rec-rank">${String(i+1).padStart(2,'0')}</span>
-          <span class="rec-body"><span class="rec-meta"><span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-title">${escapeHtml(titleZh)}</span><span class="rec-summary">${escapeHtml(summary)}</span><span class="rec-tags"><b>关键词</b>${tags}</span><span class="rec-why"><b>值得优先看：</b>${escapeHtml(reason)}</span><span class="rec-original">原标题：${escapeHtml(p.title)}</span></span>
+          <span class="rec-body"><span class="rec-meta">${edgeScope?`<span class="rec-edge-scope">${escapeHtml(edgeScope)}</span>`:''}<span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-title">${escapeHtml(titleZh)}</span><span class="rec-summary">${escapeHtml(summary)}</span><span class="rec-tags"><b>关键词</b>${tags}</span><span class="rec-why"><b>值得优先看：</b>${escapeHtml(reason)}</span><span class="rec-original">原标题：${escapeHtml(p.title)}</span></span>
         </a>`;
       }).join('');
       el.innerHTML=`<header class="rec-head"><div><div class="rec-kicker">Agent 精选 · 推荐优先</div><h2>Agent 本周推荐 <span class="rec-count">· ${previewLabel} · 共推荐 ${countLabel} 条</span></h2></div><p class="rec-note">完整收录仍保留在下方；这里仅把 Agent 判断更值得优先阅读的内容排到前面。</p></header>`+
