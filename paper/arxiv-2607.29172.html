@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>CLIFT: Turning Gemini Robotics On-Device into Humanoid Specialists via Non-Invasive Closed-Loop Iterative Fine-Tuning</h1>
-<div class="meta"><span class="score">17</span> <span class="tier school">学校预印本</span>  2026-07-31 · Yuxin Chen; Hari Srikanth; Nathan Jew; Menglin Wu; Pengcheng Wang; Junli Ren; Masayoshi Tomizuka; Peng Xu / arXiv</div>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-07-31 · Yuxin Chen; Hari Srikanth; Nathan Jew; Menglin Wu; Pengcheng Wang; Junli Ren; Masayoshi Tomizuka; Peng Xu / arXiv</div>
 <div class="tags"><span class="tag">方向:端侧agent</span><span class="tag">应用:机器人</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">机器人基础模型越来越强，但最强的都是闭源、用私有数据训练的，限制了后续发展。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">直接监督微调已明显优于同数据训练的开源 VLA；加入 CLIFT 后，两轮闭环迭代就把敏捷、接触密集任务推到接近满成功率。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">每轮在真实机器人上执行策略，收集奖励和失败状态，再把这些反馈整理成 API 可接收的监督样本继续微调，形成部署—反馈—再训练的闭环。</span></div>
-<div class="score-reason">评分依据：使用 Gemini Robotics On-Device 并在真实人形机器人上做闭环迭代，两轮达到接近满成功率；端侧机器人相关性和实证强度都高。</div>
+<div class="field"><span class="label">这是什么</span><span class="text">CLIFT 把 Gemini Robotics On-Device 适配成特定人形机器人专家，在不改动基础模型内部结构的情况下学习目标机器人的动作能力。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">未报告</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">通过闭环迭代微调，让机器人反复执行、收集反馈并更新适配层。</span></div>
+<div class="score-reason">评分依据：明确涉及端侧或资源受限设备，相关性较高；主要贡献集中在端侧agent、机器人。</div>
 <div class="source"><a href="https://arxiv.org/abs/2607.29172" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>
