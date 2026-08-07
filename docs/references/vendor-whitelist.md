@@ -54,5 +54,10 @@ vivo: `vivo.com`, `vivo.com.cn`
 Honor: `honor.com`
 Alibaba/Qwen: `alibabacloud.com`, `qwenlm.github.io`
 Mistral: `mistral.ai`
-Minimax: `minimax.io`
+ModelBest/面壁智能: `modelbest.cn`
+MiniMax: `minimax.io`, `minimaxi.com`
 阶跃星辰 StepFun: `stepfun.com`
+DeepSeek: `deepseek.com`, `api-docs.deepseek.com`
+Moonshot/Kimi: `kimi.com`, `moonshot.cn`
+Zhipu: `zhipuai.cn`, `bigmodel.cn`
+Baichuan: `baichuan-ai.com`

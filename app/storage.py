@@ -34,6 +34,10 @@ PAPER_COLUMNS = (
     "source_tier",
     "open_source",
     "tags",
+    "edge_agent_scope",
+    "edge_agent_evidence",
+    "arxiv_date_basis",
+    "arxiv_revision_note",
     "insight_person",
     "wiki_url",
     "authors",
@@ -50,6 +54,12 @@ TIER_CASE = (
     "CASE source_tier "
     "WHEN '官方动态' THEN 0 WHEN '开源大项目' THEN 1 "
     "WHEN '公司项目' THEN 2 WHEN '学校顶会' THEN 3 WHEN '学校预印本' THEN 4 ELSE 9 END"
+)
+
+# 真正端侧 Agent 是产品核心，设备优先级高于来源层级：手机 > PC > 其他端侧。
+EDGE_AGENT_CASE = (
+    "CASE edge_agent_scope "
+    "WHEN '手机' THEN 0 WHEN 'PC' THEN 1 WHEN '其他端侧' THEN 2 ELSE 3 END"
 )
 
 
@@ -95,6 +105,10 @@ def init_db(db_path: Path) -> None:
                     source_tier TEXT NOT NULL,
                     open_source INTEGER NOT NULL DEFAULT 0,
                     tags TEXT,
+                    edge_agent_scope TEXT NOT NULL DEFAULT '非端侧Agent',
+                    edge_agent_evidence TEXT NOT NULL DEFAULT '',
+                    arxiv_date_basis TEXT NOT NULL DEFAULT 'submitted',
+                    arxiv_revision_note TEXT NOT NULL DEFAULT '',
                     insight_person TEXT,
                     wiki_url TEXT,
                     authors TEXT,
@@ -118,6 +132,22 @@ def init_db(db_path: Path) -> None:
                 conn.execute("ALTER TABLE papers ADD COLUMN open_source INTEGER NOT NULL DEFAULT 0")
             if "tags" not in columns:
                 conn.execute("ALTER TABLE papers ADD COLUMN tags TEXT")
+            if "edge_agent_scope" not in columns:
+                conn.execute(
+                    "ALTER TABLE papers ADD COLUMN edge_agent_scope TEXT NOT NULL DEFAULT '非端侧Agent'"
+                )
+            if "edge_agent_evidence" not in columns:
+                conn.execute(
+                    "ALTER TABLE papers ADD COLUMN edge_agent_evidence TEXT NOT NULL DEFAULT ''"
+                )
+            if "arxiv_date_basis" not in columns:
+                conn.execute(
+                    "ALTER TABLE papers ADD COLUMN arxiv_date_basis TEXT NOT NULL DEFAULT 'submitted'"
+                )
+            if "arxiv_revision_note" not in columns:
+                conn.execute(
+                    "ALTER TABLE papers ADD COLUMN arxiv_revision_note TEXT NOT NULL DEFAULT ''"
+                )
             if "detail" not in columns:
                 conn.execute("ALTER TABLE papers ADD COLUMN detail TEXT")
             if "recommendation" not in columns:
@@ -135,7 +165,12 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
     # the window END as today. Same env-override pattern as EDGE_WEEKS_DIR.
     import os
     today_override = os.environ.get("EDGE_TODAY")
-    normalized = research_run.validate_payload(payload, skip_network=True, today=today_override)
+    normalized = research_run.validate_payload(
+        payload,
+        skip_network=True,
+        today=today_override,
+        require_collection_manifest=True,
+    )
     timestamp = now_iso()
     with closing(connect(db_path)) as conn:
         with conn:
@@ -158,14 +193,18 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                     INSERT INTO papers (
                         id, run_id, title, title_zh, abstract, effects, mechanism, paper_url, date, score,
                         score_relevance, score_contribution, score_reason, source_tier, open_source,
-                        tags, insight_person, wiki_url, authors, vendors, venue, recommendation,
+                        tags, edge_agent_scope, edge_agent_evidence,
+                        arxiv_date_basis, arxiv_revision_note,
+                        insight_person, wiki_url, authors, vendors, venue, recommendation,
                         recommendation_reason,
                         updated_at
                     )
                     VALUES (
                         :id, :run_id, :title, :title_zh, :abstract, :effects, :mechanism, :paper_url, :date,
                         :score, :score_relevance, :score_contribution, :score_reason, :source_tier,
-                        :open_source, :tags, :insight_person, :wiki_url, :authors, :vendors, :venue,
+                        :open_source, :tags, :edge_agent_scope, :edge_agent_evidence,
+                        :arxiv_date_basis, :arxiv_revision_note,
+                        :insight_person, :wiki_url, :authors, :vendors, :venue,
                         :recommendation, :recommendation_reason, :updated_at
                     )
                     ON CONFLICT(id) DO UPDATE SET
@@ -184,6 +223,10 @@ def upsert_run(db_path: Path, payload: dict) -> dict:
                         source_tier = excluded.source_tier,
                         open_source = excluded.open_source,
                         tags = excluded.tags,
+                        edge_agent_scope = excluded.edge_agent_scope,
+                        edge_agent_evidence = excluded.edge_agent_evidence,
+                        arxiv_date_basis = excluded.arxiv_date_basis,
+                        arxiv_revision_note = excluded.arxiv_revision_note,
                         insight_person = excluded.insight_person,
                         wiki_url = excluded.wiki_url,
                         authors = excluded.authors,
@@ -210,9 +253,9 @@ def _attach_row(paper: dict) -> dict:
 
 def list_papers(db_path: Path, sort: str = "score") -> list[dict]:
     order_by = (
-        f"{TIER_CASE} ASC, score DESC, date DESC, title ASC"
+        f"{EDGE_AGENT_CASE} ASC, {TIER_CASE} ASC, score DESC, date DESC, title ASC"
         if sort != "date"
-        else f"{TIER_CASE} ASC, date DESC, score DESC, title ASC"
+        else f"{EDGE_AGENT_CASE} ASC, {TIER_CASE} ASC, date DESC, score DESC, title ASC"
     )
     with closing(connect(db_path)) as conn:
         latest_run = conn.execute(

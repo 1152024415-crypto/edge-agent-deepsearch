@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT))  # for app package
 sys.path.insert(0, str(ROOT / "agent"))  # for research_run / publish_results
 
 import publish_results
+import research_collection
 import research_run
 from app import build as build_app
 from app import server as server_app
@@ -31,6 +32,8 @@ from app import weeks as weeks_mod
 
 TODAY = date.today()
 YESTERDAY = (TODAY - timedelta(days=1)).isoformat()
+TEST_PUBLISH_TOKEN = "test-publish-secret"
+_TEST_ARTIFACT_DIRS = []
 
 
 def _score_dims(score):
@@ -55,10 +58,14 @@ def valid_paper(**overrides):
         "source_tier": "学校顶会",
         "open_source": False,
         "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
+        "edge_agent_scope": "手机",
+        "edge_agent_evidence": "论文明确说明规划、记忆和执行闭环均在手机本地运行。",
         "recommendation": "推荐",
         "recommendation_reason": "端侧收益明确，并在真实设备上给出了可核验的延迟改善。",
         "insight_person": "",
         "wiki_url": "",
+        "candidate_source": "",
+        "candidate_ref": "",
     }
     paper.update(overrides)
     rel, con = _score_dims(paper["score"])
@@ -68,10 +75,70 @@ def valid_paper(**overrides):
 
 
 def run_payload(*papers):
+    start, end, days = research_collection.collection_window(TODAY)
+    tempdir = tempfile.TemporaryDirectory()
+    _TEST_ARTIFACT_DIRS.append(tempdir)
+    artifact_dir = Path(tempdir.name)
+    candidates = []
+    normalized_papers = []
+    for paper in papers:
+        candidate = {
+            "id": paper["id"],
+            "title": paper["title"],
+            "paper_url": paper["paper_url"],
+            "date": paper["date"],
+        }
+        candidates.append(candidate)
+        normalized = dict(paper)
+        normalized["candidate_source"] = "huggingface"
+        normalized["candidate_ref"] = research_collection.candidate_record_ref(candidate)
+        normalized_papers.append(normalized)
+    artifact_paths = {}
+    attestations = {}
+    for source in ("arxiv", "huggingface", "github", "vendors"):
+        path = artifact_dir / f"{source}.json"
+        path.write_text(
+            json.dumps(candidates if source == "huggingface" else [], ensure_ascii=False),
+            encoding="utf-8",
+        )
+        artifact_paths[source] = path
+        attestations[source] = research_collection.candidate_artifact_attestation(path, source)
     return {
         "run_id": "run-20260625-120000",
         "generated_at": "2026-06-25T12:00:00+08:00",
-        "papers": list(papers),
+        "collection_manifest": {
+            "window_start": start.isoformat(),
+            "window_end": end.isoformat(),
+            "sources": {
+                "arxiv": {
+                    "status": "complete", "candidate_count": 0,
+                    **attestations["arxiv"],
+                    "queries_completed": sorted(research_collection.REQUIRED_ARXIV_SWEEPS),
+                    "pages_fetched": len(research_collection.REQUIRED_ARXIV_SWEEPS),
+                },
+                "huggingface": {
+                    "status": "complete", "candidate_count": 0,
+                    **attestations["huggingface"],
+                    "dates_checked": [day.isoformat() for day in days],
+                },
+                "github": {
+                    "status": "complete", "candidate_count": 0,
+                    **attestations["github"],
+                    "release_projects_checked": sorted(research_collection.REQUIRED_GITHUB_PROJECTS),
+                    "trending_checked": True,
+                },
+                "vendors": {
+                    "status": "complete", "candidate_count": 0,
+                    **attestations["vendors"],
+                    "vendors_checked": sorted(research_collection.REQUIRED_VENDOR_SOURCES),
+                    "vendor_checks": {
+                        vendor: {"status": "no_match", "sources_succeeded": ["official-index"]}
+                        for vendor in research_collection.REQUIRED_VENDOR_SOURCES
+                    },
+                },
+            },
+        },
+        "papers": normalized_papers,
     }
 
 
@@ -104,7 +171,9 @@ class MirrorBuildTest(unittest.TestCase):
         self.addCleanup(self._tmpdir.cleanup)
         db_path = Path(self._tmpdir.name) / "papers.sqlite"
 
-        self.httpd = server_app.create_server(("127.0.0.1", 0), db_path)
+        self.httpd = server_app.create_server(
+            ("127.0.0.1", 0), db_path, publish_token=TEST_PUBLISH_TOKEN
+        )
         self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
         self.thread.start()
         self.base_url = f"http://127.0.0.1:{self.httpd.server_port}"
@@ -131,7 +200,7 @@ class MirrorBuildTest(unittest.TestCase):
     def test_build_mirrors_server_to_static_site(self):
         # Publish one validated paper to the running test server.
         payload = research_run.validate_payload(run_payload(valid_paper()), today=TODAY)
-        publish_results.publish_payload(self.base_url, payload)
+        publish_results.publish_payload(self.base_url, payload, token=TEST_PUBLISH_TOKEN)
 
         # Run build.py against the ephemeral server URL.
         result = subprocess.run(
@@ -310,7 +379,9 @@ class TwoWeekFlowTest(unittest.TestCase):
         self._tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self._tmp.cleanup)
         db_path = Path(self._tmp.name) / "papers.sqlite"
-        self.httpd = server_app.create_server(("127.0.0.1", 0), db_path)
+        self.httpd = server_app.create_server(
+            ("127.0.0.1", 0), db_path, publish_token=TEST_PUBLISH_TOKEN
+        )
         self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
         self.thread.start()
         self.base_url = f"http://127.0.0.1:{self.httpd.server_port}"
@@ -354,7 +425,7 @@ class TwoWeekFlowTest(unittest.TestCase):
             self.addCleanup(lambda: wp.write_text(backup, encoding="utf-8"))
         else:
             self.addCleanup(lambda: wp.unlink(missing_ok=True))
-        publish_results.publish_payload(self.base_url, payload)
+        publish_results.publish_payload(self.base_url, payload, token=TEST_PUBLISH_TOKEN)
 
         r = subprocess.run([sys.executable, str(ROOT / "app" / "build.py"),
                             "--server", self.base_url],

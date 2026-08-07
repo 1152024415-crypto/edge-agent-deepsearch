@@ -13,6 +13,8 @@ Catches the failure modes that shipped before by operating on real artifacts
                  URLs), not paper-list duplicates; paper_id highlights must resolve.
 4. vendor tier — current week must have ≥1 官方动态 (vendor blogs collected);
                  0 is a process alarm requiring per-vendor evidence on disk.
+5. edge agents — every item is source-reviewed; genuine on-device agents are
+                 recommended and their device scope/tag/evidence agree.
 
 Use: python app/gates/gate_release.py [--root DIR]
 Pre-deploy, after `python app/build.py`. Exit 0 = ship; 1 = blocked.
@@ -29,9 +31,13 @@ MIN_EXTERNAL_HIGHLIGHTS = 5
 MIN_CHINESE_CHARS = 8
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 INTERNAL_PLACEHOLDER_RE = re.compile(
-    r"auto[- ]?converted|待核实|待后续补|精修.{0,12}待补|votes\s*=",
+    r"auto[- ]?converted|待核实|待后续补|精修.{0,12}待补|votes\s*=|"
+    r"自动初评|主\s*Agent|待复核",
     re.IGNORECASE,
 )
+ALLOWED_EDGE_AGENT_SCOPES = {"手机", "PC", "其他端侧", "非端侧Agent"}
+DIRECT_EDGE_AGENT_SCOPES = {"手机", "PC", "其他端侧"}
+DIRECT_EDGE_AGENT_TAG = "方向:端侧agent"
 
 _PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(.+?);\s*window\.__WEEKLY__", re.S)
 # render_page inlines with NO spaces around '=': `window.__WEEKS__=[`. The server.py
@@ -97,6 +103,11 @@ def check_recommendation_readability(root: Path, errors: list) -> None:
     papers = _papers_from_index(root)
     if not papers:
         return  # the contract gate reports missing/broken paper data
+    for paper in papers:
+        pid = paper.get("id") or "<missing-id>"
+        score_reason = str(paper.get("score_reason") or "")
+        if INTERNAL_PLACEHOLDER_RE.search(score_reason):
+            _err(errors, f"{pid}: score_reason 含内部占位/流程标记")
     recommendations = [p for p in papers if p.get("recommendation") == "推荐"]
     if not recommendations:
         _err(errors, "当前周有内容但没有推荐条目 — 发布前至少人工精选 1 条并填写中文推荐理由")
@@ -120,6 +131,50 @@ def check_recommendation_readability(root: Path, errors: list) -> None:
             _err(errors, f"{pid}: recommendation_reason 缺失或不是可直接阅读的中文理由")
         elif INTERNAL_PLACEHOLDER_RE.search(reason):
             _err(errors, f"{pid}: recommendation_reason 含内部占位/流程标记")
+
+
+def check_edge_agent_classification(root: Path, errors: list) -> None:
+    """Block keyword promotion and missed recommendations in the built artifact."""
+    for paper in _papers_from_index(root):
+        pid = paper.get("id") or "<missing-id>"
+        scope = str(paper.get("edge_agent_scope") or "").strip()
+        evidence = str(paper.get("edge_agent_evidence") or "").strip()
+        tags = paper.get("tags") if isinstance(paper.get("tags"), list) else []
+        if scope == "待核实":
+            _err(errors, f"{pid}: edge_agent_scope=待核实，不可发布")
+            continue
+        if scope not in ALLOWED_EDGE_AGENT_SCOPES:
+            _err(errors, f"{pid}: edge_agent_scope 缺失或非法")
+            continue
+        if scope in DIRECT_EDGE_AGENT_SCOPES:
+            if paper.get("recommendation") != "推荐":
+                _err(errors, f"{pid}: 真正端侧 Agent（{scope}）必须进入推荐区")
+            if DIRECT_EDGE_AGENT_TAG not in tags:
+                _err(errors, f"{pid}: 真正端侧 Agent 缺少 {DIRECT_EDGE_AGENT_TAG} 标签")
+            if not _has_readable_chinese(evidence):
+                _err(errors, f"{pid}: 真正端侧 Agent 缺少可读的 edge_agent_evidence 中文证据")
+            try:
+                relevance = int(paper.get("score_relevance"))
+            except (TypeError, ValueError):
+                relevance = -1
+            if relevance < 8:
+                _err(errors, f"{pid}: 真正端侧 Agent 的 score_relevance 必须为 8-10")
+        else:
+            if DIRECT_EDGE_AGENT_TAG in tags:
+                _err(errors, f"{pid}: 非端侧 Agent 不得使用 {DIRECT_EDGE_AGENT_TAG} 标签")
+            if evidence:
+                _err(errors, f"{pid}: 非端侧 Agent 的 edge_agent_evidence 必须为空")
+
+
+def check_arxiv_revision_evidence(root: Path, errors: list) -> None:
+    """An arXiv update date is recall evidence, not proof of a weekly event."""
+    for paper in _papers_from_index(root):
+        if paper.get("arxiv_date_basis") != "updated":
+            continue
+        pid = paper.get("id") or "<missing-id>"
+        note = str(paper.get("arxiv_revision_note") or "")
+        if not _has_readable_chinese(note):
+            _err(errors, f"{pid}: arXiv 更新稿缺少可读的 arxiv_revision_note 实质变化说明")
 
 
 def check_links(root: Path, errors: list) -> None:
@@ -226,6 +281,8 @@ def _read_json(path: Path, default=None):
 def run_all(root: Path) -> list:
     errors = []
     check_contract(root, errors)
+    check_edge_agent_classification(root, errors)
+    check_arxiv_revision_evidence(root, errors)
     check_recommendation_readability(root, errors)
     check_links(root, errors)
     check_highlights(root, errors)

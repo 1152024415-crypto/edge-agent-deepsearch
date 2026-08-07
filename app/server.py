@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import hmac
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -51,6 +53,17 @@ def _deploy_to_ghpages() -> None:
         if build.returncode != 0:
             print(f"[DEPLOY] build.py failed: {build.stderr.strip()}", flush=True)
             return
+        for script_name in ("build_notes.py", "build_snn.py", "build_waic.py"):
+            auxiliary = subprocess.run(
+                [sys.executable, str(ROOT / "agent" / script_name)],
+                cwd=str(ROOT), capture_output=True, text=True, timeout=60,
+            )
+            if auxiliary.returncode != 0:
+                details = "\n".join(
+                    part.strip() for part in (auxiliary.stdout, auxiliary.stderr) if part.strip()
+                )
+                print(f"[DEPLOY] {script_name} failed: {details}", flush=True)
+                return
         site_dir = ROOT / "site"
         if not site_dir.exists():
             print("[DEPLOY] site/ missing after build", flush=True)
@@ -151,8 +164,9 @@ def _trigger_deploy() -> None:
 
 
 class ResearchServer(ThreadingHTTPServer):
-    def __init__(self, server_address, handler_cls, db_path: Path):
+    def __init__(self, server_address, handler_cls, db_path: Path, publish_token: str | None):
         self.db_path = Path(db_path)
+        self.publish_token = publish_token or ""
         storage.init_db(self.db_path)
         super().__init__(server_address, handler_cls)
 
@@ -188,6 +202,11 @@ class Handler(BaseHTTPRequestHandler):
         if not raw:
             return {}
         return json.loads(raw.decode("utf-8"))
+
+    def is_authorized_writer(self) -> bool:
+        expected = self.server.publish_token
+        supplied = self.headers.get("Authorization", "")
+        return bool(expected) and hmac.compare_digest(supplied, f"Bearer {expected}")
 
     def do_OPTIONS(self):
         self.send_response(204)
@@ -257,6 +276,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urlparse(self.path)
+        if not self.is_authorized_writer():
+            status = 401 if self.server.publish_token else 503
+            self.send_json(status, {"ok": False, "error": "authorized publisher token required"})
+            return
         try:
             payload = self.read_json()
             if parsed.path == "/api/research-runs":
@@ -322,8 +345,17 @@ def render_detail(paper: dict) -> str:
 </main></body></html>"""
 
 
-def create_server(address=("127.0.0.1", 8000), db_path: str | Path = ROOT / "app" / "papers.sqlite"):
-    return ResearchServer(address, Handler, Path(db_path))
+def create_server(
+    address=("127.0.0.1", 8000),
+    db_path: str | Path = ROOT / "app" / "papers.sqlite",
+    publish_token: str | None = None,
+):
+    return ResearchServer(
+        address,
+        Handler,
+        Path(db_path),
+        publish_token if publish_token is not None else os.environ.get("EDGE_PUBLISH_TOKEN"),
+    )
 
 
 def main(argv=None) -> int:
@@ -333,6 +365,10 @@ def main(argv=None) -> int:
     parser.add_argument("--db", default=str(ROOT / "app" / "papers.sqlite"),
                         help="SQLite path; must match create_server default so published papers are visible")
     args = parser.parse_args(argv)
+
+    if not os.environ.get("EDGE_PUBLISH_TOKEN"):
+        print("[SERVER] EDGE_PUBLISH_TOKEN is required for all write APIs", file=sys.stderr)
+        return 2
 
     httpd = create_server((args.host, args.port), Path(args.db))
     print(f"Serving on http://{args.host}:{httpd.server_port}/")

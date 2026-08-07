@@ -6,7 +6,7 @@
 
 Returns papers from the latest accepted research run only. Historical runs may stay in SQLite for audit/debugging, but the display page must not mix old runs into the current radar.
 
-返回当前服务器中可展示的论文/官方动态/开源大项目列表。排序按 `source_tier` 优先级（官方动态 > 开源大项目 > 公司项目 > 学校顶会 > 学校预印本）+ `score` 降序。
+返回当前服务器中可展示的论文/官方动态/开源大项目列表。排序先按经核实的`edge_agent_scope`（手机 > PC > 其他端侧 > 非端侧Agent），再按 `source_tier` 优先级（官方动态 > 开源大项目 > 公司项目 > 学校顶会 > 学校预印本）+ `score` 降序。
 前端按标签 chip 多选筛选展示（多标签，一个工作可挂多个 tag）；`source_tier` 用 badge 标注。
 
 Query:
@@ -36,6 +36,8 @@ Response:
       "source_tier": "学校顶会",
       "open_source": false,
       "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
+      "edge_agent_scope": "手机",
+      "edge_agent_evidence": "规划、记忆和工具执行均在手机本地运行。",
       "insight_person": "",
       "wiki_url": "",
       "authors": "",
@@ -72,6 +74,8 @@ Response:
 
 主 agent 用 `agent/publish_results.py` 调用。服务器会再次校验 payload。
 
+请求必须携带 `Authorization: Bearer <EDGE_PUBLISH_TOKEN>`；服务端未配置令牌时所有写 API 返回 503，令牌缺失或错误返回 401。payload 必须包含完整 `collection_manifest`，其中候选文件条数、文件 SHA-256 和逐记录指纹已由 `agent/attest_candidates.py` 生成；每条 paper 的 `candidate_source` + `candidate_ref` 必须命中对应候选记录。
+
 Request:
 
 ```json
@@ -95,6 +99,8 @@ Request:
       "source_tier": "学校顶会",
       "open_source": false,
       "tags": ["方向:端侧agent", "方向:记忆", "方向:评测基准"],
+      "edge_agent_scope": "手机",
+      "edge_agent_evidence": "规划、记忆和工具执行均在手机本地运行。",
       "insight_person": "",
       "wiki_url": "",
       "recommendation": "推荐",

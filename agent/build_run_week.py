@@ -8,16 +8,17 @@ Reads:
   research_runs/candidates-github.json     (GitHub whitelist subagent)
   research_runs/candidates-vendor.json     (vendor blog subagent)
 
-Converts each to the 方案 B run schema (2-dim score + 4-dim tags + source_tier),
-auto-tags + scores via build_run_from_arxiv.auto_tags / is_edge heuristic,
-detects company affiliations in arxiv author strings to mark 公司项目 (volume
-boost the user asked for), dedups by id, and writes research_runs/run-<ts>.json.
+Validates the four-source collection manifest, converts candidates to the
+方案 B schema, keeps direct edge work plus relevant adjacent inference/deployment
+work, and writes research_runs/run-<ts>.json.  Initial scores are never
+recommendations; the main agent must verify final scores and affiliation evidence.
 
-Re-run after editing candidates. Tolerates missing files (skips with a warning)
-so it can be run incrementally as subagents finish.
+Re-run after editing candidates. Historical recovery may skip missing files only
+with an explicit bypass; normal weekly assembly requires all four artifacts.
 """
 from __future__ import annotations
 
+import argparse
 import datetime
 import json
 import re
@@ -29,11 +30,21 @@ sys.path.insert(0, str(ROOT / "agent"))
 sys.path.insert(0, str(ROOT))
 
 from build_run_from_arxiv import auto_tags, first_sentence, TAG_RULES  # noqa: E402
+from research_collection import (  # noqa: E402
+    CollectionCoverageError,
+    candidate_output_identity,
+    candidate_record_ref,
+    is_required_github_project,
+    load_collection_manifest,
+    parse_collection_date,
+    validate_candidate_artifacts,
+)
 
 ARXIV_CAND = ROOT / ".superpowers" / "sdd" / "arxiv_candidates.json"
 HF_CAND = ROOT / "research_runs" / "candidates-hf.json"
 GH_CAND = ROOT / "research_runs" / "candidates-github.json"
 VENDOR_CAND = ROOT / "research_runs" / "candidates-vendor.json"
+COLLECTION_MANIFEST = ROOT / "research_runs" / "collection-manifest.json"
 
 # keyword -> (vendors english name, source_tier). From vendor-whitelist.md.
 # Used to detect company affiliation in arxiv author strings / summaries so
@@ -80,6 +91,18 @@ def detect_affil(text: str) -> str | None:
     return None
 
 
+def explicit_affiliation_text(candidate: dict) -> str:
+    """Return only declared affiliation evidence, never title/summary model mentions."""
+    values = []
+    for field in ("affiliation", "affiliations", "author_affiliations", "institution", "institutions"):
+        value = candidate.get(field)
+        if isinstance(value, list):
+            values.extend(str(item) for item in value if item)
+        elif value:
+            values.append(str(value))
+    return " ".join(values)
+
+
 def _coerce_authors(v) -> str:
     """authors may be a list (HF) or '; '-joined string (arXiv) — coerce to str."""
     if isinstance(v, list):
@@ -87,46 +110,139 @@ def _coerce_authors(v) -> str:
     return str(v) if v else ""
 
 
+DIRECT_RE = re.compile(
+    r"on-device|on device|edge[- ](?:ai|agents?|llms?|models?|inference|comput|device|system|hardware|"
+    r"platform|deployment|accelerator|gpu|npu|server)|"
+    r"mobile[- ](?:ai|agents?|llms?|models?|inference|deployment|device|hardware|npu|rag)|"
+    r"mobile[- ](?:autonomous[- ])?agents?|"
+    r"embedded[- ](?:ai|agents?|llms?|models?|neural networks?|inference|system|device|hardware|"
+    r"platform|processor|accelerator)|device[- ]side|local[- ](?:ai|llms?|models?)[- ](?:inference|execution|serving)|"
+    r"\biot\b|\bnpu\b|\bevks?\b|hexagon htp|dragonwing|\b(?:smart)?phone\b|"
+    r"microcontroller|neuromorphic|loihi|spinnaker|raspberry|"
+    r"jetson|smartwatch|wearable|\bonboard\b|tinyml|low.?power|resource.?constrain|"
+    r"edge computing|edge ai|edge inference|mobile inference|\bmcus?\b|\bfpga\b|"
+    r"端侧|端上|边缘(?:设备|推理|计算|系统|芯片)|设备端|离线运行|本地运行|"
+    r"llama\.cpp|executorch|mlc-llm|onnx runtime|mediapipe|litert|core ml|openvino|"
+    r"\bmnn\b|\bncnn\b",
+    re.I,
+)
+AI_RE = re.compile(
+    r"\bai\b|\bllms?\b|language models?|foundation models?|diffusion models?|transformer|"
+    r"neural network|spiking neural|\bsnns?\b|generative ai|\bagents?\b|\bagentic\b|\bassistants?\b|\bvlms?\b|"
+    r"vision-language|machine learning|deep learning|\binference\b|tinyml|executorch|"
+    r"llama\.cpp|litert|core ml|openvino|computer vision|object detection|"
+    r"speech recognition|keyword spotting|\byolo\b|image classification|"
+    r"人工智能|语言模型|神经网络|生成式|推理",
+    re.I,
+)
+STACK_RE = re.compile(
+    r"quantiz|(?:model|weight|channel|token|kv|attention|expert|network|neural|structured|unstructured)"
+    r"[- ]prun\w*|prun\w*[^.]{0,30}(?:model|weight|channel|token|kv|attention|expert|network|neural)|"
+    r"(?:knowledge|model|self)[- ]?distill|distillation|speculative decoding|"
+    r"kv.?cache|small model|small language|\bsnn\b|"
+    r"model compression|efficient inference|inference acceleration|"
+    r"(?:model|llm|vlm|inference|on-device|edge|mobile) deployment|"
+    r"deploy(?:ing|ed)? (?:a |the )?(?:model|llm|vlm|neural network|inference engine|runtime)|runtime|"
+    r"serving|latency|throughput|"
+    r"(?:model|llm|vlm|inference|decoding|generation|training|hardware)[- ]accelerat\w*|"
+    r"accelerat\w*[^.]{0,30}(?:model|llm|vlm|inference|decoding|generation|runtime|hardware)|"
+    r"hardware.?friendly|co.?design|\bmoe\b|"
+    r"sparse attention|efficient attention|federat|offload|compil|memory footprint|"
+    r"energy[- ](?:efficient|efficiency|aware|consumption|saving|budget)|power consumption|"
+    r"real.?time (?:inference|serving|processing|execution)|"
+    r"token compression|memory compress|compress\w*[^.]{0,40}(?:long.?term )?memory|"
+    r"(?:agent|assistant)[^.]{0,50}memory|memory[^.]{0,50}(?:agent|assistant)|"
+    r"agent(?:ic)?[- ](?:system|training|infrastructure|platform)|agentic modeling|"
+    r"量化|剪枝|蒸馏|压缩|缓存|低延迟|吞吐|运行时|持续推理|"
+    r"(?:模型|推理|端侧|设备端)部署|(?:推理|模型|硬件)加速|加速(?:推理|部署)",
+    re.I,
+)
+GUI_RE = re.compile(r"gui agent|computer use|screen.?click|screen.?tap|ui automation|web navigation", re.I)
+GUI_SYSTEM_RE = re.compile(
+    r"on-device inference|edge inference|\bnpu\b|\bmcu\b|embedded|runtime|serving|latency|"
+    r"quantiz|model compression|low.?power|resource.?constrain|system architecture|privacy|security|safety",
+    re.I,
+)
+
+
+def classify_research_relevance(text: str) -> str:
+    """Classify broad collection scope without using novelty as a deletion gate."""
+    value = text or ""
+    if GUI_RE.search(value) and not GUI_SYSTEM_RE.search(value):
+        return "irrelevant"
+    if DIRECT_RE.search(value) and AI_RE.search(value):
+        return "direct"
+    if AI_RE.search(value) and STACK_RE.search(value):
+        return "adjacent"
+    return "irrelevant"
+
+
 def is_edge_text(text: str) -> bool:
-    # Broad edge-AI relevance check — not just device keywords, but the full
-    # tech stack (efficient inference, quantization, pruning, speculative, KV cache,
-    # small models, federated, deployment, etc.). Catches papers relevant to
-    # edge/on-device AI even if they don't explicitly say "on-device".
-    return bool(re.search(
-        r"on-device|on device|\bedge\b|mobile|embedded|\biot\b|npu|phone|"
-        r"microcontroller|neuromorphic|loihi|spinnaker|raspberry|jetson|"
-        r"smartwatch|wearable|drone|robot|"
-        r"efficient inference|lightweight|small model|small language|\bsnn\b|"
-        r"quantiz|prun|distill|speculative|kv.?cache|federated|tinyml|"
-        r"model compression|inference acceleration|low.?power|resource.?constrain|"
-        r"edge computing|edge ai|edge inference|mobile inference|"
-        r"spiking neural|spikformer|"
-        r"deploy|runtime|serving|real.?time|latency|throughput|"
-        r"accelerat|hardware.?friendly|co.?design|asic|fpga", text))
+    """Backward-compatible broad inclusion check used by existing callers/tests."""
+    return classify_research_relevance(text) != "irrelevant"
+
+
+def candidate_tags(title: str, summary: str, relevance: str) -> list[str]:
+    # 自动关键词只负责召回，不具备认定“真正端侧 Agent”的权限。
+    # 该标签必须由主 Agent 阅读来源并填写 edge_agent_scope 后人工加入。
+    tags = [tag for tag in auto_tags(title, summary) if tag != "方向:端侧agent"]
+    return tags or ["方向:高效推理"]
+
+
+def public_score_reason(
+    relevance: str,
+    tags: list[str],
+    *,
+    source_tier: str,
+    vendor: str = "",
+) -> str:
+    """Build a reader-facing scoring explanation, never pipeline status text."""
+    topics = []
+    for tag in tags:
+        value = tag.split(":", 1)[-1].strip()
+        if value and value not in topics:
+            topics.append(value)
+    focus = "、".join(topics[:3]) or "高效推理"
+    if source_tier == "官方动态":
+        return f"来自{vendor or '厂商'}官方发布，内容直接涉及{focus}，因此作为本周官方动态收录。"
+    if source_tier == "开源大项目":
+        return f"白名单开源项目的正式版本更新，重点涉及{focus}，可直接跟踪落地能力。"
+    if relevance == "direct":
+        reason = f"明确涉及端侧或资源受限设备，相关性较高；主要贡献集中在{focus}。"
+    else:
+        reason = f"属于{focus}等端侧可迁移技术，但未明确端侧部署，因此相关度按中等计。"
+    if source_tier == "公司项目" and vendor:
+        return f"论文机构证据明确包含 {vendor}；{reason}"
+    return reason
 
 
 def convert_arxiv(c: dict) -> dict | None:
     aid = re.sub(r"v\d+$", "", str(c.get("id") or "")).strip()
-    title = (c.get("title") or "").strip()
+    title, paper_url, source_date = candidate_output_identity("arxiv", c)
     summary = c.get("abstract") or c.get("summary") or ""
     authors = _coerce_authors(c.get("authors"))
     text = (title + " " + summary).lower()
-    # Filter: only keep arxiv papers with edge-AI relevance (broad sweep catches
-    # ALL cs.AI/cs.LG papers; many are pure theory/cloud/medical — drop those).
-    # HF/vendor/github papers are NOT filtered (they're curated/official).
-    if not is_edge_text(text):
+    # Broad collection keeps direct and adjacent AI inference/deployment work.
+    # Only completely unrelated keyword collisions are removed here.
+    relevance = classify_research_relevance(text)
+    if relevance == "irrelevant":
         return None
-    rel = 7 if is_edge_text(text) else 5
+    rel = 8 if relevance == "direct" else 5
     contrib = 5
-    tags = auto_tags(title, summary)
-    # source_tier: detect company affiliation -> 公司项目, else 学校预印本
-    vendor = detect_affil(authors + " " + title + " " + summary)
+    tags = candidate_tags(title, summary, relevance)
+    # Only an explicit affiliation field may promote a paper to 公司项目.
+    affiliation_evidence_url = str(c.get("affiliation_evidence_url") or "").strip()
+    vendor = detect_affil(explicit_affiliation_text(c)) if affiliation_evidence_url else None
     if vendor:
         tier = "公司项目"
-        score_reason = f"auto-converted；affiliation 命中 {vendor}（作者/摘要关键词匹配，待 OpenReview/Scholar 核实）"
     else:
         tier = "学校预印本"
-        score_reason = "auto-converted（乙方案首版）；affiliation/精修大白话/精调分数待后续补"
+    score_reason = public_score_reason(
+        relevance,
+        tags,
+        source_tier=tier,
+        vendor=vendor or "",
+    )
     return {
         "id": f"arxiv-{aid}",
         "title": title,
@@ -134,8 +250,8 @@ def convert_arxiv(c: dict) -> dict | None:
         "abstract": first_sentence(summary),
         "effects": "未报告",
         "mechanism": "未报告",
-        "paper_url": f"https://arxiv.org/abs/{aid}",
-        "date": (c.get("date") or c.get("published") or "")[:10],
+        "paper_url": paper_url,
+        "date": source_date,
         "score": rel + contrib,
         "score_relevance": rel,
         "score_contribution": contrib,
@@ -143,12 +259,20 @@ def convert_arxiv(c: dict) -> dict | None:
         "source_tier": tier,
         "open_source": bool(re.search(r"github\.com|github\.io", summary, re.I)),
         "tags": tags,
+        "edge_agent_scope": "待核实",
+        "edge_agent_evidence": "",
         "authors": authors,
         "vendors": vendor or "",
+        "affiliation_evidence_url": affiliation_evidence_url if vendor else "",
         "venue": "arXiv",
         # 自动汇集只负责扩充完整收录；“推荐”必须由主 Agent 阅读后人工判断。
         "recommendation": "纳入",
         "recommendation_reason": "",
+        "candidate_source": "arxiv",
+        "candidate_ref": candidate_record_ref(c),
+        "arxiv_date_basis": str(c.get("date_basis") or "submitted"),
+        # 更新稿必须由主 Agent 比对旧版，确认有实质变化后才能填写并发布。
+        "arxiv_revision_note": "",
     }
 
 
@@ -169,48 +293,60 @@ def convert_hf(c: dict, seen_arxiv: set) -> dict | None:
     else:
         pid = c.get("id") or f"hf-{re.sub(r'[^a-z0-9]+', '-', (c.get('title') or 'x').lower())[:60]}"
         paper_url = url or ""
-    title = (c.get("title") or "").strip()
+    title, identity_url, source_date = candidate_output_identity("huggingface", c)
+    paper_url = identity_url
     summary = c.get("abstract") or ""
     authors = _coerce_authors(c.get("authors"))
     text = (title + " " + summary).lower()
-    rel = 7 if is_edge_text(text) else 6  # HF精选质量高，基础分稍高
+    relevance = classify_research_relevance(text)
+    if relevance == "irrelevant":
+        return None
+    rel = 8 if relevance == "direct" else 5
     contrib = 5
-    tags = auto_tags(title, summary)
-    vendor = detect_affil(authors + " " + title + " " + summary)
+    tags = candidate_tags(title, summary, relevance)
+    affiliation_evidence_url = str(c.get("affiliation_evidence_url") or "").strip()
+    vendor = detect_affil(explicit_affiliation_text(c)) if affiliation_evidence_url else None
     tier = "公司项目" if vendor else "学校预印本"
+    score_reason = public_score_reason(
+        relevance,
+        tags,
+        source_tier=tier,
+        vendor=vendor or "",
+    )
     return {
         "id": pid, "title": title, "title_zh": "",
         "abstract": first_sentence(summary), "effects": "未报告", "mechanism": "未报告",
-        "paper_url": paper_url, "date": (c.get("date") or "")[:10],
+        "paper_url": paper_url, "date": source_date,
         "score": rel + contrib, "score_relevance": rel, "score_contribution": contrib,
-        "score_reason": f"HF Daily Papers 精选(votes={c.get('votes','?')})；affiliation {'命中 '+vendor if vendor else '待核实'}",
+        "score_reason": score_reason,
         "source_tier": tier,
         "open_source": bool(re.search(r"github\.com|github\.io", summary, re.I)),
         "tags": tags, "authors": authors, "vendors": vendor or "",
+        "edge_agent_scope": "待核实", "edge_agent_evidence": "",
+        "affiliation_evidence_url": affiliation_evidence_url if vendor else "",
         "venue": "HuggingFace Daily", "recommendation": "纳入", "recommendation_reason": "",
+        "candidate_source": "huggingface", "candidate_ref": candidate_record_ref(c),
     }
 
 
-def convert_github(c: dict) -> dict:
+def convert_github(c: dict) -> dict | None:
     repo = c.get("repo") or ""
     tag = c.get("tag") or ""
-    url = c.get("release_url") or f"https://github.com/{repo}"
-    title = (c.get("title") or f"{repo} {tag}").strip()
+    if not is_required_github_project(repo):
+        return None
+    title, url, source_date = candidate_output_identity("github", c)
     summary = c.get("summary") or ""
-    tier = c.get("tier") or "开源大项目"
-    # tier from subagent: model-lab org -> 公司项目, whitelist -> 开源大项目
-    vendor = ""
-    if tier == "公司项目":
-        for pat, name in AFFIL:
-            if re.search(pat, repo + " " + summary, re.I):
-                vendor = name
-                break
+    # GitHub candidates are a single, explicit facet: whitelisted big projects.
+    tier = "开源大项目"
+    vendor = str(c.get("vendor") or "")
+    affiliation_evidence_url = ""
     text = (title + " " + summary).lower()
-    rel = 8 if re.search(r"on-device|edge|mobile|embedded|npu|phone|mcu|jetson|"
-                         r"raspberry|wearable|agent|robot|inference|llama\.cpp|"
-                         r"executorch|mlc|onnx|mediapipe|litert|mlx|powerinfer", text) else 6
+    relevance = classify_research_relevance(text)
+    if relevance == "irrelevant":
+        return None
+    rel = 8 if relevance == "direct" else 5
     contrib = 6
-    tags = auto_tags(title, summary)
+    tags = candidate_tags(title, summary, relevance)
     if not any(t == "方向:推理框架" for t in tags):
         tags.append("方向:推理框架")
     tags = tags[:8]
@@ -221,26 +357,29 @@ def convert_github(c: dict) -> dict:
         "title_zh": "",
         "abstract": first_sentence(summary) or summary[:160],
         "effects": "未报告", "mechanism": "未报告",
-        "paper_url": url, "date": (c.get("date") or "")[:10],
+        "paper_url": url, "date": source_date,
         "score": rel + contrib, "score_relevance": rel, "score_contribution": contrib,
-        "score_reason": c.get("summary", "")[:120] or "GitHub 白名单大项目本周 release",
+        "score_reason": public_score_reason(relevance, tags, source_tier=tier, vendor=vendor),
         "source_tier": tier, "open_source": True,
         "tags": tags, "authors": owner, "vendors": vendor,
+        "edge_agent_scope": "待核实", "edge_agent_evidence": "",
+        "affiliation_evidence_url": affiliation_evidence_url,
         "venue": "GitHub", "recommendation": "纳入", "recommendation_reason": "",
+        "candidate_source": "github", "candidate_ref": candidate_record_ref(c),
     }
 
 
-def convert_vendor(c: dict) -> dict:
+def convert_vendor(c: dict) -> dict | None:
     vendor = c.get("vendor") or ""
-    title = (c.get("title") or "").strip()
+    title, url, source_date = candidate_output_identity("vendors", c)
     summary = c.get("summary") or ""
-    url = c.get("url") or ""
     text = (title + " " + summary).lower()
-    rel = 8  # 官方动态默认高相关
+    relevance = classify_research_relevance(text)
+    if relevance == "irrelevant":
+        return None
+    rel = 9 if relevance == "direct" else 5
     contrib = 5
-    tags = auto_tags(title, summary)
-    if not any(t.startswith("方向:") for t in tags):
-        tags.insert(0, "方向:端侧agent")
+    tags = candidate_tags(title, summary, relevance)
     tags = tags[:8]
     return {
         "id": f"vendor-{re.sub(r'[^a-z0-9]+','-',(vendor+'-'+title).lower())[:70]}",
@@ -248,31 +387,74 @@ def convert_vendor(c: dict) -> dict:
         "title_zh": "",
         "abstract": first_sentence(summary) or summary[:160],
         "effects": "未报告", "mechanism": "未报告",
-        "paper_url": url, "date": (c.get("date") or "")[:10],
+        "paper_url": url, "date": source_date,
         "score": rel + contrib, "score_relevance": rel, "score_contribution": contrib,
-        "score_reason": f"{vendor} 官方动态（命中官方域名白名单）",
+        "score_reason": public_score_reason(
+            relevance,
+            tags,
+            source_tier="官方动态",
+            vendor=vendor,
+        ),
         "source_tier": "官方动态", "open_source": False,
         "tags": tags, "authors": vendor, "vendors": vendor,
+        "edge_agent_scope": "待核实", "edge_agent_evidence": "",
+        "affiliation_evidence_url": "",
         "venue": vendor, "recommendation": "纳入", "recommendation_reason": "",
+        "candidate_source": "vendors", "candidate_ref": candidate_record_ref(c),
     }
 
 
-def load(path: Path):
+def load(path: Path, required: bool = False):
     if not path.exists():
+        if required:
+            raise CollectionCoverageError(f"required candidate artifact missing: {path}")
         print(f"[ASSEMBLE] WARN missing: {path}")
         return []
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        value = json.loads(path.read_text(encoding="utf-8"))
     except Exception as e:
+        if required:
+            raise CollectionCoverageError(f"required candidate artifact is invalid: {path}: {e}") from e
         print(f"[ASSEMBLE] WARN bad JSON {path}: {e}")
         return []
+    if not isinstance(value, list):
+        if required:
+            raise CollectionCoverageError(f"required candidate artifact must be a JSON list: {path}")
+        print(f"[ASSEMBLE] WARN candidate JSON is not a list: {path}")
+        return []
+    return value
 
 
-def main() -> int:
-    arxiv = load(ARXIV_CAND)
-    hf = load(HF_CAND)
-    gh = load(GH_CAND)
-    vendor = load(VENDOR_CAND)
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description="Assemble a weekly research run from four source files.")
+    parser.add_argument("--today", help="Override collection date as YYYY-MM-DD")
+    parser.add_argument("--manifest", default=str(COLLECTION_MANIFEST))
+    parser.add_argument(
+        "--allow-incomplete-coverage",
+        action="store_true",
+        help="Historical recovery only; normal weekly research must never use this flag.",
+    )
+    args = parser.parse_args(argv)
+    run_date = parse_collection_date(args.today)
+    manifest = None
+    if not args.allow_incomplete_coverage:
+        manifest = load_collection_manifest(args.manifest, today=run_date)
+
+    require_artifacts = not args.allow_incomplete_coverage
+    arxiv = load(ARXIV_CAND, required=require_artifacts)
+    hf = load(HF_CAND, required=require_artifacts)
+    gh = load(GH_CAND, required=require_artifacts)
+    vendor = load(VENDOR_CAND, required=require_artifacts)
+    if manifest is not None:
+        validate_candidate_artifacts(
+            manifest,
+            {
+                "arxiv": ARXIV_CAND,
+                "huggingface": HF_CAND,
+                "github": GH_CAND,
+                "vendors": VENDOR_CAND,
+            },
+        )
 
     seen_arxiv_ids = {re.sub(r"v\d+$", "", str(c.get("id") or "")) for c in arxiv}
     papers = []
@@ -281,9 +463,13 @@ def main() -> int:
         if p:
             papers.append(p)
     for c in vendor:
-        papers.append(convert_vendor(c))
+        p = convert_vendor(c)
+        if p:
+            papers.append(p)
     for c in gh:
-        papers.append(convert_github(c))
+        p = convert_github(c)
+        if p:
+            papers.append(p)
     for c in hf:
         e = convert_hf(c, seen_arxiv_ids)
         if e:
@@ -315,6 +501,8 @@ def main() -> int:
         "generated_at": datetime.datetime.now().astimezone().isoformat(),
         "papers": uniq,
     }
+    if manifest is not None:
+        payload["collection_manifest"] = manifest
     out = ROOT / "research_runs" / f"run-{ts}.json"
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 

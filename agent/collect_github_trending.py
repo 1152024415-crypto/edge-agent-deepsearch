@@ -7,12 +7,13 @@ Two sources:
 2. api.github.com/search/repositories (created:>DATE + edge keywords, sort=stars) — uses
    GITHUB_PERSONAL_ACCESS_TOKEN env var if set (avoids rate limit).
 Filter for端侧 AI relevance, output data/_github_trending.json with repo + stars + url + created.
-Reusable each week — change DATE_FROM and keywords as needed.
+The seven-date window is computed at runtime; no weekly source edit is required.
 """
+import argparse
 import urllib.request, urllib.parse, re, sys, json, time, os
 from datetime import datetime, timezone
 
-DATE_FROM = "2026-07-16"  # created:> this date
+from research_collection import collection_window, parse_collection_date, update_source_coverage
 
 EDGE_KW = [
   "on-device","on device","edge","mobile","npu","embedded","mcu","iot","llm","agent",
@@ -54,8 +55,8 @@ def parse_trending(html):
         out.append((full,desc))
     return out
 
-def search_api(query, per_page=30):
-    q=f"{query} created:>{DATE_FROM}"
+def search_api(query, date_from, per_page=30):
+    q=f"{query} created:>={date_from}"
     url=f"https://api.github.com/search/repositories?{urllib.parse.urlencode({'q':q,'sort':'stars','order':'desc','per_page':per_page})}"
     txt,st=fetch(url)
     if not txt: return []
@@ -65,7 +66,15 @@ def search_api(query, per_page=30):
                  it.get('html_url',''), it.get('created_at','')[:10]) for it in d.get('items',[])]
     except: return []
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Refresh weekly edge-AI GitHub trending data.")
+    parser.add_argument("--today", help="Override collection date as YYYY-MM-DD")
+    parser.add_argument("--manifest", default="research_runs/collection-manifest.json")
+    args = parser.parse_args(argv)
+    run_date = parse_collection_date(args.today)
+    window_start, window_end, _ = collection_window(run_date)
+    date_from = window_start.isoformat()
+
     repos={}  # full_name -> {desc, stars, url, created, source}
     # 1) trending
     for lang in ["","/python","/c","/c%2B%2B","/rust","/jupyter-notebook","/swift","/typescript"]:
@@ -79,7 +88,7 @@ def main():
     # 2) search API for端侧 keywords created this week
     for q in ['on-device LLM','edge AI inference','mobile LLM agent','NPU inference',
               'speculative decoding','local LLM engine','edge device agent','llama.cpp executorch']:
-        for full,desc,stars,url,created in search_api(q):
+        for full,desc,stars,url,created in search_api(q, date_from):
             if full not in repos or repos[full]['stars'] is None:
                 repos[full]={"desc":desc,"stars":stars,"url":url,"created":created,"source":"search"}
         time.sleep(2)
@@ -91,7 +100,16 @@ def main():
         out.append({"repo":full,"desc":r['desc'][:140],"stars":r['stars'],"url":r['url'],"created":r['created'],"source":r['source']})
     out.sort(key=lambda x:(x['stars'] or 0), reverse=True)
     json.dump(out, open("data/_github_trending.json","w",encoding="utf-8"), ensure_ascii=False, indent=2)
-    print(f"# {len(out)}端侧-AI repos (trending + created>{DATE_FROM})")
+    update_source_coverage(
+        args.manifest,
+        "github",
+        {
+            "trending_checked": True,
+            "trending_candidate_count": len(out),
+        },
+        today=run_date,
+    )
+    print(f"# {len(out)}端侧-AI repos (trending + created>={date_from}, through {window_end})")
     for r in out[:40]:
         print(f"  {str(r['stars'] or '?'):>4}★ [{r['source']}] {r['repo']}  -- {r['desc'][:60]}")
         print(f"      {r['url']}")

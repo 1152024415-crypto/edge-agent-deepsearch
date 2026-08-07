@@ -2,7 +2,7 @@
 
 ## Active
 
-- [ ] 给 `app/server.py` 增加鉴权配置，避免公开写入 `POST /api/research-runs`。
+- [x] 给 `app/server.py` 增加 `EDGE_PUBLISH_TOKEN` 鉴权，避免公开写入所有 POST 接口。
 - [ ] 增加真实调研 run fixture，用于端到端展示 10 到 20 篇论文。
 - [ ] 给 `GET /api/papers` 增加 `window=7d` 参数。
 

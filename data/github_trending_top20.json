@@ -1,162 +1,162 @@
 [
   {
     "rank": 1,
-    "repo": "Tencent/AngelSpec",
-    "url": "https://github.com/Tencent/AngelSpec",
-    "total": "183★",
-    "week": "183",
-    "desc": "统一的 torch 原生训练框架，支持 MTP 和块并行投机解码。"
+    "repo": "patchy631/time-to-first-token",
+    "url": "https://github.com/patchy631/time-to-first-token",
+    "total": "338★",
+    "week": "338",
+    "desc": "A 10-week, 30-minutes-a-day roadmap for LLM inference serving and optimization. vLLM, SGLang, quantization, speculative decoding, benchmarki"
   },
   {
     "rank": 2,
-    "repo": "bitwize-ai/Logue",
-    "url": "https://github.com/bitwize-ai/Logue",
-    "total": "134★",
-    "week": "134",
-    "desc": "Mac 端隐私优先的 AI 会议笔记和写作助手：本地转写、智能纪要、待办提取、60+ 写作模式。"
+    "repo": "allover326/deepseek-v4-cmp170hx",
+    "url": "https://github.com/allover326/deepseek-v4-cmp170hx",
+    "total": "33★",
+    "week": "33",
+    "desc": "DeepSeek-V4-Flash-0731 on 4x CMP 170HX (sm_80): 98 tok/s decode, ~5300 tok/s prefill. DSpark speculative decoding under pipeline parallelism"
   },
   {
     "rank": 3,
-    "repo": "MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
-    "url": "https://github.com/MiaAI-Lab/Laguna-S-2.1-DGX-Spark-RTX-6000-PRO",
-    "total": "75★",
-    "week": "75",
-    "desc": "面向 poolside/Laguna-S-2.1-NVFP4 的 vLLM 0.25.1 serving 栈，带 DFlash 投机解码，支持 DGX Spark 和 RTX 6000 PRO。"
+    "repo": "Badtheorylabs/Macaw",
+    "url": "https://github.com/Badtheorylabs/Macaw",
+    "total": "20★",
+    "week": "20",
+    "desc": "Macaw — on-device AI agent for macOS. 2.7B LFM2.5 fine-tune, MLX 4-bit, 97 macOS tools, no cloud."
   },
   {
     "rank": 4,
-    "repo": "patchy631/time-to-first-token",
-    "url": "https://github.com/patchy631/time-to-first-token",
-    "total": "53★",
-    "week": "53",
-    "desc": "10 周、每天 30 分钟的 LLM 推理 serving 与优化路线图，覆盖 vLLM、SGLang、量化、投机解码和基准测试。"
+    "repo": "eric8810/deepseek-v4-deploy",
+    "url": "https://github.com/eric8810/deepseek-v4-deploy",
+    "total": "13★",
+    "week": "13",
+    "desc": "DeepSeek-V4-Flash-0731 deployment on 2x RTX PRO 6000 Blackwell (SM120) with vLLM PR #41834 fork + DSpark speculative decoding. 无海外网络环境下的镜像源解"
   },
   {
     "rank": 5,
-    "repo": "fypklanfanqie/local-llm-with-character-setting-Arknights",
-    "url": "https://github.com/fypklanfanqie/local-llm-with-character-setting-Arknights",
-    "total": "43★",
-    "week": "43",
-    "desc": "一款运行在安卓设备上的 LLM 对话助手应用。你可以自行下载并管理模型，自由定制角色人设，并随时在本地推理（部分机型支持 GPU/NPU 加速）与云端模型之间切换。同时内置 TTS 语音合成功能，让对话更加鲜活。"
+    "repo": "lrozewicz/vLLM-Moet-GB10",
+    "url": "https://github.com/lrozewicz/vLLM-Moet-GB10",
+    "total": "10★",
+    "week": "10",
+    "desc": "Run DeepSeek-V4-Flash 304B on a single NVIDIA GB10 / DGX Spark - 2-bit MoE planes, FP4 quality recovery, speculative decoding"
   },
   {
     "rank": 6,
-    "repo": "babutree/TTS-API",
-    "url": "https://github.com/babutree/TTS-API",
-    "total": "33★",
-    "week": "33",
-    "desc": "自托管流式 TTS 网关，带 Web UI 和 REST/WebSocket API：本地 Kokoro CPU 推理 + 微软 Edge 神经语音双引擎。"
+    "repo": "manjunathshiva/esp32-tinyllm",
+    "url": "https://github.com/manjunathshiva/esp32-tinyllm",
+    "total": "2★",
+    "week": "2",
+    "desc": "Interactive on-device storytelling with a 28.9M-parameter LLM on an $8 ESP32-S3, using Gemma-style Per-Layer Embeddings to keep 25M paramete"
   },
   {
     "rank": 7,
-    "repo": "YutongChenVictor/NPU-E2E",
-    "url": "https://github.com/YutongChenVictor/NPU-E2E",
-    "total": "26★",
-    "week": "26",
-    "desc": "端到端 NPU：从 RTL 脉动阵列 → AXI4 SoC → TVM 编译器 → FPGA 推理。"
+    "repo": "anuragsingh1227/mutualfund-ai",
+    "url": "https://github.com/anuragsingh1227/mutualfund-ai",
+    "total": "2★",
+    "week": "2",
+    "desc": "Android-first AI mutual fund assistant. Import Groww reports, analyze holdings & tax, chat with AI. Zero-knowledge: Recovery Key and LLM key"
   },
   {
     "rank": 8,
-    "repo": "Ali-hey-0/ai-runtime-lab",
-    "url": "https://github.com/Ali-hey-0/ai-runtime-lab",
-    "total": "18★",
-    "week": "18",
-    "desc": "围绕非确定性 LLM 构建确定性、生产级系统：FSM、持久化执行、重试、DAG、agent 运行时等。"
+    "repo": "yuzhang-robotics/embodied-robot-heterogeneous-control",
+    "url": "https://github.com/yuzhang-robotics/embodied-robot-heterogeneous-control",
+    "total": "2★",
+    "week": "2",
+    "desc": "This work presents a wheeled‑robot system built on Jetson Orin Nano‑STM32 heterogeneous computing architecture. It performs asynchronous VLA"
   },
   {
     "rank": 9,
-    "repo": "mraza007/minute",
-    "url": "https://github.com/mraza007/minute",
-    "total": "9★",
-    "week": "9",
-    "desc": "macOS 全离线会议笔记工具：用 Whisper 和本地 LLM 在端上录音、转写、总结，带会议检测。"
+    "repo": "jacklarmer/deepseek-v4-flash-0731-sm120",
+    "url": "https://github.com/jacklarmer/deepseek-v4-flash-0731-sm120",
+    "total": "2★",
+    "week": "2",
+    "desc": "Working recipe: DeepSeek-V4-Flash-0731 + DSpark speculative decoding + SparkInfer/B12X on 4x RTX PRO 6000 Blackwell (SM120), PCIe-only host."
   },
   {
     "rank": 10,
-    "repo": "Quor-a/ZorvAI",
-    "url": "https://github.com/Quor-a/ZorvAI",
-    "total": "6★",
-    "week": "6",
-    "desc": "Zorv AI — 安卓 Android 端本地优先的 AI Agent 智能体助手（开源）。多模型对话、人格系统、记忆、语音全双工 TTS/STT、定时任务、可扩展工具链、飞书/QQ/微信接入。Kotlin + Jetpack Compose 开发。"
+    "repo": "zercade-dev/app-narn",
+    "url": "https://github.com/zercade-dev/app-narn",
+    "total": "2★",
+    "week": "2",
+    "desc": "Multi-provider AI translation workbench for local, single-user use — BYOK LLM and classical MT engines, glossaries, translation memory, and "
   },
   {
     "rank": 11,
-    "repo": "tonyd2wild/Inkling-Small-NVFP4-DSpark-BF16-KV-262K-2x-DGX-Spark",
-    "url": "https://github.com/tonyd2wild/Inkling-Small-NVFP4-DSpark-BF16-KV-262K-2x-DGX-Spark",
-    "total": "6★",
-    "week": "6",
-    "desc": "Inkling Small NVFP4 跑在 2 张 DGX Spark 上，TP2 并行、262K 上下文、BF16 KV cache、DSpark 投机解码。"
+    "repo": "binaydhakal/react-native-local-llm",
+    "url": "https://github.com/binaydhakal/react-native-local-llm",
+    "total": "1★",
+    "week": "1",
+    "desc": "One interface for every on-device LLM runtime in React Native — Apple Foundation Models, ExecuTorch (Gemma), and llama.cpp-based Cactus — wi"
   },
   {
     "rank": 12,
-    "repo": "Underline-1024/loom-engine",
-    "url": "https://github.com/Underline-1024/loom-engine",
-    "total": "6★",
-    "week": "6",
-    "desc": "用 Rust 写的终端原生叙事引擎和文字 RPG，支持 OpenAI、Anthropic、本地模型等任意 LLM。"
+    "repo": "Justin300507/aria",
+    "url": "https://github.com/Justin300507/aria",
+    "total": "1★",
+    "week": "1",
+    "desc": "On-device voice assistant — 80+ tools, encrypted local-first memory, privacy modes"
   },
   {
     "rank": 13,
-    "repo": "AAAelina/rikkahub-agent",
-    "url": "https://github.com/AAAelina/rikkahub-agent",
-    "total": "5★",
-    "week": "5",
-    "desc": "RikkaHub Agent：安卓端本地 LLM agent（本地 fork/上传）。"
+    "repo": "Fangyuan025/Kokosuki",
+    "url": "https://github.com/Fangyuan025/Kokosuki",
+    "total": "1★",
+    "week": "1",
+    "desc": "A fully-offline macOS desktop pet with an on-device LLM mind — one self-contained app, no cloud"
   },
   {
     "rank": 14,
-    "repo": "SaymRuxoTE/EDGE-AI",
-    "url": "https://github.com/SaymRuxoTE/EDGE-AI",
-    "total": "4★",
-    "week": "4",
-    "desc": "从零手写的 C++ AVX2 Transformer 推理引擎。"
+    "repo": "Wayazi/adtc-2026",
+    "url": "https://github.com/Wayazi/adtc-2026",
+    "total": "1★",
+    "week": "1",
+    "desc": "ADTC 2026 — On-Device LLM Challenge: Qwen3.5-2B fine-tuned for healthcare advisory (isiZulu, KZN) with Hermes Agent"
   },
   {
     "rank": 15,
-    "repo": "fxd0h/Axelera-Voyager-Local-Assistant",
-    "url": "https://github.com/fxd0h/Axelera-Voyager-Local-Assistant",
-    "total": "4★",
-    "week": "4",
-    "desc": "面向 Axelera Voyager SDK 和 Metis AIPU 的本地 AI 助手：基于公开 Axelera 资料做语义 RAG + 工作流技能，走 MCP。"
+    "repo": "axe01010/android-ai-agent",
+    "url": "https://github.com/axe01010/android-ai-agent",
+    "total": "1★",
+    "week": "1",
+    "desc": "local-llm agent that controls your phone over adb. zero cloud."
   },
   {
     "rank": 16,
-    "repo": "DngBack/awesome-speculative-decoding",
-    "url": "https://github.com/DngBack/awesome-speculative-decoding",
-    "total": "4★",
-    "week": "4",
-    "desc": "投机解码方向的精选论文清单。"
+    "repo": "Doriyz/Jetson-TensorRT-Deployment",
+    "url": "https://github.com/Doriyz/Jetson-TensorRT-Deployment",
+    "total": "1★",
+    "week": "1",
+    "desc": "End-to-end edge AI inference deployment and optimization on NVIDIA Jetson AGX Xavier with PyTorch, ONNX and TensorRT."
   },
   {
     "rank": 17,
-    "repo": "Nahid-mahmud555/ai-data-engineering-roadmap",
-    "url": "https://github.com/Nahid-mahmud555/ai-data-engineering-roadmap",
-    "total": "4★",
-    "week": "4",
-    "desc": "从零搭建生产级本地 RAG 管道和数据工程系统，跟着每日实操路线图和代码架构走。"
+    "repo": "jiawei686/tiny-llm-gateway",
+    "url": "https://github.com/jiawei686/tiny-llm-gateway",
+    "total": "1★",
+    "week": "1",
+    "desc": "A tiny (<=5 MB), single-binary, OpenAI-compatible LLM inference gateway in Rust on llama.cpp. Drop-in Ollama replacement for local LLM infer"
   },
   {
     "rank": 18,
-    "repo": "eschizoid/stride",
-    "url": "https://github.com/eschizoid/stride",
-    "total": "4★",
-    "week": "4",
-    "desc": "本地优先的多运动训练引擎：把 Strava 数据同步到你自己的 SQLite，确定性计算训练指标，带教练指导。"
+    "repo": "hrabanazviking/RuneForgeAI-Project-Aesir",
+    "url": "https://github.com/hrabanazviking/RuneForgeAI-Project-Aesir",
+    "total": "1★",
+    "week": "1",
+    "desc": "Bare-metal Mojo inference engine designed for local sovereignty. Features zero-copy GGUF parsing, PagedAttention KV caching, and a stateless"
   },
   {
     "rank": 19,
-    "repo": "mavesensei/commitcraft",
-    "url": "https://github.com/mavesensei/commitcraft",
-    "total": "4★",
-    "week": "4",
-    "desc": "智能约定式 commit，两层管线：本地规则引擎秒处理简单改动，复杂 diff 才调用 LLM。"
+    "repo": "ivanwwl123-oss/NOETRONYX-Robot-Dog-Journey",
+    "url": "https://github.com/ivanwwl123-oss/NOETRONYX-Robot-Dog-Journey",
+    "total": "1★",
+    "week": "1",
+    "desc": "End-to-end portfolio project for an AI-powered quadruped robot (Robot Dog). Integrating Python, ESP32, OpenCV, YOLOv8, ROS2, Jetson Orin Nan"
   },
   {
     "rank": 20,
-    "repo": "statico/llmac",
-    "url": "https://github.com/statico/llmac",
-    "total": "3★",
-    "week": "3",
-    "desc": "命令行调用 Apple 端侧 Foundation Models：小巧、快速、无需 API key，致敬 Simon Willison 的 llm。"
+    "repo": "a1643859813/npu-inference-platform",
+    "url": "https://github.com/a1643859813/npu-inference-platform",
+    "total": "1★",
+    "week": "1",
+    "desc": "针对 NPU 模型部署环节分散、人工操作效率低、推理结果缺少统一管理的问题，负责设计覆盖模型资产、转换压缩、部署、推理与 Agent 问答的一站式管理平"
   }
 ]

@@ -2,7 +2,7 @@
 
 > 本文件是调研 agent 的厂商检索记忆，基于 `vendor-whitelist.md`（官方域名白名单）扩展。
 > **端侧重点关注厂商举例**：Apple、Google、NVIDIA。这只是举例，其余厂商同样要覆盖，不许只搜这三家。
-> 收录范围：9 家设备厂商 + 9 家模型厂商（含 NVIDIA）+ 8 家中国互联网公司研究项目。
+> 规范官方来源：9 家设备厂商 + 10 家模型厂商（含 NVIDIA/StepFun）+ 5 家模型实验室补充来源；另查 8 家中国互联网公司研究项目。完整集合由 `agent/research_collection.py` 机械校验。
 > 不可违反规则：非论文条目必须命中 `vendor-whitelist.md` 官方域名；公司项目按 arXiv affiliation + GitHub org 搜；不拿新闻、社媒、GitHub release、二手解读冒充官方。
 
 ## 通用检索方法
@@ -42,7 +42,7 @@ arXiv 自身搜索只匹配标题和摘要，不直接按作者 affiliation 过�
 
 ---
 
-## 模型厂商（9 家，含 NVIDIA）
+## 模型厂商（10 家，含 NVIDIA）
 
 | 厂商 | 官方动态来源 | websearch 关键词 | arXiv affiliation | GitHub / 重要页面 |
 |---|---|---|---|---|
@@ -58,6 +58,18 @@ arXiv 自身搜索只匹配标题和摘要，不直接按作者 affiliation 过�
 | Qwen（阿里云） | `qwenlm.github.io`、`alibabacloud.com` 博客 | `"Qwen2.5" on-device`、`"Qwen Mobile-Agent"`、`site:qwenlm.github.io` | `Alibaba`、`Alibaba Cloud`、`Qwen Team`、`阿里云` | `github.com/QwenLM`、`qwenlm.github.io` |
 
 > 模型厂商 arXiv affiliation 命中率高，论文和官方技术报告都多。端侧关注小参数量变体（MiniCPM、Qwen 0.5B/1.5B/3B、Llama 1B/3B、Ministral 3B/8B、Phi-3-mini、Gemini Nano）。
+
+## 模型实验室补充来源（5 家，强制检查）
+
+| 厂商 | 官方来源 | 补查重点 |
+|---|---|---|
+| DeepSeek | `deepseek.com`、`api-docs.deepseek.com`、GitHub `deepseek-ai` | 新仓、重大 commit、推理内核、HF checkpoints；不能只查 arXiv |
+| Moonshot/Kimi | `kimi.com`、`moonshot.cn` | 官方博客、模型发布、长上下文与本地部署动态 |
+| Zhipu | `zhipuai.cn`、`bigmodel.cn` | GLM 小模型、Agent、端侧/工具调用更新 |
+| MiniMax | `minimax.io` | 新模型、语音/多模态、小模型和推理部署 |
+| Baichuan | `baichuan-ai.com` | 新模型、医疗以外的通用推理与端侧部署动态 |
+
+这 5 家即使窗口内 0 命中也必须写入 `collection-manifest.json` 的 `vendors_checked`；0 是结果，不是跳过检查。
 
 ---
 

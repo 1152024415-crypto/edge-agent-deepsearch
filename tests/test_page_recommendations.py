@@ -96,6 +96,18 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
         self.assertIn("Agent 精选 · 推荐优先", INDEX_HTML)
         self.assertNotIn("agent curation · ranked first", INDEX_HTML)
 
+    def test_recommendations_rank_phone_pc_and_other_edge_agents_first(self):
+        self.assertIn(
+            "const EDGE_AGENT_PRIORITY={\"手机\":0,\"PC\":1,\"其他端侧\":2,\"非端侧Agent\":3};",
+            INDEX_HTML,
+        )
+        self.assertIn("edgeAgentPriority(a)-edgeAgentPriority(b)", INDEX_HTML)
+
+    def test_recommendation_cards_show_verified_device_scope_badges(self):
+        self.assertIn("const EDGE_AGENT_LABELS={\"手机\":\"手机端 Agent\",\"PC\":\"PC 端 Agent\",\"其他端侧\":\"其他端侧 Agent\"};", INDEX_HTML)
+        self.assertIn('class="rec-edge-scope"', INDEX_HTML)
+        self.assertIn("EDGE_AGENT_LABELS[p.edge_agent_scope]", INDEX_HTML)
+
     def test_original_title_keeps_up_to_two_lines(self):
         self.assertIn(".rec-original{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2", INDEX_HTML)
         original_style = INDEX_HTML.split(".rec-original{", 1)[1].split("}", 1)[0]

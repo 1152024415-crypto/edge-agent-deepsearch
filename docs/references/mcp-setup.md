@@ -42,24 +42,28 @@ github MCP 走 GitHub API，需要 Personal Access Token（PAT）否则严重限
 ## 工具使用逻辑（搜集阶段）
 
 ### arxiv MCP（`blazickjp/arxiv-mcp-server`）
-- `search_papers(query, max_results, sort_by, category, author)`：按关键词搜 arXiv，返回结构化 JSON（标题/作者/摘要/日期/arxiv id）。`sort_by="submittedDate"` 拿最新。
+- `search_papers(query, max_results, sort_by, category, author)`：按关键词搜 arXiv。若 MCP 不支持翻页，使用 `agent/arxiv_curl_sweep.py` 的 HTTP API 分页兜底；不能把单次前 100 条当成一周全量。
 - `download_paper(paper_id)`：下载 PDF 到本地缓存。
 - `read_paper(paper_id)`：读论文全文（markdown）。
 - 自动限速 3 秒间隔 + 24 小时缓存，符合 arXiv API 规范。
-- **date 字段必须取自这里返回的 submittedDate，不许 agent 自填**（防 date 漂移/旧论文充本周）。
+- **date 字段必须取自这里返回的 submittedDate**；窗口由 `agent/research_collection.py` 动态计算为含运行日的最近 7 个自然日。
 
 ### huggingface MCP（`huggingface-daily-paper-mcp`）
 - `get_today_papers()` / `get_yesterday_papers()`：当天/昨天社区精选。
-- `get_papers_by_date(date=YYYY-MM-DD)`：按日期取精选（过去 7 天每天调一次）。
+- `get_papers_by_date(date=YYYY-MM-DD)`：窗口内 7 个日期每天调一次，并把全部日期写入 `collection-manifest.json`；某天 0 条也算一次有证据的检查。
 - 每天约 20 篇社区投票热门，质量比 arXiv 全量高、覆盖窄，和 arXiv 互补。
 
 ### github MCP（`@modelcontextprotocol/server-github`）
 - 搜开源仓 trending / release：仅收**业界认可大项目**（见 `docs/references/big-projects-whitelist.md`，如 Google ADK / NVIDIA TensorRT Edge Agent / vLLM / SGLang / llama.cpp / ExecuTorch / MLC-LLM 等）。
-- 门槛：必须在白名单内 + 最近 7 天有 release/重大 commit + 主题相关。非白名单小仓不收。
+- 门槛：必须在白名单内 + 最近 7 天有 release/重大 commit + 主题相关。Trending 和白名单 release 分别执行并记录，不能互相代替。
 
 ### websearch（补充）
 - 搜大厂官方博客/产品发布，命中 `vendor-whitelist.md` 官方域名才算。
 - 非官方博客/新闻/社媒/二手解读一律排除。
+
+## 检索覆盖清单
+
+四类来源共同维护 `research_runs/collection-manifest.json`。规范集合在 `agent/research_collection.py`，validate/publish 默认先检查：arXiv 大类与自然终止的分页、HF 7 个日期、GitHub Trending + 白名单 release、24 个厂商/模型实验室逐家成功来源证据。四个最终候选文件完成后还必须运行 `python agent/attest_candidates.py` 绑定路径、条数、文件 SHA-256、逐记录指纹和稳定 title+URL+来源日期身份；每条 run 内容必须唯一指向其中一个指纹且不得复用。传输层使用 MCP 还是公开 HTTP 不影响覆盖契约。
 
 ## 排查
 

@@ -1,40 +1,65 @@
 {
-  "overview": "本周端侧 AI 动态(07-31~08-03):Qualcomm Dragonwing IQ-9075 端侧 AI 芯片连续发布(Vision AI 流水线 + GenAI RAG/ASR,QIM SDK+Edge Impulse+Qt);NVIDIA 协同设计 AI 模型注意力实现快速交互式长上下文推理 + Video Codec SDK 13.1;Google Gemini Drop July 2026;QwenLM qwen-code v0.21.2/v0.21.3 coding agent CLI;MiniMax cli v1.0.19(Hailuo H3 视频生成);学术侧 68 篇(arXiv 27+HF 33,含 1 篇 SNN/neuromorphic)+9 公司项目+5 官方动态——端侧从 Qualcomm 新芯片、注意力协同设计、coding agent 到神经形态持续推进。窗口仅 4 天(07-31~08-03),08-01/02 HF 无数据,多篇厂 8 月初淡季。",
+  "overview": "本周端侧 AI 动态(08-01~08-07):Samsung 连发两篇亚1比特量化(NanoQuant+LittleBit-2,极低比特端侧推理);Google 三连发(统一 AI 模型路由 API + MCP Stateless 扩展 agent 基础设施 + Agent Plugins 打包技能工具);NVIDIA 多条(Alpamayo 2 robotaxi 开源模型 + 世界动作模型重塑机器人操作 + 开放世界模型与物理 AI + Beyond VLAs);OpenVINO 2026.3.0 大版本(新模型覆盖);Mistral Shieldstral 3B 开放权重安全分类器;Anthropic Fable 5 生物安全护栏更新;学术侧 549 篇(arXiv 2008 broad sweep + HF 158,含 6 篇 SNN/neuromorphic)+6 官方动态+1 开源大项目——端侧从亚1比特量化、agent 基础设施、robotaxi 开源到神经形态持续推进。",
   "highlights": [
     {
-      "url": "https://www.qualcomm.com/developer/blog/2026/07/vision-ai-factorypulse-iq9075-qim-sdk",
-      "topic": "Qualcomm Dragonwing IQ-9075:端侧 Vision AI 流水线(07-31)",
-      "why": "Qualcomm Dragonwing IQ-9075 端侧 AI 芯片上跑 Vision AI 流水线(QIM SDK+Edge Impulse+Qt),端侧视觉 AI 芯片落地"
+      "url": "https://research.samsung.com/blog/NanoQuant-Sub-bit-LLM-Quantization",
+      "topic": "Samsung NanoQuant:亚1比特 LLM 量化(08-03)",
+      "why": "Samsung 研究院发亚1比特量化,极端压缩下保精度——端侧极致量化前沿"
     },
     {
-      "url": "https://www.qualcomm.com/developer/blog/2026/07/genai-rag-iq9075-factorypulse",
-      "topic": "Qualcomm Dragonwing IQ-9075:端侧 GenAI(RAG+ASR)(07-31)",
-      "why": "Qualcomm 端侧芯片跑 GenAI(RAG+ASR),端侧大模型推理+语音在 Qualcomm 芯片上落地"
+      "url": "https://research.samsung.com/blog/LittleBit-2-Spectral-Energy-Gain-Sub-bit",
+      "topic": "Samsung LittleBit-2:谱能量增益亚1比特(08-04)",
+      "why": "Samsung 连发第二篇亚1比特,谱能量视角,端侧极端压缩持续突破"
     },
     {
-      "url": "https://developer.nvidia.com/blog/co-designing-ai-model-attention-for-fast-interactive-long-context-inference/",
-      "topic": "NVIDIA:协同设计 AI 模型注意力实现快速交互式长上下文推理(07-31)",
-      "why": "模型-硬件协同设计注意力,长上下文推理效率——端侧/边缘长上下文推理优化"
+      "url": "https://developers.googleblog.com/en/a-unified-api-for-ai-model-routing/",
+      "topic": "Google:统一 AI 模型路由 API(08-04)",
+      "why": "Google 统一模型路由 API,端侧/云端多模型选择的基础设施层"
     },
     {
-      "url": "https://developer.nvidia.com/blog/nvidia-video-codec-sdk-13-1-zero-copy-transcode-av1-b-frames-and-frame-accurate-seek/",
-      "topic": "NVIDIA Video Codec SDK 13.1:零拷贝转码+AV1 B帧(07-31)",
-      "why": "视频编解码 SDK 更新,端侧视频处理+AI 视觉相关的基础设施"
+      "url": "https://developers.googleblog.com/en/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/",
+      "topic": "Google:MCP Stateless 扩展 agent 基础设施(08-05)",
+      "why": "MCP Stateless 扩展,agent 工程基础设施向无状态扩展"
     },
     {
-      "url": "https://blog.google/products-and-platforms/products/gemini/gemini-drop-july-2026/",
-      "topic": "Google Gemini Drop July 2026(07-31)",
-      "why": "Google Gemini 7 月更新,Gemini 应用新功能——端侧/移动 AI 助手迭代"
+      "url": "https://developers.googleblog.com/en/agent-plugins-package-your-skills-tools-and-more/",
+      "topic": "Google:Agent Plugins 打包技能工具(08-06)",
+      "why": "Agent Plugins 打包技能/工具,agent 工程标准化封装"
     },
     {
-      "url": "https://github.com/QwenLM/qwen-code/releases/tag/v0.21.3",
-      "topic": "QwenLM qwen-code v0.21.3:coding agent CLI 更新(08-01)",
-      "why": "Qwen coding agent CLI 持续迭代,agent 工程工具链"
+      "url": "https://blogs.nvidia.com/blog/alpamayo-2-super-open-model-now-available/",
+      "topic": "NVIDIA Alpamayo 2 Super:robotaxi 开源模型(08-04)",
+      "why": "NVIDIA 开源 Alpamayo 2 robotaxi 模型,端侧自动驾驶+物理 AI 开源"
     },
     {
-      "url": "https://github.com/MiniMax-AI/cli/releases/tag/v1.0.19",
-      "topic": "MiniMax CLI v1.0.19:Hailuo H3 视频生成支持(08-01)",
-      "why": "MiniMax CLI 加 Hailuo H3 视频生成,模型厂 CLI 工具+新模型能力"
+      "url": "https://developer.nvidia.com/blog/beyond-vlas-how-world-action-models-reshape-robot-manipulation/",
+      "topic": "NVIDIA:Beyond VLAs—世界动作模型重塑机器人操作(08-04)",
+      "why": "从 VLA 到世界动作模型,机器人操作新范式,端侧/具身 agent 前沿"
+    },
+    {
+      "url": "https://mistral.ai/news/shieldstral/",
+      "topic": "Mistral Shieldstral 3B:开放权重安全分类器(08-04)",
+      "why": "Mistral 开源 3B 安全分类器,端侧安全护栏小模型"
+    },
+    {
+      "url": "https://github.com/openvinotoolkit/openvino/releases/tag/2026.3.0",
+      "topic": "OpenVINO 2026.3.0:大版本新模型覆盖(08-04)",
+      "why": "Intel 端侧推理引擎 OpenVINO 大版本,新模型覆盖——端侧部署框架持续演进"
+    },
+    {
+      "url": "https://blogs.nvidia.com/blog/open-world-models-physical-ai/",
+      "topic": "NVIDIA:开放世界模型与物理 AI(08-06)",
+      "why": "开放世界模型 + 物理 AI,端侧具身智能新方向"
+    },
+    {
+      "url": "https://anthropic.com/news/improving-fable-5-s-biology-safeguards",
+      "topic": "Anthropic Fable 5:生物安全护栏更新(08-07)",
+      "why": "Anthropic 安全护栏更新,端侧/边缘 AI 安全对齐相关"
+    },
+    {
+      "url": "https://blogs.nvidia.com/blog/ai-storage-fms/",
+      "topic": "NVIDIA:AI 内存/存储需求升级(08-04)",
+      "why": "AI 内存/存储需求分析,端侧部署存储约束参考"
     }
   ]
 }

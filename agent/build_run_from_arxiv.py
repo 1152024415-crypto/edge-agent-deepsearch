@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Auto-convert collected arXiv candidates + github entries into a research run JSON
-(方案 B schema: 2-dim score + 4-dim dim:val tags + source_tier).
+"""Shared tag helpers plus a retired fixed-date prototype builder.
 
-这是"乙方案"快速首版：auto 打标/打分，affiliation 和精修大白话后续再补。
+The weekly pipeline imports ``auto_tags`` and ``first_sentence`` from this
+module.  Its old executable builder is deliberately disabled because it embeds
+historical dates and hand-written GitHub entries; use ``build_run_week.py`` with
+a validated collection manifest instead.
 """
 from __future__ import annotations
 
@@ -241,24 +243,11 @@ GITHUB_ENTRIES = [
 
 
 def main() -> int:
-    arxiv = convert_arxiv(ROOT / "data" / "_arxiv_final.json")
-    papers = arxiv + GITHUB_ENTRIES
-    # 去重 by id
-    seen = set()
-    uniq = []
-    for p in papers:
-        if p["id"] not in seen:
-            seen.add(p["id"])
-            uniq.append(p)
-    payload = {
-        "run_id": "run-20260703-real4",
-        "generated_at": "2026-07-03T12:00:00+08:00",
-        "papers": uniq,
-    }
-    out = ROOT / "research_runs" / "run-20260703-real4.json"
-    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"wrote {out} · {len(uniq)} papers (arxiv {len(arxiv)} + github {len(GITHUB_ENTRIES)})")
-    return 0
+    print(
+        "[ERROR] fixed-date prototype retired; run agent/build_run_week.py with "
+        "research_runs/collection-manifest.json",
+    )
+    return 2
 
 
 if __name__ == "__main__":

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Collect official vendor dynamics (06-23..06-30) across ~21 vendors.
+"""Collect official vendor dynamics across the canonical 24-source set.
 
 Robust discovery: robots.txt -> Sitemap: entries -> (recurse index) -> <url><loc><lastmod>.
-Plus known-good RSS feeds. Filters by date window + edge-AI keywords, verifies alive.
+Plus known-good RSS feeds. The seven-date window is computed at runtime.
 Output: data/_vendors_collected.json
 """
+import argparse
 import urllib.request, re, sys, json, time, gzip, io
 from datetime import datetime, timezone
 import xml.etree.ElementTree as ET
 
-DATE_FROM = datetime(2026,6,26,tzinfo=timezone.utc)
-DATE_TO   = datetime(2026,7,4,tzinfo=timezone.utc)
+from research_collection import collection_window, parse_collection_date, update_source_coverage
 
 # vendor -> (base_domain_for_robots, [known RSS/sitemap URLs to try first])
 VENDORS = {
@@ -29,12 +29,15 @@ VENDORS = {
   "OpenAI":      ("https://openai.com", ["https://openai.com/news/rss.xml","https://openai.com/sitemap.xml"]),
   "Anthropic":   ("https://www.anthropic.com", ["https://www.anthropic.com/sitemap.xml"]),
   "Meta":        ("https://ai.meta.com", ["https://ai.meta.com/blog/feed/","https://ai.meta.com/sitemap.xml"]),
+  "NVIDIA":      ("https://developer.nvidia.com", ["https://developer.nvidia.com/blog/feed/","https://developer.nvidia.com/sitemap.xml"]),
   "Mistral":     ("https://mistral.ai", ["https://mistral.ai/sitemap.xml"]),
   "ModelBest":   ("https://modelbest.cn", ["https://modelbest.cn/sitemap.xml"]),
   "Qwen":        ("https://qwenlm.github.io", ["https://qwenlm.github.io/feed.xml","https://qwenlm.github.io/sitemap.xml"]),
   "Zhipu":       ("https://www.zhipuai.cn", ["https://www.zhipuai.cn/sitemap.xml","https://open.bigmodel.cn/sitemap.xml"]),
   "DeepSeek":    ("https://api-docs.deepseek.com", ["https://api-docs.deepseek.com/sitemap.xml","https://www.deepseek.com/sitemap.xml"]),
+  "Moonshot":    ("https://www.kimi.com", ["https://www.kimi.com/sitemap.xml"]),
   "MiniMax":     ("https://www.minimax.io", ["https://www.minimax.io/sitemap.xml","https://www.minimaxi.com/sitemap.xml"]),
+  "Baichuan":    ("https://www.baichuan-ai.com", ["https://www.baichuan-ai.com/sitemap.xml"]),
   "StepFun":     ("https://www.stepfun.com", ["https://www.stepfun.com/sitemap.xml"]),
 }
 
@@ -111,56 +114,93 @@ def alive(url, timeout=12):
             return True
     return False
 
-def collect_vendor(vendor, base, known):
+
+def is_structured_source(txt):
+    """True when a response is a parseable feed or sitemap, even with zero rows."""
+    if not txt or '<html' in txt[:300].lower() or '404' in txt[:400]:
+        return False
+    try:
+        root = ET.fromstring(strip_ns(txt))
+    except ET.ParseError:
+        return False
+    return root.tag.lower() in {'rss', 'feed', 'urlset', 'sitemapindex'}
+
+
+def collect_vendor(vendor, base, known, window_start, window_end):
     found=[]
-    # 1) known feeds first
+    attempted=[]
+    succeeded=[]
+
+    def consume(src, txt):
+        attempted.append(src)
+        items, children = extract_urls(txt)
+        if is_structured_source(txt):
+            succeeded.append(src)
+        if items:
+            sys.stderr.write(f"[{vendor}] SOURCE {src} -> {len(items)}\n")
+            found.extend(items)
+        return children
+
+    # 1) Aggregate every known official feed; one successful feed must not hide another.
     for src in known:
         txt=fetch(src)
-        items,_=extract_urls(txt)
-        if items:
-            sys.stderr.write(f"[{vendor}] FEED {src} -> {len(items)}\n")
-            found=items; break
-    # 2) robots.txt -> sitemap discovery
-    if not found:
-        robots=fetch(base+"/robots.txt")
-        sm=find_sitemaps_in_robots(robots)
-        # prefer news/blog sitemaps
-        sm=sorted(sm, key=lambda u: 0 if any(k in u.lower() for k in ('news','blog','post','article')) else 1)
-        for s in sm[:6]:
-            txt=fetch(s)
-            items,children=extract_urls(txt)
-            if children:
-                # sitemap index -> fetch news-y children
-                kids=sorted(children, key=lambda u: 0 if any(k in u.lower() for k in ('news','blog','post','article','en')) else 1)
-                for ch in kids[:4]:
-                    ct=fetch(ch)
-                    ci,_=extract_urls(ct)
-                    if ci:
-                        sys.stderr.write(f"[{vendor}] SITEMAP {ch} -> {len(ci)}\n")
-                        found=ci; break
-                if found: break
-            if items:
-                sys.stderr.write(f"[{vendor}] SITEMAP {s} -> {len(items)}\n")
-                found=items; break
-        if not found and sm:
-            sys.stderr.write(f"[{vendor}] robots sitemaps found {len(sm)} but no usable urls\n")
-        elif not found:
-            sys.stderr.write(f"[{vendor}] NO robots/sitemap\n")
-    if not found: return []
+        consume(src, txt)
+
+    # 2) Also discover official sitemaps. Feeds and sitemaps are complementary.
+    robots_url = base+"/robots.txt"
+    robots=fetch(robots_url)
+    attempted.append(robots_url)
+    sm=find_sitemaps_in_robots(robots)
+    sm=sorted(sm, key=lambda u: 0 if any(k in u.lower() for k in ('news','blog','post','article')) else 1)
+    for s in sm[:6]:
+        children = consume(s, fetch(s))
+        kids=sorted(children, key=lambda u: 0 if any(k in u.lower() for k in ('news','blog','post','article','en')) else 1)
+        for ch in kids[:4]:
+            consume(ch, fetch(ch))
+
+    # Deduplicate before applying the semantic/date filter.
+    raw=[]; seen_urls=set()
+    for title, link, pub in found:
+        if link in seen_urls:
+            continue
+        seen_urls.add(link)
+        raw.append((title, link, pub))
     res=[]
-    for title,link,pub in found:
+    for title,link,pub in raw:
         dt=parse_date(pub)
         if not dt: continue
-        if not (DATE_FROM<=dt<DATE_TO): continue
+        if not (window_start <= dt.date() <= window_end): continue
         hay=(title+' '+link).lower()
         if not any(k in hay for k in EDGE_KW): continue
         res.append({"vendor":vendor,"title":title or link,"url":link,"date":dt.strftime('%Y-%m-%d')})
-    return res
+    if res:
+        status = "found"
+    elif succeeded:
+        status = "no_match"
+    else:
+        status = "unreachable"
+    check = {
+        "status": status,
+        "sources_attempted": attempted,
+        "sources_succeeded": sorted(set(succeeded)),
+        "candidate_count": len(res),
+    }
+    return res, check
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Collect official vendor dynamics for the latest seven dates.")
+    parser.add_argument("--today", help="Override collection date as YYYY-MM-DD")
+    parser.add_argument("--manifest", default="research_runs/collection-manifest.json")
+    args = parser.parse_args(argv)
+    run_date = parse_collection_date(args.today)
+    window_start, window_end, _ = collection_window(run_date)
+
     allr=[]
+    vendor_checks={}
     for vendor,(base,known) in VENDORS.items():
-        allr += collect_vendor(vendor, base, known)
+        items, check = collect_vendor(vendor, base, known, window_start, window_end)
+        allr += items
+        vendor_checks[vendor] = check
         time.sleep(1)
     seen=set(); uniq=[]
     for r in allr:
@@ -168,9 +208,27 @@ def main():
         seen.add(r['url']); r['alive']=alive(r['url']); uniq.append(r)
     uniq.sort(key=lambda x:(x['date'],x['vendor']), reverse=True)
     json.dump(uniq, open("data/_vendors_collected.json","w",encoding="utf-8"), ensure_ascii=False, indent=2)
-    print(f"# collected {len(uniq)} vendor articles 06-23..06-30")
+    complete = all(check["status"] in {"found", "no_match"} for check in vendor_checks.values())
+    update_source_coverage(
+        args.manifest,
+        "vendors",
+        {
+            "status": "complete" if complete else "incomplete",
+            "vendors_checked": sorted(VENDORS),
+            "vendor_checks": vendor_checks,
+            "candidate_count": len(uniq),
+        },
+        today=run_date,
+    )
+    print(f"# collected {len(uniq)} vendor articles {window_start}..{window_end}")
     for r in uniq:
         print(f"[{r['date']}] {r['vendor']:10} {'OK ' if r['alive'] else 'DEAD'} {r['title'][:58]}")
         print(f"      {r['url']}")
+    if not complete:
+        failed = [vendor for vendor, check in vendor_checks.items() if check["status"] == "unreachable"]
+        print(f"[VENDORS] incomplete official-source checks: {', '.join(failed)}", file=sys.stderr)
+        return 1
+    return 0
 
-if __name__=="__main__": main()
+if __name__=="__main__":
+    raise SystemExit(main())

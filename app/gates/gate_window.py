@@ -2,15 +2,17 @@
 """Gate 3: every content/papers item must be within the current 7-day window."""
 
 import sys
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "agent"))
 import gate_common as gc
+from research_collection import collection_window
 
 
 today = date.today()
-cutoff_date = today - timedelta(days=7)
+cutoff_date, _, _ = collection_window(today)
 
 
 def parse_post_date(value):

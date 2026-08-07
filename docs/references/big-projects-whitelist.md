@@ -24,6 +24,7 @@
 
 ## Agent 应用
 - nanobot (HKUDS) — `github.com/HKUDS/nanobot`（轻量开源 AI agent，工具/聊天/工作流；港大 HKUDS 实验室）
+- Orchard (Microsoft Research) — `github.com/microsoft/Orchard`（Agent 训练与 Kubernetes 环境基础设施；属于相邻 Agent 平台，不是端侧 Agent）
 
 ## 维护规则
 - 增删在本文档进行，不靠记忆。新项目要"业界认可大项目"（知名实验室/公司/高 star+影响力），个人小仓不收。

@@ -44,6 +44,8 @@ class GateReleaseTest(unittest.TestCase):
                 "title_zh": "端侧智能体推理框架",
                 "abstract": "这项工作让端侧智能体在手机上更快完成推理，并减少运行内存。",
                 "recommendation_reason": "端侧收益明确，而且给出了真实设备上的验证结果。",
+                "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "",
+                "tags": ["方向:高效推理"], "score_relevance": 7,
             }],
             "weekly": {"overview": "(07-02~07-09)", "highlights": []},
             "trending": {"items": []},
@@ -61,7 +63,9 @@ class GateReleaseTest(unittest.TestCase):
                '<script>window.__PAPERS__={"papers": [{"id": "arxiv-x1", "recommendation": "推荐", '
                '"title_zh": "端侧智能体推理框架", '
                '"abstract": "这项工作让端侧智能体在手机上更快完成推理，并减少运行内存。", '
-               '"recommendation_reason": "端侧收益明确，而且给出了真实设备上的验证结果。"}]};'
+               '"recommendation_reason": "端侧收益明确，而且给出了真实设备上的验证结果。", '
+               '"edge_agent_scope":"非端侧Agent","edge_agent_evidence":"",'
+               '"tags":["方向:高效推理"],"score_relevance":7}]};'
                'window.__WEEKLY__={"overview":"","highlights":[]};'
                'window.__TRENDING__={"items":[]};'
                'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
@@ -142,6 +146,69 @@ class GateReleaseTest(unittest.TestCase):
         self.assertTrue(any("官方动态" in e for e in errs), errs)
 
     # ---- recommendation readability ----
+    def test_fail_when_edge_agent_scope_is_unreviewed(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               '"title_zh":"手机本地助理","abstract":"这项工作让手机在本地完成规划和工具调用。",'
+               '"recommendation_reason":"关键智能体闭环在手机本地运行，值得优先关注。",'
+               '"edge_agent_scope":"待核实","edge_agent_evidence":"",'
+               '"tags":["方向:高效推理"],"score_relevance":9}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("edge_agent_scope" in e and "待核实" in e for e in errs), errs)
+
+    def test_fail_when_arxiv_update_has_no_substantive_revision_note(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1","recommendation":"推荐",'
+               '"title_zh":"端侧智能体推理框架","abstract":"这项工作让手机在本地完成推理。",'
+               '"recommendation_reason":"端侧收益明确，而且给出了真实设备验证。",'
+               '"edge_agent_scope":"非端侧Agent","edge_agent_evidence":"",'
+               '"arxiv_date_basis":"updated","arxiv_revision_note":"",'
+               '"tags":["方向:高效推理"],"score_relevance":7}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("arxiv_revision_note" in e for e in errs), errs)
+
+    def test_fail_when_verified_phone_agent_is_not_recommended(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"phone-agent","recommendation":"纳入",'
+               '"title_zh":"","abstract":"这项工作让手机在本地完成规划和工具调用。",'
+               '"recommendation_reason":"","edge_agent_scope":"手机",'
+               '"edge_agent_evidence":"规划和工具调用均在手机本地运行。",'
+               '"tags":["方向:端侧agent","硬件:手机"],"score_relevance":9}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+        _write(self.root, "site/paper/phone-agent.html", "<html>detail</html>")
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("真正端侧 Agent" in e and "推荐" in e for e in errs), errs)
+
+    def test_fail_when_edge_agent_scope_and_tag_disagree(self):
+        self._seed_good()
+        _write(self.root, "site/index.html",
+               '<script>window.__PAPERS__={"papers":[{"id":"ordinary-edge-model","recommendation":"推荐",'
+               '"title_zh":"普通端侧模型","abstract":"这项工作只优化手机模型推理，没有智能体闭环。",'
+               '"recommendation_reason":"具有端侧工程参考价值，因此作为普通项目推荐。",'
+               '"edge_agent_scope":"非端侧Agent","edge_agent_evidence":"",'
+               '"tags":["方向:端侧agent","硬件:手机"],"score_relevance":7}]};'
+               'window.__WEEKLY__={};window.__TRENDING__={};'
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+        _write(self.root, "site/paper/ordinary-edge-model.html", "<html>detail</html>")
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("方向:端侧agent" in e for e in errs), errs)
+
     def test_fail_when_current_build_has_no_recommendations(self):
         self._seed_good()
         _write(self.root, "site/index.html",

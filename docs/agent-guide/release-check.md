@@ -53,7 +53,7 @@ gate 拦不住「漏一个厂商」——它只检查 官方动态 ≥1，不检
 
 ## 流程顺序（编辑层 ≠ 采集层）
 
-1. 采厂商动态（18 厂博客 + 模型实验室博客）→ `官方动态` 条目
+1. 校验 `collection-manifest.json` 四来源覆盖、逐厂成功来源证据、四候选文件路径/条数/文件 SHA-256/逐记录指纹/稳定 title+URL+来源日期身份，以及 run 条目唯一且不可复用的 candidate_source + candidate_ref（先运行 `python agent/attest_candidates.py`）；服务端和发布端确认配置同一个 `EDGE_PUBLISH_TOKEN`。再采 24 个规范厂商/模型实验室动态 → `官方动态` 条目
 2. 写 `data/weekly_summary.json`（从厂商新闻 + 判断，≥5 外部 URL）
 3. run 论文列表是另一层，不填进 highlights
 

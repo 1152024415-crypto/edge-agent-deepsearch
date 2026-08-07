@@ -1,0 +1,212 @@
+{
+  "run_id": "run-20260805-edge-agent-priority",
+  "include_ids": [
+    "arxiv-2607.28573",
+    "arxiv-2608.02254",
+    "arxiv-2508.08645",
+    "github-microsoft-orchard-df3f973"
+  ],
+  "drop_ids": [
+    "arxiv-2607.26760",
+    "vendor-openai-how-we-built-a-realtime-system-for-responsive-voice-ai-in-six-m"
+  ],
+  "overrides": {
+    "arxiv-2608.01033": {
+      "title_zh": "CallScreenBench 手机来电秘书",
+      "edge_agent_scope": "手机",
+      "edge_agent_evidence": "论文在手机本地运行六个低比特模型，由模型接听真实来电开场、判断来意并替机主决定如何回应。",
+      "recommendation": "推荐",
+      "recommendation_reason": "本周最直接的手机 Agent 工作，场景真实且揭示现有评测会高估能力。",
+      "score_relevance": 10,
+      "score_contribution": 6,
+      "score_reason": "模型在手机本地直接替用户处理来电，是明确的手机端 Agent 场景。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:评测基准",
+        "方向:安全隐私",
+        "应用:语音",
+        "硬件:手机"
+      ]
+    },
+    "arxiv-2607.28573": {
+      "title_zh": "本地电脑操作智能体算力权衡",
+      "abstract": "这项研究系统测试在个人电脑本地运行的电脑操作智能体，比较增加上下文、执行步数、规划结构和并行采样究竟能否提高任务成功率。",
+      "effects": "在 OSWorld 上，额外计算普遍很快出现收益递减；更长历史能提升轨迹稳定性，但无法持续提高任务成功率。",
+      "mechanism": "用 Qwen3-VL、UI-TARS 和 OpenCUA 等本地模型，分别扩展上下文、时间步、两阶段规划和并行采样，并分析失败类型如何变化。",
+      "edge_agent_scope": "PC",
+      "edge_agent_evidence": "论文明确在本地硬件运行电脑操作智能体，由本地模型读取屏幕历史、规划任务并输出 OSWorld 操作。",
+      "recommendation": "推荐",
+      "recommendation_reason": "少见的 PC 本地智能体实测，直接揭示加算力不一定更可靠。",
+      "score_relevance": 10,
+      "score_contribution": 6,
+      "score_reason": "PC 本地运行完整电脑操作智能体，直接回答端侧 Agent 的算力该花在哪里。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:多模态",
+        "方向:评测基准",
+        "方向:安全隐私",
+        "硬件:GPU",
+        "模型:Qwen"
+      ]
+    },
+    "arxiv-2608.02254": {
+      "title_zh": "Homebot 本地家庭助手",
+      "abstract": "Homebot 是可在本地部署的家庭 AI 助手，用同一运行时接收语音和即时消息，把语言模型回复、已注册工具和可扩展技能组合起来完成家庭协助与自动化。",
+      "effects": "论文未报告统一量化结果，重点是公开一套可定制的本地家庭助手架构和交互协议。",
+      "mechanism": "本地唤醒词、流式语音识别与合成负责免手操作；会话状态按渠道隔离，工具和技能通过明确契约接入。",
+      "edge_agent_scope": "其他端侧",
+      "edge_agent_evidence": "论文明确称 Homebot 可本地部署，并在本地运行时中维护会话、调用注册工具和执行家庭自动化技能。",
+      "recommendation": "推荐",
+      "recommendation_reason": "本周最接近可用产品的本地家庭助手，具备语音、会话和工具闭环。",
+      "score_relevance": 10,
+      "score_contribution": 6,
+      "score_reason": "本地运行时同时承担会话、语言模型、工具和自动化技能，是完整端侧 Agent。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:工具调用",
+        "方向:记忆",
+        "应用:语音"
+      ]
+    },
+    "arxiv-2508.08645": {
+      "title_zh": "IFRAgent 个性化手机操作智能体",
+      "abstract": "IFRAgent 从用户的手机操作演示中同时学习显式步骤和隐式偏好，再把模糊指令改写成符合个人习惯的查询与标准操作流程。",
+      "effects": "本周 v3 扩展到 40 名中英文用户；人类意图对齐率平均绝对提升 9.88%，步骤完成率平均绝对提升 8.26%。",
+      "mechanism": "把演示整理成查询级操作流程库和用户级习惯库，再用流程提取器、检索增强和蒸馏训练的查询改写器生成个性化执行步骤。",
+      "edge_agent_scope": "手机",
+      "edge_agent_evidence": "智能体读取手机图形界面上的用户演示，并在手机界面执行个性化操作序列；本周修订补充了双语用户实验。",
+      "recommendation": "推荐",
+      "recommendation_reason": "手机 Agent 不只会照步骤，还开始从演示中学习用户长期偏好。",
+      "score_relevance": 9,
+      "score_contribution": 7,
+      "score_reason": "直接研究手机操作智能体的个性化执行闭环，本周修订还补强了真实用户证据。",
+      "arxiv_revision_note": "v3 新增覆盖 40 名中英文用户的实验，补充蒸馏查询改写器，并更新意图对齐率和步骤完成率结果。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:记忆",
+        "方向:工具调用",
+        "方向:评测基准",
+        "硬件:手机"
+      ]
+    },
+    "arxiv-2608.03728": {
+      "edge_agent_scope": "其他端侧",
+      "edge_agent_evidence": "系统部署在 ARM 异构端侧芯片上，由本地语言服务解析任务、调用目标检测工具并返回结构化结果。",
+      "recommendation": "推荐",
+      "score_relevance": 10,
+      "score_contribution": 6,
+      "score_reason": "卫星端侧芯片完整运行任务理解、工具调用和结果回传闭环，并给出硬件在环证据。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:工具调用",
+        "方向:多模态",
+        "方向:能耗功耗",
+        "硬件:NPU"
+      ]
+    },
+    "arxiv-2608.03682": {
+      "edge_agent_scope": "其他端侧",
+      "edge_agent_evidence": "同一运行时把 VLA 和世界动作模型部署到板载设备和边缘 GPU，本地执行感知到动作的实时控制。",
+      "recommendation": "推荐",
+      "score_relevance": 9,
+      "score_contribution": 7,
+      "score_reason": "直接服务机器人板载闭环执行，并统一端、边、云的动作模型运行时。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:推理框架",
+        "方向:编译部署",
+        "方向:端云协同",
+        "应用:机器人",
+        "硬件:GPU"
+      ]
+    },
+    "arxiv-2608.03938": {
+      "edge_agent_scope": "其他端侧",
+      "edge_agent_evidence": "双臂机器人在 8GB Jetson 上本地读取三路相机并运行 ACT 动作策略，闭环完成抓放任务。",
+      "recommendation": "推荐",
+      "score_relevance": 9,
+      "score_contribution": 6,
+      "score_reason": "完整机器人感知和动作策略均在入门级 Jetson 本地运行，部署证据充分。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:量化",
+        "方向:编译部署",
+        "方向:多模态",
+        "应用:机器人",
+        "硬件:Jetson"
+      ]
+    },
+    "arxiv-2608.00569": {
+      "title_zh": "CloudEdgeVLA 端云协同机器人",
+      "edge_agent_scope": "其他端侧",
+      "edge_agent_evidence": "云端只提供慢速任务特征，机器人端的轻量动作头持续读取最新视觉并在本地完成闭环控制和状态修正。",
+      "recommendation": "推荐",
+      "recommendation_reason": "把慢速云端推理与机器人本地实时动作解耦，直面网络抖动下的端侧闭环。",
+      "score_relevance": 9,
+      "score_contribution": 6,
+      "score_reason": "核心闭环动作留在机器人端，云端特征延迟也不会阻塞本地控制。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:端云协同",
+        "方向:多模态",
+        "方向:调度服务",
+        "应用:机器人"
+      ]
+    },
+    "arxiv-2608.00635": {
+      "title_zh": "FlowPilot 无人机端侧导航",
+      "edge_agent_scope": "其他端侧",
+      "edge_agent_evidence": "模型在 Jetson Orin NX 上用机载深度感知直接生成飞行轨迹，完整感知到动作管线全部在无人机本地执行。",
+      "recommendation": "推荐",
+      "recommendation_reason": "真实无人机仅靠机载算力闭环飞行，18 毫秒内完成感知到动作。",
+      "score_relevance": 9,
+      "score_contribution": 7,
+      "score_reason": "真实 Jetson 无人机上完成全本地感知、预测和动作生成，端侧闭环证据很强。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:多模态",
+        "方向:高效推理",
+        "应用:机器人",
+        "硬件:Jetson"
+      ]
+    },
+    "arxiv-2607.29172": {
+      "title_zh": "CLIFT 端侧人形机器人适配",
+      "edge_agent_scope": "其他端侧",
+      "edge_agent_evidence": "Gemini Robotics On-Device 策略实际部署在人形机器人上，本地执行动作；部署反馈再转成监督数据迭代改进策略。",
+      "recommendation": "推荐",
+      "recommendation_reason": "把闭源端侧机器人模型做成可迭代专家，真实硬件两轮即可接近满成功率。",
+      "score_relevance": 9,
+      "score_contribution": 7,
+      "score_reason": "端侧机器人动作执行与部署反馈闭环明确，且针对真实人形机器人验证。",
+      "tags": [
+        "方向:端侧agent",
+        "方向:端侧训练",
+        "方向:多模态",
+        "应用:机器人",
+        "模型:Gemini"
+      ]
+    },
+    "github-microsoft-orchard-df3f973": {
+      "title_zh": "微软 Orchard 智能体建模框架",
+      "abstract": "Orchard 是微软开源的智能体建模框架，统一提供 Kubernetes 沙箱环境、软件工程智能体、GUI 操作智能体和个人助手的训练与评测方案。",
+      "effects": "Orchard-SWE 在 SWE-bench Verified 达到 73.0%；4B GUI 智能体在三项网页操作基准平均成功率 68.4%；本周一次性公开 80 个文件、约 1.6 万行代码。",
+      "mechanism": "Orchard Env 负责可复用沙箱生命周期，上层组合监督微调、强化学习、过程奖励和历史经验蒸馏，服务不同智能体训练流程。",
+      "vendors": "Microsoft",
+      "recommendation": "推荐",
+      "recommendation_reason": "微软本周公开的大型智能体训练底座，值得跟踪，但它本身不是端侧 Agent。",
+      "score_relevance": 6,
+      "score_contribution": 9,
+      "score_reason": "智能体训练和环境基础设施价值高，但没有在手机或 PC 本地执行 Agent 闭环。",
+      "tags": [
+        "方向:推理框架",
+        "方向:工具调用",
+        "方向:蒸馏",
+        "方向:评测基准",
+        "应用:代码"
+      ],
+      "edge_agent_scope": "非端侧Agent",
+      "edge_agent_evidence": ""
+    }
+  }
+}

@@ -3,9 +3,9 @@
 """Refresh data/github_trending_top20.json in one step.
 
 Runs collect_github_trending (fetches trending + search API → _github_trending.json)
-then converts to the top20 file the page reads. Called by the deploy flow
-(server _deploy_to_ghpages) so trending auto-refreshes on each publish —
-no longer relies on the main agent manually running it when the gate fails.
+then converts to the top20 file the page reads. The main agent runs this during
+weekly collection before Chinese rewriting; deployment must not overwrite the
+translated descriptions with fresh English text.
 """
 import json
 import sys

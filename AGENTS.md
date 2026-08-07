@@ -60,18 +60,19 @@
 
 1. 读 `.agents/skills/edge-agent-research-pipeline/SKILL.md`、`docs/agent-guide/main-agent-workflow.md`、`docs/agent-guide/research-prompt.md`、`output-contract.md`、`validation-rules.md`。强入口，不许跳过。
 2. 检查 `data/.last_run`：读上次调研时间戳，距本次 ≥7 天才跑；<7 天提示"本周已调研"并停止。防重复跑、防拿旧 run 充本周。
-3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（B 档边界、官方域名白名单、7 天窗口、多标签 tags、source_tier、不凑数）。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏掉标准，编造断链。
-4. 子 agent 用 arXiv MCP + HF Daily Papers MCP + GitHub MCP + websearch 广搜集本周（过去 7 天）端侧 agent 论文 + 18 家大厂官方动态 + 开源大项目 release，产出易读版 `abstract`/`effects`/`mechanism` + 2 维打分 + `tags` + `source_tier` + `open_source` + `vendors`。arXiv date 取自元数据。子 agent 只输出结构化 JSON，不改代码、网页、服务器。
-5. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`。自动汇集的条目必须全部保持 `title_zh=""`、`recommendation=纳入`；主 agent 读过来源后再挑选本周值得优先看的条目，填写简短中文项目名 `title_zh` 和具体中文 `recommendation_reason`，推荐数量按实际质量决定。
-6. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：中文项目名/摘要/推荐理由 + 内部占位词 + 结构 + 7 天窗口 + 2 维加总 = score + source_tier/tags 校验 + HTTP 死链检查 + arXiv date 核对 + 跨 run 去重 warning。校验失败自动拦。
-7. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
-8. publish 前主 agent 抽检 `source_tier=官方动态` 和 `source_tier=开源大项目` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
-9. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
-10. 服务器 upsert，`GET /api/papers` 刷新最新 run。
-11. 详情页展示短摘要 + tags + 原文链接（不再有 6 段深度整理；整理 agent 已停用，`detail-prompt.md` 已删）。publish 后列表页和详情页立即可见。
-12. 更新 `data/.last_run` 时间戳为本次调研时间（ISO 8601，如 `2026-06-26T15:00:00+08:00`）。
-13. 本周错误沉淀：进 AGENTS 已知教训 + `docs/agent-guide/validation-rules.md` 规则 + `docs/agent-guide/research-prompt.md` 强化。不靠对话记忆，靠 repo。
-14. 跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py` 确认 harness 健康。
+3. 发起调研子 agent。**prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束**（广检索边界、官方域名白名单、动态 7 天窗口、多标签 tags、source_tier、不凑数）。**不许主 agent 自写简化版 prompt**。
+4. 子 agent 用 arXiv MCP + HF Daily Papers MCP + GitHub MCP + websearch 广搜集最近 7 个自然日的端侧 agent、端侧技术栈和有直接迁移价值的相邻工作 + 24 个规范厂商/模型实验室官方来源 + 开源大项目 release。普通量化、剪枝、缓存、benchmark 或云端 serving 只要仍与 AI 推理/部署技术栈相关就保留并低分，不因“不够推荐”提前删除；完全无关才丢。子 agent 只输出结构化候选和覆盖证据，不改代码、网页、服务器。
+5. 四类来源完成后必须生成 `research_runs/collection-manifest.json`：HF 逐日覆盖；GitHub trending 与大项目 release 分别记录；厂商逐家记录成功访问的官方来源；arXiv 完成大类扫描并自然翻页到窗口外。候选文件完成后运行 `python agent/attest_candidates.py`，把四个文件的路径、条数、文件 SHA-256、逐候选记录指纹和原始 title+URL+来源日期稳定身份写入 manifest；每条 run 内容必须保留唯一的 `candidate_source` + `candidate_ref`，不得复用候选，且原标题/原文 URL/日期必须匹配该候选身份。少一类、少一天、某厂全不可达、条数/哈希/血缘不一致都不能组装、validate 或 publish。
+6. 主 agent 保存为 `research_runs/run-YYYYMMDD-HHMMSS.json`，亲自完成最终筛选、评分、标签、中文整理、affiliation 核实和逐条`edge_agent_scope`分类。自动汇集必须保持`edge_agent_scope=待核实`且不得自动加`方向:端侧agent`。真正端侧 Agent 的关键闭环至少部分实际运行在设备端，凡确认属于手机/PC/其他端侧都必须推荐；手机最优先、PC第二、其他端侧仍完整收录并推荐。
+7. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：先校验 collection manifest，再校验内容结构、动态 7 天窗口、评分、标签、链接、arXiv date 和跨 run 去重。旧论文若仅因本周修订进入窗口，主 agent 必须对比旧版并填写中文 `arxiv_revision_note`；排版、勘误或摘要无实质变化的一律不收。校验失败自动拦。
+8. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
+9. publish 前主 agent 抽检 `source_tier=官方动态` 和 `source_tier=开源大项目` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
+10. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
+11. 服务器 upsert，`GET /api/papers` 刷新最新 run。
+12. 详情页展示短摘要 + tags + 原文链接。publish 后列表页和详情页立即可见。
+13. 更新 `data/.last_run` 时间戳为本次调研时间。
+14. 本周错误沉淀进 AGENTS + validation-rules + research-prompt，不靠对话记忆。
+15. 跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py` 确认 harness 健康。
 
 ## 调研策略（核心）
 
@@ -85,18 +86,19 @@
   3. **公司+学校合作顶会项目**（公司联合高校发表顶会）
   4. **学校顶会项目**（高校独立发表顶会顶刊）
 - **学校项目门槛**：`学校顶会` 必须发表在顶会顶刊（NeurIPS/ICML/ICLR/MobiSys/SenSys/ASPLOS/ACL/CVPR/ICCV/EMNLP/AAAI/IJCAI/TPAMI/TNNLS/ToN）+ 任何正规大学（不再卡中美名校）。任何大学的 arXiv 预印本（非顶会但强相关）收为 `学校预印本`。公司项目 arXiv 或顶会均可。
-- **排除常见方法无明显创新**：纯前缀缓存+投机解码堆砌、普通量化/剪枝、常规 benchmark，除非有显著新意，否则不收。即使中了顶会也不要，或给低分。
-- **评分口径**（2 维，质量判断由调研 agent 给分，不是代码硬排）：
-  - `score_relevance`（0-10）：明确端侧部署 8-10；可迁移且作者提到端侧场景 4-7；纯云端无端侧考量 0-3 或排除
-  - `score_contribution`（0-10）：创新度高 7-10；常见方法/工程整合 3-6
+- **广收录、推荐聚焦**：普通量化/剪枝、缓存、benchmark、通用 serving 只要与 AI 推理/部署或资源受限场景有直接迁移价值就收录；常见方法给较低贡献分，通常不推荐。不得用“创新一般”充当检索删除条件；只有完全无关、来源不可信、越窗、重复或链接不匹配才删除。
+- **真正端侧 Agent 是最高优先级**：必须同时具备 Agent 闭环（规划/记忆/工具/环境交互/行动之一）和设备端执行证据。`edge_agent_scope`只能是`待核实`/`手机`/`PC`/`其他端侧`/`非端侧Agent`；发布不得残留`待核实`。手机、PC、其他端侧必须有中文`edge_agent_evidence`、`方向:端侧agent`、`score_relevance>=8`且全部`推荐`，排序手机 > PC > 其他端侧 > 普通推荐。普通端侧模型/量化/缓存/检测、手机仅作云端入口、Orchard 一类云端 Agent 训练基础设施都不算真正端侧 Agent。
+- **评分口径**（2 维，搜集阶段可给初值，最终由主 agent 阅读来源后确认）：
+  - `score_relevance`（0-10）：明确端侧部署 8-10；端侧技术栈或直接可迁移工作 4-7；仅宽泛云端关联 1-3；完全无关排除
+  - `score_contribution`（0-10）：创新度高 7-10；常见方法/工程整合 1-6。低贡献仍可完整收录，但不自动推荐
   - `score` = 2 维之和（0-20），排序靠 `source_tier` 优先级 + `score`
-- **source_tier**（来源 facet，替代旧 source_type + is_major_vendor_official）：`官方动态`（18 家大厂官方博客/产品发布，含 NVIDIA，命中官方域名，排序最前）/ `开源大项目`（白名单大项目 release，github.com URL）/ `公司项目`（affiliation 命中公司，vendors 必填）/ `学校顶会`（任何大学顶会顶刊）/ `学校预印本`（任何大学 arXiv 预印本，排序最低，保证新鲜端侧工作不漏）
+- **source_tier**（来源 facet，替代旧 source_type + is_major_vendor_official）：`官方动态`（24 个规范厂商/模型实验室官方来源，含 NVIDIA，命中官方域名，排序最前）/ `开源大项目`（白名单大项目 release，github.com URL）/ `公司项目`（affiliation 有一手证据，vendors 必填）/ `学校顶会`（任何大学顶会顶刊）/ `学校预印本`（任何大学 arXiv 预印本，排序最低）
 - **open_source**：bool facet（有开源仓库/数据集/模型 true），不打分，同等条件开源优先
-- **vendors 字段**：公司项目必填公司名（如 `Kuaishou` / `ByteDance` / `Tencent` / `Baidu` / `Meituan` / `JD` / `Pinduoduo` / `Netease`）。当前 run 的 affiliation 核实 defer：未识别公司的论文一律标 `学校预印本`，公司论文待识别。
+- **vendors 字段**：公司项目必填公司名和 `affiliation_evidence_url`。证据 URL 只能是 arXiv PDF、OpenReview/Scholar 或权威论文出版页，`score_reason` 必须解释它如何支持 vendors；GitHub 仓库/release 不是作者机构证据，统一归 `开源大项目`。没有一手证据一律先标 `学校预印本`。
 - **官方域名硬约束**：非论文条目必须命中官方域名（见 `docs/references/vendor-whitelist.md`），非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
 - **多标签 tags**：每条 1-8 个标签，格式 `维度:值`（4 维：方向/应用/硬件/模型，如 `方向:端侧agent`/`硬件:NPU`/`模型:Llama`），取自 `data/tags.yaml` 词表（人读版 `docs/references/tag-taxonomy.md`），多标签，一个工作可挂多个（如「端侧 VLM 量化部署」挂 `方向:端侧agent`+`方向:多模态`+`方向:量化`+`方向:编译部署`）。页面按 4 维 faceted 筛选展示，不是非此即彼。方向/应用/硬件为受控词表，模型为半自由。词表外标签先加进 `data/tags.yaml` 再用。
 - **首页字段人类可读**：`abstract`/`effects`/`mechanism` 用中文短句给人看（这是什么/有什么结果/怎么做到的），详细技术分解放 wiki，不塞首页。
-- **推荐是主 agent 的编辑判断**：自动脚本和搜集子 agent 只做完整收录，一律 `title_zh=""`、`recommendation=纳入`；不得因为标题命中 on-device/KV cache/量化等关键词自动晋升。主 agent 逐条读来源后决定推荐数量和排序，每条推荐必须有 40 字以内的中文项目名 `title_zh` 和具体中文 `recommendation_reason`。推荐卡按中文项目名 → 中文 `abstract` 介绍 → tags 关键词 → 推荐理由 → 小号英文原标题展示；项目名不得直接复制 abstract。
+- **推荐是主 agent 的编辑判断**：自动脚本和搜集子 agent 只做完整收录，一律 `title_zh=""`、`recommendation=纳入`、`edge_agent_scope=待核实`；不得因为标题命中关键词自动晋升。主 agent 逐条读来源后决定普通推荐；真正端侧 Agent 是例外中的硬规则——确认后必须推荐。推荐卡按设备范围徽标 → 中文项目名 → 中文 `abstract` 介绍 → tags 关键词 → 推荐理由 → 小号英文原标题展示。
 - **keywords 已并入 tags**：原 keywords 字段取消，统一用 `tags`（受控词表）。
 - **MCP 配置**：arXiv MCP / HuggingFace Daily Papers MCP / GitHub MCP 已沉淀为项目级 `.mcp.json`，配置和工具用法见 `docs/references/mcp-setup.md`。调研 agent 搜集优先用 MCP（arXiv 全量搜 / HF 社区精选 / GitHub 大项目 release），websearch 补充搜大厂官网。
 - **开源大项目白名单**：GitHub MCP 只收 `docs/references/big-projects-whitelist.md` 内业界认可大项目（vLLM/SGLang/llama.cpp/ExecuTorch/ADK/TensorRT 等），非白名单小仓不收。
@@ -106,6 +108,8 @@
 - 服务器不负责搜索论文；搜索由 agent 使用自己的搜索、浏览、阅读工具完成。
 - 大厂官方技术博客 / 官方产品发布可收录且排序最前（`source_tier=官方动态`），但必须命中官方域名；开源大项目 release 用 `source_tier=开源大项目` + github.com URL + 白名单（`docs/references/big-projects-whitelist.md`）。非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
 - 时间窗口是当前日期过去 7 天，不允许用旧 `.last_run` 放行过期样例。
+- arXiv 更新稿不能只凭 `updated` 日期进入周报：必须由主 agent 对比旧版，确认实验、方法、数据、代码或结论有实质变化并填写 `arxiv_revision_note`；仅改排版、作者信息或无实质内容变化必须丢弃。
+- `research_runs/collection-manifest.json` 是发布硬门：四类来源、精确 7 个自然日、arXiv 分页自然终止、HF 逐日、GitHub release/trending 分离、24 个厂商/模型实验室逐厂成功来源证据、候选文件路径/条数/文件 SHA-256/逐记录指纹、run 条目血缘缺一不可。组装会把 manifest 与候选血缘嵌入 run，发布客户端和服务器都会复验。所有写 API 还必须使用服务端配置的 `EDGE_PUBLISH_TOKEN`，匿名原始 POST 不能绕过。`--allow-incomplete-coverage` 只用于本地历史恢复，正常周报禁止使用。
 - 没有本周合格论文时显示空状态，不拿旧数据撑数量。
 - 凑数禁令：本周大厂官方不足就少收，不拿学术充大厂，不拿不确定链接凑数。
 - `paper_url` 必须和论文标题、摘要匹配。
@@ -113,7 +117,7 @@
 - 发布前必须跑 `validate_research_run.py`。
 - **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、推荐中文项目名/摘要/理由缺失或含内部占位词、项目名复用介绍、非空周报 0 推荐、内链 404、热点复读论文列表、0 官方动态静默。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
 - `data/weekly_summary.json` 是**独立编辑产物**，不是 run 的派生字段。`highlights` 必须是编辑性新闻（厂商博客/动态/行业事件，带**外部 URL**，≥5 条），不许用 run 的 paper_id 切 top N 填充——那会让热点复读下面的论文列表。流程顺序：先采厂商动态（`官方动态`）→ 再写 weekly_summary（从新闻 + 判断）→ run 论文列表是另一层。
-- **0 官方动态是流程告警，不是可接受结果**。research-prompt 强制查 18 厂博客 + 模型实验室博客（DeepSeek/Moonshot/Zhipu/Minimax/百川）。run 里 `官方动态` count==0 时，必须要么去补采，要么在 `data/weeks/<label>-no-vendor.md` 写明逐厂证据（哪厂查了、在窗内是否有端侧文），不许静默接受 0。
+- **0 官方动态是流程告警，不是可接受结果**。research-prompt 和 collection manifest 强制查 24 个规范厂商/模型实验室来源。run 里 `官方动态` count==0 时，必须要么去补采，要么在 `data/weeks/<label>-no-vendor.md` 写明逐厂证据，不许静默接受 0。
 - 修改完成前至少跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py`。
 
 ## 已知教训
@@ -145,3 +149,9 @@
 - [2026-07-30] github trending 每次要手动跑——gate_release `check_trending_freshness` 只拦过期不自动刷，`collect_github_trending.py` 靠主 agent 手动跑（gate FAIL 才补）。根因：trending 刷新不在刷新流程里。修复：`agent/refresh_trending.py`（collect + 转 top20 一步）作为**主 agent 每次周刷新的固定步骤**（build_run_week 后、翻译 subagent 前），`refresh_trending` 拿英文 desc → 翻译 subagent 把 trending desc + run abstract 翻中文。**不进 auto-deploy**（auto-deploy 的 refresh 会覆盖翻译 subagent 的中文 desc——refresh 拿英文 GitHub 描述，翻译要 LLM 在 refresh 之后）。gate 兜底（mtime>7d FAIL 提醒主 agent 补刷）。
 - [2026-08-04] 推荐区把英文原标题当主信息，还把 `score_reason` 的 `auto-converted`/`votes=`/`待核实` 等流水线文字直接展示；同时 `build_run_week.py` 仅凭标题关键词自动推荐，导致弱相关内容挤进首屏。根因：完整收录和编辑推荐共用字段、页面层级反了、中文要求只有文档没有机械门。修复：推荐卡改为中文 `abstract` 主信息 + 中文 `recommendation_reason` + 小号原标题；自动汇集一律 `纳入`，只允许主 agent 阅读来源后晋升；validate 与 gate_release 双层拦英文摘要、缺失理由和内部占位词。**今后凡读者可见的内容契约，都必须同时落到 prompt、schema/存储、测试和真实构建 gate，不能只修页面或只写文档。**
 - [2026-08-04] 中文摘要虽然解决了英文难读，但把“项目介绍”直接放到卡片第一视觉层，读者仍要读完一句话才知道条目叫什么。根因：数据里没有独立的中文项目名，页面只能拿 abstract 冒充标题。修复：新增 `title_zh` 全链路字段；推荐时由主 agent 编写简短中文名称，卡片固定按名称→介绍→关键词→理由→原标题展示；validate 与 gate_release 拦缺失、过长和直接复制 abstract。**名称和介绍是两个不同的内容契约，不能靠前端截句或同一字段兼任。**
+- [2026-08-05] 广搜初筛把裸 `edge/embedded/deployed/energy/pruning/加速` 当端侧证据，既收进图结构、社会语境、音乐和云端 Mobile 用户等噪声，也因 AI 词表只认单数 LLM/agent 而漏掉 TinyML、ExecuTorch、端侧视觉/语音任务。修复：相关性改为“明确设备语境 + AI 模型/任务”或“明确推理优化技术栈”的组合证据；补复数、视觉、目标检测、语音识别、关键词唤醒等高频端侧词；每次改触发规则必须在 `tests/test_research_collection.py` 同时加正例和碰撞负例。**广搜追求召回，入库仍要语义证据；单个词既不能自动收录，也不能自动推荐。**
+- [2026-08-05] 检索数量多但无法证明覆盖完整：arXiv 只取每个 query 前 100 条、多个采集脚本写死日期、厂商/HF/GitHub 候选靠临时执行，且“常见方法直接删”与“完整收录”冲突。修复：统一 `research_collection.py` 动态 7 日窗口和 `collection-manifest.json` 四来源覆盖门；arXiv 翻页；普通但相关内容低分保留；主 agent 只通过推荐层决定用户优先看什么；公司归属只认明确 affiliation 证据。**检索层追求覆盖，推荐层负责注意力，不能用提前删内容代替策展。**
+- [2026-08-05] 覆盖清单若只写 `status=complete` 仍可能把抓取失败、分页截断或被清空的候选文件伪装成完整；只在发布 CLI 检查还可被直接 API 绕过。修复：arXiv 命中页数上限即失败；厂商逐家记录 `found/no_match/unreachable` 和成功官方来源；四候选文件必须做路径/条数/文件 SHA-256/逐记录指纹/稳定 title+URL+来源日期身份证明；每条 run 内容必须唯一命中候选且不能复用；manifest 与血缘嵌入 run 并由客户端、服务器复验；写 API 强制 `EDGE_PUBLISH_TOKEN`。公司项目另强制权威 `affiliation_evidence_url`，GitHub URL 不算机构证据，多 vendors（包括 `JD` 这类短名称）必须逐家解释，空分隔符不能算厂商；`candidate_source=github` 强制映射为 `开源大项目` 且 URL 命中大项目白名单，未知小仓不能伪装成学校/公司项目。**覆盖证据必须和实际候选、最终条目、受信发布者同时绑定，不能只相信采集器自报。**
+- [2026-08-05] 为补漏加入 arXiv `lastUpdatedDate` 扫描后，旧论文仅改排版也会伪装成本周动态；Jetson-PI v1/v4 摘要和文件大小几乎不变，不能因 8 月 3 日更新时间重发。修复：`arxiv_date_basis=updated` 必须填写主 agent 比对旧版后的中文 `arxiv_revision_note`，说明实验、方法、数据、代码或结论的实质变化；缺失即 validate 拦截。**更新时间只负责召回，实质修订证据才允许进入本周。**
+- [2026-08-05] 中文摘要已修好但详情页仍显示“自动初评/主 Agent 复核”，且 25 条摘要以省略号截断。根因：只把摘要当读者字段，遗漏了同样直接展示的 `score_reason`；翻译检查只数中文字符，没有检查句子完整性。修复：摘要翻译后必须拦截省略号结尾并回到原始摘要重写；`build_run_week.py` 生成读者可读评分依据，validate 与 `gate_release` 对所有条目的 `score_reason` 拦内部流程词，并配回归测试。**所有会在页面出现的字段都属于内容契约，不能只检查推荐卡主字段。**
+- [2026-08-05] `方向:端侧agent`曾由`edge/mobile/agent`宽泛关键词自动生成，49 个标签条目里混入普通推理、检测、量化和云边系统，无法据此强制推荐。修复：新增经原文核实的`edge_agent_scope`+`edge_agent_evidence`；自动搜集只写`待核实`且不自动加端侧 Agent 标签，validate 和 gate 双层拦待核实、标签错配、漏推荐和低相关分。**真正端侧 Agent 必须有关键 Agent 闭环实际在设备端运行；手机优先、PC次之、其他设备仍全部推荐。**

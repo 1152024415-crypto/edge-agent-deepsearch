@@ -4,7 +4,7 @@
 
 ## 1. 目标
 
-端侧 AI Agent 论文雷达：**每周调研一次**本周（过去 7 天）端侧 agent 论文 + 18 家大厂官方动态，校验后发布，网页持久展示最新结果。Harness 保证循环持续正确运作 + 自进化（错误沉淀，下次自动拦），不靠对话记忆。
+端侧 AI Agent 论文雷达：**每周调研一次**含运行日的最近 7 个自然日端侧 AI 与相关技术栈论文 + 24 个规范厂商/模型实验室官方动态，校验后发布。完整收录尽量广，推荐层负责用户优先阅读内容。
 
 ## 2. 整体架构
 
@@ -12,8 +12,9 @@
 调度(data/.last_run时间戳 + AGENTS节奏)
   → 主agent读AGENTS/SKILL/research-prompt(强入口)
   → 发起调研子agent(prompt必须注入research-prompt.md全文+硬约束)
-  → 子agent产出 research_runs/run-<week>.json
-  → validate: 结构+死链(自动拦)+7天窗口+2维加总+arXiv date核对+跨run去重
+  → 子agent产出四类候选 + research_runs/collection-manifest.json
+  → 主agent广收录筛选并产出 research_runs/run-<week>.json
+  → validate: 覆盖清单+结构+死链+动态7天窗口+2维加总+arXiv date+跨run去重
   → 主agent抽检来源并策展推荐(中文项目名+摘要+为什么值得看；自动脚本不得按关键词推荐)
   → publish → 服务器upsert → 展示最新run(标签筛选)
   → 详情页: 短摘要+标签+原文链接(无6段整理,整理agent已停用)
@@ -28,25 +29,26 @@
 | 1 | 主 agent 读 AGENTS/SKILL/research-prompt/output-contract/validation-rules | 强入口 |
 | 2 | 检查 `data/.last_run`，距上次 ≥7 天才跑 | 自动 gate |
 | 3 | 发起调研子 agent，**prompt 必须注入 research-prompt.md 全文 + 硬约束**（不许自写简化版） | 流程强制 |
-| 4 | 子 agent 用 MCP+websearch 广搜集本周论文+大厂官方+开源大项目，产出易读版 abstract/effects/mechanism + 2维 + tags + source_tier + open_source + vendors（arXiv date 取自元数据）；搜集结果统一标 `纳入` | agent |
-| 5 | 保存 `research_runs/run-YYYYMMDD-HHMMSS.json` | 主 agent |
-| 6 | 主 agent 读来源后，从完整收录中挑选值得优先看的条目，补简短中文 `title_zh` 和中文 `recommendation_reason` 并排序；不设固定推荐比例 | 主 agent |
-| 7 | `python agent/validate_research_run.py`：中文项目名/摘要/推荐理由 + 内部占位词 + 结构 + 7天窗口 + 2维加总=score + source_tier/tags + **HTTP 死链检查** + **arXiv date 核对** + 跨run去重warning | **自动拦** |
-| 8 | validate 失败：修正或丢弃，**不许凑数** | 流程 |
-| 9 | 主 agent 抽检 `source_tier=官方动态` 和 `开源大项目` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
-| 10 | `python agent/publish_results.py --server <URL>` | 主 agent |
-| 11 | 服务器 upsert，`GET /api/papers` 刷新最新 run | 自动 |
-| 12 | 详情页展示短摘要 + tags + 原文链接（整理 agent 已停用，无 6 段 detail，无「整理中」状态） | 自动 |
-| 13 | publish 后列表页和详情页立即可见；页面按标签筛选，source_tier 优先 + score 排序 | 自动 |
-| 14 | 更新 `data/.last_run` 时间戳 | 主 agent |
-| 15 | 本周错误 → AGENTS 教训 + validate 规则 + research-prompt 强化 | 自进化 |
-| 16 | 跑 `tests/` + `app/gates/gate_all.py` 确认 harness 健康 | 自动 |
+| 4 | 子 agent 用 MCP+websearch 广搜本周论文+厂商官方+开源大项目。普通但相关的量化/剪枝/缓存/benchmark/serving 低分保留；完全无关才删；自动条目统一 `纳入` | agent |
+| 5 | 完成 `research_runs/collection-manifest.json`：动态7日、arXiv分页自然终止、HF逐日、GitHub release/trending分离、24厂商/模型实验室逐一留下成功来源证据；运行 `agent/attest_candidates.py` 绑定四候选文件路径/条数/文件 SHA-256/逐记录指纹/稳定 title+URL+来源日期身份，并核对每条 run 的唯一 candidate_source + candidate_ref | **自动拦** |
+| 6 | 主 agent 完成最终筛选、评分、标签、中文整理和 affiliation 证据核实，保存 `research_runs/run-YYYYMMDD-HHMMSS.json` | 主 agent |
+| 7 | 主 agent 逐条完成`edge_agent_scope`分类；真正端侧 Agent 必须补设备端闭环证据并全部推荐（手机 > PC > 其他端侧），再从其余完整收录中挑普通推荐 | 主 agent + 自动拦 |
+| 8 | `python agent/validate_research_run.py`：先验覆盖清单，再验内容、动态7日、评分、标签、链接、arXiv date 和去重 | **自动拦** |
+| 9 | validate 失败：修正或丢弃，**不许凑数** | 流程 |
+| 10 | 主 agent 抽检 `source_tier=官方动态` 和 `开源大项目` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
+| 11 | `python agent/publish_results.py --server <URL>` | 主 agent |
+| 12 | 服务器 upsert，`GET /api/papers` 刷新最新 run | 自动 |
+| 13 | 详情页展示短摘要 + tags + 原文链接（整理 agent 已停用，无 6 段 detail，无「整理中」状态） | 自动 |
+| 14 | publish 后列表页和详情页立即可见；推荐区按手机端 Agent > PC 端 Agent > 其他端侧 Agent > 普通推荐，再按 source_tier + score 排序 | 自动 |
+| 15 | 更新 `data/.last_run` 时间戳 | 主 agent |
+| 16 | 本周错误 → AGENTS 教训 + validate 规则 + research-prompt 强化 | 自进化 |
+| 17 | 跑 `tests/` + `app/gates/gate_all.py` 确认 harness 健康 | 自动 |
 
 ## 4. 持久展示层
 
 - 服务器持续跑 `app/server.py`（本地 systemd/PM2 或远端部署）
 - `GET /api/papers` 只返回最新 run（`storage.list_papers` 按 `received_at DESC` 取最新 run_id）
-- **标签筛选**：`app/page.py` 按标签 chip 多选筛选展示（多标签，一个工作可挂多个标签），不再分论文/博客两 tab。排序按 `source_tier` 优先级（官方动态>开源大项目>公司项目>学校顶会>学校预印本）+ `score DESC`
+- **标签筛选**：`app/page.py` 按标签 chip 多选筛选展示。`方向:端侧agent`只表示经原文核实的真正设备端 Agent 闭环；推荐排序先按`edge_agent_scope`（手机>PC>其他端侧>非端侧Agent），再按 source_tier + score。
 - **详情页** `/paper/<id>`：展示短摘要（abstract/effects/mechanism）+ tags + 原文链接，无 6 段深度整理（整理 agent 已停用）
 - **静态 fallback** `app/build.py` 生成 `site/index.html`，服务器挂时兜底
 - **空状态**：本周无合格内容显示空，不拿旧数据撑
@@ -85,12 +87,13 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 ## 8. 校验规则
 
 **自动校验**（`agent/research_run.py`，发布前必跑）：
-- 必填字段、source_tier 枚举、tags 词表（data/tags.yaml）、date 7 天窗口、score=2维之和、`source_tier=官方动态` 必须官方域名、`source_tier=开源大项目` 必须 github.com URL、`source_tier=公司项目` vendors 非空
+- 必填字段、source_tier 枚举、tags 词表（data/tags.yaml）、date 7 天窗口、score=2维之和、候选记录血缘、`source_tier=官方动态` 必须官方域名、`source_tier=开源大项目` 必须 github.com URL、`source_tier=公司项目` 必须有 vendors + 权威 affiliation_evidence_url（GitHub 不算）
 - **死链检查**：每个 paper_url 发 HTTP HEAD，HEAD 失败 fallback GET；超时/网络不可达记 alive + warning 不 fail；只有 404 才 fail；每 URL 超时 5s
-- **arXiv date 核对**：paper_url 是 arXiv 时查 arXiv API 取真实提交日，与 JSON date 不一致 fail（防旧论文改日期充本周）；离线 warning 跳过
+- **arXiv date 与更新稿核对**：按 `arxiv_date_basis` 查真实提交日/更新日；旧稿走 `updated` 时还必须有主 agent 版本对比后的中文 `arxiv_revision_note`，无实质变化即丢，防止排版修订冒充本周动态
 - **跨 run 去重**：读 data/.last_run_papers.json，命中上次 run 的 id 给 warning（不 fail，相邻两周窗口有合法重叠）
 - **推荐可读性**：每条 abstract 至少 8 个中文字符；推荐条目必须有 2 个以上中文字符且不超过 40 字的 `title_zh`（不得等于 abstract）以及至少 8 个中文字符的 recommendation_reason；读者字段含 auto-converted/votes=/待核实/精修待补等内部占位词直接 fail
 - **构建发布门**：当前周非空时至少 1 条人工精选，自动汇集不能按关键词晋升推荐；gate_release 在真实 `site/index.html` 上复核
+- **端侧 Agent 发布门**：自动汇集写`待核实`且不能自动加`方向:端侧agent`；发布前逐条分类。手机/PC/其他端侧必须有中文闭环证据、相关分≥8并全部推荐；字段、标签、推荐任一不一致即 fail。
 
 **半自动抽检**（主 agent publish 前对官方动态/开源大项目条目）：
 - fetch 每个 `source_tier=官方动态` 和 `source_tier=开源大项目` 的 URL，核验页面内容与标题摘要对应（URL 能开 ≠ 内容对题）
@@ -118,13 +121,13 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 ### 流程总览
 
 ```
-第一层 子agent(MCP搜集)      第二层 主agent(筛选)        第三层 主agent(评分)       第四层 自动(发布)
+第一层 子agent(广搜+覆盖证据) 第二层 主agent(硬边界筛选)   第三层 主agent(评分推荐)   第四层 自动(发布)
 ┌─────────────────────┐     ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│ arXiv MCP 8轮×100   │     │ 1.日期过滤7天    │     │ 2维评分           │     │ validate(死链+   │
+│ arXiv 大类+关键词分页│     │ 1.动态7日窗口    │     │ 2维最终评分       │     │ validate(覆盖+   │
 │ HF Daily 7天×20    │ ─→ │ 2.关键词粗筛      │ ─→ │ vendors附证据     │ ─→ │ arXiv date+      │
 │ GitHub trending+    │     │ 3.过滤GUI agent   │     │ abstract/effects  │     │ 7天+2维+tags)   │
-│   release           │     │ 4.过滤常见方法    │     │ /mechanism重写    │     │ publish          │
-│ 大厂blog 12家fetch  │     │ 5.affiliation粗筛 │     │ 2维加总=score     │     │ hook自动gh-pages │
+│ release + trending  │     │ 4.相关低贡献保留  │     │ /mechanism重写    │     │ publish          │
+│ 24厂/实验室逐一检查 │     │ 5.affiliation证据 │     │ 推荐人工策展      │     │ hook自动gh-pages │
 └─────────────────────┘     │ 6.死链检查        │     │ tags+source_tier  │     │ 列表+详情        │
                             │ 7.去重            │     └──────────────────┘     └──────────────────┘
         尽量广搜集          └──────────────────┘              全量发布
@@ -137,7 +140,7 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 
 #### arXiv MCP（`arxiv-mcp-server`，工具 `search_papers`）
 - 全量结构化搜索 arXiv，比 websearch 搜 arXiv 精准 10 倍
-- 8 轮搜索，每轮 100 条：
+- 9 个大类全扫 + 多轮关键词搜索；每轮按 100 条分页，直到越过窗口下界或无下一页：
   1. `"on-device agent"` — 核心词
   2. `"edge computing agent"` — 边缘计算
   3. `"mobile LLM inference"` — 端侧推理
@@ -146,7 +149,7 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
   6. `"tool use edge device"` — 工具调用
   7. `"federated agent"` — 联邦 agent
   8. `"quantization agent mobile"` — 量化+agent
-- `max_results=100, sort_by="submittedDate"`，`date_from`=7天前，`categories=[cs.AI,cs.LG,cs.CL,cs.RO]`
+- 大类至少覆盖 `cs.AI/cs.LG/cs.CL/cs.RO/cs.AR/cs.DC/cs.ET/cs.SY/cs.NE`；窗口由 `research_collection.py` 动态计算为含运行日的 7 个自然日
 - **自适应**：某 query 返回过少就放宽/换词（去引号、换同义词、扩 category），不死守固定 query
 - 结果：去重后约 200-300（视窗口内实际产出，不设硬目标）
 
@@ -154,7 +157,7 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 - 社区投票精选热门论文，质量比 arXiv 全量高
 - 过去 7 天每天调一次 `get_papers_by_date(date=YYYY-MM-DD)`
 - 每天 ~20 篇，7 天 = ~140 候选
-- 筛选：标题/摘要含端侧关键词 + votes > 10 优先
+- votes 只影响候选浏览顺序，不作为删除门槛；7 个日期必须全部写入 coverage manifest
 - 和 arXiv MCP 互补：HF 精选（质量高覆盖窄）+ arXiv 全量（覆盖广噪音多）
 
 #### GitHub MCP（搜 trending repos + 最新 release，端侧优先）
@@ -163,9 +166,9 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 - 筛选：在 `big-projects-whitelist.md` 白名单内 + 最近 7 天有 release + 主题相关
 - 结果：5-10 个开源框架/项目更新
 
-**大厂 blog（webfetch 12 家厂商博客 URL）**
-- Apple machinelearning.apple.com / Google blog.google / NVIDIA blogs.nvidia.com / Meta ai.meta.com / Samsung research.samsung.com / Qualcomm qualcomm.com/news / MediaTek mediatek.com/tek-talk-blogs / OpenAI openai.com/index / Anthropic anthropic.com/news / Microsoft techcommunity.microsoft.com / Qwen qwenlm.github.io / Mistral mistral.ai/news
-- 直接 fetch 找过去 7 天动态
+**厂商与模型实验室官方来源（24 个规范来源）**
+- 规范集合由 `agent/research_collection.py::REQUIRED_VENDOR_SOURCES` 定义，具体官方 URL 和查法见 `vendor-research-guide.md`
+- 逐一 fetch/websearch/browser 检查动态；JS/403 站点必须换浏览器或搜索兜底，不能因静态抓取失败就当成已无更新
 - 结果：10-20 条大厂官方动态
 
 **第一层汇总**：arXiv + HF + GitHub + 大厂 blog 去重后视窗口内实际产出，不设硬数量目标（列表轻量罗列，可以多收）。
@@ -174,13 +177,13 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 
 主 agent 拿到候选后，亲自筛选：
 1. **日期过滤**：保留过去 7 天
-2. **标题+摘要粗筛**：含端侧关键词（on-device/edge/mobile/embedded + agent）
+2. **主题粗筛**：明确端侧必收；与 AI 推理/部署有直接迁移价值的相邻工作保留并低分；完全无关才删
 3. **过滤 GUI agent**：纯 GUI 操作类（屏幕点击/GUI自动化）→ 删，除非非 GUI 创新
-4. **过滤常见方法**：纯前缀缓存+投机解码/普通量化剪枝 → 删，除非显著新意
+4. **相关低贡献内容保留**：普通量化/剪枝/缓存/benchmark/serving 只要与 AI 推理部署相关就低分保留，完全无关才删
 5. **affiliation 粗筛**：
-   - 作者含快手/字节/腾讯/百度等 → 标记公司项目
+   - 论文明确 affiliation/机构字段及一手证据命中快手/字节/腾讯/百度等 → 标记公司项目
    - 任何正规大学（清华/北大/上交/浙大/MIT/Stanford/CMU/Berkeley 等，不限中美名校）→ 标记学校项目（顶会→学校顶会，arXiv预印本→学校预印本）
-   - 无机构署名 + 非顶会 → 删
+   - 标题、摘要或模型名命中公司不算 affiliation；无证据先标学校预印本
 6. **死链检查**：HTTP HEAD/GET 验证 URL 可访问
 7. **去重**（含跨 run）
 
@@ -207,6 +210,6 @@ agent 项目现实：调研要 LLM agent 搜索，cron/CI 跑 agent runtime 复�
 ### 关键设计原则
 
 - **主 agent 参与筛选+评分**：不全交给子 agent，质量可控
-- **子 agent 只做搜集（量大）**：搜集是体力活；评分打标由主 agent 亲自做；整理 agent 已停用
+- **子 agent 做广搜和覆盖留痕**：搜集追求召回率；最终筛选、评分、打标和推荐由主 agent 亲自做
 - **三个 MCP 互补**：arXiv 全量 + HF 精选 + GitHub 开源动态（配置见 `docs/references/mcp-setup.md`，项目级 `.mcp.json`）
 - **量大**：尽量广搜集 → 筛后全量发布（不设硬目标，可以多收），不是从 6-9 篇里选

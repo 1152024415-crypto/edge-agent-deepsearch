@@ -38,7 +38,7 @@
 ## 收录规则
 
 - 时间窗口：当前日期过去 7 天（arXiv date 取自元数据，validate 核对）。
-- 类型（source_tier facet）：`官方动态`（大厂官方博客/产品发布，命中官方域名）/ `开源大项目`（白名单大项目 release，github.com URL）/ `公司项目`（affiliation 命中公司，vendors 必填+证据）/ `学校顶会`（任何大学顶会顶刊）/ `学校预印本`（任何大学 arXiv 预印本，排序最低）。
+- 类型（source_tier facet）：`官方动态`（大厂官方博客/产品发布，命中官方域名）/ `开源大项目`（白名单大项目 release，github.com URL）/ `公司项目`（affiliation 命中公司，`vendors` 与权威 `affiliation_evidence_url` 必填，GitHub URL 不算机构证据）/ `学校顶会`（任何大学顶会顶刊）/ `学校预印本`（任何大学 arXiv 预印本，排序最低）。证据未核实的公司候选先按学校预印本保留，不提前删除。
 - 大厂官方约束：`source_tier=官方动态` 必须来自官方域名；`source_tier=开源大项目` 必须在 `docs/references/big-projects-whitelist.md` 白名单内。非官方博客/新闻/社媒/GitHub release/二手解读一律排除。
 - 排序：source_tier 优先级（官方动态 > 开源大项目 > 公司项目 > 学校顶会 > 学校预印本）+ score 降序。
 - 链接：必须是论文原文、权威论文页、官方来源页或 github 仓。
