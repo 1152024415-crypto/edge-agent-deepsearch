@@ -6,29 +6,39 @@
 
 ## 快速开始：跑一次调研并展示
 
-新 codeagent 照下面 10 步做，就能完整跑一次"调研 + 发布 + 网页展示"。步骤和 `docs/harness.md` 第 3 节主循环、`AGENTS.md` 工作流一致，不许跳步。
+**一键入口**：
+
+```bash
+bash agent/run_weekly.sh
+```
+
+脚本自动完成所有机械步骤（token/server/sweep/attest/assemble/validate/publish/build/gate/deploy），最后输出本地 + GitHub 两个 URL。需要 agent 智能的步骤（子 agent 调度、翻译、推荐策展）脚本会暂停并打印指令。
+
+如果需要手动操作，下面是完整 10 步（和 `docs/harness.md` 第 3 节主循环、`AGENTS.md` 工作流一致，不许跳步）：
 
 1. **读强入口文档**：`AGENTS.md` → `docs/harness.md` → `.agents/skills/edge-agent-research-pipeline/SKILL.md`。再读 `docs/agent-guide/research-prompt.md`、`output-contract.md`、`validation-rules.md`，以及 `docs/references/mcp-setup.md`、`tag-taxonomy.md`、`big-projects-whitelist.md`。不读就动手，必然漏标准、编断链。
 
 2. **查时间窗口**：读 `data/.last_run` 里的上次调研时间戳。距本次 ≥7 天才跑；不到 7 天就提示"本周已调研"然后停。防重复跑、防拿旧 run 充本周。
 
-3. **发起调研子 agent**：prompt 必须注入 `docs/agent-guide/research-prompt.md` 全文 + 硬约束（B 档边界、官方域名白名单、7 天窗口、多标签 tags、source_tier、不凑数、大白话整理）。自动搜集只做完整收录，一律标 `纳入`；推荐由主 agent 阅读来源后另行策展并填写中文理由。**不许主 agent 自写简化版 prompt**，简化版会让子 agent 漏标准，编造 404 链接。
+3. **发起调研子 agent**：注入 `research-prompt.md` 全文。检索尽量广：明确端侧和端侧技术栈必收，有直接迁移价值的通用推理/serving 也低分保留；只删完全无关、越窗、不可信、链接不匹配和重复项。自动搜集一律标 `纳入`，推荐由主 agent 阅读来源后策展。
 
-4. **保存产出**：子 agent 输出结构化论文/动态 JSON，主 agent 筛选+评分+打标后存成 `research_runs/run-YYYYMMDD-HHMMSS.json`。子 agent 只产 JSON，不改代码、网页、服务器。
+4. **覆盖清单 + 候选证明**：四类来源先完成 `research_runs/collection-manifest.json`（动态7日、arXiv分页到窗口外、HF逐日、GitHub release/trending分离、24厂商/模型实验室逐家成功来源证据），再运行 `python agent/attest_candidates.py` 绑定四个候选文件的条数和 SHA-256；缺项、不可达或产物不一致都不能继续。主 agent 再完成评分、中文整理和推荐，保存 run JSON。
 
-5. **校验**：跑 `python agent/validate_research_run.py research_runs/<run_id>.json`。校验结构 + 7 天窗口 + 2 维加总 = score + source_tier/tags + HTTP 死链检查 + arXiv date 核对 + 跨 run 去重，404 和不可达自动拦。validate 失败就修正或丢弃条目，**不许凑数**，找不到官方 URL 就丢，大厂不足就少收。
+5. **校验**：跑 `python agent/validate_research_run.py research_runs/<run_id>.json`。命令先验覆盖清单，再验内容、精确7日窗口、评分、标签、链接、arXiv date 和去重。普通但相关的低贡献内容不因分数低删除；完全无关或来源不合格才丢。
 
 6. **抽检官方/开源条目**：publish 前，fetch 每个 `source_tier=官方动态` 和 `source_tier=开源大项目` 的 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
 
 7. **启动服务器**（如未跑）：
 
    ```powershell
+   $env:EDGE_PUBLISH_TOKEN = "<本机随机长令牌>"
    python app/server.py --host 127.0.0.1 --port 8001
    ```
 
 8. **发布**：
 
    ```powershell
+   $env:EDGE_PUBLISH_TOKEN = "<与服务端相同的令牌>"
    python agent/publish_results.py research_runs/<run_id>.json --server http://127.0.0.1:8001
    ```
 
@@ -41,8 +51,8 @@
 1. 主 agent 读取 `AGENTS.md` 和 `docs/agent-guide/`。
 2. 主 agent 发起一个或多个调研子 agent。
 3. 子 agent 按 `docs/agent-guide/research-prompt.md` 搜索、阅读、审查论文。
-4. **保存产出**：子 agent 输出结构化候选，主 agent 筛选+评分+打标后存成 `research_runs/run-YYYYMMDD-HHMMSS.json`（不设硬数量目标，有多少合格收多少）。子 agent 只产 JSON，不改代码、网页、服务器。
-5. 主 agent 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`。
+4. **保存产出**：子 agent 输出结构化候选和 collection manifest，主 agent 完成最终筛选+评分+打标+推荐后存成 run JSON（相关内容尽量全收，不设上限）。
+5. 主 agent 运行 validate；覆盖清单不完整时命令直接失败。
 6. 校验通过后，主 agent 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
 7. 服务器接收 `POST /api/research-runs`，写入 SQLite。
 8. 展示页调用 `GET /api/papers`，刷新出最新调研结果。
@@ -75,6 +85,7 @@
 ## 本地运行服务器
 
 ```powershell
+$env:EDGE_PUBLISH_TOKEN = "<本机随机长令牌>"
 python app/server.py --host 127.0.0.1 --port 8000
 ```
 
@@ -101,6 +112,7 @@ python agent/validate_research_run.py research_runs/run-20260625-120000.json
 发布：
 
 ```powershell
+$env:EDGE_PUBLISH_TOKEN = "<与服务端相同的令牌>"
 python agent/publish_results.py research_runs/run-20260625-120000.json --server http://127.0.0.1:8000
 ```
 
