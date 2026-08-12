@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CubicQuant: Parametric Non-Uniform Codebooks for High-Throughput LLM Inference with 1-8-Bit Weights</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",Arial,sans-serif;background:#f7f3ea;color:#202621} main{max-width:820px;margin:0 auto;padding:20px} a{color:#8d3d30} .back{display:inline-block;margin-bottom:12px;text-decoration:none} h1{font-size:21px;margin:0 0 8px;line-height:1.35} .meta{color:#627066;font-size:13px;margin-bottom:12px} .score{font-weight:700;color:#8d3d30;font-size:17px} .tier{display:inline-block;padding:2px 7px;border:1px solid #8d3d30;color:#8d3d30;font-size:11px;font-weight:700;border-radius:3px} .tier.oss{border-color:#2e7d32;color:#2e7d32} .tier.company{border-color:#5a6b8d;color:#5a6b8d} .tier.school{border-color:#8a6d3b;color:#8a6d3b} .open-badge{display:inline-block;padding:2px 7px;border:1px solid #2e7d32;color:#2e7d32;font-size:11px;font-weight:700;border-radius:3px} .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 14px} .vendor-tag{display:inline-block;padding:3px 10px 3px 8px;background:#fffdf7;border-left:3px solid #8d3d30;border-radius:0 4px 4px 0;font-size:12px;font-weight:600;color:#8d3d30} .tag{display:inline-block;padding:2px 9px;background:#eee7da;border-radius:11px;font-size:12px;color:#596258} .field{display:flex;margin-top:10px;gap:10px} .label{flex-shrink:0;width:78px;color:#627066;font-size:13px;font-weight:600} .text{color:#3f463f;font-size:14px;line-height:1.6} .score-reason{margin-top:12px;color:#4c554e;font-size:12px;line-height:1.5} .source{margin-top:18px} .source a{display:inline-block;padding:6px 14px;border:1px solid #8d3d30;border-radius:4px;text-decoration:none;font-size:13px}
+</style></head><body><main>
+<a class="back" href="../index.html">← 返回雷达</a>
+<h1>CubicQuant: Parametric Non-Uniform Codebooks for High-Throughput LLM Inference with 1-8-Bit Weights</h1>
+<div class="meta"><span class="score">12</span> <span class="tier school">学校预印本</span>  2026-08-07 · Xuetian Gao / arXiv</div>
+<div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:高效推理</span><span class="tag">方向:评测基准</span><span class="tag">硬件:GPU</span><span class="tag">硬件:H100</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">CubicQuant 用单调三次曲线构造 1 至 8 比特的非均匀权重量化格式，在保留规则整数码流的同时提高重建精度。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在组大小 128 的四比特实验中，相比最优裁剪均匀量化，三类分布的重建误差分别降低 3.90%、13.49% 和 28.14%；H200 内核结果显示不同矩阵形状存在执行方案交叉点。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">每组权重只保存两个曲线形状参数和一个尺度，把均匀幅值码映射为非均匀重建值，并支持直接打包的 GPU 权重执行。</span></div>
+<div class="score-reason">评分依据：格式设计兼顾低比特表示和规则 GPU 执行，但目前主要是分布重建和 H200 初测，模型质量与跨设备端到端收益仍未验证。</div>
+<div class="source"><a href="https://arxiv.org/abs/2608.06763" target="_blank" rel="noopener">查看原文 →</a></div>
+</main></body></html>
