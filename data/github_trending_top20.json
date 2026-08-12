@@ -1,115 +1,115 @@
 [
   {
     "rank": 1,
-    "repo": "patchy631/time-to-first-token",
-    "url": "https://github.com/patchy631/time-to-first-token",
-    "total": "338★",
-    "week": "338",
-    "desc": "A 10-week, 30-minutes-a-day roadmap for LLM inference serving and optimization. vLLM, SGLang, quantization, speculative decoding, benchmarki"
+    "repo": "YINGLINGH/limioryn",
+    "url": "https://github.com/YINGLINGH/limioryn",
+    "total": "133★",
+    "week": "133",
+    "desc": "面向真实设备的端云多智能体框架，强调可验证执行和有界恢复。"
   },
   {
     "rank": 2,
-    "repo": "allover326/deepseek-v4-cmp170hx",
-    "url": "https://github.com/allover326/deepseek-v4-cmp170hx",
-    "total": "33★",
-    "week": "33",
-    "desc": "DeepSeek-V4-Flash-0731 on 4x CMP 170HX (sm_80): 98 tok/s decode, ~5300 tok/s prefill. DSpark speculative decoding under pipeline parallelism"
+    "repo": "lichuang/docq",
+    "url": "https://github.com/lichuang/docq",
+    "total": "15★",
+    "week": "15",
+    "desc": "在终端运行的本地文档问答工具，由端侧大模型完成推理。"
   },
   {
     "rank": 3,
-    "repo": "Badtheorylabs/Macaw",
-    "url": "https://github.com/Badtheorylabs/Macaw",
-    "total": "20★",
-    "week": "20",
-    "desc": "Macaw — on-device AI agent for macOS. 2.7B LFM2.5 fine-tune, MLX 4-bit, 97 macOS tools, no cloud."
+    "repo": "jbarrow/specspecs",
+    "url": "https://github.com/jbarrow/specspecs",
+    "total": "11★",
+    "week": "11",
+    "desc": "为投机解码过程提供可观测性与性能分析。"
   },
   {
     "rank": 4,
-    "repo": "eric8810/deepseek-v4-deploy",
-    "url": "https://github.com/eric8810/deepseek-v4-deploy",
-    "total": "13★",
-    "week": "13",
-    "desc": "DeepSeek-V4-Flash-0731 deployment on 2x RTX PRO 6000 Blackwell (SM120) with vLLM PR #41834 fork + DSpark speculative decoding. 无海外网络环境下的镜像源解"
+    "repo": "raullenchai/twinspark",
+    "url": "https://github.com/raullenchai/twinspark",
+    "total": "7★",
+    "week": "7",
+    "desc": "在两台 NVIDIA DGX Spark 上部署 DeepSeek-V4-Flash 的生产级方案，包含双节点 vLLM 自愈和重启验证。"
   },
   {
     "rank": 5,
-    "repo": "lrozewicz/vLLM-Moet-GB10",
-    "url": "https://github.com/lrozewicz/vLLM-Moet-GB10",
-    "total": "10★",
-    "week": "10",
-    "desc": "Run DeepSeek-V4-Flash 304B on a single NVIDIA GB10 / DGX Spark - 2-bit MoE planes, FP4 quality recovery, speculative decoding"
+    "repo": "Mog9/Octane",
+    "url": "https://github.com/Mog9/Octane",
+    "total": "6★",
+    "week": "6",
+    "desc": "零配置的端到端投机解码运行时，可自动选择草稿模型并加速本地大模型推理。"
   },
   {
     "rank": 6,
-    "repo": "manjunathshiva/esp32-tinyllm",
-    "url": "https://github.com/manjunathshiva/esp32-tinyllm",
-    "total": "2★",
-    "week": "2",
-    "desc": "Interactive on-device storytelling with a 28.9M-parameter LLM on an $8 ESP32-S3, using Gemma-style Per-Layer Embeddings to keep 25M paramete"
+    "repo": "kalesha681/ARES-Autonomous-Surveyor",
+    "url": "https://github.com/kalesha681/ARES-Autonomous-Surveyor",
+    "total": "5★",
+    "week": "5",
+    "desc": "面向无 GPS 地形测绘的端云分工无人机系统，覆盖航线规划、视觉地标检测和边缘 AI 推理。"
   },
   {
     "rank": 7,
-    "repo": "anuragsingh1227/mutualfund-ai",
-    "url": "https://github.com/anuragsingh1227/mutualfund-ai",
-    "total": "2★",
-    "week": "2",
-    "desc": "Android-first AI mutual fund assistant. Import Groww reports, analyze holdings & tax, chat with AI. Zero-knowledge: Recovery Key and LLM key"
+    "repo": "CogniTechSystems/muse-glimmer-claude-code",
+    "url": "https://github.com/CogniTechSystems/muse-glimmer-claude-code",
+    "total": "4★",
+    "week": "4",
+    "desc": "在 Apple Silicon 上本地运行 Muse-Glimmer-30B，提供 llama.cpp 配置、实测基准、投机解码和 Claude Code 接入。"
   },
   {
     "rank": 8,
+    "repo": "ZinYY/AdaFlash",
+    "url": "https://github.com/ZinYY/AdaFlash",
+    "total": "3★",
+    "week": "3",
+    "desc": "通过在线策略蒸馏的扩散草稿模型，实现可自适应的投机解码。"
+  },
+  {
+    "rank": 9,
+    "repo": "lnn-ops/HiViS",
+    "url": "https://github.com/lnn-ops/HiViS",
+    "total": "3★",
+    "week": "3",
+    "desc": "多模态大模型投机解码方法：对草稿模型隐藏视觉 token，以减少无效计算。"
+  },
+  {
+    "rank": 10,
+    "repo": "zshs000/Remote-Agent-Gateway",
+    "url": "https://github.com/zshs000/Remote-Agent-Gateway",
+    "total": "3★",
+    "week": "3",
+    "desc": "自托管 MCP 网关，为电脑、服务器、CI 和边缘设备上的轻量智能体提供统一出站连接。"
+  },
+  {
+    "rank": 11,
+    "repo": "rsantomauro/TeroGlasses",
+    "url": "https://github.com/rsantomauro/TeroGlasses",
+    "total": "2★",
+    "week": "2",
+    "desc": "面向 Ray-Ban Meta 眼镜的语音助手，串联唤醒词、端侧语音识别、大模型和端侧语音合成。"
+  },
+  {
+    "rank": 12,
     "repo": "yuzhang-robotics/embodied-robot-heterogeneous-control",
     "url": "https://github.com/yuzhang-robotics/embodied-robot-heterogeneous-control",
     "total": "2★",
     "week": "2",
-    "desc": "This work presents a wheeled‑robot system built on Jetson Orin Nano‑STM32 heterogeneous computing architecture. It performs asynchronous VLA"
-  },
-  {
-    "rank": 9,
-    "repo": "jacklarmer/deepseek-v4-flash-0731-sm120",
-    "url": "https://github.com/jacklarmer/deepseek-v4-flash-0731-sm120",
-    "total": "2★",
-    "week": "2",
-    "desc": "Working recipe: DeepSeek-V4-Flash-0731 + DSpark speculative decoding + SparkInfer/B12X on 4x RTX PRO 6000 Blackwell (SM120), PCIe-only host."
-  },
-  {
-    "rank": 10,
-    "repo": "zercade-dev/app-narn",
-    "url": "https://github.com/zercade-dev/app-narn",
-    "total": "2★",
-    "week": "2",
-    "desc": "Multi-provider AI translation workbench for local, single-user use — BYOK LLM and classical MT engines, glossaries, translation memory, and "
-  },
-  {
-    "rank": 11,
-    "repo": "binaydhakal/react-native-local-llm",
-    "url": "https://github.com/binaydhakal/react-native-local-llm",
-    "total": "1★",
-    "week": "1",
-    "desc": "One interface for every on-device LLM runtime in React Native — Apple Foundation Models, ExecuTorch (Gemma), and llama.cpp-based Cactus — wi"
-  },
-  {
-    "rank": 12,
-    "repo": "Justin300507/aria",
-    "url": "https://github.com/Justin300507/aria",
-    "total": "1★",
-    "week": "1",
-    "desc": "On-device voice assistant — 80+ tools, encrypted local-first memory, privacy modes"
+    "desc": "基于 Jetson Orin Nano 与 STM32 异构架构的轮式机器人系统，在设备上异步执行视觉—语言—动作控制。"
   },
   {
     "rank": 13,
-    "repo": "Fangyuan025/Kokosuki",
-    "url": "https://github.com/Fangyuan025/Kokosuki",
-    "total": "1★",
-    "week": "1",
-    "desc": "A fully-offline macOS desktop pet with an on-device LLM mind — one self-contained app, no cloud"
+    "repo": "ElonAug7/Mnemosyne-agentmemory-engine-openclaw-hermes",
+    "url": "https://github.com/ElonAug7/Mnemosyne-agentmemory-engine-openclaw-hermes",
+    "total": "2★",
+    "week": "2",
+    "desc": "OpenClaw 的零依赖本地记忆引擎，运行时仅 526KB，不依赖大模型 API 或向量数据库。"
   },
   {
     "rank": 14,
-    "repo": "Wayazi/adtc-2026",
-    "url": "https://github.com/Wayazi/adtc-2026",
+    "repo": "SKL-666666/mnn-local-ai-chat",
+    "url": "https://github.com/SKL-666666/mnn-local-ai-chat",
     "total": "1★",
     "week": "1",
-    "desc": "ADTC 2026 — On-Device LLM Challenge: Qwen3.5-2B fine-tuned for healthcare advisory (isiZulu, KZN) with Hermes Agent"
+    "desc": "HarmonyOS 端侧大模型聊天应用，同时支持 MNN 与 llama.cpp 两套推理引擎。"
   },
   {
     "rank": 15,
@@ -117,46 +117,46 @@
     "url": "https://github.com/axe01010/android-ai-agent",
     "total": "1★",
     "week": "1",
-    "desc": "local-llm agent that controls your phone over adb. zero cloud."
+    "desc": "通过 ADB 控制手机的本地大模型智能体，全流程不依赖云端。"
   },
   {
     "rank": 16,
-    "repo": "Doriyz/Jetson-TensorRT-Deployment",
-    "url": "https://github.com/Doriyz/Jetson-TensorRT-Deployment",
+    "repo": "loyality7/speech-to-speech-mobile",
+    "url": "https://github.com/loyality7/speech-to-speech-mobile",
     "total": "1★",
     "week": "1",
-    "desc": "End-to-end edge AI inference deployment and optimization on NVIDIA Jetson AGX Xavier with PyTorch, ONNX and TensorRT."
+    "desc": "面向 Android 和 iOS 的全端侧实时语音对话引擎，集成 VAD、Whisper、流式大模型和语音合成。"
   },
   {
     "rank": 17,
-    "repo": "jiawei686/tiny-llm-gateway",
-    "url": "https://github.com/jiawei686/tiny-llm-gateway",
+    "repo": "AnjanaSuresh01/edge-vlm",
+    "url": "https://github.com/AnjanaSuresh01/edge-vlm",
     "total": "1★",
     "week": "1",
-    "desc": "A tiny (<=5 MB), single-binary, OpenAI-compatible LLM inference gateway in Rust on llama.cpp. Drop-in Ollama replacement for local LLM infer"
+    "desc": "可离线运行的 Qwen3-VL-2B 视觉助手，并用显存和推理基准帮助选择适合端侧的精度。"
   },
   {
     "rank": 18,
-    "repo": "hrabanazviking/RuneForgeAI-Project-Aesir",
-    "url": "https://github.com/hrabanazviking/RuneForgeAI-Project-Aesir",
+    "repo": "AbakarSilet/Monsieur",
+    "url": "https://github.com/AbakarSilet/Monsieur",
     "total": "1★",
     "week": "1",
-    "desc": "Bare-metal Mojo inference engine designed for local sovereignty. Features zero-copy GGUF parsing, PagedAttention KV caching, and a stateless"
+    "desc": "Flutter 开发的离线学习助手，使用完全在设备端运行的 Gemma 4。"
   },
   {
     "rank": 19,
-    "repo": "ivanwwl123-oss/NOETRONYX-Robot-Dog-Journey",
-    "url": "https://github.com/ivanwwl123-oss/NOETRONYX-Robot-Dog-Journey",
+    "repo": "YoursSarcastically/stark",
+    "url": "https://github.com/YoursSarcastically/stark",
     "total": "1★",
     "week": "1",
-    "desc": "End-to-end portfolio project for an AI-powered quadruped robot (Robot Dog). Integrating Python, ESP32, OpenCV, YOLOv8, ROS2, Jetson Orin Nan"
+    "desc": "完全在端侧运行的 macOS 文本改写工具，使用 MLX 加载本地微调的 Qwen 1.5B。"
   },
   {
     "rank": 20,
-    "repo": "a1643859813/npu-inference-platform",
-    "url": "https://github.com/a1643859813/npu-inference-platform",
+    "repo": "v4valti/ipex-llm",
+    "url": "https://github.com/v4valti/ipex-llm",
     "total": "1★",
     "week": "1",
-    "desc": "针对 NPU 模型部署环节分散、人工操作效率低、推理结果缺少统一管理的问题，负责设计覆盖模型资产、转换压缩、部署、推理与 Agent 问答的一站式管理平"
+    "desc": "面向多种主流大模型的本地推理与微调加速方案。"
   }
 ]

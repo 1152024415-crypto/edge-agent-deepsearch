@@ -1,65 +1,40 @@
 {
-  "overview": "本周端侧 AI 动态(08-01~08-07):Samsung 连发两篇亚1比特量化(NanoQuant+LittleBit-2,极低比特端侧推理);Google 三连发(统一 AI 模型路由 API + MCP Stateless 扩展 agent 基础设施 + Agent Plugins 打包技能工具);NVIDIA 多条(Alpamayo 2 robotaxi 开源模型 + 世界动作模型重塑机器人操作 + 开放世界模型与物理 AI + Beyond VLAs);OpenVINO 2026.3.0 大版本(新模型覆盖);Mistral Shieldstral 3B 开放权重安全分类器;Anthropic Fable 5 生物安全护栏更新;学术侧 549 篇(arXiv 2008 broad sweep + HF 158,含 6 篇 SNN/neuromorphic)+6 官方动态+1 开源大项目——端侧从亚1比特量化、agent 基础设施、robotaxi 开源到神经形态持续推进。",
+  "overview": "本周端侧 AI 动态(08-07~08-12)：最值得看的是本地 Agent 真正开始分化成可落地组件——NVIDIA 同时发布适配 RTX PC、Jetson 的高效 Agent 模型与多模型路由方案；Limioryn 把 Agent 工具调用延伸到 ESP32、STM32 和 Linux SBC，并补上设备确认、状态对账与恢复；Activity Frames 与 SuperLocalMemory 分别探索 PC 本地行为记忆和可治理长期记忆。手机端本周没有核到可信的新产品发布，但 Android Agent 的现实鲁棒性与无障碍注入风险值得持续关注。基础设施侧，ExecuTorch 1.4 扩展 Cortex-M、Qualcomm QNN、Android 与 Vulkan 支持。",
   "highlights": [
     {
-      "url": "https://research.samsung.com/blog/NanoQuant-Sub-bit-LLM-Quantization",
-      "topic": "Samsung NanoQuant:亚1比特 LLM 量化(08-03)",
-      "why": "Samsung 研究院发亚1比特量化,极端压缩下保精度——端侧极致量化前沿"
+      "url": "https://blogs.nvidia.com/blog/nemotron-lightning-switchyard-rtx-dgx/",
+      "topic": "NVIDIA Nemotron 3.5 与 NeMo Switchyard",
+      "why": "本周最强的 PC/Jetson 本地 Agent 信号：开放权重 MoE 模型配合多模型路由，直接面向长期智能体任务降低延迟和成本。"
     },
     {
-      "url": "https://research.samsung.com/blog/LittleBit-2-Spectral-Energy-Gain-Sub-bit",
-      "topic": "Samsung LittleBit-2:谱能量增益亚1比特(08-04)",
-      "why": "Samsung 连发第二篇亚1比特,谱能量视角,端侧极端压缩持续突破"
+      "url": "https://blogs.nvidia.com/blog/local-ai-open-source-models-agents-nemotron/",
+      "topic": "NVIDIA 本地开源模型与智能体生态",
+      "why": "把 RTX PC、DGX Spark、Jetson 上的本地文件、应用和消息工具调用放在同一张产品版图里，说明本地 Agent 正从模型演示走向应用组合。"
     },
     {
-      "url": "https://developers.googleblog.com/en/a-unified-api-for-ai-model-routing/",
-      "topic": "Google:统一 AI 模型路由 API(08-04)",
-      "why": "Google 统一模型路由 API,端侧/云端多模型选择的基础设施层"
+      "url": "https://github.com/YINGLINGH/limioryn/releases/tag/v0.39.0",
+      "topic": "Limioryn 0.39.0 首次公开预览",
+      "why": "新开源项目直接覆盖 ESP32、STM32 与 Linux SBC，重点不是聊天界面，而是设备能力、执行确认、状态对账和故障恢复闭环。"
     },
     {
-      "url": "https://developers.googleblog.com/en/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/",
-      "topic": "Google:MCP Stateless 扩展 agent 基础设施(08-05)",
-      "why": "MCP Stateless 扩展,agent 工程基础设施向无状态扩展"
+      "url": "https://github.com/pytorch/executorch/releases/tag/v1.4.0",
+      "topic": "ExecuTorch 1.4 端侧运行时更新",
+      "why": "Cortex-M、Qualcomm QNN、Android、Vulkan 与多种量化路径同时增强，是本周最值得跟踪的端侧部署底座更新。"
     },
     {
-      "url": "https://developers.googleblog.com/en/agent-plugins-package-your-skills-tools-and-more/",
-      "topic": "Google:Agent Plugins 打包技能工具(08-06)",
-      "why": "Agent Plugins 打包技能/工具,agent 工程标准化封装"
+      "url": "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities/",
+      "topic": "OpenAI 披露 Astra 的 Agent 网络安全能力跃迁",
+      "why": "模型的多步编程与网络行动能力逼近更高风险门槛，促使隔离环境、工具权限、监控和沙箱执行成为 Agent 产品的核心安全层。"
     },
     {
-      "url": "https://blogs.nvidia.com/blog/alpamayo-2-super-open-model-now-available/",
-      "topic": "NVIDIA Alpamayo 2 Super:robotaxi 开源模型(08-04)",
-      "why": "NVIDIA 开源 Alpamayo 2 robotaxi 模型,端侧自动驾驶+物理 AI 开源"
+      "url": "https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/",
+      "topic": "OpenAI 扩展 Daybreak 网络安全 Agent",
+      "why": "GPT-5.6-Cyber 进入受控访问，覆盖漏洞发现、验证、响应和修复，展示了高能力工具型 Agent 的产品化与权限治理方式。"
     },
     {
-      "url": "https://developer.nvidia.com/blog/beyond-vlas-how-world-action-models-reshape-robot-manipulation/",
-      "topic": "NVIDIA:Beyond VLAs—世界动作模型重塑机器人操作(08-04)",
-      "why": "从 VLA 到世界动作模型,机器人操作新范式,端侧/具身 agent 前沿"
-    },
-    {
-      "url": "https://mistral.ai/news/shieldstral/",
-      "topic": "Mistral Shieldstral 3B:开放权重安全分类器(08-04)",
-      "why": "Mistral 开源 3B 安全分类器,端侧安全护栏小模型"
-    },
-    {
-      "url": "https://github.com/openvinotoolkit/openvino/releases/tag/2026.3.0",
-      "topic": "OpenVINO 2026.3.0:大版本新模型覆盖(08-04)",
-      "why": "Intel 端侧推理引擎 OpenVINO 大版本,新模型覆盖——端侧部署框架持续演进"
-    },
-    {
-      "url": "https://blogs.nvidia.com/blog/open-world-models-physical-ai/",
-      "topic": "NVIDIA:开放世界模型与物理 AI(08-06)",
-      "why": "开放世界模型 + 物理 AI,端侧具身智能新方向"
-    },
-    {
-      "url": "https://anthropic.com/news/improving-fable-5-s-biology-safeguards",
-      "topic": "Anthropic Fable 5:生物安全护栏更新(08-07)",
-      "why": "Anthropic 安全护栏更新,端侧/边缘 AI 安全对齐相关"
-    },
-    {
-      "url": "https://blogs.nvidia.com/blog/ai-storage-fms/",
-      "topic": "NVIDIA:AI 内存/存储需求升级(08-04)",
-      "why": "AI 内存/存储需求分析,端侧部署存储约束参考"
+      "url": "https://mistral.ai/news/regional-inference-open-models-new-compute/",
+      "topic": "Mistral 推出区域内推理与开放模型基础设施",
+      "why": "虽然不是端侧方案，但数据驻留、区域推理和开放模型选择会影响企业端云协同的部署边界。"
     }
   ]
 }

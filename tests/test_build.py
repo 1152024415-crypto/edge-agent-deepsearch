@@ -315,6 +315,13 @@ class PageSwitcherTest(unittest.TestCase):
         self.assertIn("window.__WEEKS__", INDEX_HTML)
         self.assertIn("window.__WEEK_LABEL__", INDEX_HTML)
 
+    def test_header_range_uses_editorial_week_window_not_last_paper_date(self):
+        from app.page import INDEX_HTML
+
+        self.assertIn("const weekMeta=mine", INDEX_HTML)
+        self.assertIn("weekMeta.range.start", INDEX_HTML)
+        self.assertIn("weekMeta.range.end", INDEX_HTML)
+
 
 class WeekArchiveBuildTest(unittest.TestCase):
     def setUp(self):

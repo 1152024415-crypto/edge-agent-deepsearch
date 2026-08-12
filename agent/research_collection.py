@@ -43,6 +43,7 @@ REQUIRED_GITHUB_PROJECTS = frozenset({
     "PowerInfer/PowerInfer",
     "HKUDS/nanobot",
     "microsoft/Orchard",
+    "YINGLINGH/limioryn",
 })
 
 REQUIRED_VENDOR_SOURCES = frozenset({

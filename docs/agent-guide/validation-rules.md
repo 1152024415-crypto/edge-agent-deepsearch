@@ -29,6 +29,9 @@
 23. **推荐策展机械门**：自动汇集一律 `纳入`，不得按标题关键词自动推荐。只有主 agent 读过来源后可改为 `推荐`；每条推荐必须填写中文 `recommendation_reason`（至少 8 个中文字符、无内部占位词）。构建产物有内容时至少有 1 条合格推荐，否则 `gate_release` 阻止部署。
 24. **推荐项目名机械门**：自动汇集 `title_zh` 一律留空；主 agent 晋升推荐时必须填写简短中文项目名（至少 2 个中文字符、总长不超过 40 字、无内部占位词）。`title_zh` 回答“它叫什么”，不得与回答“它做什么”的 `abstract` 完全相同。推荐卡固定按项目名 → 介绍 → 关键词 → 推荐理由 → 英文原标题展示。
 25. **相关性触发词必须成对验证**：广搜不等于裸关键词入库。明确设备语境（on-device/edge device/mobile/embedded/NPU/MCU/FPGA）还必须与 AI 模型或任务语境组合；普通图的 `edge`、论文语义中的 `embedded/deployed`、energy-based model、数学“推理”、树搜索 pruning、云端 LLM 面向 mobile users 均不算端侧证据。新增或放宽触发词时，必须在 `tests/test_research_collection.py` 同时加入“应收”与“碰撞应排除”回归样例，避免只测召回或只测降噪。
+26. **官方页面日期核验**：`source_tier=官方动态` 的 `date` 必须来自具体页面正文发布日期。sitemap `lastmod`、搜索抓取时间、页面模板更新时间和地区镜像不能作为发布日；同一动态的语言/地区副本只留一个规范 URL。
+27. **中心贡献校验**：相邻技术触发词必须描述标题或核心方法；只在摘要背景、对比基线或应用描述中偶然提到 `multi-agent`、蒸馏、serving、低功耗，不得据此入库。真正端侧 Agent 必须额外满足设备语境 + Agent 闭环证据。
+28. **新开源项目晋升校验**：非白名单 Trending 仓库只进线索审计，不进 canonical candidates。主 agent 只有在核对影响力、代码真实性、本周事件和设备闭环后，才可更新白名单；修改必须同时覆盖正例与未知小仓拒绝回归测试。
 25. **检索覆盖机械门**：`research_runs/collection-manifest.json` 必须覆盖运行日向前含当日的 7 个自然日、arXiv 规范大类扫描且分页自然终止、HF 每个日期、GitHub Trending 和白名单 release 两项、24 个规范厂商/模型实验室逐厂成功来源证据。四个候选 JSON 即使 0 条也必须以空数组落盘，并由 `agent/attest_candidates.py` 写入路径、精确条数、文件 SHA-256、逐候选记录指纹和稳定 title+URL+来源日期身份绑定；每条 run 内容必须携带唯一且不可复用的 `candidate_source` + `candidate_ref`，最终英文标题、原文 URL 与日期必须匹配同一候选。`candidate_source=github` 还必须固定为 `source_tier=开源大项目` 并命中大项目白名单。缺文件、坏 JSON、条数/哈希/身份/血缘不符、某厂全不可达或 arXiv 命中页数上限均不能组装。manifest 与血缘嵌入 run，发布客户端和服务器都会复验；写 API 强制 `EDGE_PUBLISH_TOKEN`，正常周报禁止绕过。
 26. **公司归属只认明确机构证据**：自动转换只能读取 affiliation/机构字段，不得从标题、摘要或模型名推测公司。Qwen/NVIDIA/Google 等被研究对象不等于作者机构。
 

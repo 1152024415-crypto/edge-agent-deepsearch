@@ -191,6 +191,11 @@ class BroadCollectionBoundaryTests(unittest.TestCase):
             "LLM Agents with Monte Carlo Tree Search Pruning.",
             "Mobile Networks with Cloud LLMs.",
             "Mobile Users Query Remote LLMs.",
+            (
+                "Electronic health record feature engineering with a multi-agent system "
+                "for automated heart-failure phenotyping."
+            ),
+            "Universal rendezvous of anonymous agents with footprints in a low-power sensor network.",
         ]
 
         for text in cases:
@@ -257,6 +262,10 @@ class BroadCollectionBoundaryTests(unittest.TestCase):
         wearable_memory = build_run_week.classify_research_relevance(
             "A wearable assistant with long-term memory from streaming video"
         )
+        mcu_agent = build_run_week.classify_research_relevance(
+            "Limioryn 0.39.0\n"
+            "An AI agent executes capabilities on ESP32, STM32 and Linux SBC devices with acknowledgements."
+        )
 
         self.assertEqual(adjacent, "adjacent")
         self.assertEqual(agent_memory, "adjacent")
@@ -266,7 +275,21 @@ class BroadCollectionBoundaryTests(unittest.TestCase):
         self.assertEqual(snn_accelerator, "direct")
         self.assertEqual(token_compression, "adjacent")
         self.assertEqual(wearable_memory, "direct")
+        self.assertEqual(mcu_agent, "direct")
         self.assertEqual(unrelated, "irrelevant")
+
+    def test_adjacent_stack_evidence_must_be_central_to_the_work(self):
+        incidental = build_run_week.classify_research_relevance(
+            "Reference-Free Post-Training of Open Large Language Models for Translation\n"
+            "The comparison mentions a distillation baseline and serving cost."
+        )
+        central = build_run_week.classify_research_relevance(
+            "ReRound: Calibration-Free LLM Quantization\n"
+            "The method reduces inference memory while preserving accuracy."
+        )
+
+        self.assertEqual(incidental, "irrelevant")
+        self.assertEqual(central, "adjacent")
 
     def test_model_name_in_abstract_does_not_create_company_affiliation(self):
         paper = build_run_week.convert_arxiv({
@@ -291,6 +314,18 @@ class BroadCollectionBoundaryTests(unittest.TestCase):
         })
 
         self.assertIsNone(paper)
+
+    def test_curated_official_agent_post_is_not_lost_when_title_is_nontechnical(self):
+        paper = build_run_week.convert_vendor({
+            "vendor": "OpenAI",
+            "title": "Responding to the next frontier of critical cyber capabilities",
+            "summary": "The AI agent uses tools in a sandboxed security workflow.",
+            "url": "https://openai.com/index/example",
+            "date": "2026-08-10",
+        })
+
+        self.assertIsNotNone(paper)
+        self.assertLess(paper["score_relevance"], 8)
 
     def test_chinese_vendor_summary_can_supply_edge_relevance_evidence(self):
         paper = build_run_week.convert_vendor({
@@ -330,6 +365,25 @@ class GitHubReleaseCollectionTests(unittest.TestCase):
         module = importlib.import_module("research_collection")
 
         self.assertIn("microsoft/Orchard", module.REQUIRED_GITHUB_PROJECTS)
+
+    def test_limioryn_is_in_the_audited_edge_agent_project_set(self):
+        module = importlib.import_module("research_collection")
+
+        self.assertIn("YINGLINGH/limioryn", module.REQUIRED_GITHUB_PROJECTS)
+        self.assertTrue(module.is_required_github_project("https://github.com/YINGLINGH/limioryn"))
+
+    def test_limioryn_chinese_release_summary_is_kept_as_direct_edge_agent(self):
+        paper = build_run_week.convert_github({
+            "repo": "YINGLINGH/limioryn",
+            "tag": "v0.39.0",
+            "title": "Limioryn 0.39.0 — Initial Public Preview",
+            "summary": "首个公开预览版本把云端 Agent 与 ESP32、STM32、Linux SBC 的设备能力连接起来，并提供受约束执行、设备确认、状态对账和故障恢复闭环。",
+            "release_url": "https://github.com/YINGLINGH/limioryn/releases/tag/v0.39.0",
+            "date": "2026-08-07",
+        })
+
+        self.assertIsNotNone(paper)
+        self.assertEqual(paper["score_relevance"], 8)
 
     def test_major_commit_scan_stops_after_first_match_and_caps_detail_requests(self):
         module = self._module()

@@ -118,7 +118,7 @@ DIRECT_RE = re.compile(
     r"embedded[- ](?:ai|agents?|llms?|models?|neural networks?|inference|system|device|hardware|"
     r"platform|processor|accelerator)|device[- ]side|local[- ](?:ai|llms?|models?)[- ](?:inference|execution|serving)|"
     r"\biot\b|\bnpu\b|\bevks?\b|hexagon htp|dragonwing|\b(?:smart)?phone\b|"
-    r"microcontroller|neuromorphic|loihi|spinnaker|raspberry|"
+    r"microcontroller|\bmcus?\b|\besp32\b|\bstm32\b|\blinux sbc\b|neuromorphic|loihi|spinnaker|raspberry|"
     r"jetson|smartwatch|wearable|\bonboard\b|tinyml|low.?power|resource.?constrain|"
     r"edge computing|edge ai|edge inference|mobile inference|\bmcus?\b|\bfpga\b|"
     r"端侧|端上|边缘(?:设备|推理|计算|系统|芯片)|设备端|离线运行|本地运行|"
@@ -133,6 +133,27 @@ AI_RE = re.compile(
     r"llama\.cpp|litert|core ml|openvino|computer vision|object detection|"
     r"speech recognition|keyword spotting|\byolo\b|image classification|"
     r"人工智能|语言模型|神经网络|生成式|推理",
+    re.I,
+)
+MODEL_TASK_RE = re.compile(
+    r"\bai\b|\bllms?\b|language models?|foundation models?|diffusion models?|transformer|"
+    r"neural network|spiking neural|\bsnns?\b|generative ai|agentic ai|\bai agents?\b|"
+    r"\bvlms?\b|vision-language|machine learning|deep learning|\binference\b|tinyml|"
+    r"computer vision|object detection|speech recognition|keyword spotting|\byolo\b|"
+    r"image classification|world[- ]action models?|vision-language-action|"
+    r"executorch|llama\.cpp|litert|core ml|openvino|mediapipe|onnx runtime|"
+    r"语言模型|神经网络|生成式|模型推理|人工智能",
+    re.I,
+)
+AGENT_LOOP_RE = re.compile(
+    r"autonomous|planning|planner|memory|tool(?: use| calling)?|action|actuation|"
+    r"environment interaction|control loop|self-correct|self-heal|自主|规划|记忆|工具调用|"
+    r"行动闭环|设备执行|受约束执行|状态对账|故障恢复",
+    re.I,
+)
+OFFICIAL_TOPIC_RE = re.compile(
+    r"人工智能|智能体|模型|推理|算力|工具调用|沙箱|安全护栏|云端|本地运行|设备端|"
+    r"\bai\b|\bagents?\b|\bagentic\b|\bllms?\b|\bvlms?\b|inference|model|compute|sandbox",
     re.I,
 )
 STACK_RE = re.compile(
@@ -152,7 +173,7 @@ STACK_RE = re.compile(
     r"real.?time (?:inference|serving|processing|execution)|"
     r"token compression|memory compress|compress\w*[^.]{0,40}(?:long.?term )?memory|"
     r"(?:agent|assistant)[^.]{0,50}memory|memory[^.]{0,50}(?:agent|assistant)|"
-    r"agent(?:ic)?[- ](?:system|training|infrastructure|platform)|agentic modeling|"
+    r"agent(?:ic)?[- ](?:training|infrastructure|platform)|agentic modeling|"
     r"量化|剪枝|蒸馏|压缩|缓存|低延迟|吞吐|运行时|持续推理|"
     r"(?:模型|推理|端侧|设备端)部署|(?:推理|模型|硬件)加速|加速(?:推理|部署)",
     re.I,
@@ -168,11 +189,17 @@ GUI_SYSTEM_RE = re.compile(
 def classify_research_relevance(text: str) -> str:
     """Classify broad collection scope without using novelty as a deletion gate."""
     value = text or ""
+    title, separator, _body = value.partition("\n")
+    central = title if separator else value
     if GUI_RE.search(value) and not GUI_SYSTEM_RE.search(value):
         return "irrelevant"
-    if DIRECT_RE.search(value) and AI_RE.search(value):
+    direct_agent_loop = re.search(r"\bagents?\b|\bagentic\b|\bassistants?\b|智能体", value, re.I) and AGENT_LOOP_RE.search(value)
+    if DIRECT_RE.search(value) and (MODEL_TASK_RE.search(value) or direct_agent_loop):
         return "direct"
-    if AI_RE.search(value) and STACK_RE.search(value):
+    # Adjacent work must make the inference/deployment technique central enough
+    # to name it in the title.  A baseline mentioned deep in an abstract is not
+    # evidence that the paper contributes to the edge-AI stack.
+    if AI_RE.search(central) and STACK_RE.search(central):
         return "adjacent"
     return "irrelevant"
 
@@ -221,7 +248,7 @@ def convert_arxiv(c: dict) -> dict | None:
     title, paper_url, source_date = candidate_output_identity("arxiv", c)
     summary = c.get("abstract") or c.get("summary") or ""
     authors = _coerce_authors(c.get("authors"))
-    text = (title + " " + summary).lower()
+    text = (title + "\n" + summary).lower()
     # Broad collection keeps direct and adjacent AI inference/deployment work.
     # Only completely unrelated keyword collisions are removed here.
     relevance = classify_research_relevance(text)
@@ -297,7 +324,7 @@ def convert_hf(c: dict, seen_arxiv: set) -> dict | None:
     paper_url = identity_url
     summary = c.get("abstract") or ""
     authors = _coerce_authors(c.get("authors"))
-    text = (title + " " + summary).lower()
+    text = (title + "\n" + summary).lower()
     relevance = classify_research_relevance(text)
     if relevance == "irrelevant":
         return None
@@ -340,7 +367,7 @@ def convert_github(c: dict) -> dict | None:
     tier = "开源大项目"
     vendor = str(c.get("vendor") or "")
     affiliation_evidence_url = ""
-    text = (title + " " + summary).lower()
+    text = (title + "\n" + summary).lower()
     relevance = classify_research_relevance(text)
     if relevance == "irrelevant":
         return None
@@ -373,8 +400,16 @@ def convert_vendor(c: dict) -> dict | None:
     vendor = c.get("vendor") or ""
     title, url, source_date = candidate_output_identity("vendors", c)
     summary = c.get("summary") or ""
-    text = (title + " " + summary).lower()
+    text = (title + "\n" + summary).lower()
     relevance = classify_research_relevance(text)
+    # The vendor candidate file is already a manually curated slice of the
+    # official-source sweep.  Product names and editorial headlines often omit
+    # the technical keyword that appears in the body, so retain clear AI/Agent
+    # or inference-stack evidence from the full candidate at adjacent priority.
+    if relevance == "irrelevant" and (
+        AI_RE.search(text) or STACK_RE.search(text) or OFFICIAL_TOPIC_RE.search(text)
+    ):
+        relevance = "adjacent"
     if relevance == "irrelevant":
         return None
     rel = 9 if relevance == "direct" else 5
