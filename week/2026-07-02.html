@@ -239,7 +239,15 @@
         rows(first,0)+
         (rest.length?`<details class="weekly-more"><summary>展开其余 ${rest.length} 条热点 ↓</summary>${rows(rest,WEEKLY_PREVIEW)}</details>`:"");
     }
-    function range(){const d=ALL.map(p=>p.date).sort();return d.length?`${d[0]} → ${d[d.length-1]}`:'';}
+    function range(){
+      const ws=window.__WEEKS__||[],mine=window.__WEEK_LABEL__||null;
+      const weekMeta=mine?ws.find(w=>w.label===mine):ws.find(w=>w.current);
+      if(weekMeta&&weekMeta.range&&weekMeta.range.start&&weekMeta.range.end){
+        return `${weekMeta.range.start} → ${weekMeta.range.end}`;
+      }
+      const d=ALL.map(p=>p.date).sort();
+      return d.length?`${d[0]} → ${d[d.length-1]}`:'';
+    }
 
     function allTags(){const s=new Set();ALL.forEach(p=>(p.tags||[]).forEach(t=>s.add(t)));return[...s];}
     const dim=t=>t.split(":")[0], val=t=>t.split(":")[1]||t;
