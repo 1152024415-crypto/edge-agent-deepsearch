@@ -70,6 +70,39 @@ Response:
 }
 ```
 
+## GET /api/community
+
+返回独立的 7 日社区雷达。它不属于 research run，也不会混入 `GET /api/papers`。历史周页面使用当周冻结的 `community` 快照。
+
+Response:
+
+```json
+{
+  "window": {"start": "2026-08-07", "end": "2026-08-13"},
+  "coverage": [
+    {"source": "X", "status": "limited", "note": "公开索引受限，未找到可直接核验的本周原帖。"}
+  ],
+  "items": [
+    {
+      "id": "reddit-local-agent-test",
+      "source": "Reddit",
+      "author": "r/LocalLLM",
+      "url": "https://www.reddit.com/r/LocalLLM/comments/example/",
+      "published_at": "2026-08-12T12:00:00Z",
+      "title_zh": "本地智能体设备实测",
+      "summary_zh": "社区在真实设备上完成了模型和工具调用测试。",
+      "why_it_matters": "补充正式基准之外的可用性与部署取舍。",
+      "device_scope": "PC",
+      "topic": "Agent",
+      "verification": "仅线索",
+      "evidence_url": ""
+    }
+  ]
+}
+```
+
+`coverage` 必须完整覆盖 X / Reddit / Hacker News / 厂商论坛 / 开发者论坛；status 只能是 `found` / `no_match` / `limited` / `unavailable`。`device_scope` 只能是手机 / PC / 其他端侧 / 通用技术；`verification` 只能是仅线索 / 已回链原始材料 / 已进入正式周报。社媒讨论 URL 不得直接作为正式 papers 的 `paper_url`。
+
 ## POST /api/research-runs
 
 主 agent 用 `agent/publish_results.py` 调用。服务器会再次校验 payload。

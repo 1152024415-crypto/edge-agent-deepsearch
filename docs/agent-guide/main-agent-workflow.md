@@ -51,7 +51,11 @@ python agent/validate_research_run.py research_runs/run-YYYYMMDD-HHMMSS.json
 
 publish 前对 `source_tier=官方动态` 和 `source_tier=开源大项目` 条目：fetch URL 核验页面内容 vs 标题摘要，对不上就丢。
 
-## 9. 发布到服务器
+## 9. 采集独立社区雷达
+
+检索当前日期过去 7 个自然日的 X、Reddit、Hacker News、厂商论坛和开发者论坛，写 `data/community_radar.json`。每类来源必须记录覆盖状态与说明；条目按手机 > PC > 其他端侧 > 通用技术排序，并填写中文名称、总结、价值判断和核验状态。X 只能使用无需登录可打开、能核验发布时间的原帖；受限就明确写 `limited`。社区讨论不进入 research run，找到一手材料后仍须重新走正式来源校验。
+
+## 10. 发布到服务器
 
 ```powershell
 $env:EDGE_PUBLISH_TOKEN = "<服务端与发布端共享的随机长令牌>"
@@ -61,10 +65,10 @@ python agent/publish_results.py research_runs/run-YYYYMMDD-HHMMSS.json --server 
 
 publish 成功后自动写 `data/.last_run_papers.json`（下次 validate 跨 run 去重用）+ 触发 gh-pages 异步部署。
 
-## 10. 验证页面
+## 11. 验证页面
 
-打开 `http://127.0.0.1:8001/`。页面按标签筛选展示，source_tier 优先 + score 排序。点标题进详情页（短摘要+标签+原文链接）。`GET /api/papers` 只返最新 run。无合格内容显示空状态。
+打开 `http://127.0.0.1:8001/`。页面按标签筛选展示，source_tier 优先 + score 排序。点标题进详情页（短摘要+标签+原文链接）。`GET /api/papers` 只返最新 run；`GET /api/community` 只返独立社区线索。确认社区雷达在完整资料库之后、GitHub 发现线索之前，来源覆盖和 X 受限状态可见，社区筛选不改变正式列表。无合格内容显示空状态。
 
-## 11. 收尾
+## 12. 收尾
 
 更新 `data/.last_run` 时间戳（ISO 8601）。本周错误沉淀进 `AGENTS.md` 教训 + `validation-rules.md` + `research-prompt.md`。跑 `python tests/test_research_pipeline.py`、`tests/test_build.py`、`app/gates/gate_all.py` 确认 harness 健康。

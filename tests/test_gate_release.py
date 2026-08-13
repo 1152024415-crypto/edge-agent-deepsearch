@@ -11,6 +11,7 @@ import json
 import sys
 import tempfile
 import unittest
+from datetime import date, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +35,24 @@ class GateReleaseTest(unittest.TestCase):
 
     def _seed_good(self):
         """A minimally-passing site+data layout."""
+        today = date.today()
+        community = {
+            "window": {"start": (today - timedelta(days=6)).isoformat(), "end": today.isoformat()},
+            "coverage": [
+                {"source": source, "status": "found" if source == "Reddit" else "no_match",
+                 "note": "已完成公开来源检索并记录结果。"}
+                for source in ("X", "Reddit", "Hacker News", "厂商论坛", "开发者论坛")
+            ],
+            "items": [{
+                "id": "reddit-signal", "source": "Reddit", "author": "r/LocalLLM",
+                "url": "https://www.reddit.com/r/LocalLLM/comments/signal/",
+                "published_at": today.isoformat() + "T12:00:00Z",
+                "title_zh": "本地智能体设备实测", "summary_zh": "社区在本地设备上完成了智能体工具调用实测。",
+                "why_it_matters": "这条反馈补充了正式基准之外的真实设备表现。",
+                "device_scope": "PC", "topic": "Agent", "verification": "仅线索", "evidence_url": "",
+            }],
+        }
+        _write(self.root, "data/community_radar.json", json.dumps(community, ensure_ascii=False))
         # current week archive (1 paper, 1 官方动态 so the vendor gate passes)
         _write(self.root, "data/weeks/2026-07-02.json", json.dumps({
             "label": "2026-07-02", "title": "07-02~07-09",
@@ -49,6 +68,7 @@ class GateReleaseTest(unittest.TestCase):
             }],
             "weekly": {"overview": "(07-02~07-09)", "highlights": []},
             "trending": {"items": []},
+            "community": community,
         }, ensure_ascii=False))
         _write(self.root, "data/weeks/manifest.json", json.dumps([
             {"label": "2026-07-02", "title": "07-02~07-09",
@@ -62,6 +82,7 @@ class GateReleaseTest(unittest.TestCase):
         _write(self.root, "site/index.html",
                '<main><section id="recommendations"></section><section id="weekly"></section>'
                '<section id="all-research"><div id="source-map"></div></section>'
+               '<section id="community"></section>'
                '<section id="discovery"></section></main>'
                '<script>window.__PAPERS__={"papers": [{"id": "arxiv-x1", "recommendation": "推荐", '
                '"title_zh": "端侧智能体推理框架", '
@@ -71,8 +92,10 @@ class GateReleaseTest(unittest.TestCase):
                '"tags":["方向:高效推理"],"score_relevance":7}]};'
                'window.__WEEKLY__={"overview":"","highlights":[]};'
                'window.__TRENDING__={"items":[]};'
+               f'window.__COMMUNITY__={json.dumps(community, ensure_ascii=False)};'
                'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>'
-               '<script>let data=window.__PAPERS__||null;</script>')
+               '<script>async function loadPapers(){let data=window.__PAPERS__||null;}</script>'
+               '<script>async function loadCommunity(){let data=window.__COMMUNITY__||null;}</script>')
         # detail page exists -> no 404
         _write(self.root, "site/paper/arxiv-x1.html", "<html>detail</html>")
         _write(self.root, "site/notes.html", "<html>notes</html>")
@@ -137,6 +160,39 @@ class GateReleaseTest(unittest.TestCase):
         errs = gr.run_all(self.root)
 
         self.assertTrue(any("inlined" in e.lower() or "静态" in e for e in errs), errs)
+
+    def test_fail_when_community_data_is_missing(self):
+        self._seed_good()
+        (self.root / "data" / "community_radar.json").unlink()
+        errs = gr.run_all(self.root)
+        self.assertTrue(any("community_radar" in e and "missing" in e for e in errs), errs)
+
+    def test_fail_when_community_coverage_is_incomplete(self):
+        self._seed_good()
+        path = self.root / "data" / "community_radar.json"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["coverage"] = payload["coverage"][:-1]
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        errs = gr.run_all(self.root)
+        self.assertTrue(any("community_radar" in e and "coverage" in e for e in errs), errs)
+
+    def test_fail_when_static_community_snapshot_differs_from_data(self):
+        self._seed_good()
+        index = self.root / "site" / "index.html"
+        html = index.read_text(encoding="utf-8").replace('"id": "reddit-signal"', '"id": "other-signal"')
+        index.write_text(html, encoding="utf-8")
+        errs = gr.run_all(self.root)
+        self.assertTrue(any("community" in e.lower() and "不一致" in e for e in errs), errs)
+
+    def test_fail_when_social_discussion_url_enters_formal_papers(self):
+        self._seed_good()
+        index = self.root / "site" / "index.html"
+        html = index.read_text(encoding="utf-8").replace(
+            '"score_relevance":7}',
+            '"score_relevance":7,"paper_url":"https://www.reddit.com/r/LocalLLM/comments/signal/"}')
+        index.write_text(html, encoding="utf-8")
+        errs = gr.run_all(self.root)
+        self.assertTrue(any("社区讨论链接" in e for e in errs), errs)
 
     # ---- links 200 ----
     def test_fail_when_detail_page_missing(self):

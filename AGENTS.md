@@ -42,6 +42,7 @@
 | `app/server.py` | HTTP 路由和服务器入口 |
 | `app/storage.py` | SQLite 存储和 paper upsert/query |
 | `app/page.py` | 服务器展示页 HTML shell |
+| `app/community.py` | 社区雷达 7 日窗口、来源覆盖和条目契约校验 |
 | `app/build.py` | 静态 fallback build（生成 site/index.html） |
 | `app/gates/` | content/papers frontmatter 校验 gate |
 | `app/frontmatter.schema.json` | frontmatter 字段 schema |
@@ -50,6 +51,7 @@
 | `content/papers/` | 兼容旧静态 build 的本地 Markdown |
 | `site/` | 静态 fallback 产物，不提交 |
 | `data/` | index.json / vendors.yaml 共享数据 |
+| `data/community_radar.json` | X/Reddit/HN/厂商论坛/开发者论坛的独立社区线索与覆盖证据 |
 | `docs/` | 文档（agent-guide / site / design-docs / plans / references） |
 | `README.md` | 人类入口和常用命令 |
 | `ARCHITECTURE.md` | 顶层架构和数据流 |
@@ -67,12 +69,13 @@
 7. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：先校验 collection manifest，再校验内容结构、动态 7 天窗口、评分、标签、链接、arXiv date 和跨 run 去重。旧论文若仅因本周修订进入窗口，主 agent 必须对比旧版并填写中文 `arxiv_revision_note`；排版、勘误或摘要无实质变化的一律不收。校验失败自动拦。
 8. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
 9. publish 前主 agent 抽检 `source_tier=官方动态` 和 `source_tier=开源大项目` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
-10. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
-11. 服务器 upsert，`GET /api/papers` 刷新最新 run。
-12. 详情页展示短摘要 + tags + 原文链接。publish 后列表页和详情页立即可见。
-13. 更新 `data/.last_run` 时间戳为本次调研时间。
-14. 本周错误沉淀进 AGENTS + validation-rules + research-prompt，不靠对话记忆。
-15. 跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py` 确认 harness 健康。
+10. **独立采集社区雷达**：以运行日为末日检索最近 7 个自然日的 X、Reddit、Hacker News、厂商论坛、开发者论坛，写 `data/community_radar.json`。五类来源逐一写 `found/no_match/limited/unavailable` + 中文说明；X 只用无需登录即可打开并核验日期的公开原帖，受限就写 `limited`，不得拿转述冒充原帖。社区条目只进“社区雷达”，不得直接进入正式 run；必须回链一手材料并重新满足正式来源契约后才可晋升。
+11. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
+12. 服务器 upsert，`GET /api/papers` 刷新最新 run；`GET /api/community` 读取独立社区雷达。
+13. 详情页展示短摘要 + tags + 原文链接。publish 后列表页、社区雷达和详情页立即可见。
+14. 更新 `data/.last_run` 时间戳为本次调研时间。
+15. 本周错误沉淀进 AGENTS + validation-rules + research-prompt，不靠对话记忆。
+16. 跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py` 确认 harness 健康。
 
 ## 调研策略（核心）
 
@@ -102,11 +105,13 @@
 - **keywords 已并入 tags**：原 keywords 字段取消，统一用 `tags`（受控词表）。
 - **MCP 配置**：arXiv MCP / HuggingFace Daily Papers MCP / GitHub MCP 已沉淀为项目级 `.mcp.json`，配置和工具用法见 `docs/references/mcp-setup.md`。调研 agent 搜集优先用 MCP（arXiv 全量搜 / HF 社区精选 / GitHub 大项目 release），websearch 补充搜大厂官网。
 - **开源大项目白名单**：GitHub MCP 只收 `docs/references/big-projects-whitelist.md` 内业界认可大项目（vLLM/SGLang/llama.cpp/ExecuTorch/ADK/TensorRT 等），非白名单小仓不收。
+- **社区雷达独立层**：社媒/论坛能补充真实设备体验、项目苗头和用户争议，但可信度不同于正式周报。社区条目固定使用中文名称、中文总结、价值判断、设备范围和核验状态；手机优先、PC 第二、其他端侧与通用技术仍列出。搜索/筛选只作用于该层，不改写正式 papers。
 
 ## 不可违反
 
 - 服务器不负责搜索论文；搜索由 agent 使用自己的搜索、浏览、阅读工具完成。
 - 大厂官方技术博客 / 官方产品发布可收录且排序最前（`source_tier=官方动态`），但必须命中官方域名；开源大项目 release 用 `source_tier=开源大项目` + github.com URL + 白名单（`docs/references/big-projects-whitelist.md`）。非官方博客、新闻、GitHub release、社媒、二手解读一律排除。
+- 社媒和论坛链接只允许出现在 `data/community_radar.json`，不得作为正式周报 `paper_url`。社区条目写“已进入正式周报”时，正式条目仍必须使用回链后的一手 URL，而不是讨论链接。
 - 时间窗口是当前日期过去 7 天，不允许用旧 `.last_run` 放行过期样例。
 - arXiv 更新稿不能只凭 `updated` 日期进入周报：必须由主 agent 对比旧版，确认实验、方法、数据、代码或结论有实质变化并填写 `arxiv_revision_note`；仅改排版、作者信息或无实质内容变化必须丢弃。
 - `research_runs/collection-manifest.json` 是发布硬门：四类来源、精确 7 个自然日、arXiv 分页自然终止、HF 逐日、GitHub release/trending 分离、24 个厂商/模型实验室逐厂成功来源证据、候选文件路径/条数/文件 SHA-256/逐记录指纹、run 条目血缘缺一不可。组装会把 manifest 与候选血缘嵌入 run，发布客户端和服务器都会复验。所有写 API 还必须使用服务端配置的 `EDGE_PUBLISH_TOKEN`，匿名原始 POST 不能绕过。`--allow-incomplete-coverage` 只用于本地历史恢复，正常周报禁止使用。
@@ -115,7 +120,7 @@
 - `paper_url` 必须和论文标题、摘要匹配。
 - `effects` 必须来自论文原文；没有报告写 `未报告`。
 - 发布前必须跑 `validate_research_run.py`。
-- **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、推荐中文项目名/摘要/理由缺失或含内部占位词、项目名复用介绍、非空周报 0 推荐、内链 404、热点复读论文列表、0 官方动态静默。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
+- **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、推荐中文项目名/摘要/理由缺失或含内部占位词、项目名复用介绍、非空周报 0 推荐、内链 404、热点复读论文列表、0 官方动态静默、社区五来源覆盖缺失、静态社区快照不一致和社媒链接污染正式周报。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
 - `data/weekly_summary.json` 是**独立编辑产物**，不是 run 的派生字段。`highlights` 必须是编辑性新闻（厂商博客/动态/行业事件，带**外部 URL**，≥5 条），不许用 run 的 paper_id 切 top N 填充——那会让热点复读下面的论文列表。流程顺序：先采厂商动态（`官方动态`）→ 再写 weekly_summary（从新闻 + 判断）→ run 论文列表是另一层。
 - **0 官方动态是流程告警，不是可接受结果**。research-prompt 和 collection manifest 强制查 24 个规范厂商/模型实验室来源。run 里 `官方动态` count==0 时，必须要么去补采，要么在 `data/weeks/<label>-no-vendor.md` 写明逐厂证据，不许静默接受 0。
 - 修改完成前至少跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py`。
@@ -159,3 +164,4 @@
 - [2026-08-12] 裸 `multi-agent system` 和摘要深处偶然出现的蒸馏/serving 再次把医疗表型、低功耗网络等无关工作带进入库。修复：相邻技术证据必须是标题或核心贡献；真正端侧 Agent 必须同时有设备语境与规划/记忆/工具/行动闭环，新增 ESP32/STM32/Linux SBC 正例和关键词碰撞负例。**广搜保召回，但正式入库仍看语义中心。**
 - [2026-08-12] GitHub Trending 发现 Limioryn 等端侧 Agent 新仓，静态白名单会漏新方向，但直接接纳所有新仓又会把 0-star 个人演示当大项目。修复：未知新仓先留线索；主 agent 核对本周事件、影响力、代码和真实设备 ACK/对账/恢复闭环后，仅将通过审计的项目加入白名单并补测试。**白名单可演进，但每次晋升都必须有人工证据和机械回归。**
 - [2026-08-13] 页面新增 HTTP 状态检查后，`build.py` 依赖两行精确代码形状的正则没有命中，GitHub Pages 仍请求不存在的 `/api/papers`，本地动态服务正常却导致线上“读取失败”。修复：页面运行时固定先读内联 `window.__PAPERS__`，不存在时才请求 API；静态构建不再重写 fetch 代码；页面测试、真实构建测试和 `gate_release` 同时检查这一契约。**静态/动态双运行模式必须由稳定的数据优先级契约保证，不能靠匹配实现细节的源码正则。**
+- [2026-08-13] 正式来源扩展后仍看不到 X/论坛动态，是因为“可信正式收录”和“高召回社区发现”被塞进同一个来源门：放宽会污染周报，不放宽就永远缺社区声音。修复：新增独立 `data/community_radar.json` + `/api/community` + 页面“社区雷达”；五类来源逐项留下覆盖状态，X 公开索引受限时明确展示，不编造完整性；社区讨论回链一手材料前不得进入正式周报。`gate_release` 同时校验数据、静态快照、页面顺序和层间隔离。**来源可信度不同就拆层展示，不能靠降低正式周报标准换取消息量。**

@@ -63,11 +63,12 @@ bash agent/run_weekly.sh
 6. **Validate**: `python agent/validate_research_run.py research_runs/<run_id>.json`. The CLI validates the collection manifest before the content contract, 7-day window, links, arXiv date and dedup checks.
 7. **Spot-check**: before publishing, fetch every `source_tier=官方动态` and `source_tier=开源大项目` URL and compare page content vs title/abstract. Drop mismatches.
 8. **Write the editorial weekly_summary**: `data/weekly_summary.json` is an **independent editorial product**, NOT a slice of the run. `highlights` must be editorial news (vendor blogs/dynamics/industry events with **external URLs**, ≥5). Do NOT fill highlights with `paper_id` links to the run's top papers — that duplicates the paper list. Write from the `官方动态` tier + judgment. If `官方动态` count is 0, you have NOT collected vendor blogs — go back to step 3 and collect them, or write per-vendor evidence to `data/weeks/<label>-no-vendor.md`.
-9. **Start the server** (if not running): set `EDGE_PUBLISH_TOKEN` to a strong shared secret, then run `python app/server.py --host 127.0.0.1 --port 8001`.
-10. **Publish**: set the same `EDGE_PUBLISH_TOKEN`, then run `python agent/publish_results.py research_runs/<run_id>.json --server http://127.0.0.1:8001` (writes `data/.last_run_papers.json` for next-run dedup + triggers gh-pages deploy).
-11. **See it on the page** (do NOT skip — assertIn tests don't catch functional regressions): open `http://127.0.0.1:8001/` (or the built `site/index.html`), and with chrome-devtools **click every link type** — row, weekly-highlight, week-switcher (both directions), back-link, notes — each must resolve to 200 content, not 404. Compare highlights to last week: are they editorial news (external URLs), or paper-list duplicates?
-12. **Run the release gate** (hard blocker): `python app/gates/gate_all.py`. `gate_release.py` checks the built `site/` + `data/` for: __PAPERS__ contract, completed edge-agent classification, mandatory recommendation/evidence/tag/relevance for every genuine on-device agent, readable Chinese recommendation copy, internal-link 200s, editorial highlights, and vendor coverage. **If gate_release FAILs, do not deploy.**
-13. **Close the loop**: update `data/.last_run` to this research time (ISO 8601). Fold this week's mistakes into `AGENTS.md` lessons, `validation-rules.md`, and `research-prompt.md`.
+9. **Collect the separate community radar**: search the past seven calendar days across X, Reddit, Hacker News, vendor forums and developer forums; write `data/community_radar.json`. Record `found/no_match/limited/unavailable` plus a note for every source. Use only directly openable, date-verifiable public X posts; record `limited` instead of inventing completeness. Community discussion URLs never enter formal `paper_url`; promotion requires a first-party source and the full formal contract.
+10. **Start the server** (if not running): set `EDGE_PUBLISH_TOKEN` to a strong shared secret, then run `python app/server.py --host 127.0.0.1 --port 8001`.
+11. **Publish**: set the same `EDGE_PUBLISH_TOKEN`, then run `python agent/publish_results.py research_runs/<run_id>.json --server http://127.0.0.1:8001` (writes `data/.last_run_papers.json` for next-run dedup + triggers gh-pages deploy).
+12. **See it on the page** (do NOT skip — assertIn tests don't catch functional regressions): open `http://127.0.0.1:8001/` (or the built `site/index.html`), and with chrome-devtools **click every link type** — row, weekly-highlight, community discussion/evidence, week-switcher (both directions), back-link, notes — each must resolve to 200 content, not 404. Confirm community coverage/statuses are visible, its filters do not alter formal papers, and highlights are editorial news rather than paper duplicates.
+13. **Run the release gate** (hard blocker): `python app/gates/gate_all.py`. `gate_release.py` checks the built `site/` + `data/` for: __PAPERS__ contract, completed edge-agent classification, mandatory recommendation/evidence/tag/relevance for every genuine on-device agent, readable Chinese recommendation copy, internal-link 200s, editorial highlights, vendor coverage, community five-source coverage/snapshot consistency, and separation from formal papers. **If gate_release FAILs, do not deploy.**
+14. **Close the loop**: update `data/.last_run` to this research time (ISO 8601). Fold this week's mistakes into `AGENTS.md` lessons, `validation-rules.md`, and `research-prompt.md`.
 
 ## Project Boundaries
 
@@ -78,7 +79,7 @@ bash agent/run_weekly.sh
 | Scripts | Validate and publish agent output deterministically |
 | `app/server.py` | HTTP routes and server entry point |
 | `app/storage.py` | SQLite paper storage and queries |
-| `app/page.py` | HTML shell that refreshes from `/api/papers` |
+| `app/page.py` | HTML shell that refreshes formal papers and the separate community radar |
 | Static build | Fallback only; not the final deployment path |
 
 ## Hard Rules
@@ -91,6 +92,7 @@ bash agent/run_weekly.sh
 - Filter out pure GUI agents (screen-tap / GUI automation / screen parsing) unless there is notable non-GUI innovation.
 - Open-source entries: only industry-recognized big projects in `docs/references/big-projects-whitelist.md`, with a `github.com` URL. No small repos.
 - Official-vendor entries (`source_tier=官方动态`) must use an official domain; unofficial blogs / news / GitHub releases / social / secondary commentary are excluded.
+- Social/forum material belongs only in `data/community_radar.json`. It requires exact seven-day coverage, one status record for each of X/Reddit/Hacker News/vendor forums/developer forums, readable Chinese editorial fields, device scope and verification state. It may inform discovery but cannot lower the formal-run source standard.
 - `date` must come from source metadata. New arXiv papers use `submitted`; old papers recalled by `updated` are publishable only after the main agent compares versions and records a substantive experiment/method/data/code/conclusion change in `arxiv_revision_note`. Cosmetic revisions are dropped. Do not re-date old papers into the window.
 - 7-day window; no old sample data to pad the page.
 - `paper_url` must match the paper/official source title and abstract.

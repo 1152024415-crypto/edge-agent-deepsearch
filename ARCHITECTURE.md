@@ -22,6 +22,7 @@ edge_agent 分成三个清晰边界：
    - `app/storage.py` 负责 SQLite 存储和查询。
    - `app/page.py` 提供页面 shell。
    - 页面调用 `GET /api/papers` 刷新最新结果。
+   - `app/community.py` 校验 `data/community_radar.json`；页面调用 `GET /api/community` 展示独立社区线索，静态构建和历史周冻结同一快照。
    - `POST /api/insights` 更新洞察人和 wiki 链接。
 
 ## 数据流
@@ -36,6 +37,8 @@ flowchart LR
   F --> G["SQLite papers"]
   G --> H["GET /api/papers"]
   H --> I["网页展示"]
+  K["data/community_radar.json"] --> L["GET /api/community"]
+  L --> I
   I --> J["POST /api/insights"]
   J --> G
 ```
@@ -44,12 +47,15 @@ flowchart LR
 
 - `GET /`：展示页。
 - `GET /api/papers`：返回论文列表，默认按 source_tier 优先级 + score 降序。
+- `GET /api/community`：返回独立 7 日社区雷达，不混入正式 papers。
 - `POST /api/research-runs`：接收主 agent 发布的批量调研结果。
 - `POST /api/insights`：更新洞察人和 wiki 链接。
 
 ## 数据源规则
 
 服务器不是搜索引擎，不抓取论文。所有搜索和审查都由 agent 完成。服务器只相信通过 `validate_research_run.py` 的结构化结果。
+
+社媒/论坛采用独立信任层：agent 每周写 `data/community_radar.json` 和五来源覆盖证据；服务器只校验、读取和展示。社区讨论回链一手材料并重新满足正式契约前，不得进入 research run。
 
 ## 静态 fallback
 

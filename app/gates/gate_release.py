@@ -16,8 +16,11 @@ Catches the failure modes that shipped before by operating on real artifacts
 5. edge agents — every item is source-reviewed; genuine on-device agents are
                  recommended and their device scope/tag/evidence agree.
 6. layout       — recommendations, editorial brief, complete library and
-                 unverified discovery remain separate; the complete library
+                 community radar and unverified discovery remain separate; the complete library
                  must not remove recommended items.
+7. community    — all five social/forum sources have coverage evidence, the
+                 static snapshot matches data/community_radar.json, and
+                 discussion URLs never masquerade as formal research sources.
 
 Use: python app/gates/gate_release.py [--root DIR]
 Pre-deploy, after `python app/build.py`. Exit 0 = ship; 1 = blocked.
@@ -26,9 +29,15 @@ import argparse
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app import community  # noqa: E402
 
 MIN_EXTERNAL_HIGHLIGHTS = 5
 MIN_CHINESE_CHARS = 8
@@ -43,11 +52,14 @@ DIRECT_EDGE_AGENT_SCOPES = {"手机", "PC", "其他端侧"}
 DIRECT_EDGE_AGENT_TAG = "方向:端侧agent"
 
 _PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(.+?);\s*window\.__WEEKLY__", re.S)
+_COMMUNITY_RE = re.compile(
+    r"window\.__COMMUNITY__\s*=\s*(\{.*?\});\s*window\.__WEEKS__", re.S)
 # render_page inlines with NO spaces around '=': `window.__WEEKS__=[`. The server.py
 # `/` route injects WITH spaces: `window.__WEEKS__ = [`. The space-form is the runtime
 # injection that must NOT survive into a static page (render_page strips it).
 _SERVER_INJECT_RE = re.compile(r"window\.__WEEKS__\s+=\s+\[")
 _STATIC_PAPERS_FIRST = "let data=window.__PAPERS__||null;"
+_STATIC_COMMUNITY_FIRST = "let data=window.__COMMUNITY__||null;"
 _OLD_RECOMMENDATION_EXCLUSION_RE = re.compile(
     r"visible\(\)\.filter\(\s*p\s*=>\s*!isRecommended\(p\)\s*\)"
 )
@@ -82,6 +94,8 @@ def check_contract(root: Path, errors: list) -> None:
                      "into static page — render_page must strip the server injection block")
     if _STATIC_PAPERS_FIRST not in html:
         _err(errors, "site/index.html: 静态页面没有优先读取 inlined __PAPERS__；GitHub Pages 会误请求不存在的 /api/papers")
+    if _STATIC_COMMUNITY_FIRST not in html:
+        _err(errors, "site/index.html: 静态页面没有优先读取 inlined __COMMUNITY__；历史周或 GitHub Pages 会丢失社区快照")
 
 
 def check_editorial_layout(root: Path, errors: list) -> None:
@@ -90,7 +104,7 @@ def check_editorial_layout(root: Path, errors: list) -> None:
     if not idx.exists():
         return  # check_contract reports the missing build artifact
     html = idx.read_text(encoding="utf-8")
-    ordered_ids = ["recommendations", "weekly", "all-research", "source-map", "discovery"]
+    ordered_ids = ["recommendations", "weekly", "all-research", "source-map", "community", "discovery"]
     positions = {}
     for section_id in ordered_ids:
         position = html.find(f'id="{section_id}"')
@@ -101,7 +115,7 @@ def check_editorial_layout(root: Path, errors: list) -> None:
     if all(positions[section_id] >= 0 for section_id in ordered_ids):
         actual = [positions[section_id] for section_id in ordered_ids]
         if actual != sorted(actual):
-            _err(errors, "site/index.html: editorial layout order must be 推荐 → 本周判断 → 完整资料库 → 来源构成 → 发现线索")
+            _err(errors, "site/index.html: editorial layout order must be 推荐 → 本周判断 → 完整资料库 → 来源构成 → 社区雷达 → GitHub 发现线索")
     if _OLD_RECOMMENDATION_EXCLUSION_RE.search(html):
         _err(errors, "site/index.html: 完整资料库仍在排除推荐条目；推荐只能作为上方编辑视图，不能从完整收录移除")
 
@@ -123,6 +137,45 @@ def _papers_from_index(root: Path) -> list[dict]:
 
 def _paper_ids_from_index(root: Path) -> list:
     return [p.get("id") for p in _papers_from_index(root) if p.get("id")]
+
+
+def check_community_radar(root: Path, errors: list) -> None:
+    """Community leads are complete, frozen and visibly outside formal research."""
+    data_path = root / "data" / "community_radar.json"
+    if not data_path.exists():
+        _err(errors, "data/community_radar.json missing — 社区雷达不能静默跳过来源覆盖")
+        return
+    try:
+        raw = json.loads(data_path.read_text(encoding="utf-8"))
+        expected = community.validate_community(raw, today=date.today())
+    except (OSError, json.JSONDecodeError, community.CommunityValidationError) as exc:
+        _err(errors, f"data/community_radar.json 校验失败（window/coverage/items）：{exc}")
+        return
+
+    index = root / "site" / "index.html"
+    if not index.exists():
+        return
+    html = index.read_text(encoding="utf-8")
+    match = _COMMUNITY_RE.search(html)
+    if not match:
+        _err(errors, "site/index.html: window.__COMMUNITY__ missing — 静态社区快照未构建")
+        return
+    try:
+        actual = community.validate_community(json.loads(match.group(1)), today=date.today())
+    except (json.JSONDecodeError, community.CommunityValidationError) as exc:
+        _err(errors, f"site/index.html: __COMMUNITY__ 无效：{exc}")
+        return
+    if actual != expected:
+        _err(errors, "site/index.html: __COMMUNITY__ 与 data/community_radar.json 不一致 — 构建可能使用了旧社区数据")
+
+    community_urls = {item["url"] for item in expected["items"]}
+    social_hosts = {"x.com", "twitter.com", "reddit.com", "www.reddit.com", "news.ycombinator.com"}
+    for paper in _papers_from_index(root):
+        paper_url = str(paper.get("paper_url") or "").strip()
+        host = (urlparse(paper_url).hostname or "").lower()
+        if paper_url in community_urls or host in social_hosts:
+            pid = paper.get("id") or "<missing-id>"
+            _err(errors, f"{pid}: 社区讨论链接不得作为正式周报 paper_url；应回链一手材料后再收录")
 
 
 def _has_readable_chinese(value) -> bool:
@@ -313,6 +366,7 @@ def run_all(root: Path) -> list:
     errors = []
     check_contract(root, errors)
     check_editorial_layout(root, errors)
+    check_community_radar(root, errors)
     check_edge_agent_classification(root, errors)
     check_arxiv_revision_evidence(root, errors)
     check_recommendation_readability(root, errors)

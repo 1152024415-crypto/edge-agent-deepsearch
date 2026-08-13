@@ -36,13 +36,14 @@
 | 8 | `python agent/validate_research_run.py`：先验覆盖清单，再验内容、动态7日、评分、标签、链接、arXiv date 和去重 | **自动拦** |
 | 9 | validate 失败：修正或丢弃，**不许凑数** | 流程 |
 | 10 | 主 agent 抽检 `source_tier=官方动态` 和 `开源大项目` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
-| 11 | `python agent/publish_results.py --server <URL>` | 主 agent |
-| 12 | 服务器 upsert，`GET /api/papers` 刷新最新 run | 自动 |
-| 13 | 详情页展示短摘要 + tags + 原文链接（整理 agent 已停用，无 6 段 detail，无「整理中」状态） | 自动 |
-| 14 | publish 后列表页和详情页立即可见；推荐区按手机端 Agent > PC 端 Agent > 其他端侧 Agent > 普通推荐，再按 source_tier + score 排序 | 自动 |
-| 15 | 更新 `data/.last_run` 时间戳 | 主 agent |
-| 16 | 本周错误 → AGENTS 教训 + validate 规则 + research-prompt 强化 | 自进化 |
-| 17 | 跑 `tests/` + `app/gates/gate_all.py` 确认 harness 健康 | 自动 |
+| 11 | 独立检索 X / Reddit / Hacker News / 厂商论坛 / 开发者论坛，写 `data/community_radar.json`；五来源逐项留覆盖状态，社媒链接不进入正式 run | 主 agent + 自动拦 |
+| 12 | `python agent/publish_results.py --server <URL>` | 主 agent |
+| 13 | 服务器 upsert，`GET /api/papers` 刷新最新 run；`GET /api/community` 返回独立社区层 | 自动 |
+| 14 | 详情页展示短摘要 + tags + 原文链接（整理 agent 已停用，无 6 段 detail，无「整理中」状态） | 自动 |
+| 15 | publish 后列表页、社区雷达和详情页立即可见；推荐区按手机端 Agent > PC 端 Agent > 其他端侧 Agent > 普通推荐，再按 source_tier + score 排序 | 自动 |
+| 16 | 更新 `data/.last_run` 时间戳 | 主 agent |
+| 17 | 本周错误 → AGENTS 教训 + validate 规则 + research-prompt 强化 | 自进化 |
+| 18 | 跑 `tests/` + `app/gates/gate_all.py` 确认 harness 健康 | 自动 |
 
 ## 4. 持久展示层
 
@@ -51,6 +52,7 @@
 - **标签筛选**：`app/page.py` 按标签 chip 多选筛选展示。`方向:端侧agent`只表示经原文核实的真正设备端 Agent 闭环；推荐排序先按`edge_agent_scope`（手机>PC>其他端侧>非端侧Agent），再按 source_tier + score。
 - **详情页** `/paper/<id>`：展示短摘要（abstract/effects/mechanism）+ tags + 原文链接，无 6 段深度整理（整理 agent 已停用）
 - **静态 fallback** `app/build.py` 生成 `site/index.html`，服务器挂时兜底
+- **社区雷达**：`data/community_radar.json` 独立于 research run；页面顺序为完整资料库 → 社区雷达 → GitHub 待核验线索。社区按手机 > PC > 其他端侧 > 通用技术排序，并随周归档冻结。
 - **空状态**：本周无合格内容显示空，不拿旧数据撑
 
 ## 5. 自进化闭环
@@ -66,7 +68,7 @@
 **闭环验证（分层）**：
 - **快验证**（每次改 harness 后）：跑 `tests/test_research_pipeline.py` + `test_build` + `app/gates/gate_all.py`，确认代码层规则生效
 - **慢验证**（新策略上线时）：跑一次真调研，确认死链拦、research-prompt 用、易读版产出、不凑数
-- **渲染验证**（每次 publish/deploy 后必做，不只 curl+tests）：用 chrome-devtools 加载线上页（profile 被锁就 `taskkill //F //IM chrome.exe` 杀掉重连），`ignoreCache` 硬刷新，三查：(1) DOM 渲染对——`#recommendations .rec-item`、`#papers .row` 数、band 折叠态、标签栏、weekly/trending 渲染条数；(2) 读内容质量——推荐卡严格按中文项目名 → 介绍 → 关键词 → 为什么值得看 → 小号英文原标题展示，不能把介绍冒充项目名；weekly 的 topic/why、论文中文摘要真的看内容不是数条数；(3) `list_console_messages` 查 error/404。curl 对 ≠ 渲染对，tests 过 ≠ 页面好。
+- **渲染验证**（每次 publish/deploy 后必做，不只 curl+tests）：用 chrome-devtools 加载线上页（profile 被锁就 `taskkill //F //IM chrome.exe` 杀掉重连），`ignoreCache` 硬刷新，三查：(1) DOM 渲染对——`#recommendations .rec-item`、`#papers .signal-row`、`#community-list .community-item` 数、band 折叠态、标签栏、weekly/trending 渲染条数；(2) 读内容质量——推荐卡严格按中文项目名 → 介绍 → 关键词 → 为什么值得看 → 小号英文原标题展示，不能把介绍冒充项目名；社区来源覆盖、X 受限状态、中文总结/判断与核验状态可读，社区筛选不改变正式列表；weekly 的 topic/why、论文中文摘要真的看内容不是数条数；(3) `list_console_messages` 查 error/404。curl 对 ≠ 渲染对，tests 过 ≠ 页面好。
 
 ## 6. 调度
 

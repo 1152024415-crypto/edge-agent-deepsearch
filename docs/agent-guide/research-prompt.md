@@ -60,6 +60,16 @@ DeepSeek / Moonshot / Zhipu / Minimax / 百川 等**模型实验室经常先发�
 ## websearch（大厂官方博客）
 逐一检查 24 个规范厂商/模型实验室官方来源，命中官方域名才算；即使 0 命中也把厂商写入 manifest 的 `vendors_checked` 并保留逐厂证据。各厂商方法见 `vendor-research-guide.md`。
 
+## 社区雷达（独立编辑产物，不进入正式 run）
+
+正式候选完成后，主 agent 另行检索最近 7 个自然日的 X、Reddit、Hacker News、厂商论坛和开发者论坛，写入 `data/community_radar.json`。目标是补充真实设备反馈、新项目苗头和社区争议，不降低正式周报的来源标准：
+
+- 五类来源必须逐一留下 `found` / `no_match` / `limited` / `unavailable` 与中文说明，0 条也不能静默跳过。
+- X 只接受无需登录即可打开、可核验发布时间的公开原帖；搜索索引不足时标 `limited`，不得把 Reddit 转述或搜索摘要改写成 X 原帖。
+- 每条线索必须有讨论直达 URL、`published_at`、中文 `title_zh` / `summary_zh` / `why_it_matters`、`device_scope`（手机 / PC / 其他端侧 / 通用技术）、topic 和 verification（仅线索 / 已回链原始材料 / 已进入正式周报）。
+- 排序手机 > PC > 其他端侧 > 通用技术；相关但价值一般的线索仍可列出，价值判断负责用户注意力。
+- 社区链接不得写进正式 run 的 `paper_url`。只有找到一手论文、官方发布或通过审计的大项目来源，并重新满足正式来源、日期和内容契约后，才可单独生成正式条目。
+
 # 检索式参考
 
 - **大厂官方优先检索式**：`(site:apple.com OR site:google.com OR site:microsoft.com OR site:openai.com OR site:anthropic.com OR site:meta.com OR site:samsung.com OR site:huawei.com OR site:qualcomm.com OR site:mediatek.com OR site:mi.com OR site:oppo.com OR site:vivo.com OR site:honor.com OR site:mistral.ai OR site:qwenlm.github.io) AND ("on-device" OR "edge" OR "mobile" OR "NPU" OR "local") AND ("agent" OR "assistant")`
