@@ -20,14 +20,49 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
         recommendation_pos = INDEX_HTML.find('id="recommendations"')
         weekly_pos = INDEX_HTML.find('id="weekly"')
         all_research_pos = INDEX_HTML.find('id="all-research"')
+        community_pos = INDEX_HTML.find('id="community"')
         discovery_pos = INDEX_HTML.find('id="discovery"')
 
         self.assertGreaterEqual(recommendation_pos, 0)
         self.assertGreaterEqual(all_research_pos, 0)
         self.assertGreaterEqual(discovery_pos, 0)
+        self.assertGreaterEqual(community_pos, 0)
         self.assertLess(recommendation_pos, weekly_pos)
         self.assertLess(weekly_pos, all_research_pos)
-        self.assertLess(all_research_pos, discovery_pos)
+        self.assertLess(all_research_pos, community_pos)
+        self.assertLess(community_pos, discovery_pos)
+
+    def test_community_radar_is_visibly_separate_from_formal_research(self):
+        self.assertIn("社区雷达", INDEX_HTML)
+        self.assertIn("不等同于正式周报", INDEX_HTML)
+        self.assertIn('id="community-source-filter"', INDEX_HTML)
+        self.assertIn('id="community-scope-filter"', INDEX_HTML)
+        self.assertIn('id="community-coverage"', INDEX_HTML)
+        self.assertIn('id="community-list"', INDEX_HTML)
+
+    def test_community_radar_prefers_inlined_week_snapshot_then_api(self):
+        self.assertIn("let data=window.__COMMUNITY__||null;", INDEX_HTML)
+        self.assertIn('fetch("/api/community")', INDEX_HTML)
+        self.assertIn("const COMMUNITY_PREVIEW=8", INDEX_HTML)
+
+    def test_community_cards_explain_signal_and_evidence_status(self):
+        start = INDEX_HTML.index("function renderCommunityItem(")
+        end = INDEX_HTML.index("function renderCommunity(", start)
+        renderer = INDEX_HTML[start:end]
+
+        self.assertIn("item.title_zh", renderer)
+        self.assertIn("item.summary_zh", renderer)
+        self.assertIn("item.why_it_matters", renderer)
+        self.assertIn("item.verification", renderer)
+        self.assertIn("item.evidence_url", renderer)
+        self.assertIn('target="_blank" rel="noopener"', renderer)
+
+    def test_community_filters_source_and_device_without_touching_papers(self):
+        self.assertIn('COMMUNITY_SOURCE=""', INDEX_HTML)
+        self.assertIn('COMMUNITY_SCOPE=""', INDEX_HTML)
+        self.assertIn("item.source===COMMUNITY_SOURCE", INDEX_HTML)
+        self.assertIn("item.device_scope===COMMUNITY_SCOPE", INDEX_HTML)
+        self.assertIn("COMMUNITY_CACHE.filter", INDEX_HTML)
 
     def test_complete_research_contains_a_source_map(self):
         all_research_pos = INDEX_HTML.index('id="all-research"')

@@ -76,8 +76,8 @@ INDEX_HTML = """<!doctype html>
     .rec-why b{display:block;margin-bottom:3px;font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--rust);font-size:9.5px;letter-spacing:.65px}
     .rec-original{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:var(--faint);font-size:10.5px;line-height:1.45;margin-top:10px}
     .rec-empty{color:var(--muted);font-size:13px;padding:22px 0 10px}
-    .rec-more,.trending-more{display:block;margin:12px auto 2px;border:1px solid var(--rust);background:transparent;color:var(--rust);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;padding:7px 15px;cursor:pointer}
-    .rec-more:hover,.trending-more:hover{background:var(--rust);color:var(--paper)}
+    .rec-more,.community-more,.trending-more{display:block;margin:12px auto 2px;border:1px solid var(--rust);background:transparent;color:var(--rust);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;padding:7px 15px;cursor:pointer}
+    .rec-more:hover,.community-more:hover,.trending-more:hover{background:var(--rust);color:var(--paper)}
 
     /* weekly editorial layer */
     .weekly{background:var(--panel);border:1px solid var(--rule);padding:20px 22px;margin-bottom:26px}
@@ -171,6 +171,46 @@ INDEX_HTML = """<!doctype html>
     .empty{color:var(--muted);font-size:13px;padding:34px 18px;text-align:center;border:1px dashed var(--rule);background:var(--panel)}
     .empty button{display:block;margin:10px auto 0;border:1px solid var(--rust);background:transparent;color:var(--rust);padding:5px 10px;cursor:pointer}
 
+    /* community signals: useful leads, kept outside the formal weekly report */
+    .community{margin-top:38px;padding:20px 22px 16px;background:var(--paper);border:1px solid var(--rule);border-top:4px solid var(--blue);scroll-margin-top:12px}
+    .community-boundary{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:13px 0 11px;padding:9px 11px;background:var(--blue-soft);color:var(--muted);font-size:11.5px}
+    .community-boundary b{color:var(--blue);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.25px}
+    .community-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+    .community-filter{display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding:9px 10px;border:1px solid var(--hair);background:var(--panel)}
+    .community-filter-label{margin-right:4px;color:var(--faint);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;letter-spacing:.4px}
+    .community-filter button{border:1px solid var(--hair);background:var(--paper);color:var(--muted);padding:3px 7px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;cursor:pointer}
+    .community-filter button:hover{border-color:var(--blue);color:var(--blue)}
+    .community-filter button.active{border-color:var(--blue);background:var(--blue);color:var(--paper)}
+    .community-coverage{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:0 0 12px;border:1px solid var(--rule);background:var(--panel)}
+    .coverage-item{min-width:0;padding:10px 11px;border-right:1px solid var(--hair)}
+    .coverage-item:last-child{border-right:0}
+    .coverage-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+    .coverage-source{font-size:11px;font-weight:600}
+    .coverage-status{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:8.5px;color:var(--moss);white-space:nowrap}
+    .coverage-item.limited .coverage-status,.coverage-item.unavailable .coverage-status{color:var(--rust)}
+    .coverage-note{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:var(--faint);font-size:9.5px;line-height:1.45}
+    .community-list{display:grid;grid-template-columns:1fr;gap:7px}
+    .community-item{display:grid;grid-template-columns:82px minmax(0,1fr) minmax(250px,.58fr);gap:18px;padding:15px 14px;background:var(--panel);border:1px solid var(--hair);content-visibility:auto;contain-intrinsic-size:150px}
+    .community-item:hover{border-color:var(--blue)}
+    .community-origin{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+    .community-source{color:var(--paper);background:var(--blue);padding:3px 7px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;font-weight:600}
+    .community-date{color:var(--faint);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9px}
+    .community-scope{color:var(--blue);background:var(--blue-soft);padding:2px 6px;font-size:9.5px;font-weight:600}
+    .community-main,.community-judgement{min-width:0}
+    .community-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:var(--faint);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px}
+    .community-topic{color:var(--violet);background:var(--violet-soft);padding:1px 6px}
+    .community-title{display:block;margin:5px 0 4px;color:var(--ink);font-size:16px;font-weight:700;line-height:1.4;text-decoration:none}
+    .community-title:hover{color:var(--blue)}
+    .community-summary{margin:0;color:var(--muted);font-size:12.5px;line-height:1.62}
+    .community-judgement{border-left:2px solid var(--blue-soft);padding-left:16px}
+    .community-why{margin:0;color:var(--ink);font-size:11.5px;line-height:1.6}
+    .community-why b{display:block;margin-bottom:3px;color:var(--blue);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9px;letter-spacing:.4px}
+    .community-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .verification{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9px;color:var(--rust)}
+    .verification.verified{color:var(--moss)}
+    .community-link{color:var(--blue);font-size:10.5px;text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--blue) 45%,transparent)}
+    .community-link:hover{border-color:var(--blue)}
+
     /* unverified discovery stream */
     .discovery{margin-top:35px;padding-top:20px;border-top:4px double var(--rule)}
     .discovery-note{display:inline-block;margin:12px 0 10px;padding:5px 8px;background:var(--slate-soft);color:var(--muted);font-size:11px}
@@ -199,6 +239,8 @@ INDEX_HTML = """<!doctype html>
       .rec-item{grid-template-columns:58px minmax(0,1fr)}.rec-editorial{grid-column:2;border-left:0;border-top:2px solid var(--rust-soft);padding:10px 0 0}
       .weekly-grid{grid-template-columns:1fr}.weekly-overview{padding-right:0;border-right:0;border-bottom:1px solid var(--hair);padding-bottom:16px}
       .source-map{grid-template-columns:repeat(3,minmax(0,1fr))}.source-card:nth-child(3){border-right:0}.source-card:nth-child(-n+3){border-bottom:1px solid var(--hair)}
+      .community-item{grid-template-columns:70px minmax(0,1fr)}.community-judgement{grid-column:2}
+      .community-coverage{grid-template-columns:repeat(3,minmax(0,1fr))}.coverage-item{border-bottom:1px solid var(--hair)}
     }
     @media(max-width:680px){
       main{padding:14px 12px 70px}.scope-stats{grid-template-columns:repeat(2,1fr)}.masthead-foot{align-items:flex-start;flex-direction:column}
@@ -207,6 +249,7 @@ INDEX_HTML = """<!doctype html>
       .weekly-hl{grid-template-columns:20px 1fr}.weekly-why{grid-column:2}
       .source-map{grid-template-columns:1fr 1fr}.source-card{border-bottom:1px solid var(--hair)}.source-card:nth-child(odd){border-right:1px solid var(--hair)}.source-card:nth-child(even){border-right:0}
       .library-tools{grid-template-columns:1fr}.trending-row{grid-template-columns:34px 1fr}.trending-desc,.trending-meta{grid-column:2}
+      .community{padding:17px 14px}.community-toolbar{grid-template-columns:1fr}.community-coverage{grid-template-columns:1fr 1fr}.community-item{grid-template-columns:1fr}.community-origin{flex-direction:row;align-items:center}.community-judgement{grid-column:1;border-left:0;border-top:2px solid var(--blue-soft);padding:10px 0 0}
     }
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
   </style>
@@ -223,6 +266,7 @@ INDEX_HTML = """<!doctype html>
       </div>
       <div class="masthead-foot">
         <nav class="nav" aria-label="辅助内容">
+          <a class="nav-link" href="#community">社区雷达</a>
           <a class="nav-link" href="notes.html">调研笔记 ↗</a>
           <a class="nav-link" href="snn.html">SNN 洞察 ↗</a>
           <a class="nav-link" href="waic.html">WAIC ↗</a>
@@ -257,6 +301,20 @@ INDEX_HTML = """<!doctype html>
       <div id="papers" aria-live="polite"><div class="empty">正在读取本周数据…</div></div>
     </section>
 
+    <section class="community" id="community">
+      <header class="section-head">
+        <div><p class="eyebrow">社媒与论坛 · 本周线索</p><h2>社区雷达</h2></div>
+        <p class="section-note">追踪 X、Reddit、Hacker News 和厂商／开发者论坛里的真实设备反馈；手机优先、PC 其次，并保留其他端侧与通用技术线索。</p>
+      </header>
+      <div class="community-boundary"><b>社区线索，不等同于正式周报</b><span>这里帮助发现新项目和使用反馈；只有回链并完成一手核验后，才可能进入上方正式资料库。</span></div>
+      <div class="community-toolbar">
+        <div class="community-filter" id="community-source-filter" aria-label="按社区来源筛选"></div>
+        <div class="community-filter" id="community-scope-filter" aria-label="按设备范围筛选"></div>
+      </div>
+      <div class="community-coverage" id="community-coverage" aria-label="社区来源覆盖情况"></div>
+      <div class="community-list" id="community-list" aria-live="polite"><div class="empty">正在读取本周社区线索…</div></div>
+    </section>
+
     <section class="discovery" id="discovery">
       <header class="section-head">
         <div><p class="eyebrow">发现线索 · 尚未核验</p><h2>GitHub 待核验线索</h2></div>
@@ -270,10 +328,11 @@ INDEX_HTML = """<!doctype html>
   </main>
 
   <script>
-    let ALL=[], TRENDING_CACHE=[], ACTIVE=new Set(), Q="", SORT="score", ACTIVE_SOURCE="", ACTIVE_SCOPE="", SHOW_ALL_RECOMMENDED=false, SHOW_ALL_TRENDING=false, ADVANCED_OPEN=false, LAST_FOCUS=null;
+    let ALL=[], TRENDING_CACHE=[], COMMUNITY_CACHE=[], COMMUNITY_COVERAGE=[], ACTIVE=new Set(), Q="", SORT="score", ACTIVE_SOURCE="", ACTIVE_SCOPE="", COMMUNITY_SOURCE="", COMMUNITY_SCOPE="", SHOW_ALL_RECOMMENDED=false, SHOW_ALL_COMMUNITY=false, SHOW_ALL_TRENDING=false, ADVANCED_OPEN=false, LAST_FOCUS=null;
     const REC_PREVIEW=6;
     const WEEKLY_PREVIEW=3;
     const TRENDING_PREVIEW=8;
+    const COMMUNITY_PREVIEW=8;
     const TIER=[
       ["官方动态","--amber","厂商与模型实验室的一手发布"],
       ["开源大项目","--green","通过白名单审计的重要项目更新"],
@@ -531,6 +590,46 @@ INDEX_HTML = """<!doctype html>
     }
     document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!document.querySelector("#overlay").classList.contains("hidden"))closeDetail();});
 
+    const COMMUNITY_SCOPE_ORDER=["手机","PC","其他端侧","通用技术"];
+    const COMMUNITY_COVERAGE_LABELS={found:"已覆盖",no_match:"已检索 · 无合格线索",limited:"公开检索受限",unavailable:"暂不可用"};
+    function visibleCommunity(){
+      return COMMUNITY_CACHE.filter(item=>
+        (COMMUNITY_SOURCE===""||item.source===COMMUNITY_SOURCE)&&
+        (COMMUNITY_SCOPE===""||item.device_scope===COMMUNITY_SCOPE)
+      ).sort((a,b)=>COMMUNITY_SCOPE_ORDER.indexOf(a.device_scope)-COMMUNITY_SCOPE_ORDER.indexOf(b.device_scope)||(b.published_at||'').localeCompare(a.published_at||''));
+    }
+    function renderCommunityFilters(){
+      const sources=[...new Set(COMMUNITY_COVERAGE.map(item=>item.source).concat(COMMUNITY_CACHE.map(item=>item.source)))];
+      const sourceOptions=[["","全部来源"],...sources.map(source=>[source,source])];
+      document.querySelector("#community-source-filter").innerHTML='<span class="community-filter-label">来源</span>'+sourceOptions.map(([source,label])=>`<button type="button" data-community-source="${escapeAttr(source)}" class="${COMMUNITY_SOURCE===source?'active':''}">${escapeHtml(label)}</button>`).join("");
+      const scopes=COMMUNITY_SCOPE_ORDER.filter(scope=>COMMUNITY_CACHE.some(item=>item.device_scope===scope));
+      const scopeOptions=[["","全部设备"],...scopes.map(scope=>[scope,scope])];
+      document.querySelector("#community-scope-filter").innerHTML='<span class="community-filter-label">设备</span>'+scopeOptions.map(([scope,label])=>`<button type="button" data-community-scope="${escapeAttr(scope)}" class="${COMMUNITY_SCOPE===scope?'active':''}">${escapeHtml(label)}</button>`).join("");
+    }
+    function renderCommunityCoverage(){
+      const el=document.querySelector("#community-coverage");
+      if(!COMMUNITY_COVERAGE.length){el.innerHTML='<div class="coverage-item"><span class="coverage-note">本周未保存社区来源覆盖记录。</span></div>';return;}
+      el.innerHTML=COMMUNITY_COVERAGE.map(item=>`<div class="coverage-item ${escapeAttr(item.status||'')}"><div class="coverage-top"><span class="coverage-source">${escapeHtml(item.source)}</span><span class="coverage-status">${escapeHtml(COMMUNITY_COVERAGE_LABELS[item.status]||item.status)}</span></div><span class="coverage-note" title="${escapeAttr(item.note||'')}">${escapeHtml(item.note||'')}</span></div>`).join("");
+    }
+    function renderCommunityItem(item){
+      const day=String(item.published_at||'').slice(0,10);
+      const verified=item.verification==='已回链原始材料'||item.verification==='已进入正式周报';
+      return `<article class="community-item"><div class="community-origin"><span class="community-source">${escapeHtml(item.source)}</span><time class="community-date" datetime="${escapeAttr(item.published_at)}">${escapeHtml(day)}</time><span class="community-scope">${escapeHtml(item.device_scope)}</span></div><div class="community-main"><div class="community-meta"><span>${escapeHtml(item.author)}</span><span class="community-topic">${escapeHtml(item.topic)}</span></div><a class="community-title" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.title_zh)} ↗</a><p class="community-summary">${escapeHtml(item.summary_zh)}</p></div><div class="community-judgement"><p class="community-why"><b>为什么值得关注</b>${escapeHtml(item.why_it_matters)}</p><div class="community-links"><span class="verification ${verified?'verified':''}">${escapeHtml(item.verification)}</span><a class="community-link" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">查看讨论</a>${item.evidence_url?`<a class="community-link" href="${escapeAttr(item.evidence_url)}" target="_blank" rel="noopener">一手材料</a>`:''}</div></div></article>`;
+    }
+    function renderCommunity(){
+      renderCommunityFilters();renderCommunityCoverage();
+      const list=visibleCommunity(),el=document.querySelector("#community-list");
+      if(!list.length){el.innerHTML='<div class="empty">当前条件下没有可展示的社区线索；上方覆盖状态仍保留本周检索结果。</div>';return;}
+      const shown=SHOW_ALL_COMMUNITY?list:list.slice(0,COMMUNITY_PREVIEW);
+      el.innerHTML=shown.map(renderCommunityItem).join("")+(list.length>COMMUNITY_PREVIEW?`<button type="button" class="community-more" id="community-toggle">${SHOW_ALL_COMMUNITY?'收起社区线索':'展开全部 '+list.length+' 条社区线索'}</button>`:'');
+    }
+    async function loadCommunity(){
+      let data=window.__COMMUNITY__||null;
+      if(!data){try{const response=await fetch("/api/community");if(!response.ok)throw new Error("HTTP "+response.status);data=await response.json();}catch(error){document.querySelector("#community-list").innerHTML='<div class="empty">社区雷达暂时读取失败；正式周报不受影响。</div>';return;}}
+      COMMUNITY_CACHE=data.items||[];COMMUNITY_COVERAGE=data.coverage||[];
+      renderCommunity();
+    }
+
     function renderTrendingRow(item){
       return `<a class="trending-row" href="${escapeAttr(item.url)}" target="_blank" rel="noopener"><span class="trending-rank">${String(item.rank||'').padStart(2,'0')}</span><span class="trending-repo">${escapeHtml(item.repo)}</span><span class="trending-desc">${escapeHtml(item.desc||'')}</span><span class="trending-meta">+${escapeHtml(item.week||'0')}/wk · ${escapeHtml(item.total||'')}</span></a>`;
     }
@@ -572,6 +671,18 @@ INDEX_HTML = """<!doctype html>
     document.querySelector("#discovery-list").addEventListener("click",event=>{
       const button=event.target.closest("#trending-toggle");if(!button)return;
       SHOW_ALL_TRENDING=!SHOW_ALL_TRENDING;renderTrending(TRENDING_CACHE);
+    });
+    document.querySelector("#community-source-filter").addEventListener("click",event=>{
+      const button=event.target.closest("[data-community-source]");if(!button)return;
+      COMMUNITY_SOURCE=button.dataset.communitySource;SHOW_ALL_COMMUNITY=false;renderCommunity();
+    });
+    document.querySelector("#community-scope-filter").addEventListener("click",event=>{
+      const button=event.target.closest("[data-community-scope]");if(!button)return;
+      COMMUNITY_SCOPE=button.dataset.communityScope;SHOW_ALL_COMMUNITY=false;renderCommunity();
+    });
+    document.querySelector("#community-list").addEventListener("click",event=>{
+      const button=event.target.closest("#community-toggle");if(!button)return;
+      SHOW_ALL_COMMUNITY=!SHOW_ALL_COMMUNITY;renderCommunity();
     });
     document.querySelector("#primary-filter").addEventListener("click",handleFilterClick);
     document.querySelector("#advanced-filter").addEventListener("click",handleFilterClick);
@@ -625,6 +736,7 @@ INDEX_HTML = """<!doctype html>
     renderWeekSwitch();
     loadPapers().catch(showLoadError);
     loadWeekly().catch(()=>{document.querySelector("#weekly").hidden=true;});
+    loadCommunity().catch(()=>{});
     loadTrending().catch(()=>{});
   </script>
 </body>
