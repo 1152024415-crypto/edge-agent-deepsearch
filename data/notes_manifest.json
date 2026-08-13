@@ -88,5 +88,17 @@
         "type": "html"
       }
     ]
+  },
+  {
+    "name": "Made by Google 2026 AI 调研",
+    "slug": "made-by-google",
+    "desc": "Made by Google 2026 AI 技术调研——Pixel 11/Gemini Intelligence/Pixel AI 芯片/端侧模型部署/Android AI 生态全拆解",
+    "notes": [
+      {
+        "title": "Made by Google 2026 AI 技术调研",
+        "file": "Made_by_Google_2026_AI技术调研.md",
+        "type": "md"
+      }
+    ]
   }
 ]

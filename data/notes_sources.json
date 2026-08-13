@@ -29,5 +29,12 @@
     "source": "C:/Users/11520/Documents/学习/output/ruview",
     "desc": "RuView 用 Wi-Fi CSI + AI 完成存在/动作/人体姿态感知——输入、模型架构、训练、输出、部署详解(含 HTML 互动页面)",
     "files": ["RuView-AI原理详解.html", "RuView-AI原理与架构知识整理.md"]
+  },
+  {
+    "name": "Made by Google 2026 AI 调研",
+    "slug": "made-by-google",
+    "source": "C:/Users/11520/Documents/学习/output/made-by-google-2026-ai-review",
+    "desc": "Made by Google 2026 AI 技术调研——Pixel 11/Gemini Intelligence/Pixel AI 芯片/端侧模型部署/Android AI 生态全拆解",
+    "files": ["Made_by_Google_2026_AI技术调研.md"]
   }
 ]
