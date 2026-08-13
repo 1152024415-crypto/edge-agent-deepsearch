@@ -27,6 +27,7 @@ import research_run
 from app import storage
 from app import weeks as weeks_mod
 from app import build as build_app
+from app import community
 from app.page import INDEX_HTML
 
 DEPLOY_SERVER = "http://127.0.0.1:8001"
@@ -248,6 +249,13 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 self.send_json(200, {"items": []})
             return
+        if parsed.path == "/api/community":
+            try:
+                payload = community.load_community(ROOT / "data" / "community_radar.json")
+            except community.CommunityValidationError:
+                payload = community.empty_community("社区雷达数据未通过校验，本周暂不展示线索。")
+            self.send_json(200, payload)
+            return
         if parsed.path == "/api/weeks":
             self.send_json(200, {"weeks": weeks_mod.read_manifest()})
             return
@@ -261,7 +269,8 @@ class Handler(BaseHTTPRequestHandler):
                 weeks_mod.read_manifest(), weeks_base="", runtime=True)
             page = build_app.render_page(
                 INDEX_HTML, rec["papers"], rec["weekly"], rec["trending"],
-                manifest, week_label=label, weeks_base="", runtime=True)
+                manifest, week_label=label, weeks_base="", runtime=True,
+                community=rec.get("community") or {"coverage": [], "items": []})
             self.send_html(page)
             return
         if parsed.path.startswith("/paper/"):

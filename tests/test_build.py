@@ -246,13 +246,16 @@ class RenderPageTest(unittest.TestCase):
             '</body></html>'
         )
         weeks = [{"label": "2026-06-26", "title": "06-26~07-03", "current": False, "href": "../week/2026-06-26.html"}]
-        out = build_app.render_page(html, [{"id": "abc"}], {"overview": ""}, {"items": []},
-                                    weeks, week_label="2026-06-26", weeks_base="../", runtime=False)
+        out = build_app.render_page(
+            html, [{"id": "abc"}], {"overview": ""}, {"items": []},
+            weeks, week_label="2026-06-26", weeks_base="../", runtime=False,
+            community={"items": [{"id": "signal-1"}]})
         self.assertIn("window.__PAPERS__", out)
         # __PAPERS__ must be a {"papers":[...]} dict (matches /api/papers contract;
         # page.py reads `data.papers`). A bare list here would render "0 signals".
         self.assertIn('window.__PAPERS__={"papers":', out)
         self.assertIn("window.__WEEKS__", out)
+        self.assertIn('window.__COMMUNITY__={"items": [{"id": "signal-1"}]}', out)
         self.assertIn('"2026-06-26"', out)  # week_label inlined
         self.assertIn('window.__WEEKS_BASE__="../"', out)
         # The inline payload is preferred; the API fetch remains as the live-server fallback.

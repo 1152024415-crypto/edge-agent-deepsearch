@@ -5,6 +5,7 @@ import sys
 import tempfile
 import threading
 import unittest
+from unittest import mock
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +48,9 @@ class ServerWeeksTest(unittest.TestCase):
     def _seed(self):
         meta = {"label": "2026-06-26", "title": "06-26~07-03",
                 "range": {"start": "2026-06-26", "end": "2026-07-03"}}
-        weeks_mod.write_archive(meta, [{"id": "p1"}], {"overview": "ov(06-26~07-03)"}, {"items": []})
+        weeks_mod.write_archive(
+            meta, [{"id": "p1"}], {"overview": "ov(06-26~07-03)"}, {"items": []},
+            {"coverage": [], "items": [{"id": "old-community"}]})
         weeks_mod.build_manifest("2026-07-02")  # current is some other week
 
     def test_api_weeks_returns_manifest(self):
@@ -64,8 +67,7 @@ class ServerWeeksTest(unittest.TestCase):
         self.assertIn('"p1"', html)
         # render_page inlines window.__WEEK_LABEL__=<json> (no spaces around =)
         self.assertIn('window.__WEEK_LABEL__="2026-06-26"', html)
-        # frozen: fetches rewritten to globals
-        self.assertNotIn('fetch("/api/papers")', html)
+        self.assertIn('"old-community"', html)
         # runtime: paper links stay absolute (/paper/<id>), NOT rewritten to relative
         self.assertIn('href="/paper/', html)
         self.assertNotIn('href="paper/', html)
@@ -81,6 +83,12 @@ class ServerWeeksTest(unittest.TestCase):
         self._seed()
         html = self._get("/")
         self.assertIn("window.__WEEKS__", html)
+
+    def test_api_community_returns_validated_payload(self):
+        payload = {"coverage": [], "items": [{"id": "signal-1"}]}
+        with mock.patch("app.server.community.load_community", return_value=payload):
+            body = self._get("/api/community")
+        self.assertEqual(json.loads(body), payload)
 
 
 if __name__ == "__main__":

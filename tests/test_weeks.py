@@ -66,13 +66,16 @@ class ArchiveManifestTest(unittest.TestCase):
 
     def test_write_then_read_archive(self):
         meta = self._meta("2026-06-26", "06-26~07-03", "2026-06-26", "2026-07-03")
-        weeks.write_archive(meta, [{"id": "p1"}], {"overview": "ov"}, {"items": []})
+        community = {"coverage": [], "items": [{"id": "signal-1"}]}
+        weeks.write_archive(
+            meta, [{"id": "p1"}], {"overview": "ov"}, {"items": []}, community)
         self.assertEqual(weeks.archive_path("2026-06-26"), Path(self._tmp.name) / "2026-06-26.json")
         a = weeks.read_archive("2026-06-26")
         self.assertEqual(a["label"], "2026-06-26")
         self.assertEqual(a["papers"], [{"id": "p1"}])
         self.assertEqual(a["weekly"], {"overview": "ov"})
         self.assertEqual(a["trending"], {"items": []})
+        self.assertEqual(a["community"], community)
 
     def test_read_missing_returns_none(self):
         self.assertIsNone(weeks.read_archive("nope"))
@@ -125,12 +128,25 @@ class ExtractPayloadsTest(unittest.TestCase):
         self.assertEqual(out["papers"], [{"id": "p1"}])
         self.assertEqual(out["weekly"]["overview"], "ov")
         self.assertEqual(out["trending"]["items"], [{"repo": "r"}])
+        self.assertEqual(out["community"], {"coverage": [], "items": []})
+
+    def test_extracts_community_payload(self):
+        html = (
+            '<script>window.__PAPERS__ = [{"id":"p1"}];'
+            'window.__WEEKLY__ = {"overview":"ov","highlights":[]};'
+            'window.__TRENDING__ = {"items":[]};'
+            'window.__COMMUNITY__ = {"coverage":[],"items":[{"id":"signal-1"}]};'
+            'window.__WEEKS__ = [];</script>'
+        )
+        out = weeks.extract_payloads_from_html(html)
+        self.assertEqual(out["community"]["items"], [{"id": "signal-1"}])
 
     def test_missing_payloads_use_defaults(self):
         out = weeks.extract_payloads_from_html("<html>no scripts</html>")
         self.assertEqual(out["papers"], [])
         self.assertEqual(out["weekly"], {"overview": "", "highlights": []})
         self.assertEqual(out["trending"], {"items": []})
+        self.assertEqual(out["community"], {"coverage": [], "items": []})
 
     def test_papers_with_semicolon_bracket_in_string(self):
         # A paper whose title contains "];" must not truncate the PAPERS capture.

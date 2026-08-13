@@ -43,7 +43,9 @@ def fetch_json(url: str):
     return json.loads(fetch_text(url))
 
 
-def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, runtime):
+def render_page(
+        html, papers, weekly, trending, weeks, week_label, weeks_base, runtime,
+        community=None):
     """Inline all payloads + switcher globals into page.py's HTML, rewrite fetches
     to read globals, and rewrite /paper/<id> links to relative {weeks_base}paper/<id>.html.
 
@@ -63,6 +65,8 @@ def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, r
         + json.dumps(weekly, ensure_ascii=False)
         + ';window.__TRENDING__='
         + json.dumps(trending, ensure_ascii=False)
+        + ';window.__COMMUNITY__='
+        + json.dumps(community or {"coverage": [], "items": []}, ensure_ascii=False)
         + ';window.__WEEKS__='
         + json.dumps(weeks, ensure_ascii=False)
         + ';window.__WEEK_LABEL__='
@@ -110,6 +114,10 @@ def mirror(server: str, site: Path = SITE) -> int:
         trending_payload = fetch_json(f"{server}/api/trending")
     except Exception:
         trending_payload = {"items": []}
+    try:
+        community_payload = fetch_json(f"{server}/api/community")
+    except Exception:
+        community_payload = {"coverage": [], "items": []}
 
     import datetime
     fallback_iso = datetime.date.today().isoformat()
@@ -117,7 +125,8 @@ def mirror(server: str, site: Path = SITE) -> int:
     current_label = meta["label"]
 
     # 1) archive current week + manifest
-    weeks_mod.write_archive(meta, papers, weekly_payload, trending_payload)
+    weeks_mod.write_archive(
+        meta, papers, weekly_payload, trending_payload, community_payload)
     manifest = weeks_mod.build_manifest(current_label)
 
     # Fetch the server-rendered index shell once; reused for index + past weeks.
@@ -129,6 +138,7 @@ def mirror(server: str, site: Path = SITE) -> int:
         papers, weekly_payload, trending_payload,
         weeks_mod.attach_hrefs(manifest, weeks_base="", runtime=False),
         week_label=None, weeks_base="", runtime=False,
+        community=community_payload,
     )
     (site / "index.html").write_text(index_html, encoding="utf-8")
     print(f"[BUILD] index.html ({len(papers)} papers, week={current_label})")
@@ -146,6 +156,7 @@ def mirror(server: str, site: Path = SITE) -> int:
             rec["papers"], rec["weekly"], rec["trending"],
             weeks_mod.attach_hrefs(manifest, weeks_base="../", runtime=False),
             week_label=entry["label"], weeks_base="../", runtime=False,
+            community=rec.get("community") or {"coverage": [], "items": []},
         )
         (site / "week" / f"{entry['label']}.html").write_text(page, encoding="utf-8")
         print(f"[BUILD] week/{entry['label']}.html")
@@ -177,7 +188,9 @@ def backfill(site: Path = SITE) -> int:
     fallback_iso = datetime.date.today().isoformat()
     meta = weeks_mod.parse_week_meta(
         payloads["weekly"].get("overview", ""), fallback_iso)
-    weeks_mod.write_archive(meta, payloads["papers"], payloads["weekly"], payloads["trending"])
+    weeks_mod.write_archive(
+        meta, payloads["papers"], payloads["weekly"], payloads["trending"],
+        payloads["community"])
     weeks_mod.build_manifest(meta["label"])
     print(f"[BACKFILL] wrote data/weeks/{meta['label']}.json from existing index.html")
     return 0

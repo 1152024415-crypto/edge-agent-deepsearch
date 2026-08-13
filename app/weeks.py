@@ -1,7 +1,7 @@
 """Week archive / manifest / parse logic for the research-radar site.
 
 A "week" is a frozen snapshot of one weekly cycle: the papers list, the
-weekly summary (overview + highlights), and the trending list. This module
+weekly summary (overview + highlights), the community radar, and the trending list. This module
 owns the data model and disk layout under ``data/weeks/``; both the static
 builder (app.build) and the runtime server (app.server) call into it.
 """
@@ -61,7 +61,9 @@ def read_archive(label: str) -> dict | None:
     return json.loads(p.read_text(encoding="utf-8"))
 
 
-def write_archive(meta: dict, papers: list, weekly: dict, trending: dict) -> None:
+def write_archive(
+        meta: dict, papers: list, weekly: dict, trending: dict,
+        community: dict | None = None) -> None:
     WEEKS_DIR.mkdir(parents=True, exist_ok=True)
     rec = {
         "label": meta["label"],
@@ -70,6 +72,7 @@ def write_archive(meta: dict, papers: list, weekly: dict, trending: dict) -> Non
         "papers": papers,
         "weekly": weekly,
         "trending": trending,
+        "community": community or {"coverage": [], "items": []},
     }
     archive_path(meta["label"]).write_text(
         json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -119,11 +122,16 @@ def attach_hrefs(manifest: list[dict], weeks_base: str, runtime: bool) -> list[d
 
 _PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(.+?);\s*window\.__WEEKLY__", re.S)
 _WEEKLY_RE = re.compile(r"window\.__WEEKLY__\s*=\s*(\{.*?\});\s*window\.__TRENDING__", re.S)
-_TRENDING_RE = re.compile(r"window\.__TRENDING__\s*=\s*(\{.*?\});</script>", re.S)
+_TRENDING_RE = re.compile(
+    r"window\.__TRENDING__\s*=\s*(\{.*?\});\s*"
+    r"(?=window\.__COMMUNITY__|window\.__WEEKS__|</script>)", re.S)
+_COMMUNITY_RE = re.compile(
+    r"window\.__COMMUNITY__\s*=\s*(\{.*?\});\s*"
+    r"(?=window\.__WEEKS__|</script>)", re.S)
 
 
 def extract_payloads_from_html(html: str) -> dict:
-    """Pull the three inlined payloads back out of a built index.html (for backfill).
+    """Pull the inlined weekly payloads back out of a built index.html.
 
     ``window.__PAPERS__`` is inlined as ``{"papers": [...]}`` (matching the
     ``/api/papers`` contract), so the raw capture is a dict and the bare list
@@ -148,4 +156,5 @@ def extract_payloads_from_html(html: str) -> dict:
         "papers": papers,
         "weekly": grab(_WEEKLY_RE, {"overview": "", "highlights": []}),
         "trending": grab(_TRENDING_RE, {"items": []}),
+        "community": grab(_COMMUNITY_RE, {"coverage": [], "items": []}),
     }
