@@ -60,6 +60,9 @@ class GateReleaseTest(unittest.TestCase):
             {"overview": "(07-02~07-09)", "highlights": hl}, ensure_ascii=False))
         # built index: dict __PAPERS__, no server injection
         _write(self.root, "site/index.html",
+               '<main><section id="recommendations"></section><section id="weekly"></section>'
+               '<section id="all-research"><div id="source-map"></div></section>'
+               '<section id="discovery"></section></main>'
                '<script>window.__PAPERS__={"papers": [{"id": "arxiv-x1", "recommendation": "推荐", '
                '"title_zh": "端侧智能体推理框架", '
                '"abstract": "这项工作让端侧智能体在手机上更快完成推理，并减少运行内存。", '
@@ -96,6 +99,31 @@ class GateReleaseTest(unittest.TestCase):
                '<script>window.__PAPERS__={"papers":[{"id":"arxiv-x1"}]};</script>')
         errs = gr.run_all(self.root)
         self.assertTrue(any("runtime" in e or "server" in e for e in errs), errs)
+
+    # ---- editorial layout ----
+    def test_fail_when_discovery_section_is_missing(self):
+        self._seed_good()
+        index = self.root / "site" / "index.html"
+        html = index.read_text(encoding="utf-8").replace(
+            '<section id="discovery"></section>', ""
+        )
+        index.write_text(html, encoding="utf-8")
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("discovery" in e or "发现线索" in e for e in errs), errs)
+
+    def test_fail_when_complete_library_excludes_recommendations(self):
+        self._seed_good()
+        index = self.root / "site" / "index.html"
+        html = index.read_text(encoding="utf-8").replace(
+            "</script>", "visible().filter(p=>!isRecommended(p));</script>"
+        )
+        index.write_text(html, encoding="utf-8")
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("完整" in e and "推荐" in e for e in errs), errs)
 
     # ---- links 200 ----
     def test_fail_when_detail_page_missing(self):

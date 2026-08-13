@@ -26,11 +26,27 @@ POST /api/research-runs
 
 ## 默认视图
 
-页面采用 **signal-terminal 设计**：顶部为终端式信号区，按 `source_tier` 分组（官方动态 / 开源大项目 / 公司项目 / 学校顶会 / 学校预印本，5 档 badge），每组内按 score 降序；每条卡片带**信号强度条**（依据 score 0-20 渲染强度）。
+桌面页面采用“编辑前台 + 全量资料库”结构。消息源增多时，不能按来源各做一条互相割裂的信息流，也不能让推荐代替完整收录。页面固定按以下顺序展示：
 
-支持 **4 维 faceted 筛选**（方向 / 应用 / 硬件 / 模型，多标签多选，取自 `data/tags.yaml` 的 `维度:值` 标签）+ **搜索框排序**（按关键词过滤标题/摘要）。`source_tier` 用 5 档 badge 标注，`open_source` 用开源 badge。列表排序按 source_tier 优先级 + score 降序。
+1. **周报抬头**：周区间、总收录、推荐数、真正端侧 Agent 数、正式来源类别数，以及周切换和辅助页面入口。
+2. **Agent 本周推荐**：作为编辑视图排在最前，按手机 > PC > 其他端侧 > 普通推荐，再按 source_tier + score 排序。
+3. **本周判断**：独立展示编辑综述和外部动态，不从论文列表切 top N 复读。
+4. **完整资料库**：包含当前 run 的全部 papers，包括已在上方推荐的条目；推荐条目在列表中带推荐 badge。
+5. **GitHub 待核验线索**：独立于正式资料库，明确说明 Trending 只是发现入口，不能冒充正式收录或推荐。
 
-### weekly 热点模块
+`source_tier` 是可信度和筛选 facet，不是首页叙事主轴。完整资料库顶部展示五档来源的实际计数，点击可设置来源筛选。来源计数之和必须等于 `papers.length`。
+
+## 筛选与搜索
+
+搜索、排序和筛选只作用于完整资料库，不改写 Agent 推荐与本周判断：
+
+- 常用筛选：设备范围（手机 / PC / 其他端侧 / 其他技术）、source_tier、常用方向。
+- 更多筛选：其余方向 / 应用 / 硬件 / 模型，默认收起并通过带 `aria-expanded` 的按钮渐进展开。
+- `tags` 多选采用“任一命中”语义，并可与设备、来源、搜索组合。
+- 一键清除必须恢复全部正式收录。
+- 搜索覆盖中文项目名、英文原标题、中文 abstract、tags 和 vendors。
+
+### 本周判断模块
 
 页面顶部含 weekly 热点模块，数据来自：
 
@@ -38,9 +54,22 @@ POST /api/research-runs
 GET /api/weekly
 ```
 
-返回 `data/weekly_summary.json`，含 `overview`（本周综述）+ `highlights[]`（每条 `{paper_id, topic, why}`）。展示本周精选热点与一句话理由。
+返回 `data/weekly_summary.json`，含 `overview`（本周综述）+ `highlights[]`。桌面布局左侧展示完整 overview，右侧展示外部动态 topic + why；首批显示 3 条，其余渐进展开。Highlights 仍必须是独立编辑产物和外部新闻入口，不得复制完整资料库的论文排名。
 
-每张卡片字段：
+### 推荐名录字段
+
+每条推荐固定按以下顺序展示：
+
+1. 设备范围、source_tier、日期、分数、开源状态。
+2. 中文 `title_zh` 项目名。
+3. 中文 `abstract` 介绍。
+4. `tags` 关键词。
+5. 中文 `recommendation_reason`。
+6. 小号英文 `title` 原标题。
+
+桌面端使用单向纵向名录，不使用需要左右跳读的双列卡片。首屏显示 6 条，可展开其余推荐。推荐区不得展示 `score_reason`。
+
+完整资料库每行字段：
 
 | 字段 | 说明 |
 |---|---|
@@ -48,7 +77,7 @@ GET /api/weekly
 | source_tier | 官方动态/开源大项目/公司项目/学校顶会/学校预印本 badge |
 | 开源 | open_source=true 时显示开源 badge |
 | 日期 | 内容日期 |
-| 标题 | 点击进详情页 |
+| 标题 | 推荐条目优先显示 `title_zh` 并保留英文原标题；其他条目显示原始标题 |
 | 标签 | 1-8 个 tags chip |
 | 这是什么 | abstract 大白话 |
 | 有什么结果 | effects，必须来自原文；没有则显示 `未报告` |
@@ -59,9 +88,17 @@ GET /api/weekly
 
 ## 排序
 
-- 默认：`source_tier` 优先级（官方动态 > 开源大项目 > 公司项目 > 学校顶会 > 学校预印本）+ `score` 降序。
-- 必须支持：按分数、日期排序（source_tier 优先级始终在前）。
+- 推荐区默认：设备范围优先级 + `source_tier` 优先级 + `score` 降序。
+- 完整资料库按 `source_tier` 分段；分段内支持按分数或日期排序。
 - 排序只改变展示顺序，不改服务器数据。
+
+## 交互与可访问性
+
+- 搜索必须有 label；筛选按钮使用 `aria-pressed`；展开按钮使用 `aria-expanded`。
+- 详情层使用 `role=dialog`、`aria-modal=true` 和语义关闭按钮；关闭后焦点返回触发条目。
+- 所有键盘操作有可见焦点；动效遵守 `prefers-reduced-motion`。
+- 百条级列表使用渐进折叠和 `content-visibility`，避免一次绘制所有离屏行。
+- 加载失败在完整资料库内展示可重试错误；空筛选结果提供清除筛选入口。
 
 ## 空状态
 
@@ -74,3 +111,5 @@ GET /api/weekly
 - 当前日期过去 7 天过滤。
 - 只显示真实论文/官方动态/开源大项目更新（source_tier 标注），无非官方博客/新闻/二手解读。
 - 洞察人 / wiki 可降级写入 `localStorage`。
+
+发布门 `gate_release.py` 必须在真实 `site/index.html` 上检查推荐、本周判断、完整资料库、来源构成、发现线索的存在与顺序，并阻止完整资料库再次使用 `!isRecommended` 排除推荐条目。

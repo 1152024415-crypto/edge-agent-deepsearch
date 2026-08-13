@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Display-contract tests for the desktop recommendation-first layout."""
+"""Display-contract tests for the multi-source desktop editorial layout."""
 
 import sys
 import unittest
@@ -12,27 +12,65 @@ from app.page import INDEX_HTML
 
 
 class DesktopRecommendationLayoutTest(unittest.TestCase):
-    def test_agent_recommendations_precede_weekly_and_full_research(self):
+    def test_editorial_sections_follow_the_reader_priority_order(self):
         recommendation_pos = INDEX_HTML.find('id="recommendations"')
         weekly_pos = INDEX_HTML.find('id="weekly"')
         all_research_pos = INDEX_HTML.find('id="all-research"')
+        discovery_pos = INDEX_HTML.find('id="discovery"')
 
         self.assertGreaterEqual(recommendation_pos, 0)
         self.assertGreaterEqual(all_research_pos, 0)
+        self.assertGreaterEqual(discovery_pos, 0)
         self.assertLess(recommendation_pos, weekly_pos)
         self.assertLess(weekly_pos, all_research_pos)
+        self.assertLess(all_research_pos, discovery_pos)
+
+    def test_complete_research_contains_a_source_map(self):
+        all_research_pos = INDEX_HTML.index('id="all-research"')
+        source_map_pos = INDEX_HTML.index('id="source-map"')
+        discovery_pos = INDEX_HTML.index('id="discovery"')
+
+        self.assertLess(all_research_pos, source_map_pos)
+        self.assertLess(source_map_pos, discovery_pos)
 
     def test_recommendation_count_comes_from_existing_agent_flag(self):
         self.assertIn(
             "const isRecommended=p=>p.recommendation==='推荐';",
             INDEX_HTML,
         )
-        self.assertIn("visible().filter(isRecommended)", INDEX_HTML)
+        self.assertIn("ALL.filter(isRecommended)", INDEX_HTML)
         self.assertIn("Agent 本周推荐", INDEX_HTML)
 
-    def test_full_research_does_not_repeat_recommended_items(self):
-        self.assertIn("visible().filter(p=>!isRecommended(p))", INDEX_HTML)
-        self.assertIn("推荐已在上方展示", INDEX_HTML)
+    def test_complete_research_keeps_recommended_items(self):
+        start = INDEX_HTML.index("function renderPapers()")
+        end = INDEX_HTML.index("function renderTabs(", start)
+        complete_renderer = INDEX_HTML[start:end]
+
+        self.assertIn("const l=visible()", complete_renderer)
+        self.assertNotIn("!isRecommended", complete_renderer)
+        self.assertIn('class="rec-badge"', INDEX_HTML)
+        self.assertIn("完整资料库包含全部", INDEX_HTML)
+
+    def test_library_filters_combine_device_source_and_tags(self):
+        self.assertIn('ACTIVE_SOURCE=""', INDEX_HTML)
+        self.assertIn('ACTIVE_SCOPE=""', INDEX_HTML)
+        self.assertIn("p.source_tier===ACTIVE_SOURCE", INDEX_HTML)
+        self.assertIn("p.edge_agent_scope===ACTIVE_SCOPE", INDEX_HTML)
+        self.assertIn("ACTIVE.size===0", INDEX_HTML)
+
+    def test_long_filters_use_progressive_disclosure(self):
+        self.assertIn('id="advanced-toggle"', INDEX_HTML)
+        self.assertIn('aria-expanded="false"', INDEX_HTML)
+        self.assertIn('id="advanced-filter"', INDEX_HTML)
+
+    def test_github_trending_is_an_independent_discovery_area(self):
+        start = INDEX_HTML.index("function renderTrending(")
+        end = INDEX_HTML.index("async function loadTrending", start)
+        renderer = INDEX_HTML[start:end]
+
+        self.assertIn('document.querySelector("#discovery-list")', renderer)
+        self.assertIn("待核验线索", INDEX_HTML)
+        self.assertNotIn("band-trending", renderer)
 
     def test_weekly_highlights_use_progressive_disclosure(self):
         self.assertIn("const WEEKLY_PREVIEW=3", INDEX_HTML)
@@ -53,8 +91,9 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
         self.assertIn("查看其余 '+(recommended.length-REC_PREVIEW)+' 条", INDEX_HTML)
 
     def test_recommendation_explanation_text_is_desktop_readable(self):
-        self.assertIn(".rec-note{max-width:430px;margin:0;color:#d5dfe4;font-size:13px", INDEX_HTML)
-        self.assertIn(".rec-title{display:block;color:#fffaf2;font-weight:700;font-size:16px", INDEX_HTML)
+        self.assertIn(".rec-item{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(260px,360px)", INDEX_HTML)
+        self.assertIn(".rec-note{max-width:520px;margin:0;color:var(--muted);font-size:13px", INDEX_HTML)
+        self.assertIn(".rec-title{display:block;color:var(--ink);font-weight:700;font-size:clamp(", INDEX_HTML)
         self.assertIn(".rec-summary{display:-webkit-box", INDEX_HTML)
 
     def test_recommendation_card_prioritizes_chinese_summary_and_reason(self):

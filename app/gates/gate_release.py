@@ -15,6 +15,9 @@ Catches the failure modes that shipped before by operating on real artifacts
                  0 is a process alarm requiring per-vendor evidence on disk.
 5. edge agents — every item is source-reviewed; genuine on-device agents are
                  recommended and their device scope/tag/evidence agree.
+6. layout       — recommendations, editorial brief, complete library and
+                 unverified discovery remain separate; the complete library
+                 must not remove recommended items.
 
 Use: python app/gates/gate_release.py [--root DIR]
 Pre-deploy, after `python app/build.py`. Exit 0 = ship; 1 = blocked.
@@ -44,6 +47,9 @@ _PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(.+?);\s*window\.__WEEKLY__",
 # `/` route injects WITH spaces: `window.__WEEKS__ = [`. The space-form is the runtime
 # injection that must NOT survive into a static page (render_page strips it).
 _SERVER_INJECT_RE = re.compile(r"window\.__WEEKS__\s+=\s+\[")
+_OLD_RECOMMENDATION_EXCLUSION_RE = re.compile(
+    r"visible\(\)\.filter\(\s*p\s*=>\s*!isRecommended\(p\)\s*\)"
+)
 
 
 def _err(errors, msg):
@@ -73,6 +79,28 @@ def check_contract(root: Path, errors: list) -> None:
     if _SERVER_INJECT_RE.search(html):
         _err(errors, "site/index.html: runtime server globals (window.__WEEKS__ = ...) leaked "
                      "into static page — render_page must strip the server injection block")
+
+
+def check_editorial_layout(root: Path, errors: list) -> None:
+    """Keep editorial ranking, complete coverage and discovery semantically separate."""
+    idx = root / "site" / "index.html"
+    if not idx.exists():
+        return  # check_contract reports the missing build artifact
+    html = idx.read_text(encoding="utf-8")
+    ordered_ids = ["recommendations", "weekly", "all-research", "source-map", "discovery"]
+    positions = {}
+    for section_id in ordered_ids:
+        position = html.find(f'id="{section_id}"')
+        if position < 0:
+            label = "发现线索" if section_id == "discovery" else section_id
+            _err(errors, f"site/index.html: missing editorial layout section {label} ({section_id})")
+        positions[section_id] = position
+    if all(positions[section_id] >= 0 for section_id in ordered_ids):
+        actual = [positions[section_id] for section_id in ordered_ids]
+        if actual != sorted(actual):
+            _err(errors, "site/index.html: editorial layout order must be 推荐 → 本周判断 → 完整资料库 → 来源构成 → 发现线索")
+    if _OLD_RECOMMENDATION_EXCLUSION_RE.search(html):
+        _err(errors, "site/index.html: 完整资料库仍在排除推荐条目；推荐只能作为上方编辑视图，不能从完整收录移除")
 
 
 def _papers_from_index(root: Path) -> list[dict]:
@@ -281,6 +309,7 @@ def _read_json(path: Path, default=None):
 def run_all(root: Path) -> list:
     errors = []
     check_contract(root, errors)
+    check_editorial_layout(root, errors)
     check_edge_agent_classification(root, errors)
     check_arxiv_revision_evidence(root, errors)
     check_recommendation_readability(root, errors)
