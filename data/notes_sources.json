@@ -36,5 +36,12 @@
     "source": "C:/Users/11520/Documents/学习/output/made-by-google-2026-ai-review",
     "desc": "Made by Google 2026 AI 技术调研——Pixel 11/Gemini Intelligence/Pixel AI 芯片/端侧模型部署/Android AI 生态全拆解",
     "files": ["Made_by_Google_2026_AI_research.md"]
+  },
+  {
+    "name": "OPPO OASIS 技术解读",
+    "slug": "oppo-oasis",
+    "source": "D:/proj/oppo",
+    "desc": "OASIS 流式视频 Agent 技术解读——按需分层事件记忆、证据驱动检索、效率收益与产品化边界",
+    "files": ["OASIS-技术解读-Blog.md"]
   }
 ]

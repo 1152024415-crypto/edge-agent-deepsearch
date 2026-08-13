@@ -100,5 +100,17 @@
         "type": "md"
       }
     ]
+  },
+  {
+    "name": "OPPO OASIS 技术解读",
+    "slug": "oppo-oasis",
+    "desc": "OASIS 流式视频 Agent 技术解读——按需分层事件记忆、证据驱动检索、效率收益与产品化边界",
+    "notes": [
+      {
+        "title": "OASIS 技术解读：让流式视频 Agent 知道何时回看、去哪里找",
+        "file": "OASIS-技术解读-Blog.md",
+        "type": "md"
+      }
+    ]
   }
 ]
