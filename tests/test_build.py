@@ -224,6 +224,10 @@ class MirrorBuildTest(unittest.TestCase):
         self.assertIn("window.__PAPERS__", index_html)
         self.assertIn("let data=window.__PAPERS__||null;", index_html)
         self.assertIn("Fresh Edge Agent Paper", index_html)
+        self.assertTrue(
+            (self.site_dir / ".nojekyll").is_file(),
+            "static builds must disable Jekyll so Markdown notes remain .md files",
+        )
 
         # Detail page: exists, contains the paper title, back link rewritten.
         detail_path = self.site_dir / "paper" / "fresh-edge-agent-paper.html"

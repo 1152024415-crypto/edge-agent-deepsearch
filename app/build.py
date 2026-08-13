@@ -101,6 +101,7 @@ def mirror(server: str, site: Path = SITE) -> int:
     # deploy. New paper pages overwrite same-id pages; old ones persist as
     # an archive. index.html is overwritten each build.
     site.mkdir(parents=True, exist_ok=True)
+    (site / ".nojekyll").touch()
     (site / "paper").mkdir(parents=True, exist_ok=True)
 
     print(f"[BUILD] mirroring {server} -> {site}")
