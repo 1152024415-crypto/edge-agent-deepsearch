@@ -6,11 +6,11 @@ This produces a GitHub-Pages-deployable snapshot under ``site/``:
   /            -> site/index.html         (papers JSON inlined, links rewritten)
   /paper/<id>  -> site/paper/<id>.html    (back link rewritten to ../index.html)
 
-The list page (app/page.py) normally fetches ``/api/papers`` at runtime; on a
-static host there is no such API, so we inline the papers payload as
-``window.__PAPERS__`` and replace the fetch with a read of that global. Detail
-pages are already server-rendered HTML (app/server.py render_detail), so we
-just mirror them and fix the back link.
+The list page (app/page.py) fetches API payloads at runtime but prefers inlined
+globals when they exist. On a static host there is no API, so this build
+inlines the payloads as ``window.__PAPERS__`` and related globals. Detail pages
+are already server-rendered HTML (app/server.py render_detail), so we just
+mirror them and fix the back link.
 
 Only this file is changed; app/page.py, app/server.py, app/storage.py are left
 untouched. Run while the server is up, e.g. ``python app/build.py --server
@@ -70,18 +70,6 @@ def render_page(html, papers, weekly, trending, weeks, week_label, weeks_base, r
         + ';window.__WEEKS_BASE__='
         + json.dumps(weeks_base, ensure_ascii=False)
         + ';</script>'
-    )
-    html = re.sub(
-        r'const\s+res\s*=\s*await\s*fetch\("/api/papers"\)\s*;\s*'
-        r'const\s+data\s*=\s*await\s*res\.json\(\)\s*;',
-        'const data = window.__PAPERS__;',
-        html,
-    )
-    html = re.sub(
-        r'const\s+wr\s*=\s*await\s*fetch\("/api/weekly"\)\s*;\s*'
-        r'const\s+w\s*=\s*await\s+wr\.json\(\)\s*;',
-        'const w = window.__WEEKLY__;',
-        html,
     )
     html = html.replace("<script>", inline + "\n    <script>", 1)
     # rewrite /paper/<id> links (incl. JS template-literal form) to relative

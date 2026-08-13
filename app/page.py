@@ -270,7 +270,7 @@ INDEX_HTML = """<!doctype html>
   </main>
 
   <script>
-    let ALL=[], ACTIVE=new Set(), Q="", SORT="score", ACTIVE_SOURCE="", ACTIVE_SCOPE="", SHOW_ALL_RECOMMENDED=false, SHOW_ALL_TRENDING=false, ADVANCED_OPEN=false, LAST_FOCUS=null;
+    let ALL=[], TRENDING_CACHE=[], ACTIVE=new Set(), Q="", SORT="score", ACTIVE_SOURCE="", ACTIVE_SCOPE="", SHOW_ALL_RECOMMENDED=false, SHOW_ALL_TRENDING=false, ADVANCED_OPEN=false, LAST_FOCUS=null;
     const REC_PREVIEW=6;
     const WEEKLY_PREVIEW=3;
     const TRENDING_PREVIEW=8;
@@ -291,17 +291,24 @@ INDEX_HTML = """<!doctype html>
     const dim=t=>t.split(":")[0], val=t=>t.split(":")[1]||t;
 
     async function loadPapers(){
-      const res = await fetch("/api/papers");
-      if(!res.ok)throw new Error("HTTP "+res.status);
-      const data = await res.json();
+      let data=window.__PAPERS__||null;
+      if(!data){
+        const res=await fetch("/api/papers");
+        if(!res.ok)throw new Error("HTTP "+res.status);
+        data=await res.json();
+      }
       ALL=data.papers||[];
       renderRadar();
       renderHeaderStats();
       attachSpy();
     }
     async function loadWeekly(){
-      const wr = await fetch("/api/weekly");
-      const w = await wr.json();
+      let w=window.__WEEKLY__||null;
+      if(!w){
+        const wr=await fetch("/api/weekly");
+        if(!wr.ok)throw new Error("HTTP "+wr.status);
+        w=await wr.json();
+      }
       const el=document.querySelector("#weekly");
       if(!w||!w.highlights||!w.highlights.length){el.hidden=true;return;}
       el.hidden=false;
@@ -537,8 +544,8 @@ INDEX_HTML = """<!doctype html>
     async function loadTrending(){
       let data=window.__TRENDING__||null;
       if(!data){try{const response=await fetch("/api/trending");data=await response.json();}catch(error){document.querySelector("#discovery-list").innerHTML='<div class="empty">GitHub 线索暂时读取失败。</div>';return;}}
-      window.__TRENDING_CACHE__=data.items||data||[];
-      renderTrending(window.__TRENDING_CACHE__);
+      TRENDING_CACHE=data.items||data||[];
+      renderTrending(TRENDING_CACHE);
     }
 
     function handleFilterClick(event){
@@ -564,7 +571,7 @@ INDEX_HTML = """<!doctype html>
     });
     document.querySelector("#discovery-list").addEventListener("click",event=>{
       const button=event.target.closest("#trending-toggle");if(!button)return;
-      SHOW_ALL_TRENDING=!SHOW_ALL_TRENDING;renderTrending(window.__TRENDING_CACHE__||[]);
+      SHOW_ALL_TRENDING=!SHOW_ALL_TRENDING;renderTrending(TRENDING_CACHE);
     });
     document.querySelector("#primary-filter").addEventListener("click",handleFilterClick);
     document.querySelector("#advanced-filter").addEventListener("click",handleFilterClick);

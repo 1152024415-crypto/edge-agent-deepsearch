@@ -71,7 +71,8 @@ class GateReleaseTest(unittest.TestCase):
                '"tags":["方向:高效推理"],"score_relevance":7}]};'
                'window.__WEEKLY__={"overview":"","highlights":[]};'
                'window.__TRENDING__={"items":[]};'
-               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>')
+               'window.__WEEKS__=[];window.__WEEK_LABEL__=null;window.__WEEKS_BASE__="";</script>'
+               '<script>let data=window.__PAPERS__||null;</script>')
         # detail page exists -> no 404
         _write(self.root, "site/paper/arxiv-x1.html", "<html>detail</html>")
         _write(self.root, "site/notes.html", "<html>notes</html>")
@@ -124,6 +125,18 @@ class GateReleaseTest(unittest.TestCase):
         errs = gr.run_all(self.root)
 
         self.assertTrue(any("完整" in e and "推荐" in e for e in errs), errs)
+
+    def test_fail_when_static_page_does_not_prefer_inlined_papers(self):
+        self._seed_good()
+        index = self.root / "site" / "index.html"
+        html = index.read_text(encoding="utf-8").replace(
+            "let data=window.__PAPERS__||null;", ""
+        )
+        index.write_text(html, encoding="utf-8")
+
+        errs = gr.run_all(self.root)
+
+        self.assertTrue(any("inlined" in e.lower() or "静态" in e for e in errs), errs)
 
     # ---- links 200 ----
     def test_fail_when_detail_page_missing(self):

@@ -12,6 +12,10 @@ from app.page import INDEX_HTML
 
 
 class DesktopRecommendationLayoutTest(unittest.TestCase):
+    def test_static_build_prefers_inlined_papers_before_api_fallback(self):
+        self.assertIn("let data=window.__PAPERS__||null;", INDEX_HTML)
+        self.assertIn('const res=await fetch("/api/papers")', INDEX_HTML)
+
     def test_editorial_sections_follow_the_reader_priority_order(self):
         recommendation_pos = INDEX_HTML.find('id="recommendations"')
         weekly_pos = INDEX_HTML.find('id="weekly"')

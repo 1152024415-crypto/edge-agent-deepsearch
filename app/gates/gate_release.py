@@ -47,6 +47,7 @@ _PAPERS_RE = re.compile(r"window\.__PAPERS__\s*=\s*(.+?);\s*window\.__WEEKLY__",
 # `/` route injects WITH spaces: `window.__WEEKS__ = [`. The space-form is the runtime
 # injection that must NOT survive into a static page (render_page strips it).
 _SERVER_INJECT_RE = re.compile(r"window\.__WEEKS__\s+=\s+\[")
+_STATIC_PAPERS_FIRST = "let data=window.__PAPERS__||null;"
 _OLD_RECOMMENDATION_EXCLUSION_RE = re.compile(
     r"visible\(\)\.filter\(\s*p\s*=>\s*!isRecommended\(p\)\s*\)"
 )
@@ -79,6 +80,8 @@ def check_contract(root: Path, errors: list) -> None:
     if _SERVER_INJECT_RE.search(html):
         _err(errors, "site/index.html: runtime server globals (window.__WEEKS__ = ...) leaked "
                      "into static page — render_page must strip the server injection block")
+    if _STATIC_PAPERS_FIRST not in html:
+        _err(errors, "site/index.html: 静态页面没有优先读取 inlined __PAPERS__；GitHub Pages 会误请求不存在的 /api/papers")
 
 
 def check_editorial_layout(root: Path, errors: list) -> None:
