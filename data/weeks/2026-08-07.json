@@ -4330,5 +4330,110 @@
         "desc": "面向多种主流大模型的本地推理与微调加速方案。"
       }
     ]
+  },
+  "community": {
+    "window": {
+      "start": "2026-08-07",
+      "end": "2026-08-13"
+    },
+    "coverage": [
+      {
+        "source": "X",
+        "status": "limited",
+        "note": "仅使用公开搜索索引；本窗口未找到同时可打开原帖并核验发布时间的对题内容，因此不展示 X 条目。"
+      },
+      {
+        "source": "Reddit",
+        "status": "found",
+        "note": "已核验 r/LocalLLaMA 与 r/LocalLLM 的帖子直达页、正文和窗口日期。"
+      },
+      {
+        "source": "Hacker News",
+        "status": "no_match",
+        "note": "公开检索结果中没有落在本窗口且直接讨论端侧 Agent、模型或 Infra 的新主题。"
+      },
+      {
+        "source": "厂商论坛",
+        "status": "no_match",
+        "note": "公开检索未发现本窗口内可核验、对题的厂商论坛新主题。"
+      },
+      {
+        "source": "开发者论坛",
+        "status": "no_match",
+        "note": "公开检索未发现本窗口内可核验、对题的开发者论坛新主题。"
+      }
+    ],
+    "items": [
+      {
+        "id": "reddit-muse-glimmer-dflash-agent",
+        "source": "Reddit",
+        "author": "r/LocalLLM",
+        "url": "https://www.reddit.com/r/LocalLLM/comments/1vm4j0i/muse_glimmer_30b_on_dgx_spark_using_dflash_is/",
+        "published_at": "2026-08-12T12:00:00Z",
+        "title_zh": "Muse Glimmer 30B 在 DGX Spark 上接入个人 Agent",
+        "summary_zh": "用户在 DGX Spark 上加入 DFlash 投机解码后，将 Muse Glimmer 30B 从约 5–8 tok/s 提升到约 23 tok/s，并接入 Hermes 处理日程、提醒和费用记录。",
+        "why_it_matters": "这是完整个人 Agent 工作流的设备端反馈，能直接观察模型工具调用和技能加载在本地硬件上的可用程度。",
+        "device_scope": "PC",
+        "topic": "Agent",
+        "verification": "仅线索",
+        "evidence_url": ""
+      },
+      {
+        "id": "reddit-ling3-quant-dgx-spark",
+        "source": "Reddit",
+        "author": "r/LocalLLaMA",
+        "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vlmun8/ling30flash_quant_ladder_on_one_dgx_spark_the/",
+        "published_at": "2026-08-11T12:00:00Z",
+        "title_zh": "Ling 3.0 Flash 单 Spark 量化阶梯实测",
+        "summary_zh": "社区在 DGX Spark 上比较 Q4、Q5、Q6 GGUF，单流解码约 32–40 tok/s，其中 Q5 同时获得最高速度和接近无损的质量。",
+        "why_it_matters": "它提示小激活参数 MoE 的量化收益与稠密模型不同，可为本地 Agent 选择模型精度和内存占用提供工程依据。",
+        "device_scope": "PC",
+        "topic": "模型",
+        "verification": "仅线索",
+        "evidence_url": ""
+      },
+      {
+        "id": "reddit-nemotron-35-community-reaction",
+        "source": "Reddit",
+        "author": "r/LocalLLaMA",
+        "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vlh9fg/nvidianvidianemotron35lightning30ba3bbf16_hugging/",
+        "published_at": "2026-08-11T12:00:00Z",
+        "title_zh": "Nemotron 3.5 本地模型社区反馈",
+        "summary_zh": "社区集中讨论 Nemotron 3.5 Lightning 的 GGUF、DGX Spark 实测和多语言问题；部分用户认为它适合高速工具调用，但不一定适合复杂编码。",
+        "why_it_matters": "高热度讨论快速暴露了官方基准没有覆盖的模型体积、多语言输出和任务边界问题，适合作为后续正式核验线索。",
+        "device_scope": "PC",
+        "topic": "模型",
+        "verification": "已回链原始材料",
+        "evidence_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+      },
+      {
+        "id": "reddit-nemotron-35-dgx-spark",
+        "source": "Reddit",
+        "author": "r/LocalLLM",
+        "url": "https://www.reddit.com/r/LocalLLM/comments/1vllg29/nemotron_35_lightning_nvfp4/",
+        "published_at": "2026-08-11T12:00:00Z",
+        "title_zh": "Nemotron 3.5 单台 DGX Spark 工具调用实测",
+        "summary_zh": "社区在单台 DGX Spark 上跑通 Nemotron 3.5 Lightning：基础输出约 78.5 tok/s，配 DSpark 草稿模型后约 90.7 tok/s；短工具评测从 77 分升到 80 分。",
+        "why_it_matters": "这说明它更像快速的 Agent 执行模型，而不是单独承担复杂规划的总控模型，补足了官方发布之外的真实设备判断。",
+        "device_scope": "PC",
+        "topic": "Agent",
+        "verification": "已回链原始材料",
+        "evidence_url": "https://blogs.nvidia.com/blog/nemotron-lightning-switchyard-rtx-dgx/"
+      },
+      {
+        "id": "reddit-deepseek-v4-dual-spark-agent",
+        "source": "Reddit",
+        "author": "r/LocalLLaMA",
+        "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vkpm5p/deepseek_v4_flash_0731_is_the_killer_app_that_is/",
+        "published_at": "2026-08-10T12:00:00Z",
+        "title_zh": "DeepSeek V4 Flash 双 Spark 本地 Agent 讨论",
+        "summary_zh": "社区报告 DeepSeek V4 Flash 0731 可在双 DGX Spark 上以约 60 tok/s 运行，并支持 1M 上下文和 Hermes 等 Agent harness。",
+        "why_it_matters": "讨论给出了并发、隐私、长上下文和硬件成本的实际取舍，能帮助判断双机 PC 端 Agent 是否值得部署。",
+        "device_scope": "PC",
+        "topic": "Agent Infra",
+        "verification": "仅线索",
+        "evidence_url": ""
+      }
+    ]
   }
 }
