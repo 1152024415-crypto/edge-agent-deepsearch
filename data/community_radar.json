@@ -1,33 +1,33 @@
 {
   "window": {
-    "start": "2026-08-07",
-    "end": "2026-08-13"
+    "start": "2026-08-08",
+    "end": "2026-08-14"
   },
   "coverage": [
     {
       "source": "X",
       "status": "limited",
-      "note": "仅使用公开搜索索引；本窗口未找到同时可打开原帖并核验发布时间的对题内容，因此不展示 X 条目。"
+      "note": "8 月 14 日复核公开搜索索引；本窗口仍未找到同时可打开原帖并核验发布时间的对题内容，因此不展示 X 条目。"
     },
     {
       "source": "Reddit",
       "status": "found",
-      "note": "已核验 r/LocalLLaMA 与 r/LocalLLM 的帖子直达页、正文和窗口日期。"
+      "note": "8 月 14 日复核 r/LocalLLaMA 与 r/LocalLLM；保留已核验帖子，未发现更高价值的新条目。"
     },
     {
       "source": "Hacker News",
       "status": "no_match",
-      "note": "公开检索结果中没有落在本窗口且直接讨论端侧 Agent、模型或 Infra 的新主题。"
+      "note": "8 月 14 日复核公开检索结果，未发现落在本窗口且直接讨论端侧 Agent、模型或 Infra 的新主题。"
     },
     {
       "source": "厂商论坛",
       "status": "no_match",
-      "note": "公开检索未发现本窗口内可核验、对题的厂商论坛新主题。"
+      "note": "8 月 14 日复核 NVIDIA、Arm、Qualcomm 等公开厂商论坛，未发现本窗口内可核验、对题的新主题。"
     },
     {
       "source": "开发者论坛",
       "status": "no_match",
-      "note": "公开检索未发现本窗口内可核验、对题的开发者论坛新主题。"
+      "note": "8 月 14 日复核 Hugging Face、Google 与 Apple 等公开开发者入口，未发现本窗口内可核验、对题的新主题。"
     }
   ],
   "items": [

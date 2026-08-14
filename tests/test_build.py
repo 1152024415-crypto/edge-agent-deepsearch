@@ -29,11 +29,19 @@ import research_run
 from app import build as build_app
 from app import server as server_app
 from app import weeks as weeks_mod
+from app.notes_page import NOTES_HTML
 
 TODAY = date.today()
 YESTERDAY = (TODAY - timedelta(days=1)).isoformat()
 TEST_PUBLISH_TOKEN = "test-publish-secret"
 _TEST_ARTIFACT_DIRS = []
+
+
+class NotesPageTest(unittest.TestCase):
+    def test_markdown_frontmatter_is_hidden_but_copy_keeps_original(self):
+        self.assertIn("function stripFrontmatter(md)", NOTES_HTML)
+        self.assertIn("LAST_RAW = md", NOTES_HTML)
+        self.assertIn("var pm = protectMath(stripFrontmatter(md));", NOTES_HTML)
 
 
 def _score_dims(score):

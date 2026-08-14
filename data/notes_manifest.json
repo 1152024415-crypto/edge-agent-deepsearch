@@ -112,5 +112,17 @@
         "type": "md"
       }
     ]
+  },
+  {
+    "name": "OPPO VisionClaw 技术解读",
+    "slug": "oppo-visionclaw",
+    "desc": "VisionClaw 智能眼镜常驻 Agent 技术解读——第一视角多模态感知、语音交互、工具执行闭环与真实使用边界",
+    "notes": [
+      {
+        "title": "VisionClaw 技术解读：智能眼镜如何从“看见”走到“代办”",
+        "file": "VisionClaw-技术解读-Blog.md",
+        "type": "md"
+      }
+    ]
   }
 ]

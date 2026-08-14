@@ -120,6 +120,11 @@ NOTES_HTML = r"""<!doctype html>
       });
     }
 
+    function stripFrontmatter(md){
+      var match = md.match(/^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|$)/);
+      return match ? md.slice(match[0].length) : md;
+    }
+
     function selectNote(slug, file){
       var link = document.querySelector('.note-link[data-slug="' + slug + '"][data-file="' + file + '"]');
       document.querySelectorAll('.note-link.active').forEach(function(n){n.classList.remove('active');});
@@ -142,7 +147,7 @@ NOTES_HTML = r"""<!doctype html>
         // Protect $...$$ / $$...$$ from marked's inline parser (it mangles
         // math with _ * | inside, splitting $$ pairs so KaTeX can't match).
         // Replace with plain placeholders, parse, restore, THEN KaTeX render.
-        var pm = protectMath(md);
+        var pm = protectMath(stripFrontmatter(md));
         var html = marked.parse(pm.md);
         html = restoreMath(html, pm.math);
         art.innerHTML = html;
