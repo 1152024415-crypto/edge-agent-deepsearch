@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT))  # for app package
 sys.path.insert(0, str(ROOT / "agent"))  # for research_run / publish_results
 
 import publish_results
+import build_notes
 import research_collection
 import research_run
 from app import build as build_app
@@ -42,6 +43,37 @@ class NotesPageTest(unittest.TestCase):
         self.assertIn("function stripFrontmatter(md)", NOTES_HTML)
         self.assertIn("LAST_RAW = md", NOTES_HTML)
         self.assertIn("var pm = protectMath(stripFrontmatter(md));", NOTES_HTML)
+
+
+class NotesIngestTest(unittest.TestCase):
+    def test_markdown_file_whitelist_only_copies_referenced_images(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            source = tmp_path / "source"
+            (source / "images" / "chosen").mkdir(parents=True)
+            (source / "images" / "other").mkdir(parents=True)
+            (source / "note.md").write_text(
+                "# Note\n\n![chosen](images/chosen/kept.png)\n", encoding="utf-8"
+            )
+            (source / "other.md").write_text(
+                "# Other\n\n![other](images/other/dropped.png)\n", encoding="utf-8"
+            )
+            (source / "images" / "chosen" / "kept.png").write_bytes(b"kept")
+            (source / "images" / "other" / "dropped.png").write_bytes(b"dropped")
+
+            with mock.patch.object(build_notes, "SITE", tmp_path / "site"):
+                build_notes.ingest_collection({
+                    "name": "Only Note",
+                    "slug": "only-note",
+                    "source": str(source),
+                    "files": ["note.md"],
+                })
+
+            output = tmp_path / "site" / "notes" / "only-note"
+            self.assertTrue((output / "kept.png").exists())
+            self.assertTrue((output / "images" / "chosen" / "kept.png").exists())
+            self.assertFalse((output / "dropped.png").exists())
+            self.assertFalse((output / "images" / "other" / "dropped.png").exists())
 
 
 def _score_dims(score):

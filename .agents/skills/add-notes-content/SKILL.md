@@ -15,7 +15,7 @@ The notes system has 3 parts:
 
 1. **`data/notes_sources.json`** — registry of note collections. Each entry: `{name, slug, source, desc}`. The `source` is a local directory path containing `.md` and/or `.html` files + `images/` or `assets/` subdirs.
 
-2. **`agent/build_notes.py`** — ingests each collection: copies top-level `*.md` + `*.html` to `site/notes/<slug>/`, copies `images/` + `assets/` images (flat for .md, preserving subdir for .html), and renders `site/notes.html` from `app/notes_page.py` with the manifest inlined.
+2. **`agent/build_notes.py`** — ingests each collection: copies top-level `*.md` + `*.html` to `site/notes/<slug>/`; a Markdown-only `files` whitelist copies only the local images referenced by those selected notes, while unfiltered or HTML collections retain the broader `images/` + `assets/` behavior; then renders `site/notes.html` from `app/notes_page.py` with the manifest inlined.
 
 3. **`app/notes_page.py`** — the notes page template (HTML + CSS + JS). Renders markdown via marked.js + KaTeX + mermaid. For `.html` notes, loads in an `<iframe>` (HTML's own styles/JS render fully). Left sidebar (collapsible) shows collections + notes; right sidebar shows TOC (auto-built from H2/H3 for .md notes; shows "HTML 页面" for .html notes).
 
@@ -90,7 +90,7 @@ Click the new note → verify it renders.
 
 ## Notes
 
-- `build_notes.py` cleans `site/notes/<slug>/` before each ingest (rmtree + recreate) — stale files don't accumulate.
+- `build_notes.py` cleans `site/notes/<slug>/` before each ingest (rmtree + recreate) — stale files don't accumulate. For a collection with a Markdown-only `files` whitelist, unrelated images elsewhere in the same source directory are not copied.
 - `build_notes.py` only ingests TOP-LEVEL `*.md` and `*.html` (not recursive into subdirs). Subdirs like `deepspec/` with `.venv` are skipped.
 - `assets/` is copied BOTH flat (for .md image rewrite) AND preserving subdir (for .html relative paths).
 - The notes page supports: collapsible left sidebar, right TOC, KaTeX math (with protectMath to prevent marked.js mangling `$$`), mermaid diagrams, copy-raw-markdown button, HTML iframe notes.
