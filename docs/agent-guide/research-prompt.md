@@ -62,9 +62,9 @@ DeepSeek / Moonshot / Zhipu / Minimax / 百川 等**模型实验室经常先发�
 
 ## 社区雷达（独立编辑产物，不进入正式 run）
 
-正式候选完成后，主 agent 另行检索最近 7 个自然日的 X、Reddit、Hacker News、厂商论坛和开发者论坛，写入 `data/community_radar.json`。目标是补充真实设备反馈、新项目苗头和社区争议，不降低正式周报的来源标准：
+正式候选完成后，主 agent 另行检索最近 7 个自然日的 X、Bluesky、Reddit、Hacker News、Mastodon、GitHub Discussions、Hugging Face（Discussions/Models/Spaces）、YouTube / Bilibili 和厂商论坛，写入 `data/community_radar.json`。目标是补充真实设备反馈、新项目苗头和社区争议，不降低正式周报的来源标准：
 
-- 五类来源必须逐一留下 `found` / `no_match` / `limited` / `unavailable` 与中文说明，0 条也不能静默跳过。
+- 九类来源必须逐一留下 `found` / `no_match` / `limited` / `unavailable` 与中文说明，0 条也不能静默跳过。视频只收官方频道或可回链一手项目的演示。
 - X 只接受无需登录即可打开、可核验发布时间的公开原帖；搜索索引不足时标 `limited`，不得把 Reddit 转述或搜索摘要改写成 X 原帖。
 - 每条线索必须有讨论直达 URL、`published_at`、中文 `title_zh` / `summary_zh` / `why_it_matters`、`device_scope`（手机 / PC / 其他端侧 / 通用技术）、topic 和 verification（仅线索 / 已回链原始材料 / 已进入正式周报）。
 - 排序手机 > PC > 其他端侧 > 通用技术；相关但价值一般的线索仍可列出，价值判断负责用户注意力。

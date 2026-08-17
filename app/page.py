@@ -181,7 +181,7 @@ INDEX_HTML = """<!doctype html>
     .community-filter button{border:1px solid var(--hair);background:var(--paper);color:var(--muted);padding:3px 7px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;cursor:pointer}
     .community-filter button:hover{border-color:var(--blue);color:var(--blue)}
     .community-filter button.active{border-color:var(--blue);background:var(--blue);color:var(--paper)}
-    .community-coverage{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:0 0 12px;border:1px solid var(--rule);background:var(--panel)}
+    .community-coverage{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));margin:0 0 12px;border:1px solid var(--rule);background:var(--panel)}
     .coverage-item{min-width:0;padding:10px 11px;border-right:1px solid var(--hair)}
     .coverage-item:last-child{border-right:0}
     .coverage-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
@@ -304,7 +304,7 @@ INDEX_HTML = """<!doctype html>
     <section class="community" id="community">
       <header class="section-head">
         <div><p class="eyebrow">社媒与论坛 · 本周线索</p><h2>社区雷达</h2></div>
-        <p class="section-note">追踪 X、Reddit、Hacker News 和厂商／开发者论坛里的真实设备反馈；手机优先、PC 其次，并保留其他端侧与通用技术线索。</p>
+        <p class="section-note">逐周检查 X、Bluesky、Reddit、Hacker News、Mastodon、GitHub Discussions、Hugging Face、YouTube／Bilibili 和厂商论坛；手机优先、PC 其次。</p>
       </header>
       <div class="community-boundary"><b>社区线索，不等同于正式周报</b><span>这里帮助发现新项目和使用反馈；只有回链并完成一手核验后，才可能进入上方正式资料库。</span></div>
       <div class="community-toolbar">

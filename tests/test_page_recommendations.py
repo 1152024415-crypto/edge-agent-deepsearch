@@ -40,6 +40,18 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
         self.assertIn('id="community-coverage"', INDEX_HTML)
         self.assertIn('id="community-list"', INDEX_HTML)
 
+    def test_community_radar_names_expanded_public_sources(self):
+        for label in (
+            "Bluesky",
+            "Mastodon",
+            "GitHub Discussions",
+            "Hugging Face",
+            "YouTube",
+            "Bilibili",
+        ):
+            with self.subTest(label=label):
+                self.assertIn(label, INDEX_HTML)
+
     def test_community_radar_prefers_inlined_week_snapshot_then_api(self):
         self.assertIn("let data=window.__COMMUNITY__||null;", INDEX_HTML)
         self.assertIn('fetch("/api/community")', INDEX_HTML)

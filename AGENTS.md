@@ -51,7 +51,7 @@
 | `content/papers/` | 兼容旧静态 build 的本地 Markdown |
 | `site/` | 静态 fallback 产物，不提交 |
 | `data/` | index.json / vendors.yaml 共享数据 |
-| `data/community_radar.json` | X/Reddit/HN/厂商论坛/开发者论坛的独立社区线索与覆盖证据 |
+| `data/community_radar.json` | X/Bluesky/Reddit/HN/Mastodon/GitHub Discussions/Hugging Face/视频/厂商论坛的独立社区线索与覆盖证据 |
 | `docs/` | 文档（agent-guide / site / design-docs / plans / references） |
 | `README.md` | 人类入口和常用命令 |
 | `ARCHITECTURE.md` | 顶层架构和数据流 |
@@ -69,7 +69,7 @@
 7. 运行 `python agent/validate_research_run.py research_runs/<run_id>.json`：先校验 collection manifest，再校验内容结构、动态 7 天窗口、评分、标签、链接、arXiv date 和跨 run 去重。旧论文若仅因本周修订进入窗口，主 agent 必须对比旧版并填写中文 `arxiv_revision_note`；排版、勘误或摘要无实质变化的一律不收。校验失败自动拦。
 8. validate 失败：修正或丢弃不合格条目，**不许凑数**。找不到官方 URL 就丢，大厂不足就少收。
 9. publish 前主 agent 抽检 `source_tier=官方动态` 和 `source_tier=开源大项目` 条目：fetch 每个 URL，对比页面内容 vs 标题摘要。URL 能开 ≠ 内容对题，对不上就丢。
-10. **独立采集社区雷达**：以运行日为末日检索最近 7 个自然日的 X、Reddit、Hacker News、厂商论坛、开发者论坛，写 `data/community_radar.json`。五类来源逐一写 `found/no_match/limited/unavailable` + 中文说明；X 只用无需登录即可打开并核验日期的公开原帖，受限就写 `limited`，不得拿转述冒充原帖。社区条目只进“社区雷达”，不得直接进入正式 run；必须回链一手材料并重新满足正式来源契约后才可晋升。
+10. **独立采集社区雷达**：以运行日为末日检索最近 7 个自然日的 X、Bluesky、Reddit、Hacker News、Mastodon、GitHub Discussions、Hugging Face（Discussions/Models/Spaces）、YouTube / Bilibili 和厂商论坛，写 `data/community_radar.json`。九类来源逐一写 `found/no_match/limited/unavailable` + 中文说明；X 只用无需登录即可打开并核验日期的公开原帖，受限就写 `limited`，不得拿转述冒充原帖。视频只收官方频道或可回链一手项目的演示。社区条目只进“社区雷达”，不得直接进入正式 run；必须回链一手材料并重新满足正式来源契约后才可晋升。
 11. 运行 `python agent/publish_results.py research_runs/<run_id>.json --server <SERVER_URL>`。
 12. 服务器 upsert，`GET /api/papers` 刷新最新 run；`GET /api/community` 读取独立社区雷达。
 13. 详情页展示短摘要 + tags + 原文链接。publish 后列表页、社区雷达和详情页立即可见。
@@ -120,7 +120,7 @@
 - `paper_url` 必须和论文标题、摘要匹配。
 - `effects` 必须来自论文原文；没有报告写 `未报告`。
 - 发布前必须跑 `validate_research_run.py`。
-- **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、推荐中文项目名/摘要/理由缺失或含内部占位词、项目名复用介绍、非空周报 0 推荐、内链 404、热点复读论文列表、0 官方动态静默、社区五来源覆盖缺失、静态社区快照不一致和社媒链接污染正式周报。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
+- **发布前必须跑 `python app/gates/gate_all.py`（含 `gate_release.py`）**。`gate_release` 是机械门，作用在构建产物 `site/` + `data/`，拦：__PAPERS__ 契约、推荐中文项目名/摘要/理由缺失或含内部占位词、项目名复用介绍、非空周报 0 推荐、内链 404、热点复读论文列表、0 官方动态静默、社区九来源覆盖缺失、静态社区快照不一致和社媒链接污染正式周报。**它 FAIL 就不许部署**——比 assertIn 子串测试强，子串测试测不出的功能回归它都能拦。
 - `data/weekly_summary.json` 是**独立编辑产物**，不是 run 的派生字段。`highlights` 必须是编辑性新闻（厂商博客/动态/行业事件，带**外部 URL**，≥5 条），不许用 run 的 paper_id 切 top N 填充——那会让热点复读下面的论文列表。流程顺序：先采厂商动态（`官方动态`）→ 再写 weekly_summary（从新闻 + 判断）→ run 论文列表是另一层。
 - **0 官方动态是流程告警，不是可接受结果**。research-prompt 和 collection manifest 强制查 24 个规范厂商/模型实验室来源。run 里 `官方动态` count==0 时，必须要么去补采，要么在 `data/weeks/<label>-no-vendor.md` 写明逐厂证据，不许静默接受 0。
 - 修改完成前至少跑 `python tests/test_research_pipeline.py`、`python tests/test_build.py`、`python app/gates/gate_all.py`。

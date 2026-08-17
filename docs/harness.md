@@ -36,7 +36,7 @@
 | 8 | `python agent/validate_research_run.py`：先验覆盖清单，再验内容、动态7日、评分、标签、链接、arXiv date 和去重 | **自动拦** |
 | 9 | validate 失败：修正或丢弃，**不许凑数** | 流程 |
 | 10 | 主 agent 抽检 `source_tier=官方动态` 和 `开源大项目` 条目：fetch URL 对比页面内容 vs 标题摘要 | 半自动 |
-| 11 | 独立检索 X / Reddit / Hacker News / 厂商论坛 / 开发者论坛，写 `data/community_radar.json`；五来源逐项留覆盖状态，社媒链接不进入正式 run | 主 agent + 自动拦 |
+| 11 | 独立检索 X / Bluesky / Reddit / Hacker News / Mastodon / GitHub Discussions / Hugging Face / YouTube-Bilibili / 厂商论坛，写 `data/community_radar.json`；九来源逐项留覆盖状态，社媒链接不进入正式 run | 主 agent + 自动拦 |
 | 12 | `python agent/publish_results.py --server <URL>` | 主 agent |
 | 13 | 服务器 upsert，`GET /api/papers` 刷新最新 run；`GET /api/community` 返回独立社区层 | 自动 |
 | 14 | 详情页展示短摘要 + tags + 原文链接（整理 agent 已停用，无 6 段 detail，无「整理中」状态） | 自动 |

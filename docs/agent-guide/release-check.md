@@ -11,7 +11,7 @@
   - weekly_summary highlights 外部 URL（厂商博客/新闻）≥5，非 paper_id 复读
   - 当前周 `官方动态` ≥1；为 0 则有 `data/weeks/<label>-no-vendor.md` 逐厂证据
   - `data/github_trending_top20.json` mtime ≤7 天（>7 天 FAIL——防止 trending 区显示过期仓）
-  - `data/community_radar.json` 是截至运行日的完整 7 日窗口；X/Reddit/HN/厂商论坛/开发者论坛五类覆盖齐全；静态 `__COMMUNITY__` 与源数据一致；正式 papers 没有社媒讨论 URL
+  - `data/community_radar.json` 是截至运行日的完整 7 日窗口；X/Bluesky/Reddit/HN/Mastodon/GitHub Discussions/Hugging Face/YouTube-Bilibili/厂商论坛九类覆盖齐全；静态 `__COMMUNITY__` 与源数据一致；正式 papers 没有社媒讨论 URL
 
 ## 厂商覆盖自检（防漏大新闻，07-15 阶跃星辰 AI 手机漏掉后补）
 

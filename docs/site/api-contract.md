@@ -101,7 +101,7 @@ Response:
 }
 ```
 
-`coverage` 必须完整覆盖 X / Reddit / Hacker News / 厂商论坛 / 开发者论坛；status 只能是 `found` / `no_match` / `limited` / `unavailable`。`device_scope` 只能是手机 / PC / 其他端侧 / 通用技术；`verification` 只能是仅线索 / 已回链原始材料 / 已进入正式周报。社媒讨论 URL 不得直接作为正式 papers 的 `paper_url`。
+`coverage` 必须完整覆盖 X / Bluesky / Reddit / Hacker News / Mastodon / GitHub Discussions / Hugging Face / YouTube-Bilibili / 厂商论坛；status 只能是 `found` / `no_match` / `limited` / `unavailable`。`device_scope` 只能是手机 / PC / 其他端侧 / 通用技术；`verification` 只能是仅线索 / 已回链原始材料 / 已进入正式周报。社媒讨论 URL 不得直接作为正式 papers 的 `paper_url`。
 
 ## POST /api/research-runs
 

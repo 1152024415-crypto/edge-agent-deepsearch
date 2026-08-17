@@ -53,7 +53,7 @@ publish 前对 `source_tier=官方动态` 和 `source_tier=开源大项目` 条�
 
 ## 9. 采集独立社区雷达
 
-检索当前日期过去 7 个自然日的 X、Reddit、Hacker News、厂商论坛和开发者论坛，写 `data/community_radar.json`。每类来源必须记录覆盖状态与说明；条目按手机 > PC > 其他端侧 > 通用技术排序，并填写中文名称、总结、价值判断和核验状态。X 只能使用无需登录可打开、能核验发布时间的原帖；受限就明确写 `limited`。社区讨论不进入 research run，找到一手材料后仍须重新走正式来源校验。
+检索当前日期过去 7 个自然日的 X、Bluesky、Reddit、Hacker News、Mastodon、GitHub Discussions、Hugging Face（Discussions/Models/Spaces）、YouTube / Bilibili 和厂商论坛，写 `data/community_radar.json`。九类来源必须分别记录覆盖状态与说明；条目按手机 > PC > 其他端侧 > 通用技术排序，并填写中文名称、总结、价值判断和核验状态。X 只能使用无需登录可打开、能核验发布时间的原帖；受限就明确写 `limited`。视频只收官方频道或可回链一手项目的演示。社区讨论不进入 research run，找到一手材料后仍须重新走正式来源校验。
 
 ## 10. 发布到服务器
 
