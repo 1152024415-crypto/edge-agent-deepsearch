@@ -632,6 +632,14 @@ class ResearchRunValidationTests(unittest.TestCase):
         self.assertIn("score_reason", str(ctx.exception))
         self.assertIn("内部占位", str(ctx.exception))
 
+    def test_allows_autonomous_agent_as_reader_facing_score_reason(self):
+        reason = "系统给出了完整的自主Agent闭环证据，并报告了真实设备上的执行结果。"
+        path = write_json(run_payload(valid_paper(score_reason=reason)))
+
+        normalized = research_run.load_and_validate(path, today=TODAY)
+
+        self.assertEqual(normalized["papers"][0]["score_reason"], reason)
+
     def test_preserves_valid_chinese_recommendation_reason(self):
         reason = "直接解决端侧智能体的延迟与内存瓶颈，且给出了真实设备上的量化结果。"
         path = write_json(run_payload(valid_paper(

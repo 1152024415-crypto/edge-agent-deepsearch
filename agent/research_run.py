@@ -133,7 +133,7 @@ ARXIV_URL_RE = re.compile(
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 INTERNAL_PLACEHOLDER_RE = re.compile(
     r"auto[- ]?converted|待核实|待后续补|精修.{0,12}待补|votes\s*=|"
-    r"自动初评|主\s*Agent|待复核",
+    r"自动初评|(?<!自)主\s*Agent|待复核",
     re.IGNORECASE,
 )
 MIN_CHINESE_CHARS = 8

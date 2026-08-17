@@ -47,6 +47,8 @@
 ## HuggingFace Daily Papers MCP（`get_papers_by_date`，社区精选）
 窗口内 7 个日期每天调一次 `get_papers_by_date(date=YYYY-MM-DD)`；votes 只用于排序参考，不能作为删除门槛。把 `dates_checked` 全量写入 collection manifest；某天 0 条也必须记录为已检查。
 
+HF 日榜候选的规范论文 ID 既可能藏在 `arxiv.org/abs/<id>`，也可能只出现在 `huggingface.co/papers/<id>`。组装器必须同时识别两种直达链接，并按规范 arXiv ID 与 arXiv 全量扫描去重；不得因链接域名不同漏掉手机助理、视觉令牌剪枝或固定大小记忆等高价值工作。修改 HF 解析或相关性边界时，必须同时增加应收正例和关键词碰撞负例。
+
 ## GitHub MCP（开源大项目 release，端侧优先）
 搜 `docs/references/big-projects-whitelist.md` 内每个有明确仓址的大项目最近 7 天 release/重大 commit。GitHub Trending 与白名单 release 是两项独立任务，分别在 manifest 写 `trending_checked` 和 `release_projects_checked`，不能用 Trending 刷新冒充 release 已检查。
 

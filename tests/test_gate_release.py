@@ -107,6 +107,10 @@ class GateReleaseTest(unittest.TestCase):
         import os
         os.utime(self.root / "data" / "github_trending_top20.json", None)  # touch -> now
 
+    def test_internal_marker_rule_does_not_reject_autonomous_agent(self):
+        self.assertIsNone(gr.INTERNAL_PLACEHOLDER_RE.search("系统给出了完整的自主Agent闭环证据。"))
+        self.assertIsNotNone(gr.INTERNAL_PLACEHOLDER_RE.search("主 Agent 根据原文待复核。"))
+
     # ---- contract ----
     def test_fail_when_papers_inlined_as_bare_list(self):
         self._seed_good()

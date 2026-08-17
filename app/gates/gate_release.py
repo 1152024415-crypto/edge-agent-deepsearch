@@ -44,7 +44,7 @@ MIN_CHINESE_CHARS = 8
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 INTERNAL_PLACEHOLDER_RE = re.compile(
     r"auto[- ]?converted|待核实|待后续补|精修.{0,12}待补|votes\s*=|"
-    r"自动初评|主\s*Agent|待复核",
+    r"自动初评|(?<!自)主\s*Agent|待复核",
     re.IGNORECASE,
 )
 ALLOWED_EDGE_AGENT_SCOPES = {"手机", "PC", "其他端侧", "非端侧Agent"}
