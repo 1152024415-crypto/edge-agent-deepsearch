@@ -94,9 +94,9 @@ OASIS 不直接拿用户原问题做一次固定 top-k 搜索。模型会先生�
 - 某些问题依赖很久以前的一两个细节；
 - 历史不能无限进入模型的活跃上下文。
 
-> “where to look, not how much to remember.”
+> “The real difficulty lies in discovering where to look, not how much to remember.” — Abstract
 
-直译就是：真正的困难在于发现应该去哪里找，而不在于能够记住多少。这里的 `where to look` 不是泛泛地说“提高检索能力”，而是要求系统在每次提问时做一次时间路由：决定答案应该从当前短窗口、中期缓冲，还是更久远的某个事件中寻找。
+直译就是：真正的困难在于发现应该去哪里找，而不在于能够记住多少。这里的 `where to look` 不是泛泛地说“提高检索能力”，而是要求系统在每次提问时做一次时间路由：决定答案应该从当前短窗口、中期缓冲，还是更久远的某个事件中寻找。[查看 Abstract 完整英文段落](https://arxiv.org/html/2604.17052#Sx1)
 
 这并不意味着容量和压缩不重要。作者真正反对的是把容量当作问题本身：即使关键画面已经放进上下文，模型仍可能因为旧事件太多而关注错误位置。**记忆容量决定证据有没有保存，时间路由决定此刻能不能找到。**
 
@@ -167,9 +167,9 @@ OASIS 主要评估两类能力：
 ![完整流程与事件森林更新策略](images/oasis/figure-3-pipeline-event-forest.png)
 *图 3：论文 Figure 3。左侧是完整推理链路，右侧是事件森林的在线追加与合并。图中文字较小，建议打开原图查看。*
 
-> “reasoning in the short context by default, and retrieving long-term evidence only when semantically required.”
+> “short context by default ... long-term evidence only when semantically required.” — Conclusion
 
-默认在短上下文中推理，只有语义上确实需要时才检索长期证据。这句话比“先粗后细”更准确：Coarse 阶段并不是粗糙地回答，而是在受控的小上下文里完成一次证据充分性判断；Fine 阶段也不是固定的第二步，而是被这个判断按需触发。因而 OASIS 节省上下文的关键不是摘要压得更短，而是让长期历史不再默认参加每一次推理。
+默认在短上下文中推理，只有语义上确实需要时才检索长期证据。这句话比“先粗后细”更准确：Coarse 阶段并不是粗糙地回答，而是在受控的小上下文里完成一次证据充分性判断；Fine 阶段也不是固定的第二步，而是被这个判断按需触发。因而 OASIS 节省上下文的关键不是摘要压得更短，而是让长期历史不再默认参加每一次推理。[查看 Conclusion 完整英文段落](https://arxiv.org/html/2604.17052#S5)
 
 ### 机制流程
 
