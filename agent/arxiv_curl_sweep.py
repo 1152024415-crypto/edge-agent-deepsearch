@@ -87,7 +87,11 @@ def build_api_url(
     page_size: int = 100,
     sort_by: str = "submittedDate",
 ) -> str:
-    full = f"{query} AND {CATS}"
+    normalized_query = query.strip()
+    is_category_sweep = normalized_query == CATS or bool(
+        re.fullmatch(r"cat:[A-Za-z0-9.-]+", normalized_query)
+    )
+    full = normalized_query if is_category_sweep else f"{normalized_query} AND {CATS}"
     sq = urllib.parse.quote(full, safe="")  # encode everything incl. quotes/parens/spaces
     return (
         f"https://export.arxiv.org/api/query?search_query={sq}"

@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from datetime import date
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -119,6 +120,13 @@ class ArxivPaginationTests(unittest.TestCase):
 
         self.assertIn("start=200", url)
         self.assertIn("max_results=100", url)
+
+    def test_broad_category_query_is_not_restricted_by_a_redundant_category_union(self):
+        url = arxiv_curl_sweep.build_api_url("cat:cs.AI", start=0, page_size=100)
+
+        search_query = parse_qs(urlparse(url).query)["search_query"][0]
+
+        self.assertEqual(search_query, "cat:cs.AI")
 
     def test_reaching_page_limit_before_window_end_is_incomplete(self):
         self.assertTrue(hasattr(arxiv_curl_sweep, "PaginationLimitError"))
