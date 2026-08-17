@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "app" / "gates"))
 
 import gate_release as gr
+from app import community as community_contract
 
 
 def _write(root: Path, rel: str, content: str):
@@ -41,7 +42,7 @@ class GateReleaseTest(unittest.TestCase):
             "coverage": [
                 {"source": source, "status": "found" if source == "Reddit" else "no_match",
                  "note": "已完成公开来源检索并记录结果。"}
-                for source in ("X", "Reddit", "Hacker News", "厂商论坛", "开发者论坛")
+                for source in community_contract.SOURCES
             ],
             "items": [{
                 "id": "reddit-signal", "source": "Reddit", "author": "r/LocalLLM",

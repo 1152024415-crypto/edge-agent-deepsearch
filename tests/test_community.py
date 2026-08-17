@@ -13,17 +13,29 @@ from app.community import CommunityValidationError, load_community, validate_com
 
 
 TODAY = date(2026, 8, 13)
+COMMUNITY_SOURCES = (
+    "X",
+    "Bluesky",
+    "Reddit",
+    "Hacker News",
+    "Mastodon",
+    "GitHub Discussions",
+    "Hugging Face",
+    "YouTube / Bilibili",
+    "厂商论坛",
+)
 
 
 def valid_payload():
     return {
         "window": {"start": "2026-08-07", "end": "2026-08-13"},
         "coverage": [
-            {"source": "X", "status": "limited", "note": "公开索引没有返回可核验原帖"},
-            {"source": "Reddit", "status": "found", "note": "核验帖子直达页与日期"},
-            {"source": "Hacker News", "status": "no_match", "note": "窗口内没有对题帖子"},
-            {"source": "厂商论坛", "status": "no_match", "note": "窗口内没有对题帖子"},
-            {"source": "开发者论坛", "status": "no_match", "note": "窗口内没有对题帖子"},
+            {
+                "source": source,
+                "status": "limited" if source == "X" else ("found" if source == "Reddit" else "no_match"),
+                "note": "已完成公开来源检索并记录结果",
+            }
+            for source in COMMUNITY_SOURCES
         ],
         "items": [
             {
@@ -54,6 +66,7 @@ class CommunityValidationTests(unittest.TestCase):
         result = validate_community(payload, today=TODAY)
 
         self.assertEqual([item["id"] for item in result["items"]], ["mobile", "reddit-nemotron-spark"])
+        self.assertEqual({record["source"] for record in result["coverage"]}, set(COMMUNITY_SOURCES))
 
     def test_rejects_unknown_source_device_and_verification(self):
         for field, value in [

@@ -7,7 +7,17 @@ from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
-SOURCES = ("X", "Reddit", "Hacker News", "厂商论坛", "开发者论坛")
+SOURCES = (
+    "X",
+    "Bluesky",
+    "Reddit",
+    "Hacker News",
+    "Mastodon",
+    "GitHub Discussions",
+    "Hugging Face",
+    "YouTube / Bilibili",
+    "厂商论坛",
+)
 COVERAGE_STATUSES = {"found", "no_match", "limited", "unavailable"}
 DEVICE_SCOPES = {"手机", "PC", "其他端侧", "通用技术"}
 VERIFICATION_STATUSES = {"仅线索", "已回链原始材料", "已进入正式周报"}
