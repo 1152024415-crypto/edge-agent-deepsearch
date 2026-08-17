@@ -191,7 +191,13 @@ class DesktopRecommendationLayoutTest(unittest.TestCase):
             "const EDGE_AGENT_PRIORITY={\"手机\":0,\"PC\":1,\"其他端侧\":2,\"非端侧Agent\":3};",
             INDEX_HTML,
         )
-        self.assertIn("edgeAgentPriority(a)-edgeAgentPriority(b)", INDEX_HTML)
+        self.assertIn("recommendationDevicePriority(a)-recommendationDevicePriority(b)", INDEX_HTML)
+
+    def test_ordinary_phone_and_pc_work_follow_verified_edge_agents(self):
+        self.assertIn("const recommendationDevicePriority=p=>", INDEX_HTML)
+        self.assertIn('tags.includes("硬件:手机")', INDEX_HTML)
+        self.assertIn("return 3", INDEX_HTML)
+        self.assertIn("return 4", INDEX_HTML)
 
     def test_recommendation_cards_show_verified_device_scope_badges(self):
         self.assertIn("const EDGE_AGENT_LABELS={\"手机\":\"手机端 Agent\",\"PC\":\"PC 端 Agent\",\"其他端侧\":\"其他端侧 Agent\"};", INDEX_HTML)

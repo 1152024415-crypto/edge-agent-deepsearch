@@ -345,6 +345,15 @@ INDEX_HTML = """<!doctype html>
     const SCOPE_FILTERS=[["","全部设备"],["手机","手机端 Agent"],["PC","PC 端 Agent"],["其他端侧","其他端侧 Agent"],["非端侧Agent","其他技术"]];
     const PRIMARY_DIRECTIONS=["方向:端侧agent","方向:高效推理","方向:编译部署","方向:量化","方向:多模态","方向:推理框架","方向:安全隐私","方向:云端serving"];
     const edgeAgentPriority=p=>EDGE_AGENT_PRIORITY[p.edge_agent_scope]??3;
+    const recommendationDevicePriority=p=>{
+      const edge=edgeAgentPriority(p);
+      if(edge<3)return edge;
+      const tags=p.tags||[];
+      if(tags.includes("硬件:手机"))return 3;
+      const text=`${p.title_zh||''} ${p.title||''} ${p.abstract||''} ${tags.join(' ')}`;
+      if(/PC|笔记本|电脑|桌面|macOS|Windows|Apple[- ]Silicon|RTX/i.test(text))return 4;
+      return 5;
+    };
     const isRecommended=p=>p.recommendation==='推荐';
     const hasContent=v=>v&&v!=='未报告';
     const dim=t=>t.split(":")[0], val=t=>t.split(":")[1]||t;
@@ -501,7 +510,7 @@ INDEX_HTML = """<!doctype html>
       if(!ALL.length){el.hidden=true;return;}
       el.hidden=false;
       const recommended=ALL.filter(isRecommended).sort((a,b)=>{
-        const edgeDiff=edgeAgentPriority(a)-edgeAgentPriority(b);
+        const edgeDiff=recommendationDevicePriority(a)-recommendationDevicePriority(b);
         const tierDiff=TIER.findIndex(([t])=>t===a.source_tier)-TIER.findIndex(([t])=>t===b.source_tier);
         return edgeDiff||tierDiff||(b.score||0)-(a.score||0)||(b.date||'').localeCompare(a.date||'');
       });
