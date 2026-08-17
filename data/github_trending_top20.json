@@ -1,162 +1,162 @@
 [
   {
     "rank": 1,
-    "repo": "YINGLINGH/limioryn",
-    "url": "https://github.com/YINGLINGH/limioryn",
-    "total": "133★",
-    "week": "133",
-    "desc": "面向真实设备的端云多智能体框架，强调可验证执行和有界恢复。"
+    "repo": "PrimeIntellect-ai/prime-agent",
+    "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+    "total": "16,581★",
+    "week": "6,435",
+    "desc": "面向长时间编码任务的自改进智能体；属于 PC Agent 热点，不代表端侧推理。"
   },
   {
     "rank": 2,
-    "repo": "lichuang/docq",
-    "url": "https://github.com/lichuang/docq",
-    "total": "15★",
-    "week": "15",
-    "desc": "在终端运行的本地文档问答工具，由端侧大模型完成推理。"
+    "repo": "stablyai/orca",
+    "url": "https://github.com/stablyai/orca",
+    "total": "46,613★",
+    "week": "5,964",
+    "desc": "用于调度多种编码智能体的桌面、移动端和 VPS 管理工具。"
   },
   {
     "rank": 3,
-    "repo": "jbarrow/specspecs",
-    "url": "https://github.com/jbarrow/specspecs",
-    "total": "11★",
-    "week": "11",
-    "desc": "为投机解码过程提供可观测性与性能分析。"
+    "repo": "earendil-works/pi",
+    "url": "https://github.com/earendil-works/pi",
+    "total": "91,525★",
+    "week": "5,575",
+    "desc": "整合统一模型接口、Agent 循环、终端界面和编码 CLI 的智能体工具箱。"
   },
   {
     "rank": 4,
-    "repo": "raullenchai/twinspark",
-    "url": "https://github.com/raullenchai/twinspark",
-    "total": "7★",
-    "week": "7",
-    "desc": "在两台 NVIDIA DGX Spark 上部署 DeepSeek-V4-Flash 的生产级方案，包含双节点 vLLM 自愈和重启验证。"
+    "repo": "TencentCloud/TencentDB-Agent-Memory",
+    "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory",
+    "total": "22,245★",
+    "week": "3,637",
+    "desc": "为团队级智能体集中管理会话、技能、知识库和代码图记忆资产。"
   },
   {
     "rank": 5,
-    "repo": "Mog9/Octane",
-    "url": "https://github.com/Mog9/Octane",
-    "total": "6★",
-    "week": "6",
-    "desc": "零配置的端到端投机解码运行时，可自动选择草稿模型并加速本地大模型推理。"
+    "repo": "cactus-compute/needle",
+    "url": "https://github.com/cactus-compute/needle",
+    "total": "6,596★",
+    "week": "2,950",
+    "desc": "14MB 小模型，面向手机、穿戴、智能家居和机器人上的工具调用。"
   },
   {
     "rank": 6,
-    "repo": "kalesha681/ARES-Autonomous-Surveyor",
-    "url": "https://github.com/kalesha681/ARES-Autonomous-Surveyor",
-    "total": "5★",
-    "week": "5",
-    "desc": "面向无 GPS 地形测绘的端云分工无人机系统，覆盖航线规划、视觉地标检测和边缘 AI 推理。"
+    "repo": "unslothai/unsloth",
+    "url": "https://github.com/unslothai/unsloth",
+    "total": "72,604★",
+    "week": "2,645",
+    "desc": "在本地运行和训练主流大模型与扩散模型的界面和优化工具。"
   },
   {
     "rank": 7,
-    "repo": "CogniTechSystems/muse-glimmer-claude-code",
-    "url": "https://github.com/CogniTechSystems/muse-glimmer-claude-code",
-    "total": "4★",
-    "week": "4",
-    "desc": "在 Apple Silicon 上本地运行 Muse-Glimmer-30B，提供 llama.cpp 配置、实测基准、投机解码和 Claude Code 接入。"
+    "repo": "MakazhanAlpamys/Soup",
+    "url": "https://github.com/MakazhanAlpamys/Soup",
+    "total": "2,001★",
+    "week": "1,512",
+    "desc": "通过分层流式加载，让 4GB 笔记本显存也能训练 8B 模型。"
   },
   {
     "rank": 8,
-    "repo": "ZinYY/AdaFlash",
-    "url": "https://github.com/ZinYY/AdaFlash",
-    "total": "3★",
-    "week": "3",
-    "desc": "通过在线策略蒸馏的扩散草稿模型，实现可自适应的投机解码。"
+    "repo": "NVIDIA-NeMo/Switchyard",
+    "url": "https://github.com/NVIDIA-NeMo/Switchyard",
+    "total": "1,694★",
+    "week": "1,435",
+    "desc": "在多个模型和服务商之间路由请求，用于评测成本与性能取舍。"
   },
   {
     "rank": 9,
-    "repo": "lnn-ops/HiViS",
-    "url": "https://github.com/lnn-ops/HiViS",
-    "total": "3★",
-    "week": "3",
-    "desc": "多模态大模型投机解码方法：对草稿模型隐藏视觉 token，以减少无效计算。"
+    "repo": "huangruiteng/loopx",
+    "url": "https://github.com/huangruiteng/loopx",
+    "total": "4,816★",
+    "week": "1,130",
+    "desc": "面向 Codex、Claude Code 等长任务智能体的持久化与治理控制平面。"
   },
   {
     "rank": 10,
-    "repo": "zshs000/Remote-Agent-Gateway",
-    "url": "https://github.com/zshs000/Remote-Agent-Gateway",
-    "total": "3★",
-    "week": "3",
-    "desc": "自托管 MCP 网关，为电脑、服务器、CI 和边缘设备上的轻量智能体提供统一出站连接。"
+    "repo": "ggml-org/llama.cpp",
+    "url": "https://github.com/ggml-org/llama.cpp",
+    "total": "124,219★",
+    "week": "1,094",
+    "desc": "跨 CPU、GPU 和移动平台运行 GGUF 大模型的主流本地推理引擎。"
   },
   {
     "rank": 11,
-    "repo": "rsantomauro/TeroGlasses",
-    "url": "https://github.com/rsantomauro/TeroGlasses",
-    "total": "2★",
-    "week": "2",
-    "desc": "面向 Ray-Ban Meta 眼镜的语音助手，串联唤醒词、端侧语音识别、大模型和端侧语音合成。"
+    "repo": "altic-dev/FluidVoice",
+    "url": "https://github.com/altic-dev/FluidVoice",
+    "total": "10,507★",
+    "week": "1,065",
+    "desc": "macOS 端侧语音转写与文本增强工具，并提供 Windows 预览版本。"
   },
   {
     "rank": 12,
-    "repo": "yuzhang-robotics/embodied-robot-heterogeneous-control",
-    "url": "https://github.com/yuzhang-robotics/embodied-robot-heterogeneous-control",
-    "total": "2★",
-    "week": "2",
-    "desc": "基于 Jetson Orin Nano 与 STM32 异构架构的轮式机器人系统，在设备上异步执行视觉—语言—动作控制。"
+    "repo": "AlexsJones/llmfit",
+    "url": "https://github.com/AlexsJones/llmfit",
+    "total": "31,923★",
+    "week": "610",
+    "desc": "检测本机硬件并判断哪些本地模型和运行方式真正能够跑起来。"
   },
   {
     "rank": 13,
-    "repo": "ElonAug7/Mnemosyne-agentmemory-engine-openclaw-hermes",
-    "url": "https://github.com/ElonAug7/Mnemosyne-agentmemory-engine-openclaw-hermes",
-    "total": "2★",
-    "week": "2",
-    "desc": "OpenClaw 的零依赖本地记忆引擎，运行时仅 526KB，不依赖大模型 API 或向量数据库。"
+    "repo": "cactus-compute/cactus",
+    "url": "https://github.com/cactus-compute/cactus",
+    "total": "5,783★",
+    "week": "214",
+    "desc": "为手机、穿戴、智能家居和机器人提供量化、内核与推理运行时。"
   },
   {
     "rank": 14,
-    "repo": "SKL-666666/mnn-local-ai-chat",
-    "url": "https://github.com/SKL-666666/mnn-local-ai-chat",
-    "total": "1★",
-    "week": "1",
-    "desc": "HarmonyOS 端侧大模型聊天应用，同时支持 MNN 与 llama.cpp 两套推理引擎。"
+    "repo": "microsoft/BitNet",
+    "url": "https://github.com/microsoft/BitNet",
+    "total": "40,093★",
+    "week": "183",
+    "desc": "微软官方 1-bit 大模型推理框架，重点降低本地推理的算力与内存开销。"
   },
   {
     "rank": 15,
-    "repo": "axe01010/android-ai-agent",
-    "url": "https://github.com/axe01010/android-ai-agent",
-    "total": "1★",
-    "week": "1",
-    "desc": "通过 ADB 控制手机的本地大模型智能体，全流程不依赖云端。"
+    "repo": "ml-explore/mlx",
+    "url": "https://github.com/ml-explore/mlx",
+    "total": "27,997★",
+    "week": "111",
+    "desc": "面向 Apple Silicon 统一内存架构的本地机器学习计算框架。"
   },
   {
     "rank": 16,
-    "repo": "loyality7/speech-to-speech-mobile",
-    "url": "https://github.com/loyality7/speech-to-speech-mobile",
-    "total": "1★",
-    "week": "1",
-    "desc": "面向 Android 和 iOS 的全端侧实时语音对话引擎，集成 VAD、Whisper、流式大模型和语音合成。"
+    "repo": "memovai/mimiclaw",
+    "url": "https://github.com/memovai/mimiclaw",
+    "total": "5,702★",
+    "week": "106",
+    "desc": "尝试在低成本芯片上直接运行硬件智能体执行框架，尚需核验闭环。"
   },
   {
     "rank": 17,
-    "repo": "AnjanaSuresh01/edge-vlm",
-    "url": "https://github.com/AnjanaSuresh01/edge-vlm",
-    "total": "1★",
-    "week": "1",
-    "desc": "可离线运行的 Qwen3-VL-2B 视觉助手，并用显存和推理基准帮助选择适合端侧的精度。"
+    "repo": "orailnoor/cross-platform-llm-client",
+    "url": "https://github.com/orailnoor/cross-platform-llm-client",
+    "total": "1,009★",
+    "week": "104",
+    "desc": "在云端接口和设备端离线模型之间切换的跨平台大模型客户端。"
   },
   {
     "rank": 18,
-    "repo": "AbakarSilet/Monsieur",
-    "url": "https://github.com/AbakarSilet/Monsieur",
-    "total": "1★",
-    "week": "1",
-    "desc": "Flutter 开发的离线学习助手，使用完全在设备端运行的 Gemma 4。"
+    "repo": "microsoft/intelligent-terminal",
+    "url": "https://github.com/microsoft/intelligent-terminal",
+    "total": "1,759★",
+    "week": "99",
+    "desc": "把智能体能力直接集成进 Windows Terminal 的微软实验性分支。"
   },
   {
     "rank": 19,
-    "repo": "YoursSarcastically/stark",
-    "url": "https://github.com/YoursSarcastically/stark",
-    "total": "1★",
-    "week": "1",
-    "desc": "完全在端侧运行的 macOS 文本改写工具，使用 MLX 加载本地微调的 Qwen 1.5B。"
+    "repo": "microsoft/onnxruntime",
+    "url": "https://github.com/microsoft/onnxruntime",
+    "total": "21,395★",
+    "week": "74",
+    "desc": "覆盖 WebGPU、QNN、Core ML、XNNPACK 等后端的跨平台推理运行时。"
   },
   {
     "rank": 20,
-    "repo": "v4valti/ipex-llm",
-    "url": "https://github.com/v4valti/ipex-llm",
-    "total": "1★",
-    "week": "1",
-    "desc": "面向多种主流大模型的本地推理与微调加速方案。"
+    "repo": "ROCm/FastFlowLM",
+    "url": "https://github.com/ROCm/FastFlowLM",
+    "total": "1,745★",
+    "week": "58",
+    "desc": "针对 AMD Ryzen AI NPU 优化的本地大模型运行时和部署工具。"
   }
 ]
