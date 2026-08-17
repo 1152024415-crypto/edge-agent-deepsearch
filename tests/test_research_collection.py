@@ -154,6 +154,42 @@ class ArxivPaginationTests(unittest.TestCase):
 
 
 class BroadCollectionBoundaryTests(unittest.TestCase):
+    def test_hf_paper_url_is_deduplicated_against_the_arxiv_sweep(self):
+        candidate = {
+            "id": "2608.12123",
+            "title": "Ready Cohorts",
+            "abstract": "An on-device LLM agent uses tool calling without host round trips.",
+            "authors": ["Example Author"],
+            "date": "2026-08-13",
+            "paper_url": "https://huggingface.co/papers/2608.12123",
+        }
+
+        self.assertIsNone(build_run_week.convert_hf(candidate, {"2608.12123"}))
+
+    def test_mobile_assistant_with_tools_is_kept_for_phone_agent_review(self):
+        text = (
+            "SPIEval: Evaluating Large Language Models as Mobile Assistants\n"
+            "The benchmark covers ten apps and twenty-one tools."
+        )
+
+        self.assertEqual(build_run_week.classify_research_relevance(text), "direct")
+
+    def test_precise_inference_optimization_title_can_use_body_for_model_context(self):
+        cases = [
+            (
+                "An AI4AI Framework for Visual Token Pruning\n"
+                "The method reduces multimodal large language model inference cost."
+            ),
+            (
+                "Maglev: Sliding Recurrent Memory\n"
+                "A recurrent Transformer uses fixed-size memory during inference."
+            ),
+        ]
+
+        for text in cases:
+            with self.subTest(text=text):
+                self.assertEqual(build_run_week.classify_research_relevance(text), "adjacent")
+
     def test_updated_arxiv_candidate_keeps_revision_date_basis(self):
         paper = build_run_week.convert_arxiv({
             "id": "2505.09606",

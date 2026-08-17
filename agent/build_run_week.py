@@ -113,7 +113,7 @@ def _coerce_authors(v) -> str:
 DIRECT_RE = re.compile(
     r"on-device|on device|edge[- ](?:ai|agents?|llms?|models?|inference|comput|device|system|hardware|"
     r"platform|deployment|accelerator|gpu|npu|server)|"
-    r"mobile[- ](?:ai|agents?|llms?|models?|inference|deployment|device|hardware|npu|rag)|"
+    r"mobile[- ](?:ai|agents?|assistants?|llms?|models?|inference|deployment|device|hardware|npu|rag)|"
     r"mobile[- ](?:autonomous[- ])?agents?|"
     r"embedded[- ](?:ai|agents?|llms?|models?|neural networks?|inference|system|device|hardware|"
     r"platform|processor|accelerator)|device[- ]side|local[- ](?:ai|llms?|models?)[- ](?:inference|execution|serving)|"
@@ -172,6 +172,7 @@ STACK_RE = re.compile(
     r"energy[- ](?:efficient|efficiency|aware|consumption|saving|budget)|power consumption|"
     r"real.?time (?:inference|serving|processing|execution)|"
     r"token compression|memory compress|compress\w*[^.]{0,40}(?:long.?term )?memory|"
+    r"visual[- ]token[- ]prun\w*|sliding[- ]recurrent[- ]memory|recurrent[- ]memory|"
     r"(?:agent|assistant)[^.]{0,50}memory|memory[^.]{0,50}(?:agent|assistant)|"
     r"agent(?:ic)?[- ](?:training|infrastructure|platform)|agentic modeling|"
     r"量化|剪枝|蒸馏|压缩|缓存|低延迟|吞吐|运行时|持续推理|"
@@ -182,6 +183,10 @@ GUI_RE = re.compile(r"gui agent|computer use|screen.?click|screen.?tap|ui automa
 GUI_SYSTEM_RE = re.compile(
     r"on-device inference|edge inference|\bnpu\b|\bmcu\b|embedded|runtime|serving|latency|"
     r"quantiz|model compression|low.?power|resource.?constrain|system architecture|privacy|security|safety",
+    re.I,
+)
+PRECISE_ADJACENT_TITLE_RE = re.compile(
+    r"visual[- ]token[- ]prun\w*|sliding[- ]recurrent[- ]memory",
     re.I,
 )
 
@@ -199,7 +204,10 @@ def classify_research_relevance(text: str) -> str:
     # Adjacent work must make the inference/deployment technique central enough
     # to name it in the title.  A baseline mentioned deep in an abstract is not
     # evidence that the paper contributes to the edge-AI stack.
-    if AI_RE.search(central) and STACK_RE.search(central):
+    if STACK_RE.search(central) and (
+        AI_RE.search(central)
+        or (PRECISE_ADJACENT_TITLE_RE.search(central) and AI_RE.search(value))
+    ):
         return "adjacent"
     return "irrelevant"
 
@@ -305,7 +313,7 @@ def convert_arxiv(c: dict) -> dict | None:
 
 def convert_hf(c: dict, seen_arxiv: set) -> dict | None:
     url = c.get("paper_url") or ""
-    m = re.search(r"arxiv\.org/abs/([^v\s]+)", url)
+    m = re.search(r"(?:arxiv\.org/abs/|huggingface\.co/papers/)(\d{4}\.\d{4,5})", url)
     if m:
         aid = m.group(1)
         if aid in seen_arxiv:
