@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FedLNS: Leverage LayerNorm Signature Modeling to Mitigate Adversarial Manipulation in Federated LLMs</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",Arial,sans-serif;background:#f7f3ea;color:#202621} main{max-width:820px;margin:0 auto;padding:20px} a{color:#8d3d30} .back{display:inline-block;margin-bottom:12px;text-decoration:none} h1{font-size:21px;margin:0 0 8px;line-height:1.35} .meta{color:#627066;font-size:13px;margin-bottom:12px} .score{font-weight:700;color:#8d3d30;font-size:17px} .tier{display:inline-block;padding:2px 7px;border:1px solid #8d3d30;color:#8d3d30;font-size:11px;font-weight:700;border-radius:3px} .tier.oss{border-color:#2e7d32;color:#2e7d32} .tier.company{border-color:#5a6b8d;color:#5a6b8d} .tier.school{border-color:#8a6d3b;color:#8a6d3b} .open-badge{display:inline-block;padding:2px 7px;border:1px solid #2e7d32;color:#2e7d32;font-size:11px;font-weight:700;border-radius:3px} .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 14px} .vendor-tag{display:inline-block;padding:3px 10px 3px 8px;background:#fffdf7;border-left:3px solid #8d3d30;border-radius:0 4px 4px 0;font-size:12px;font-weight:600;color:#8d3d30} .tag{display:inline-block;padding:2px 9px;background:#eee7da;border-radius:11px;font-size:12px;color:#596258} .field{display:flex;margin-top:10px;gap:10px} .label{flex-shrink:0;width:78px;color:#627066;font-size:13px;font-weight:600} .text{color:#3f463f;font-size:14px;line-height:1.6} .score-reason{margin-top:12px;color:#4c554e;font-size:12px;line-height:1.5} .source{margin-top:18px} .source a{display:inline-block;padding:6px 14px;border:1px solid #8d3d30;border-radius:4px;text-decoration:none;font-size:13px}
+</style></head><body><main>
+<a class="back" href="../index.html">← 返回雷达</a>
+<h1>FedLNS: Leverage LayerNorm Signature Modeling to Mitigate Adversarial Manipulation in Federated LLMs</h1>
+<div class="meta"><span class="score">12</span> <span class="tier school">学校预印本</span>  2026-08-19 · Kai Li; Jong-Ik Park; Carlee Joe-Wong; Wei Ni; Falko Dressler / arXiv</div>
+<div class="tags"><span class="tag">方向:联邦学习</span><span class="tag">方向:安全隐私</span><span class="tag">方向:端侧训练</span><span class="tag">模型:Llama</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">FedLNS 只看客户端回传模型里归一化层的变化，就能在服务器端找出可疑联邦训练更新。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">在 200 客户端、40% 目标操纵下，三类模型和 IID/非 IID 切分上均比六个基线中的最强者获得更低测试困惑度。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">把 LayerNorm 参数变化压成更新签名，与稳健的跨客户端历史参考比较，筛掉异常后再用普通联邦聚合。</span></div>
+<div class="score-reason">评分依据：相关性 5/10，贡献度 7/10。摘要核心是联邦 LLM 服务端用归一化层变化筛查恶意客户端更新，不增加上传参数或元数据。</div>
+<div class="source"><a href="https://arxiv.org/abs/2608.18736" target="_blank" rel="noopener">查看原文 →</a></div>
+</main></body></html>

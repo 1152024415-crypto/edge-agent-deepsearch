@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Clustering and Token Denoising for Faster and More Robust VLMs</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",Arial,sans-serif;background:#f7f3ea;color:#202621} main{max-width:820px;margin:0 auto;padding:20px} a{color:#8d3d30} .back{display:inline-block;margin-bottom:12px;text-decoration:none} h1{font-size:21px;margin:0 0 8px;line-height:1.35} .meta{color:#627066;font-size:13px;margin-bottom:12px} .score{font-weight:700;color:#8d3d30;font-size:17px} .tier{display:inline-block;padding:2px 7px;border:1px solid #8d3d30;color:#8d3d30;font-size:11px;font-weight:700;border-radius:3px} .tier.oss{border-color:#2e7d32;color:#2e7d32} .tier.company{border-color:#5a6b8d;color:#5a6b8d} .tier.school{border-color:#8a6d3b;color:#8a6d3b} .open-badge{display:inline-block;padding:2px 7px;border:1px solid #2e7d32;color:#2e7d32;font-size:11px;font-weight:700;border-radius:3px} .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 14px} .vendor-tag{display:inline-block;padding:3px 10px 3px 8px;background:#fffdf7;border-left:3px solid #8d3d30;border-radius:0 4px 4px 0;font-size:12px;font-weight:600;color:#8d3d30} .tag{display:inline-block;padding:2px 9px;background:#eee7da;border-radius:11px;font-size:12px;color:#596258} .field{display:flex;margin-top:10px;gap:10px} .label{flex-shrink:0;width:78px;color:#627066;font-size:13px;font-weight:600} .text{color:#3f463f;font-size:14px;line-height:1.6} .score-reason{margin-top:12px;color:#4c554e;font-size:12px;line-height:1.5} .source{margin-top:18px} .source a{display:inline-block;padding:6px 14px;border:1px solid #8d3d30;border-radius:4px;text-decoration:none;font-size:13px}
+</style></head><body><main>
+<a class="back" href="../index.html">← 返回雷达</a>
+<h1>Clustering and Token Denoising for Faster and More Robust VLMs</h1>
+<div class="meta"><span class="score">14</span> <span class="tier school">学校预印本</span>  2026-08-19 · Baptiste Rossigneux; Inna Kucher; Vincent Lorrain; Emmanuel Casseau / arXiv</div>
+<div class="tags"><span class="tag">方向:多模态</span><span class="tag">方向:剪枝稀疏</span><span class="tag">方向:高效推理</span><span class="tag">模型:Llama</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">ClustRS 不重新训练模型，就从每个语义簇挑代表视觉 token，并清理噪声，让 VLM 少算很多 token。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">极端噪声和压缩下可把视觉 token 减少 97% 至 16 个，性能最高超过对比方法 20%；轻噪声下不到三分之一 token 即匹配基线。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">先用注意力加权聚类保留语义代表，再对选中的 token 做一次残差收缩去噪。</span></div>
+<div class="score-reason">评分依据：相关性 7/10，贡献度 7/10。摘要明确把视觉 token 负担与 edge deployment 联系起来，提出无需训练的 VLM token 剪枝与去噪。</div>
+<div class="source"><a href="https://arxiv.org/abs/2608.19285" target="_blank" rel="noopener">查看原文 →</a></div>
+</main></body></html>

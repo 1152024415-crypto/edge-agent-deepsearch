@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RADAR · 端侧 AI Agent 周报</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --canvas:#e9e6de;--paper:#f8f6f0;--panel:#fffdf8;--ink:#202622;--muted:#657069;
+      --faint:#8b938e;--rule:#cfcfc7;--hair:#e2e0d8;--rust:#aa4827;--rust-soft:#f3dfd5;
+      --moss:#416a50;--moss-soft:#e3ede5;--blue:#365f7c;--blue-soft:#e2eaf0;
+      --violet:#655879;--violet-soft:#ebe6ef;--slate:#707873;--slate-soft:#eaedea;
+      --amber:#aa4827;--green:#416a50;--purple:#655879;
+      --fx:#a84324;--app:#356548;--hw:#315d79;--model:#675376;
+    }
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--canvas);color:var(--ink);font-family:"IBM Plex Sans","PingFang SC","Noto Sans SC",sans-serif;font-size:14px;line-height:1.55}
+    button,input,select{font:inherit}
+    button,a,select,input{outline-offset:3px}
+    button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--rust)}
+    main{max-width:1240px;margin:0 auto;padding:28px 28px 96px}
+    .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .eyebrow{margin:0 0 4px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;font-weight:600;letter-spacing:1.15px;text-transform:uppercase;color:var(--rust)}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding-bottom:13px;border-bottom:1px solid var(--rule)}
+    .section-head h2{margin:0;font-size:clamp(22px,2.2vw,31px);line-height:1.12;letter-spacing:-.02em}
+    .section-note{max-width:520px;margin:0;color:var(--muted);font-size:13px;line-height:1.55;text-align:right}
+
+    /* masthead */
+    .masthead{background:var(--paper);border:1px solid var(--rule);border-top:4px solid var(--ink);padding:20px 22px 16px;margin-bottom:18px}
+    .masthead-main{display:grid;grid-template-columns:minmax(300px,1fr) auto;gap:30px;align-items:end}
+    .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+    h1{margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:29px;line-height:1;font-weight:600;letter-spacing:4px}
+    .brand-copy{font-size:15px;font-weight:600;color:var(--muted)}
+    .brand-deck{margin:9px 0 0;max-width:620px;color:var(--muted);font-size:12.5px}
+    .scope-stats{display:grid;grid-template-columns:repeat(4,minmax(82px,auto));gap:18px;align-items:end;text-align:right}
+    .scope-stats span{display:block;min-width:0}
+    .scope-stats b{display:block;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:18px;line-height:1.1;color:var(--ink)}
+    .scope-stats small{display:block;margin-top:4px;color:var(--faint);font-size:10px;white-space:nowrap}
+    .masthead-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:17px;padding-top:13px;border-top:1px solid var(--hair)}
+    .nav{display:flex;gap:8px;flex-wrap:wrap}
+    .nav-link{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;color:var(--ink);border-bottom:1px solid var(--rule);padding:3px 0;text-decoration:none}
+    .nav-link:hover{color:var(--rust);border-color:var(--rust)}
+    .week-switch{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--ink);border:1px solid var(--rule);background:var(--panel);padding:6px 10px;cursor:pointer}
+
+    /* editorial recommendation roster */
+    .recommendations{background:var(--paper);border:1px solid var(--rule);border-top:4px solid var(--rust);padding:20px 22px 12px;margin-bottom:18px}
+    .rec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding-bottom:15px;border-bottom:1px solid var(--rule)}
+    .rec-head h2{margin:0;font-size:clamp(23px,2.5vw,33px);line-height:1.08}
+    .rec-count{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--rust);font-size:12px;font-weight:500;letter-spacing:0}
+    .rec-note{max-width:520px;margin:0;color:var(--muted);font-size:13px;line-height:1.55;text-align:right}
+    .rec-list{position:relative}
+    .rec-item{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(260px,360px);gap:22px;padding:18px 4px;border-bottom:1px solid var(--hair);color:inherit;text-decoration:none;content-visibility:auto;contain-intrinsic-size:142px}
+    .rec-item:last-child{border-bottom:0}
+    .rec-item:hover{background:color-mix(in srgb,var(--rust-soft) 34%,transparent)}
+    .rec-rank{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:26px;line-height:1;color:var(--rust);letter-spacing:-1px}
+    .rec-rank::after{content:"";display:block;width:28px;height:2px;margin-top:10px;background:var(--rust)}
+    .rec-main,.rec-editorial{min-width:0}
+    .rec-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:7px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;color:var(--faint)}
+    .rec-edge-scope{color:var(--ink);background:var(--rust-soft);border:1px solid color-mix(in srgb,var(--rust) 38%,var(--rule));padding:2px 7px;font-weight:600}
+    .rec-tier{color:var(--rust);font-weight:500}
+    .rec-score{color:var(--ink);font-weight:600}
+    .rec-title{display:block;color:var(--ink);font-weight:700;font-size:clamp(17px,1.65vw,21px);line-height:1.3;letter-spacing:-.01em}
+    .rec-summary{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:var(--muted);font-size:13.5px;line-height:1.6;margin-top:6px}
+    .rec-tags{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:10px}
+    .rec-tags b{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--faint);font-size:9.5px;font-weight:500;margin-right:3px}
+    .rec-tag{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--muted);background:var(--panel);border:1px solid var(--hair);padding:2px 6px;font-size:9.5px;line-height:1.45}
+    .rec-editorial{border-left:2px solid var(--rust-soft);padding-left:18px;align-self:stretch}
+    .rec-why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;color:var(--ink);font-size:12.5px;line-height:1.6;margin:0}
+    .rec-why b{display:block;margin-bottom:3px;font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--rust);font-size:9.5px;letter-spacing:.65px}
+    .rec-original{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:var(--faint);font-size:10.5px;line-height:1.45;margin-top:10px}
+    .rec-empty{color:var(--muted);font-size:13px;padding:22px 0 10px}
+    .rec-more,.community-more,.trending-more{display:block;margin:12px auto 2px;border:1px solid var(--rust);background:transparent;color:var(--rust);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;padding:7px 15px;cursor:pointer}
+    .rec-more:hover,.community-more:hover,.trending-more:hover{background:var(--rust);color:var(--paper)}
+
+    /* weekly editorial layer */
+    .weekly{background:var(--panel);border:1px solid var(--rule);padding:20px 22px;margin-bottom:26px}
+    .weekly-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(360px,.88fr);gap:34px;padding-top:17px}
+    .weekly-overview{padding-right:28px;border-right:1px solid var(--hair)}
+    .weekly-label{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;color:var(--rust);letter-spacing:.8px;margin-bottom:8px}
+    .weekly-ov{margin:0;font-size:14px;color:var(--ink);line-height:1.8}
+    .weekly-stories h3{margin:0 0 4px;font-size:13px}
+    .weekly-hl{display:grid;grid-template-columns:24px minmax(150px,.75fr) minmax(0,1fr);gap:8px;align-items:baseline;padding:8px 0;border-top:1px solid var(--hair)}
+    .weekly-num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;color:var(--rust);font-weight:600}
+    .weekly-topic{font-weight:600;font-size:12.5px;color:var(--ink);text-decoration:none}
+    .weekly-topic:hover{color:var(--rust)}
+    .weekly-why{color:var(--muted);font-size:11.5px;line-height:1.5}
+    .weekly-more{border-top:1px solid var(--hair);margin-top:2px}
+    .weekly-more summary{list-style:none;cursor:pointer;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;color:var(--rust);padding:8px 0 0}
+    .weekly-more summary::-webkit-details-marker{display:none}
+
+    /* complete library */
+    .all-research{scroll-margin-top:12px}
+    .all-head{padding:0 1px 12px}
+    .all-summary{font-size:12px;color:var(--muted);margin:0;text-align:right}
+    .source-map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--rule);background:var(--panel);margin:15px 0 12px}
+    .source-card{display:grid;grid-template-rows:auto auto 1fr;gap:3px;min-height:96px;padding:13px 14px;border:0;border-right:1px solid var(--hair);background:transparent;color:var(--ink);text-align:left;cursor:pointer}
+    .source-card:last-child{border-right:0}
+    .source-card:hover,.source-card.active{background:var(--slate-soft)}
+    .source-card.active{box-shadow:inset 0 -3px 0 var(--rust)}
+    .source-card b{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:20px;line-height:1}
+    .source-card span{font-size:12px;font-weight:600}
+    .source-card small{font-size:10.5px;line-height:1.4;color:var(--muted)}
+    .library-tools{display:grid;grid-template-columns:minmax(280px,1fr) auto;gap:12px;padding:12px 14px;background:var(--panel);border:1px solid var(--rule);margin-bottom:10px}
+    .search{width:100%;padding:8px 10px;border:1px solid var(--rule);background:var(--paper);font-size:13px;color:var(--ink)}
+    .search:focus{border-color:var(--rust)}
+    .sort{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;color:var(--faint);display:flex;gap:5px;align-items:center}
+    .sort button{border:1px solid var(--rule);background:var(--paper);color:var(--muted);font-family:inherit;font-size:10.5px;padding:5px 9px;cursor:pointer}
+    .sort button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+    .filter-shell{background:var(--panel);border:1px solid var(--rule);padding:11px 13px}
+    .filter-shell.advanced{border-top:0;background:color-mix(in srgb,var(--panel) 70%,var(--slate-soft))}
+    .dim-group{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:7px}
+    .dim-group:last-child{margin-bottom:0}
+    .dim-label{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;color:var(--faint);min-width:42px;letter-spacing:.45px}
+    .ftag{padding:3px 8px;border:1px solid var(--hair);background:var(--paper);color:var(--muted);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;cursor:pointer;line-height:1.5}
+    .ftag:hover{border-color:var(--ink);color:var(--ink)}
+    .ftag.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+    .ftag.active[data-dim=方向]{background:var(--fx);border-color:var(--fx)}
+    .ftag.active[data-dim=应用]{background:var(--app);border-color:var(--app)}
+    .ftag.active[data-dim=硬件]{background:var(--hw);border-color:var(--hw)}
+    .ftag.active[data-dim=模型]{background:var(--model);border-color:var(--model)}
+    .filter-actions{display:flex;justify-content:space-between;align-items:center;padding:7px 1px 4px}
+    .filter-action{border:0;background:transparent;color:var(--rust);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;padding:4px 1px;cursor:pointer}
+    .filter-action:disabled{color:var(--faint);cursor:default}
+    .tabs{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--canvas) 94%,transparent);display:flex;gap:6px;flex-wrap:wrap;padding:9px 0;margin:8px 0 11px;border-bottom:1px solid var(--rule)}
+    .tab{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;padding:4px 10px;border:1px solid var(--rule);border-radius:14px;background:var(--panel);color:var(--muted);cursor:pointer;line-height:1.5}
+    .tab b{color:var(--ink);font-weight:600;margin-left:5px}
+    .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+    .tab.active b{color:var(--paper)}
+    section.band{margin-bottom:18px;scroll-margin-top:58px;content-visibility:auto;contain-intrinsic-size:500px}
+    .band-head{display:flex;width:100%;align-items:center;gap:8px;margin:0 0 7px;padding:5px 1px;border:0;border-bottom:1px solid var(--rule);background:transparent;color:var(--ink);cursor:pointer;text-align:left}
+    .band-head:hover .band-title{color:var(--rust)}
+    .fold{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;color:var(--faint);transition:transform .15s;display:inline-block;width:10px}
+    .band.collapsed .fold{transform:rotate(-90deg)}
+    .band.collapsed .band-body{display:none}
+    .band-bar{width:3px;height:14px}
+    .band-title{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:600;letter-spacing:.45px}
+    .band-count{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;color:var(--faint)}
+    .band-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;color:var(--faint);margin-left:auto}
+    .signal-row{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;padding:11px 13px;background:var(--panel);border:1px solid var(--hair);margin-bottom:6px;text-decoration:none;color:var(--ink);transition:border-color .12s,transform .08s;content-visibility:auto;contain-intrinsic-size:106px}
+    .signal-row:hover{border-color:var(--rule);transform:translateX(2px)}
+    .signal-row.rec{border-left:3px solid var(--rust);padding-left:11px}
+    .sig{display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px}
+    .sig-n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px;font-weight:600;color:var(--ink)}
+    .sig-n.hi{color:var(--rust)}
+    .sig-bars{display:flex;gap:1.5px;align-items:flex-end;height:9px}
+    .sig-bars i{width:3px;height:9px;background:var(--hair)}
+    .sig-bars i.on{background:var(--ink)}
+    .sig-bars i.on.hi{background:var(--rust)}
+    .row-body{min-width:0}
+    .row-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;color:var(--faint)}
+    .tier{color:var(--faint)}
+    .date{color:var(--faint)}
+    .open{color:var(--moss);font-weight:600}
+    .rec-badge{color:var(--paper);background:var(--rust);font-weight:600;padding:1px 6px}
+    .ttl{display:block;margin-top:3px;font-weight:600;font-size:13.5px;line-height:1.42}
+    .signal-row:hover .ttl{color:var(--rust)}
+    .abs{color:var(--muted);font-size:12px;line-height:1.55;margin-top:4px}
+    .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+    .tag{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;padding:1px 6px;line-height:1.5}
+    .tag[data-dim=方向]{color:var(--fx);background:#f5e4dc}
+    .tag[data-dim=应用]{color:var(--app);background:#e4eee7}
+    .tag[data-dim=硬件]{color:var(--hw);background:#e3ebf0}
+    .tag[data-dim=模型]{color:var(--model);background:#ece6f0}
+    .empty{color:var(--muted);font-size:13px;padding:34px 18px;text-align:center;border:1px dashed var(--rule);background:var(--panel)}
+    .empty button{display:block;margin:10px auto 0;border:1px solid var(--rust);background:transparent;color:var(--rust);padding:5px 10px;cursor:pointer}
+
+    /* community signals: useful leads, kept outside the formal weekly report */
+    .community{margin-top:38px;padding:20px 22px 16px;background:var(--paper);border:1px solid var(--rule);border-top:4px solid var(--blue);scroll-margin-top:12px}
+    .community-boundary{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:13px 0 11px;padding:9px 11px;background:var(--blue-soft);color:var(--muted);font-size:11.5px}
+    .community-boundary b{color:var(--blue);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.25px}
+    .community-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+    .community-filter{display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding:9px 10px;border:1px solid var(--hair);background:var(--panel)}
+    .community-filter-label{margin-right:4px;color:var(--faint);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;letter-spacing:.4px}
+    .community-filter button{border:1px solid var(--hair);background:var(--paper);color:var(--muted);padding:3px 7px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;cursor:pointer}
+    .community-filter button:hover{border-color:var(--blue);color:var(--blue)}
+    .community-filter button.active{border-color:var(--blue);background:var(--blue);color:var(--paper)}
+    .community-coverage{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));margin:0 0 12px;border:1px solid var(--rule);background:var(--panel)}
+    .coverage-item{min-width:0;padding:10px 11px;border-right:1px solid var(--hair)}
+    .coverage-item:last-child{border-right:0}
+    .coverage-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+    .coverage-source{font-size:11px;font-weight:600}
+    .coverage-status{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:8.5px;color:var(--moss);white-space:nowrap}
+    .coverage-item.limited .coverage-status,.coverage-item.unavailable .coverage-status{color:var(--rust)}
+    .coverage-note{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:var(--faint);font-size:9.5px;line-height:1.45}
+    .community-list{display:grid;grid-template-columns:1fr;gap:7px}
+    .community-item{display:grid;grid-template-columns:82px minmax(0,1fr) minmax(250px,.58fr);gap:18px;padding:15px 14px;background:var(--panel);border:1px solid var(--hair);content-visibility:auto;contain-intrinsic-size:150px}
+    .community-item:hover{border-color:var(--blue)}
+    .community-origin{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+    .community-source{color:var(--paper);background:var(--blue);padding:3px 7px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;font-weight:600}
+    .community-date{color:var(--faint);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9px}
+    .community-scope{color:var(--blue);background:var(--blue-soft);padding:2px 6px;font-size:9.5px;font-weight:600}
+    .community-main,.community-judgement{min-width:0}
+    .community-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:var(--faint);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px}
+    .community-topic{color:var(--violet);background:var(--violet-soft);padding:1px 6px}
+    .community-title{display:block;margin:5px 0 4px;color:var(--ink);font-size:16px;font-weight:700;line-height:1.4;text-decoration:none}
+    .community-title:hover{color:var(--blue)}
+    .community-summary{margin:0;color:var(--muted);font-size:12.5px;line-height:1.62}
+    .community-judgement{border-left:2px solid var(--blue-soft);padding-left:16px}
+    .community-why{margin:0;color:var(--ink);font-size:11.5px;line-height:1.6}
+    .community-why b{display:block;margin-bottom:3px;color:var(--blue);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9px;letter-spacing:.4px}
+    .community-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .verification{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9px;color:var(--rust)}
+    .verification.verified{color:var(--moss)}
+    .community-link{color:var(--blue);font-size:10.5px;text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--blue) 45%,transparent)}
+    .community-link:hover{border-color:var(--blue)}
+
+    /* unverified discovery stream */
+    .discovery{margin-top:35px;padding-top:20px;border-top:4px double var(--rule)}
+    .discovery-note{display:inline-block;margin:12px 0 10px;padding:5px 8px;background:var(--slate-soft);color:var(--muted);font-size:11px}
+    .trending-row{display:grid;grid-template-columns:48px minmax(190px,.65fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--hair);color:var(--ink);text-decoration:none;background:var(--panel)}
+    .trending-row:hover{background:var(--slate-soft)}
+    .trending-rank{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--rust);font-size:13px}
+    .trending-repo{font-weight:600;font-size:12.5px}
+    .trending-desc{color:var(--muted);font-size:11.5px}
+    .trending-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--moss);font-size:9.5px;white-space:nowrap}
+
+    /* detail dialog */
+    .overlay{position:fixed;inset:0;background:rgba(32,38,34,.48);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:42px 18px;overflow:auto}
+    .overlay.hidden{display:none}
+    .card{background:var(--panel);border:1px solid var(--rule);border-top:4px solid var(--rust);max-width:760px;width:100%;padding:22px 24px;box-shadow:0 18px 44px rgba(32,38,34,.2)}
+    .card-close{float:right;cursor:pointer;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--muted);border:1px solid var(--rule);padding:4px 9px;background:var(--paper)}
+    .card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;color:var(--faint);margin:3px 60px 11px 0}
+    .card h2{margin:0 0 9px;font-size:20px;line-height:1.35}
+    .card .abs{margin:11px 0;color:var(--ink);font-size:13.5px}
+    .card .field{margin:9px 0;font-size:12.5px;line-height:1.6}
+    .card .field b{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;color:var(--faint);font-weight:600;letter-spacing:.4px;margin-right:7px}
+    .card .src{display:inline-block;margin-top:12px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--rust);text-decoration:none;border:1px solid var(--rust);padding:6px 10px}
+    .card .src:hover{background:var(--rust);color:var(--paper)}
+
+    @media(max-width:980px){
+      .masthead-main{grid-template-columns:1fr}.scope-stats{text-align:left}
+      .rec-item{grid-template-columns:58px minmax(0,1fr)}.rec-editorial{grid-column:2;border-left:0;border-top:2px solid var(--rust-soft);padding:10px 0 0}
+      .weekly-grid{grid-template-columns:1fr}.weekly-overview{padding-right:0;border-right:0;border-bottom:1px solid var(--hair);padding-bottom:16px}
+      .source-map{grid-template-columns:repeat(3,minmax(0,1fr))}.source-card:nth-child(3){border-right:0}.source-card:nth-child(-n+3){border-bottom:1px solid var(--hair)}
+      .community-item{grid-template-columns:70px minmax(0,1fr)}.community-judgement{grid-column:2}
+      .community-coverage{grid-template-columns:repeat(3,minmax(0,1fr))}.coverage-item{border-bottom:1px solid var(--hair)}
+    }
+    @media(max-width:680px){
+      main{padding:14px 12px 70px}.scope-stats{grid-template-columns:repeat(2,1fr)}.masthead-foot{align-items:flex-start;flex-direction:column}
+      .section-head,.rec-head{align-items:flex-start;flex-direction:column}.section-note,.rec-note,.all-summary{text-align:left}
+      .rec-item{grid-template-columns:42px minmax(0,1fr);gap:12px}.rec-editorial{grid-column:1/-1}
+      .weekly-hl{grid-template-columns:20px 1fr}.weekly-why{grid-column:2}
+      .source-map{grid-template-columns:1fr 1fr}.source-card{border-bottom:1px solid var(--hair)}.source-card:nth-child(odd){border-right:1px solid var(--hair)}.source-card:nth-child(even){border-right:0}
+      .library-tools{grid-template-columns:1fr}.trending-row{grid-template-columns:34px 1fr}.trending-desc,.trending-meta{grid-column:2}
+      .community{padding:17px 14px}.community-toolbar{grid-template-columns:1fr}.community-coverage{grid-template-columns:1fr 1fr}.community-item{grid-template-columns:1fr}.community-origin{flex-direction:row;align-items:center}.community-judgement{grid-column:1;border-left:0;border-top:2px solid var(--blue-soft);padding:10px 0 0}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <div class="masthead-main">
+        <div>
+          <div class="brand"><h1>RADAR</h1><span class="brand-copy">端侧 AI Agent 每周研究</span></div>
+          <p class="brand-deck">过去 7 天完整收录，Agent 负责把更值得优先阅读的内容排在前面。</p>
+        </div>
+        <div class="scope-stats" id="summary" aria-live="polite"><span><b>—</b><small>正在读取</small></span></div>
+      </div>
+      <div class="masthead-foot">
+        <nav class="nav" aria-label="辅助内容">
+          <a class="nav-link" href="#community">社区雷达</a>
+          <a class="nav-link" href="../notes.html">调研笔记 ↗</a>
+          <a class="nav-link" href="../snn.html">SNN 洞察 ↗</a>
+          <a class="nav-link" href="../waic.html">WAIC ↗</a>
+        </nav>
+        <label><span class="sr-only">切换周</span><select class="week-switch" id="week-switch" title="切换周"></select></label>
+      </div>
+    </header>
+
+    <section class="recommendations" id="recommendations" aria-live="polite"></section>
+    <section class="weekly" id="weekly"></section>
+
+    <section class="all-research" id="all-research">
+      <header class="section-head all-head">
+        <div><p class="eyebrow">本周完整收录</p><h2>完整资料库</h2></div>
+        <p class="all-summary" id="all-summary">正在读取本周收录…</p>
+      </header>
+      <div class="source-map" id="source-map" aria-label="本周收录构成"></div>
+      <div class="library-tools">
+        <label><span class="sr-only">搜索完整资料库</span><input class="search" id="search" placeholder="搜索中文介绍、原标题、机构或关键词…" autocomplete="off"></label>
+        <div class="sort" aria-label="排序">排序
+          <button type="button" id="sort-score" class="on" aria-pressed="true">价值分</button>
+          <button type="button" id="sort-date" aria-pressed="false">时间</button>
+        </div>
+      </div>
+      <div class="filter-shell" id="primary-filter" aria-label="常用筛选"></div>
+      <div class="filter-actions">
+        <button class="filter-action" type="button" id="advanced-toggle" aria-expanded="false" aria-controls="advanced-filter">更多筛选 ↓</button>
+        <button class="filter-action" type="button" id="clear-filters" disabled>清除筛选</button>
+      </div>
+      <div class="filter-shell advanced" id="advanced-filter" hidden aria-label="更多筛选"></div>
+      <div class="tabs" id="tabs" aria-label="来源分段导航"></div>
+      <div id="papers" aria-live="polite"><div class="empty">正在读取本周数据…</div></div>
+    </section>
+
+    <section class="community" id="community">
+      <header class="section-head">
+        <div><p class="eyebrow">社媒与论坛 · 本周线索</p><h2>社区雷达</h2></div>
+        <p class="section-note">逐周检查 X、Bluesky、Reddit、Hacker News、Mastodon、GitHub Discussions、Hugging Face、YouTube／Bilibili 和厂商论坛；手机优先、PC 其次。</p>
+      </header>
+      <div class="community-boundary"><b>社区线索，不等同于正式周报</b><span>这里帮助发现新项目和使用反馈；只有回链并完成一手核验后，才可能进入上方正式资料库。</span></div>
+      <div class="community-toolbar">
+        <div class="community-filter" id="community-source-filter" aria-label="按社区来源筛选"></div>
+        <div class="community-filter" id="community-scope-filter" aria-label="按设备范围筛选"></div>
+      </div>
+      <div class="community-coverage" id="community-coverage" aria-label="社区来源覆盖情况"></div>
+      <div class="community-list" id="community-list" aria-live="polite"><div class="empty">正在读取本周社区线索…</div></div>
+    </section>
+
+    <section class="discovery" id="discovery">
+      <header class="section-head">
+        <div><p class="eyebrow">发现线索 · 尚未核验</p><h2>GitHub 待核验线索</h2></div>
+        <p class="section-note">这里是本周发现入口，不等同于正式收录或推荐；进入资料库前仍需核对影响力、代码真实性和设备端闭环。</p>
+      </header>
+      <div class="discovery-note">未进入正式收录 · 需要进一步核验</div>
+      <div id="discovery-list"></div>
+    </section>
+
+    <div id="overlay" class="overlay hidden" onclick="if(event.target===this)closeDetail()"></div>
+  </main>
+
+  
+    <script>window.__PAPERS__={"papers": [{"id": "vendor-honor-honor-launches-revolutionary-robot-phone-ushering-a-new-era-of-c", "run_id": "run-20260817-103423", "title": "HONOR Launches Revolutionary Robot Phone, Ushering a New Era of Cinematic Mobile Filmmaking and Embodied AI", "title_zh": "荣耀Robot Phone", "abstract": "把四自由度机械云台、YOYO 多模态感知和跨应用执行能力装进手机，可追踪目标、定位声源并按用户意图完成系统和应用操作。", "effects": "官方确认产品具备四自由度云台、目标跟踪、声源定位和跨应用多步执行；未公布智能体任务成功率或端侧推理时延。", "mechanism": "手机持续融合摄像头与声音感知，由 YOYO 理解用户意图并规划步骤，再调用应用、系统设置和机械云台完成数字与物理动作。", "paper_url": "https://www.honor.com/global/news/honor-robot-phone-launch/", "date": "2026-08-12", "score": 18, "score_relevance": 10, "score_contribution": 8, "score_reason": "这是本周最直接的手机端智能体产品：感知、跨应用工具调用和机械动作都落在手机上；软硬件一体的具身交互具有明显产品创新。", "source_tier": "官方动态", "open_source": false, "tags": ["方向:端侧agent", "方向:多模态", "方向:工具调用", "方向:规划推理", "硬件:手机", "应用:机器人"], "edge_agent_scope": "手机", "edge_agent_evidence": "YOYO 在手机上融合摄像头和声音理解意图，执行跨应用多步操作，并控制四自由度机械云台完成跟踪、转向等物理动作。", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Honor", "vendors": "Honor", "venue": "Honor", "recommendation": "推荐", "recommendation_reason": "本周最值得优先看的手机产品：它把跨应用任务执行与真实机械动作合到同一台手机，端侧智能体闭环最完整。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "2608.11215", "run_id": "run-20260817-103423", "title": "Poor Man's Agentic Modeling: Simulating Large LLM-Agent Societies on a Laptop", "title_zh": "笔记本多智能体社会模拟", "abstract": "先用少量大模型查询拟合每个智能体的低参数替身，再在一台笔记本上模拟任意规模的多智能体社会。", "effects": "在 EconAgent 和另外七个具名模拟中，误差随智能体规模变化的理论预测大多得到验证；两个被推翻的预测也能由响应曲率解释。", "mechanism": "根据智能体可感知的交互阶数和记忆类型选择有效替身模型，用几百到几千次真实大模型询问拟合决策规则，再在本地扩展群体规模。", "paper_url": "https://huggingface.co/papers/2608.11215", "date": "2026-08-13", "score": 17, "score_relevance": 9, "score_contribution": 8, "score_reason": "多智能体的感知、记忆和决策循环明确在笔记本本地运行，直接证明普通 PC 可承载大规模 Agent 模拟；替身理论也有较强方法创新。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:端侧agent", "方向:记忆", "方向:高效推理", "方向:模型架构", "模型:DeepSeek"], "edge_agent_scope": "PC", "edge_agent_evidence": "拟合后的多智能体在一台笔记本上本地执行感知、记忆更新和决策循环，并可把社会规模扩展到任意智能体数量。", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Igor Itkin", "vendors": "", "venue": "HuggingFace Daily", "recommendation": "推荐", "recommendation_reason": "它不是把单个模型勉强塞进笔记本，而是让大规模多智能体社会模拟真正能在普通 PC 上运行。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.14135", "run_id": "run-20260817-103423", "title": "AgilePE: Autonomous UAV Pursuit-Evasion via Self-Play Reinforcement Learning", "title_zh": "AgilePE 无人机追逃Agent", "abstract": "用自博弈强化学习训练无人机追逃策略，并把策略零样本迁移到真实四旋翼，实现两机实时对抗。", "effects": "策略无需针对真实任务再调参即可迁移到真机，真实实验复现了快速躲避、侧翼包抄等策略，并完成双Agent交互部署。", "mechanism": "策略直接把机载状态映射为总推力和机体角速度指令；训练采用PFSP与多样化历史对手池，部署前用硬件对齐仿真建模执行器、通信延迟和域随机化。", "paper_url": "https://arxiv.org/abs/2608.14135", "date": "2026-08-14", "score": 17, "score_relevance": 9, "score_contribution": 8, "score_reason": "真实无人机上闭合了观测、决策和控制动作链路，且有双Agent真机验证，是本周证据最扎实的其他端侧Agent之一。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:高效推理", "方向:端侧agent", "应用:机器人"], "edge_agent_scope": "其他端侧", "edge_agent_evidence": "策略使用机载状态直接生成四旋翼控制指令，并已零样本部署到真实无人机，完成两台设备间的实时追逃行动闭环。", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Wenhao Tang; Tianyang Chen; Zhejun Cui; Boyuan An; Jiayu Chen; Ruize Zhang; Huidong Liu; Tianyue Wu", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "真正跑在实体设备上的Agent：策略直接驱动无人机，不依赖中间轨迹规划器，并有双机实测。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.14094", "run_id": "run-20260817-103423", "title": "P2Skill: Privacy Preserving Skill Distillation for Cloud-Local LLM Inference Systems", "title_zh": "P2Skill 隐私技能蒸馏", "abstract": "让个人设备上的小模型先拆解请求、识别隐私并决定哪些内容可以发往云端，再把云端结果在本地重组。它把端云协作中的隐私控制做成可迭代的技能流程。", "effects": "在四个领域的基准上，隐私保护条件下的推理质量达到既有方法的1.69倍和3.66倍。", "mechanism": "本地小模型按技能提示执行任务分解、隐私感知路由、改写与结果重构，云端大模型再根据执行失败迭代技能。", "paper_url": "https://arxiv.org/abs/2608.14094", "date": "2026-08-14", "score": 16, "score_relevance": 9, "score_contribution": 7, "score_reason": "个人设备上的小模型承担自主分解、路由和重构闭环，兼具端侧Agent与隐私端云协同价值，实验增益也较明确。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:蒸馏", "方向:安全隐私", "方向:评测基准", "应用:长上下文推理", "方向:端侧agent"], "edge_agent_scope": "其他端侧", "edge_agent_evidence": "论文明确说明本地小模型运行在个人设备上，并自主完成任务分解、隐私感知路由、改写和结果重构，关键控制流程不是仅在云端执行。", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Myunghoon Ryu; Geunpyo Park; Sungjoon Lee; XinYu Piao; Jong-Kook Kim", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "本周少见的真正端侧Agent工作：不是只在本地跑模型，而是把任务拆解、隐私判断和端云路由交给设备侧小模型。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13420", "run_id": "run-20260817-103423", "title": "Enhancing Virtual Agents through SLMs and Edge-Computing: An Exploratory Evaluation of Think and Memory Processes", "title_zh": "Jetson 虚拟Agent大脑", "abstract": "在Jetson Orin NX上运行Qwen2.5小模型，为虚拟世界Agent提供思考、记忆、请求路由和持续对话能力。", "effects": "原型在仿真中评测了路由准确率、记忆读取表现和延迟，证明部分认知流程可由边缘小模型承担；摘要未给具体数值。", "mechanism": "按CEAA认知架构搭建边缘Agent网关，把Think与Memory组件放到Jetson上的Qwen2.5模型执行。", "paper_url": "https://arxiv.org/abs/2608.13420", "date": "2026-08-13", "score": 14, "score_relevance": 9, "score_contribution": 5, "score_reason": "思考与记忆组件确实在Jetson运行，属于有明确设备证据的端侧Agent原型，但目前只实现部分认知流程且评测规模有限。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆", "方向:评测基准", "硬件:Jetson", "应用:机器人", "应用:长上下文推理", "方向:端侧agent"], "edge_agent_scope": "其他端侧", "edge_agent_evidence": "论文在NVIDIA Jetson Orin NX上部署Qwen2.5，设备侧承担Agent的请求路由、记忆读取和记忆驱动对话，即部分思考与记忆闭环。", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Aimilios Hadjiliasi; Louis Nisiotis", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "直接把Agent的思考和记忆放到Jetson上运行，虽是早期原型，但比只做端侧模型推理更接近真正的设备侧认知系统。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "vendor-samsung-from-biosignals-to-health-insights-samsung-research-s-work-on-", "run_id": "run-20260817-103423", "title": "From Biosignals to Health Insights: Samsung Research’s Work on Health Foundation Models", "title_zh": "三星可穿戴健康基础模型", "abstract": "三星研究院推出面向可穿戴生理信号的 xMAE 与 HiMAE 健康基础模型，可在智能手表级 CPU 上快速输出。", "effects": "HiMAE 在智能手表级 CPU 上单次输出低于 1 毫秒。", "mechanism": "通过自监督掩码建模学习跨传感器的生理信号表示，并用分层结构降低手表端推理成本。", "paper_url": "https://news.samsung.com/global/from-biosignals-to-health-insights-samsung-researchs-work-on-health-foundation-models", "date": "2026-08-14", "score": 16, "score_relevance": 9, "score_contribution": 7, "score_reason": "真实智能手表级 CPU 的亚毫秒结果说明端侧落地成熟度高；但它是健康感知基础模型，不含智能体规划或行动闭环。", "source_tier": "官方动态", "open_source": false, "tags": ["方向:模型架构", "方向:高效推理", "硬件:CPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Samsung", "vendors": "Samsung", "venue": "Samsung", "recommendation": "推荐", "recommendation_reason": "亚毫秒手表 CPU 推理是非常具体的产品级指标，对全天候健康感知和后续主动助理都很关键。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "vendor-google-pixel-watch-5-proactive-assistance-and-advanced-health-tracking", "run_id": "run-20260817-103423", "title": "Pixel Watch 5: Proactive assistance and advanced health tracking on your wrist", "title_zh": "Pixel Watch 5主动助理", "abstract": "Pixel Watch 5 增加可离线、低时延运行的设备端 AI 核心操作，并根据日历等上下文主动给出一步可确认的操作建议。", "effects": "官方确认部分核心操作可离线、低时延完成；未公布时延、功耗或建议采纳率等量化结果。", "mechanism": "手表端负责低时延核心操作，Gemini 结合日历等个人上下文生成建议，用户在腕上确认后执行相应动作。", "paper_url": "https://blog.google/products-and-platforms/devices/pixel/pixel-watch-5/", "date": "2026-08-12", "score": 16, "score_relevance": 9, "score_contribution": 7, "score_reason": "这是明确落地到可穿戴设备的主动式 AI 产品，端侧执行价值高；但官方材料没有证明 Gemini 的关键规划环节完全在手表本地运行，因此不标真正端侧智能体。", "source_tier": "官方动态", "open_source": false, "tags": ["方向:高效推理", "方向:工具调用", "方向:安全隐私"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Google", "vendors": "Google", "venue": "Google", "recommendation": "推荐", "recommendation_reason": "它展示了可穿戴 AI 从被动问答转向主动建议和腕上确认执行，是很有产品意义的端侧交互进展。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "vendor-google-the-pixel-11-series-your-most-personal-pixel-yet", "run_id": "run-20260817-103423", "title": "The Pixel 11 series: Your most personal Pixel yet", "title_zh": "Pixel 11端侧Gemini Nano", "abstract": "Pixel 11 系列用 Tensor G6 在手机本地运行新一代 Gemini Nano，为个性化辅助和相机功能提供端侧模型能力。", "effects": "官方确认 Gemini Nano 在 Tensor G6 手机上运行；未公布统一的模型速度、功耗或准确率指标。", "mechanism": "Tensor G6 承担手机端小模型推理，再把本地模型能力接入个性化帮助与相机处理流程。", "paper_url": "https://blog.google/products-and-platforms/devices/pixel/google-pixel-11-pro-xl/", "date": "2026-08-12", "score": 16, "score_relevance": 9, "score_contribution": 7, "score_reason": "手机端模型和专用芯片证据明确，是后续端侧智能体的重要底座；但该发布没有给出规划、工具调用或行动闭环。", "source_tier": "官方动态", "open_source": false, "tags": ["方向:高效推理", "方向:编译部署", "硬件:手机"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Google", "vendors": "Google", "venue": "Google", "recommendation": "推荐", "recommendation_reason": "手机端 Agent 能走多远首先取决于本地模型底座，Tensor G6 与 Gemini Nano 的结合值得持续跟踪。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "vendor-meta-the-future-is-for-everyone-free-ai-glasses-for-every-blind-and-vi", "run_id": "run-20260817-103423", "title": "The Future Is for Everyone: Free AI Glasses for Every Blind and Visually Impaired Adult Vision Ireland Supports", "title_zh": "Meta视障辅助AI眼镜", "abstract": "Meta 把 Ray-Ban AI 眼镜大规模提供给视障用户，用语音帮助读取标识和文档、识别物体并理解周围环境。", "effects": "Meta 向 Vision Ireland 捐赠 1.5 万副 AI 眼镜，形成较大规模的真实辅助技术落地。", "mechanism": "眼镜采集第一视角图像和用户语音，将识别结果以语音反馈给佩戴者，辅助完成环境理解和阅读任务。", "paper_url": "https://about.fb.com/news/2026/08/the-future-is-for-everyone-free-ai-glasses-for-every-blind-and-visually-impaired-adult-vision-ireland-supports/", "date": "2026-08-12", "score": 13, "score_relevance": 7, "score_contribution": 6, "score_reason": "属于真实可穿戴 AI 产品的大规模落地，但官方材料没有证明识别、推理或工具调用关键环节在眼镜本地执行。", "source_tier": "官方动态", "open_source": false, "tags": ["方向:多模态", "应用:OCR"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Meta", "vendors": "Meta", "venue": "Meta", "recommendation": "推荐", "recommendation_reason": "一万五千副的真实部署比单个演示更能说明 AI 眼镜的社会价值和产品可用性。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "vendor-google-track-subtle-changes-in-your-body-with-health-guardian-features", "run_id": "run-20260817-103423", "title": "Track subtle changes in your body with Health Guardian features on Pixel and Fitbit", "title_zh": "Pixel与Fitbit健康守护", "abstract": "Google 用自监督传感器模型持续分析 Pixel Watch 与 Fitbit 生理信号，生成月度健康总结和异常变化提醒。", "effects": "官方发布了月度总结和异常提醒等功能，但未公布模型准确率、误报率或端侧时延。", "mechanism": "模型从长期可穿戴传感器流中学习个人基线，再识别相对基线的细微变化并生成面向用户的摘要与提醒。", "paper_url": "https://blog.google/products-and-platforms/products/google-health/pixel-watch-health-guardian/", "date": "2026-08-12", "score": 13, "score_relevance": 7, "score_contribution": 6, "score_reason": "持续可穿戴感知是主动式个人 Agent 的重要输入层，但该发布没有端侧规划、工具或行动闭环证据。", "source_tier": "官方动态", "open_source": false, "tags": ["方向:模型架构", "方向:高效推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Google", "vendors": "Google", "venue": "Google", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "vendor-google-introducing-gemini-3-7-flash", "run_id": "run-20260817-103423", "title": "Introducing Gemini 3.7 Flash", "title_zh": "Gemini 3.7 Flash模型", "abstract": "Google 发布面向代码、长任务、子智能体编排和机器人工作流的 Gemini 3.7 Flash，主要通过云端 API 提供。", "effects": "官方强调长任务和 Agent 工作流能力提升，但当前条目未提供可直接核对的统一量化结果。", "mechanism": "通过更强的长任务推理和子智能体编排能力，把复杂任务拆分并交给不同执行单元，再通过 API 接入工具与机器人流程。", "paper_url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash/", "date": "2026-08-13", "score": 10, "score_relevance": 2, "score_contribution": 8, "score_reason": "Agent 能力本身较强，但交付形态以云端 API 为主，没有手机、PC 或其他终端本地执行证据。", "source_tier": "官方动态", "open_source": false, "tags": ["方向:高效推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Google", "vendors": "Google", "venue": "Google", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "github-google-ai-edge-litert-v2-2-0", "run_id": "run-20260817-103423", "title": "v2.2.0", "title_zh": "LiteRT 2.2端侧推理升级", "abstract": "LiteRT 2.2 同时升级 GPU、Intel NPU、MediaTek NPU 和 WebGPU 路径，覆盖手机、PC 与浏览器中的端侧生成式 AI。", "effects": "官方报告新增 GPU 路径可让大模型解码约提升 5%；其他 NPU 与 WebGPU 更新未给出统一性能数字。", "mechanism": "加入 FP16 运算配 FP32 累加、RoPE 复合算子、Intel NPU JIT/AOT 编译、MediaTek 通道量化和 WebGPU 量化权重流式加载。", "paper_url": "https://github.com/google-ai-edge/LiteRT/releases/tag/v2.2.0", "date": "2026-08-13", "score": 18, "score_relevance": 10, "score_contribution": 8, "score_reason": "这是直接面向手机、PC 和浏览器的核心端侧运行时升级，覆盖多家 NPU 与 GPU；贡献是多后端工程能力和可量化解码收益。", "source_tier": "开源大项目", "open_source": true, "tags": ["硬件:NPU", "硬件:GPU", "方向:推理框架", "方向:编译部署", "方向:量化", "方向:高效推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "google-ai-edge", "vendors": "", "venue": "GitHub", "recommendation": "推荐", "recommendation_reason": "如果只看一条端侧基础设施更新，LiteRT 2.2 最全面：手机 NPU、PC NPU、GPU 和 WebGPU 都有实质改进。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "github-microsoft-onnxruntime-v1-29-0", "run_id": "run-20260817-103423", "title": "ONNX Runtime v1.29.0", "title_zh": "ONNX Runtime 1.29运行时", "abstract": "ONNX Runtime 1.29 强化 WebGPU、Arm64、QNN 和 XNNPACK，加入分页注意力与量化 KV 缓存，覆盖浏览器、手机和 Arm PC 本地推理。", "effects": "该版本未报告统一端到端加速比；改动覆盖量化 KV 缓存、Arm64 半精度与二比特、四比特内核以及多个移动后端修正。", "mechanism": "把网页推荐路径切到原生 WebGPU，并在注意力缓存、Arm64 内核和手机执行后端上补齐低比特推理能力。", "paper_url": "https://github.com/microsoft/onnxruntime/releases/tag/v1.29.0", "date": "2026-08-12", "score": 17, "score_relevance": 9, "score_contribution": 8, "score_reason": "浏览器、手机和 Arm PC 都能直接受益，是跨平台端侧推理的重要版本；贡献主要来自多后端低比特和缓存能力整合。", "source_tier": "开源大项目", "open_source": true, "tags": ["方向:KV cache", "方向:推理框架", "方向:量化", "方向:编译部署", "硬件:CPU", "硬件:NPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "microsoft", "vendors": "", "venue": "GitHub", "recommendation": "推荐", "recommendation_reason": "它同时补强浏览器、手机和 Arm PC 三条本地推理路线，尤其适合关注跨端部署的人。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "github-ggml-org-llama-cpp-ad1de39", "run_id": "run-20260817-103423", "title": "model: add Kimi-K3 text model (#26185)", "title_zh": "llama.cpp新增Kimi-K3支持", "abstract": "llama.cpp 新增 Kimi-K3 的模型转换、加载、推理和聊天模板支持，并能解析推理过程与带类型的工具调用。", "effects": "提交已通过参考实现和完整模型验证；未报告统一速度提升，Metal 与 Vulkan 对部分算子仍需回退。", "mechanism": "无损重排 MXFP4 权重并补齐模型加载与聊天模板，在本地运行时解析推理内容和结构化工具调用。", "paper_url": "https://github.com/ggml-org/llama.cpp/commit/ad1de39e0708e3ced9c71bb3c82d93a2c046a73f", "date": "2026-08-15", "score": 15, "score_relevance": 8, "score_contribution": 7, "score_reason": "llama.cpp 是 PC 和多类终端本地模型的重要运行时，结构化工具调用直接服务本地 Agent；但该提交本身不是完整智能体闭环。", "source_tier": "开源大项目", "open_source": true, "tags": ["方向:量化", "方向:推理框架", "方向:工具调用", "硬件:GPU", "硬件:CPU", "模型:Kimi"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "ggml-org", "vendors": "", "venue": "GitHub", "recommendation": "推荐", "recommendation_reason": "不只是新增模型格式，连推理内容和类型化工具调用也打通了，对 PC 本地 Agent 很实用。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "github-openvinotoolkit-openvino-926b520", "run_id": "run-20260817-103423", "title": "[NPU] Add compiler options cache (#37233)", "title_zh": "OpenVINO NPU编译选项缓存", "abstract": "OpenVINO 为 NPU 插件加入编译器选项能力缓存，避免运行时反复加载编译器并探测支持项。", "effects": "官方提交未报告端到端性能数字。", "mechanism": "分别维护 CiP 与 CiD 的编译器能力列表，首次查询后缓存结果，后续属性检查直接复用。", "paper_url": "https://github.com/openvinotoolkit/openvino/commit/926b5202fc7a772a7112ac1e5d5bd2327e8478be", "date": "2026-08-14", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "直接改善 PC NPU 运行时的编译和属性查询路径，但属于局部工程优化，贡献范围较窄。", "source_tier": "开源大项目", "open_source": true, "tags": ["硬件:NPU", "方向:推理框架"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "openvinotoolkit", "vendors": "", "venue": "GitHub", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "hf-2608.10692", "run_id": "run-20260817-103423", "title": "SPIEval: Evaluating Large Language Models as Mobile Assistants over Scattered Personal Information", "title_zh": "SPIEval手机助理评测", "abstract": "用分散在10个手机应用里的个人信息，测试大模型助理能否检索、核对并调用工具完成真实任务。", "effects": "250项任务覆盖4335条个人记录和21种工具；最佳模型准确率仅57.3%，79%的失败来自定位信息错误，说明手机助理离可靠执行仍有明显距离。", "mechanism": "按推理、消歧、信息整合、偏好推断和多意图拆解五类能力构造可多轮交互、结果可验证的手机任务环境。", "paper_url": "https://huggingface.co/papers/2608.10692", "date": "2026-08-12", "score": 16, "score_relevance": 9, "score_contribution": 7, "score_reason": "直接面向手机助理的跨应用工具执行，揭示了当前系统最主要的失败环节；但论文没有证明模型或Agent闭环运行在手机端。", "source_tier": "学校预印本", "open_source": true, "tags": ["方向:评测基准", "方向:工具调用", "方向:规划推理", "硬件:手机"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Junjie Ye, Zhuohui Sheng, Shaofan Liu, Yulun Zhu, Wenjie Fu, Dingwei Zhu, Ming Zhang, Yujiong Shen, Weichao Wang, Xin Zhao, Shihan Dou, Tao Gui, Qi Zhang, Xuanjing Huang, Pluto Zhou", "vendors": "", "venue": "HuggingFace Daily", "recommendation": "推荐", "recommendation_reason": "本周手机方向除荣耀产品外最值得看的研究：它用可复现数据说明跨应用手机助理为什么仍不可靠。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.07193", "run_id": "run-20260817-103423", "title": "An AI4AI Framework for Visual Token Pruning", "title_zh": "AutoPrune视觉令牌剪枝", "abstract": "让大模型自动设计多模态模型的视觉令牌剪枝策略，减少依靠人工反复试规则的成本。", "effects": "移除94.4%的视觉令牌后仍保留超过99%的完整令牌性能，FLOPs降低9.9倍，预填充延迟降低6.4倍。", "mechanism": "用包含131个可复用算子的剪枝领域语言表示搜索状态，再让大模型围绕强基线策略生成和改进预算、打分、约束与重组规则。", "paper_url": "https://huggingface.co/papers/2608.07193", "date": "2026-08-14", "score": 15, "score_relevance": 7, "score_contribution": 8, "score_reason": "没有给出手机或PC真机部署，但视觉令牌大幅压缩和预填充加速对端侧多模态推理有直接迁移价值，且结果明确。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:剪枝稀疏", "方向:多模态", "方向:高效推理", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Zhen Liu, Wenli Huang, Wei Song, Yuhan Liu, Zhiqin Yang, Jingwen Fu", "vendors": "", "venue": "HuggingFace Daily", "recommendation": "推荐", "recommendation_reason": "视觉令牌减少94.4%仍保留超过99%性能，适合优先评估能否迁移到手机VLM。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12500", "run_id": "run-20260817-103423", "title": "Lonic: Algorithm-Hardware Co-Design for Energy-Efficient Fully Local Online SNN Training with INT4 Precision", "title_zh": "Lonic 本地在线 SNN 训练芯片", "abstract": "Lonic 是一套算法与硬件协同方案，让脉冲神经网络用 INT4 精度在本地设备上完成在线监督训练，而非只做端侧推理。", "effects": "相对 Apple M4 和 NVIDIA V100，能效分别提升 17.44 倍和 66.28 倍，速度分别提升 3.25 倍和 1.02 倍。", "mechanism": "结合 INT4 本地学习算法、无乘法整数处理阵列、零值门控、时序前缀加速数据流和低精度权重搬运。", "paper_url": "https://arxiv.org/abs/2608.12500", "date": "2026-08-12", "score": 15, "score_relevance": 8, "score_contribution": 7, "score_reason": "直接解决设备端在线学习的算力与能耗问题，并给出硬件级对比，但它是学习加速器而不是具备规划行动闭环的智能体。", "source_tier": "学校预印本", "open_source": true, "tags": ["方向:量化", "方向:能耗功耗", "方向:SNN"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Peilin Chen; Xiaoxuan Yang", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "端侧在线训练比常见的端侧推理更难，这项工作给出了完整的 INT4 算法硬件协同路线和清晰能效收益。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.11770", "run_id": "run-20260817-103423", "title": "Achieving Near-Zero-Overhead Multi-Model Hierarchical Classification in Real-Time Detection Pipelines", "title_zh": "Jetson 双加速器分层视觉流水线", "abstract": "这是一套面向 Jetson Orin NX 的实时分层视觉部署方法，让 GPU 负责目标检测、DLA 负责后续属性分类，并发运行多个模型。", "effects": "双头属性分类加入后，1080p 检测吞吐仅从 13.3 FPS 降到 12.5 FPS；隐式量化精度由 75% 恢复到 94.0%。", "mechanism": "通过网络结构适配、INT8 动态范围修正、量化感知训练、ONNX 图修补和 GPU/DLA 并发调度，消除 DLA 的 GPU 回退。", "paper_url": "https://arxiv.org/abs/2608.11770", "date": "2026-08-12", "score": 14, "score_relevance": 8, "score_contribution": 6, "score_reason": "在真实 Jetson SoC 上给出可复用的 GPU 与 DLA 多模型并行部署流程，工程价值高，但不包含智能体规划或工具闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:量化", "方向:编译部署", "方向:高效推理", "硬件:GPU", "硬件:Jetson"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Vaishnav Raju", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "真实设备数据和部署约束都很完整，适合直接参考多模型视觉流水线如何把 NPU 类加速器真正用起来。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.14016", "run_id": "run-20260817-103423", "title": "Content Based Video Narration of Gameplay with Vision Language Models", "title_zh": "VLM 游戏视频解说", "abstract": "用通用视觉语言模型理解游戏录像，再生成类似电竞直播的语音解说；语音合成阶段可以在 Apple 芯片设备上完全本地运行。", "effects": "九帧拼成一张3×3图像后，每分钟传输的图像载荷减少9倍；论文同时报告了状态幻觉、拼图分辨率损失和语调失真。", "mechanism": "把九个均匀采样帧拼成时间马赛克供VLM理解动作，再接文本转语音后端，其中可选6比特量化的40亿参数本地TTS模型。", "paper_url": "https://arxiv.org/abs/2608.14016", "date": "2026-08-14", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "包含明确的Apple芯片本地语音部署和多帧压缩方案，但核心视觉理解未证明在端侧执行，也不属于Agent闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:量化", "方向:多模态", "方向:评测基准", "应用:语音"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Mathew Varghese", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.14242", "run_id": "run-20260817-103423", "title": "Could Model Partitioning Make Federated Learning More Sustainable?", "title_zh": "低碳联邦模型分割", "abstract": "在联邦学习中根据电网碳强度或负载信号动态分割模型，把部分计算转移给其他参与方，以降低高碳节点能耗。", "effects": "部分分割点可让单个参与方最多降低76%能耗，相比不分割训练没有显著时间或总能耗开销。", "mechanism": "把模型分割位置作为碳感知和电网感知的调度手段，在参与方之间重新分配训练计算。", "paper_url": "https://arxiv.org/abs/2608.14242", "date": "2026-08-14", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "面向低功耗设备和边缘节点的端云协同有参考价值，但不是推理Agent，也仍是初步研究。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:能耗功耗", "方向:端云协同", "方向:联邦学习"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Tobias Frohlich; Tiffany Vlaar; Lauritz Thamsen", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.14466", "run_id": "run-20260817-103423", "title": "Expected Free Energy-based Informative Path Planning for Robotic Mars Exploration", "title_zh": "EFE 火星机器人探路", "abstract": "让自主机器人在路径预算内一边探索未知区域、一边更新环境信息图，并优先前往潜在高价值区域。", "effects": "多组仿真中，EFE规划能同时获得更准确的后验地图和更高价值区域定位，并优于同条件的信息论基线。", "mechanism": "用高斯过程维护信息场信念，以主动推断中的期望自由能为动作目标，在硬路径长度约束下规划连续轨迹。", "paper_url": "https://arxiv.org/abs/2608.14466", "date": "2026-08-14", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "具备机器人自主规划闭环，但当前证据主要来自仿真，未说明规划器实际运行在哪类端侧硬件上。", "source_tier": "学校预印本", "open_source": false, "tags": ["应用:机器人"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Ajith Anil Meera; Pablo Lanillos; Wouter Kouw", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13863", "run_id": "run-20260817-103423", "title": "Joint Optimization of Memory and Computing Frequency for Energy-Efficient DNN Inference", "title_zh": "移动端推理频率联调", "abstract": "面向手机等移动设备的DNN推理，同时调节计算频率和内存频率，在时限约束下减少能耗。", "effects": "基于实测数据的仿真中，与精确最优解的差距不超过2.5%，相对其他方案最多降低10.4%的设备能耗。", "mechanism": "建立贴近真实设备的推理时间模型，把计算与内存频率联合成受截止时间约束的能耗优化问题，并求近似最优策略。", "paper_url": "https://arxiv.org/abs/2608.13863", "date": "2026-08-14", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "有明确移动设备和功耗结果，是端侧推理基础设施工作，但没有Agent规划、工具或行动闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:能耗功耗"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Yunchu Han; Zhaojun Nan; Sheng Zhou; Zhisheng Niu", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13952", "run_id": "run-20260817-103423", "title": "Reducing ANN-SNN Conversion Error via Residual Membrane Potential Alignment", "title_zh": "SNN 残余膜电位对齐", "abstract": "通过对齐残余膜电位，减少ANN转换成SNN后在少时间步推理中的累计误差和精度损失。", "effects": "在CIFAR-10、CIFAR-100和ImageNet上，T=2、4、8时均获得明显精度提升，额外计算开销可忽略。", "mechanism": "在QCFS转换基线上校正残余膜电位，并推广到ReLU卷积网络、ANN Transformer和多阈值SNN。", "paper_url": "https://arxiv.org/abs/2608.13952", "date": "2026-08-14", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "适合神经形态低功耗推理，但没有Agent闭环，且摘要未给出具体提升幅度。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:量化", "方向:能耗功耗", "方向:评测基准", "方向:SNN", "硬件:神经形态"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Zirui Chen; Zihan Huang; Tong Bu; Jianhao Ding; Yiting Dong; Zhaofei Yu", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12745", "run_id": "run-20260817-103423", "title": "A Cloud-Edge System for Multimodal Clinical Screening in Resource-Constrained Rural Settings", "title_zh": "乡村医疗端云筛查系统", "abstract": "在网络和算力受限的乡村场景，把多模态临床筛查任务分配到边缘与云端，降低带宽和推理成本。", "effects": "20个病例与三种网络条件下，工具召回98%至99%、精确率92%至96%，延迟维持25至35秒，令牌成本降低4至15倍。", "mechanism": "根据任务与网络条件把多模态处理拆到边缘和云端，并通过临床工具增强事实落地。", "paper_url": "https://arxiv.org/abs/2608.12745", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "有清晰端云系统指标和真实应用方向，但使用的是模拟网络与少量病例，也没有自主Agent闭环证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:多模态", "方向:端云协同", "方向:评测基准"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Hei Ting;  Chan; Chenwei Wu; Xueshen Liu; Zesen Zhao; Boyuan Zheng; Luis Filipe Nakayama; Michael G. Morley", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "虽然不是端侧Agent，但它给出了资源受限网络下端云拆分的完整系统指标，适合产品化参考。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13197", "run_id": "run-20260817-103423", "title": "Beyond Simulated Benchmarks: Evaluating Motion Representations for Fall Detection Under Real-World Data Scarcity", "title_zh": "真实稀缺跌倒检测评测", "abstract": "研究真实跌倒数据极少时，不同可穿戴运动表示从模拟数据迁移到现实场景的可靠性。", "effects": "区间表示的真实场景绝对表现最好；加入物理冲击描述的符号表示在域偏移和极端小样本下退化最小，但精度较低。", "mechanism": "比较区间、符号等运动表示，并把具有物理意义的冲击描述加入符号特征，评估模拟到真实的迁移。", "paper_url": "https://arxiv.org/abs/2608.13197", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "属于可穿戴端侧感知评测，不含Agent闭环，且摘要未给具体准确率。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:评测基准"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Timilehin B. Aderinola; Ilaria D'Ascanio; Luca Palmerini; Lorenzo Chiari; Jochen Klenk; Clemens Becker; Brian Caulfield; Georgiana Ifrim", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13394", "run_id": "run-20260817-103423", "title": "Heterogeneity-Aware Belief Synchronization for Semantic Communication in AI-Native 6G Networks", "title_zh": "6G Agent信念同步", "abstract": "让6G网络中的异构AI节点只在必要时交换压缩后的信念更新，减少不同本地模型之间的知识漂移。", "effects": "框架目标是降低同步开销、保护隐私并减少本地知识漂移；摘要没有报告具体实验数据。", "mechanism": "用潜变量翻译模型对齐异构模型的信念表示，并按需触发紧凑更新，而非持续同步完整状态。", "paper_url": "https://arxiv.org/abs/2608.13394", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "涉及分布式自治系统，但缺少具体设备部署与Agent行动闭环，当前更像6G语义通信框架。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:安全隐私"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Muhammad Hannan Akram; Muhammad Abubakar Rashid; Wassi Haider Kabir; Haejoon Jung; Kapal Dev; Syed Ali Hassan", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13141", "run_id": "run-20260817-103423", "title": "MergeOver: Post-Training Token Merging for Recursive Vision Transformers", "title_zh": "MergeOver 递归ViT合并", "abstract": "无需重新训练，在递归视觉Transformer中合并相似令牌，降低激活内存和端侧推理延迟。", "effects": "GPU峰值激活内存最多降低38.4%；Raspberry Pi 5在批量1和16时延迟分别降低2.4%和17.6%。", "mechanism": "在训练后按令牌相似度做动态合并，减少递归层中的重复计算，并针对不同批量评估内存与吞吐权衡。", "paper_url": "https://arxiv.org/abs/2608.13141", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "有Raspberry Pi 5实测和无需重训的部署特点，端侧迁移价值明确，但不是Agent。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:评测基准", "硬件:GPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Junseo Kim; Uraz Odyurt; Amirreza Yousefzadeh", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "少见的真实树莓派实测优化，且不用重训；适合快速判断递归视觉模型在低成本设备上的收益与代价。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12929", "run_id": "run-20260817-103423", "title": "Multi-perspective Imbalance-Conscious 6G Beamforming Optimization and Performance", "title_zh": "6G波束成形机器学习比较", "abstract": "比较监督与无监督方法在6G物联网波束成形中的应用，并分析类别不平衡与不同特征组的影响。", "effects": "网络特征的召回率、F1和ROC-AUC优于设备、环境与视觉特征；摘要没有给出具体数值。", "mechanism": "组合分类、聚类和不平衡感知实验，比较多类特征对波束性能预测的贡献。", "paper_url": "https://arxiv.org/abs/2608.12929", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "主题是6G网络优化，只有宽泛边缘关联，与端侧AI Agent关系较弱。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:云端serving"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Chukwunonso Henry Nwokoye; Blessing Oluchi Iloka; Chikwue V. Umeugoji; Christopher Anene Egemba; Nnenna D. Duroha", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13293", "run_id": "run-20260817-103423", "title": "NAS-Driven Hardware Accelerator Exploration for Edge AI and Quantization Effects on the Pareto Space", "title_zh": "NAS边缘加速器协同搜索", "abstract": "把神经架构搜索、INT4量化影响评估和硬件映射连成一条流程，寻找准确率与端侧加速器效率的折中点。", "effects": "在NAS-Bench-201全部15625个架构上分析INT4对Pareto空间的扰动，发现FP32零成本代理在两种搜索策略下反而覆盖更好。", "mechanism": "先用硬件无关代理排序，再经量化桥过滤并反馈，最后在CGRA4ML上做进化式硬件设计空间探索。", "paper_url": "https://arxiv.org/abs/2608.13293", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "是明确的边缘硬件与量化协同设计工作，但不包含Agent运行闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:量化"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Eleftherios Mylonas; Angelos Kouprizas; Michael Birbas; Alexios Birbas", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13717", "run_id": "run-20260817-103423", "title": "StreamHear: Domain-Adapted Pseudo-Labeling for Semi-Supervised Streaming Speech Recognition", "title_zh": "StreamHear 流式语音适配", "abstract": "用离线教师为目标领域的无标注音频生成伪标签，提升流式语音识别在电话等域偏移场景中的表现。", "effects": "在金融通话、朗读语音和电话质量对话等四个数据集上持续优于有监督学生微调，并缩小与离线教师的差距。", "mechanism": "对无标注目标音频做领域适配伪标注，再训练可在线流式运行的学生识别模型。", "paper_url": "https://arxiv.org/abs/2608.13717", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "电话质量语音与流式识别对手机有迁移价值，但没有真实手机部署，也不属于Agent。", "source_tier": "学校预印本", "open_source": false, "tags": ["硬件:手机", "应用:语音"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Zefang Liu; Chenyang Zhu; Sangwoo Cho; Xujun Peng; Shi-Xiong Zhang; Sambit Sahu", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13283", "run_id": "run-20260817-103423", "title": "Towards Context-Aware Clinical Motion Understanding in Daily Living at Home: Freezing of Gait Detection with Egocentric Vision", "title_zh": "居家冻结步态检测", "abstract": "结合第一视角视频和可穿戴IMU，识别帕金森患者在真实居家活动中的冻结步态。", "effects": "13名参与者数据上，IMU-TCN达到42.3 F1和83.0 AUROC，V-JEPA2视频特征为32.6 F1和77.2 AUROC。", "mechanism": "冻结预训练第一视角视频与时序基础模型表示，并与从头训练的IMU-TCN做留一受试者评测。", "paper_url": "https://arxiv.org/abs/2608.13283", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "与可穿戴感知和家庭端侧应用相关，但当前是检测模型研究，没有Agent决策或行动。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:评测基准"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Vayalet Stefanova; Diwas Lamsal; Margot Genbrugge; Maxim Yudayev; Christian Schlenstedt; Moran Gilat; Bart Vanrumste; Benjamin Filtjens", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13496", "run_id": "run-20260817-103423", "title": "YAVIN: A Unified Architecture for Secure Edge Processing in Memory", "title_zh": "YAVIN 安全近存计算", "abstract": "把处理器、内存和加速器放进统一可信执行边界，让量化边缘LLM的数据在内存中解密、计算并重新加密。", "effects": "相对最新PIM AES实现提速超过20倍；运行INT8和INT32边缘LLM的安全开销分别为34%和9.3%。", "mechanism": "在受保护内存区实现LightSaber后量子密钥交换与ASCON-128认证加密，并与PIM执行共同维护密钥状态。", "paper_url": "https://arxiv.org/abs/2608.13496", "date": "2026-08-13", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "是明确面向边缘LLM的安全硬件架构，但没有Agent功能。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:量化"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Shouzhi Fang; William C. Tegge; Md Omar Faruque; Peipei Zhou; Endadul Hoque; Alex K. Jones", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.11688", "run_id": "run-20260817-103423", "title": "APEX: Adaptive Expert Prefetching for Memory-Efficient Edge MoE Inference", "title_zh": "APEX 边缘MoE专家预取", "abstract": "针对边缘设备内存不足，提前预测并加载即将激活的MoE专家，减少推理等待和权重搬运。", "effects": "专家重叠预测准确率超过99%；严格保持路由语义时，单令牌延迟最多降低26%，能延积最多改善41%。", "mechanism": "根据连续令牌间专家激活的重叠自适应预取，并提供严格正确与无停顿两种执行模式。", "paper_url": "https://arxiv.org/abs/2608.11688", "date": "2026-08-12", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "直接面向边缘MoE推理，延迟和能耗指标清楚，是端侧Agent模型底座的重要优化，但本身不是Agent。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:MoE", "方向:能耗功耗"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Alish Kanani; Layan Badawi; Umit Y. Ogras", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "边缘MoE最现实的瓶颈就是专家权重搬运；APEX给出超过99%的预取准确率和明确延迟、能耗收益。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.11981", "run_id": "run-20260817-103423", "title": "Benchmarking Trustworthiness of SLMs: Pre-trained vs. Compressed", "title_zh": "小语言模型可信度对比", "abstract": "这项研究比较从头训练的小语言模型与由大模型压缩得到的小语言模型，在公平、鲁棒、隐私和伦理等方面的可信度差异。", "effects": "量化比剪枝更能保留可信度；对可靠大模型做量化或知识蒸馏，通常比直接使用从头训练的小模型更可靠。", "mechanism": "对预训练小模型、剪枝模型、量化模型和蒸馏模型进行多维可信度评测，并比较压缩路径的影响。", "paper_url": "https://arxiv.org/abs/2608.11981", "date": "2026-08-12", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "小模型与量化直接关系到资源受限部署，可信度结论有实用价值，但论文未在手机或 PC 设备上验证。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:量化", "方向:剪枝稀疏", "方向:蒸馏", "方向:安全隐私", "方向:评测基准"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Haokun Lin; Kaijie Zhu; Haobo Xu; Yichen Wu; Zhichao Lu; Qingfu Zhang; Zhenan Sun", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12123", "run_id": "run-20260817-103423", "title": "Ready Cohorts: Bounding GPU Opportunity and Avoiding Host Round Trips in LLM-Agent Control", "title_zh": "GPU常驻Agent控制路径", "abstract": "把模型调用与工具调用之间的路由、状态更新和下一步动作生成留在GPU上，减少频繁回到CPU主机。", "effects": "四种GPU放置下36种配置全部更快，中位加速比为1.19至2.39倍；14557440次批量调用与独立主机实现完全一致。", "mechanism": "用设备常驻的就绪队列执行确定性控制转换，同时严格界定哪些决策可以安全下沉，避免错误地把所有控制图固化在GPU。", "paper_url": "https://arxiv.org/abs/2608.12123", "date": "2026-08-12", "score": 13, "score_relevance": 8, "score_contribution": 5, "score_reason": "是很有价值的Agent服务控制基础设施，但“设备常驻”指数据中心GPU而非手机、PC或其他终端，因此不算端侧Agent。", "source_tier": "学校预印本", "open_source": false, "tags": ["硬件:GPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Josef Liyanjun Chen", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "Agent系统常被模型与工具之间的小控制步骤拖慢，这项工作给出了可信的一致性验证和1.19至2.39倍加速。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.11668", "run_id": "run-20260817-103423", "title": "HBF Sucks! A Full-Stack Characterization of High-Bandwidth Flash for KV-Centric LLM Serving", "title_zh": "高带宽闪存为何拖慢 KV 服务", "abstract": "这项系统研究发现，把高带宽闪存直接替换进传统 KV 缓存卸载栈，反而会让大模型服务变慢。", "effects": "在 H100 和 B200 上，端到端延迟上升 2 至 5.5 倍，满足时延目标的吞吐下降 1.1 至 2.7 倍。", "mechanism": "通过生产轨迹、TokenSim 和热设计分析说明瞬态 KV 写多读少，且高带宽闪存挤占近端容量并受热和寿命约束。", "paper_url": "https://arxiv.org/abs/2608.11668", "date": "2026-08-12", "score": 12, "score_relevance": 4, "score_contribution": 8, "score_reason": "给 KV 缓存分层部署提供重要反例，但面向数据中心 GPU 服务，和手机或 PC 端侧部署的距离较远。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:KV cache", "方向:云端serving", "方向:能耗功耗", "硬件:GPU", "模型:Qwen"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Zhuoran Li; Zhuohang Bian; Xin Huang; Yibo Zhao; Guangyu Sun; Youwei Zhuo", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.11879", "run_id": "run-20260817-103423", "title": "Total Recall at What Cost? Benchmarking the Serving Cost of Agentic Memory Systems", "title_zh": "智能体记忆服务成本基准", "abstract": "这项工作比较 Mem0、Hindsight 和 Mastra Observational Memory 三套智能体记忆系统，回答长期对话中记忆是否真的比重传完整上下文更省成本。", "effects": "不同记忆系统的准确率为 21% 至 54%，成本预测误差可达 18% 至 69%；有的几十轮即可回本，有的在 400 轮内仍不划算。", "mechanism": "在两种模型骨干和最长 400 轮对话上，同时测量服务成本与 665 个 LoCoMo 问题的回答准确率。", "paper_url": "https://arxiv.org/abs/2608.11879", "date": "2026-08-12", "score": 11, "score_relevance": 5, "score_contribution": 6, "score_reason": "揭示智能体长期记忆的实际服务成本与准确率取舍，对 Agent 基础设施有价值，但实验是服务端系统，不是端侧运行。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆", "方向:评测基准", "方向:云端serving"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Natchanon Pollertlam; Witchayut Kornsuwannawit", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.14333", "run_id": "run-20260817-103423", "title": "Beyond Capacity: Scalable MoE LLM Inference via High-Bandwidth Flash with Direct GPU and HBM Paths", "title_zh": "HBF 扩展MoE推理", "abstract": "用高带宽闪存扩展GPU可承载的MoE专家权重，并让权重通过直达GPU或经HBM两条路径并行输送。", "effects": "代表性负载下，相比所有闪存权重都经HBM进入GPU的设计，吞吐提升1.94倍、端到端速度提升1.90倍。", "mechanism": "提前判断即将使用的专家，用前序计算隐藏闪存读取延迟，并分开管理只读专家权重与可变KV缓存流量。", "paper_url": "https://arxiv.org/abs/2608.14333", "date": "2026-08-14", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对大模型内存层次和MoE部署有较强系统价值，但面向GPU服务系统而非终端Agent。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:KV cache", "方向:记忆", "方向:MoE", "方向:评测基准", "硬件:GPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Seeyeon Kim; Juhyeong Jin; Joo-Young Kim", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13883", "run_id": "run-20260817-103423", "title": "MemoryLake on MemoryArena: A Matched Study of Agent Memory Backends", "title_zh": "MemoryLake 记忆后端对比", "abstract": "比较多种Agent记忆后端在跨会话、相互依赖任务中的实际帮助，而不只测试事后问答式召回。", "effects": "共享测试集上的五项成功率等权平均为20.5%，最佳对照为13.6%；论文明确不把这一结果宣称为全基准最优。", "mechanism": "在MemoryArena中统一任务、模型与评测条件，对四种记忆后端做匹配比较，并额外报告221个渐进查询的失败计入结果。", "paper_url": "https://arxiv.org/abs/2608.13883", "date": "2026-08-14", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "能帮助选择个人Agent记忆后端，但没有手机、PC或其他设备上的部署证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆", "方向:评测基准", "模型:GPT", "应用:RAG", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Chaoqun Zhan; Qiang Zhou; Guannan Li; Zhenqiang Huang; Qianjin Wang", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13962", "run_id": "run-20260817-103423", "title": "MoE Expert Execution in Disaggregated LLM Serving with a High-Bandwidth ReRAM Near-Memory Architecture", "title_zh": "ReRAM 近存MoE专家池", "abstract": "把MoE专家权重常驻在高带宽ReRAM近存计算池中，减少分离式LLM服务里的权重搬运。", "effects": "在三种MoE模型的测量与建模中，FFN池延迟相对H20降低9.5倍、权重搬运能耗降低20倍，解码TPOT最多降低10.4倍。", "mechanism": "以ReRAM近存读取执行专家FFN，并通过专家池化提高占用率，再与H20注意力池组合成分离式服务架构。", "paper_url": "https://arxiv.org/abs/2608.13962", "date": "2026-08-14", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "结果显示出显著的MoE服务潜力，但属于数据中心近存架构，没有终端侧Agent证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:MoE", "方向:能耗功耗"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Kunming Shao; Ming Zeng; Xin Yuan; Binbin Liao; Yangming Zhang; Wei Wang; Tim Kwang-Ting Cheng; Chi-Ying Tsui", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13921", "run_id": "run-20260817-103423", "title": "When Personal Memory Has No Single Answer: Evaluating LLM Agents under Irreducible Conflict", "title_zh": "冲突个人记忆评测", "abstract": "评测长期交互中的个人记忆彼此冲突时，Agent能否识别矛盾、解释原因、校准信心并主动追问。", "effects": "模型通常能识别冲突，却不善于校准行动或提出针对性澄清；端到端记忆抽取还会丢失支撑冲突推理的关系。", "mechanism": "分别在人工整理记忆和从多轮对话抽取记忆两条轨道上，从冲突感知、因果推理、置信校准、澄清和忠实度五方面评测。", "paper_url": "https://arxiv.org/abs/2608.13921", "date": "2026-08-14", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对端侧个人助理的长期记忆设计有迁移价值，但论文没有设备端运行证据，属于通用Agent评测。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆", "方向:评测基准", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Lu Yang; Shusheng Xu; Zhuoran Li; Tongkai Yang; Longbo Huang", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12764", "run_id": "run-20260817-103423", "title": "Beyond Outcome Rewards: Step-Level Self-Distilled Policy Optimization for Deep Search Agents", "title_zh": "SSPO 深搜逐步自蒸馏", "abstract": "为多步深度搜索Agent生成逐步训练信号，避免只靠最终结果奖励造成信用分配困难。", "effects": "在Qwen3-8B上持续优于GRPO，并可达到或超过训练步数翻倍的GRPO，每步额外开销约5%。", "mechanism": "从Agent自己的搜索轨迹中蒸馏步骤级策略信号，为中间决策提供更密集的优化目标。", "paper_url": "https://arxiv.org/abs/2608.12764", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对搜索Agent训练有价值，但训练与运行均未体现终端设备约束或本地闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:蒸馏", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Haoze Wu; Chuqiao Kuang; Tianyi Zhuang; Xiaoguang Li", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13226", "run_id": "run-20260817-103423", "title": "CoverPrune: Coverage-Driven Token Pruning for 3D VLMs via Optimal Transport", "title_zh": "CoverPrune 3D视觉令牌剪枝", "abstract": "为3D视觉语言模型保留能覆盖多视角和几何证据的令牌，避免传统多样性剪枝误删代表性原型。", "effects": "在多项3D空间推理基准上实现领先的令牌效率，并在激进剪枝下保持稳定推理；摘要未给具体比例。", "mechanism": "把剪枝目标从最大化令牌差异改为覆盖视觉证据，并用最优传输选择能保持多视角一致性的令牌。", "paper_url": "https://arxiv.org/abs/2608.13226", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对机器人空间VLM压缩有迁移价值，但没有端侧硬件实验，也不是Agent闭环。", "source_tier": "学校预印本", "open_source": true, "tags": ["方向:剪枝稀疏", "方向:多模态", "方向:评测基准", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Peng Ling; Yingda Yin; Lingting Zhu; Weikai Chen; Shengju Qian; Zeyu Hu; Xin Wang; Wenming Yang", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13773", "run_id": "run-20260817-103423", "title": "CutClean: Neural Network Pruning for Privacy-Preserving Inference", "title_zh": "CutClean 隐私感知剪枝", "abstract": "在剪枝神经网络的同时减少敏感属性沿网络传播，让模型更稀疏且降低隐私泄露。", "effects": "在合成与真实数据上降低隐私属性可预测性，同时保持目标分类准确率并获得较高稀疏率；摘要未给具体数值。", "mechanism": "在各网络块后接线性隐私探针测量泄露，再施加递增稀疏度，定向移除携带私密属性的信息通道。", "paper_url": "https://arxiv.org/abs/2608.13773", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "适合隐私敏感的端侧模型压缩，但没有具体设备实验，也不是Agent闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:剪枝稀疏", "方向:安全隐私"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Leonardo Magliolo; Vito Paolo Pastore; Giuseppe Valenzise; Enzo Tartaglione", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13787", "run_id": "run-20260817-103423", "title": "From Passive Delegates to Strategic Negotiators: Reinforcing Social Reasoning in Small Language Models with SocialRL", "title_zh": "SocialRL 小模型谈判训练", "abstract": "直接训练40亿参数小模型的社会推理与谈判能力，并把多个领域专家合并成一个统一模型。", "effects": "统一40亿模型在六类谈判环境的平均效用为0.627，与GPT-4.1和GPT-5系列相当或更高。", "mechanism": "先做分领域强化学习，再按跨领域迁移结构采用级联RL和多教师在线蒸馏，并蒸馏显式心理理论轨迹。", "paper_url": "https://arxiv.org/abs/2608.13787", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "小模型Agent能力值得关注，但没有端侧部署、设备约束或本地执行证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:蒸馏", "方向:评测基准", "模型:GPT", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Wenyue Hua; Zachary Huang; Tyler Payne; Safoora Yousefi; Saleema Amershi; Asli Celikyilmaz", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12990", "run_id": "run-20260817-103423", "title": "LycheeMemory V2: Efficient Long-Term Memory for LLM Agents via Semantic Segment-Level Consolidation", "title_zh": "LycheeMemory V2 长期记忆", "abstract": "按语义片段而非零散记录整合Agent长期记忆，在保持准确率的同时减少构建记忆的令牌开销。", "effects": "LoCoMo达到89.22%、LongMemEval-S达到92.20%；相对A-Mem构建令牌分别减少86.0%和75.9%。", "mechanism": "把多轮交互压缩成语义连续的片段级记忆，再按任务需要检索，减少重复和过细粒度记录。", "paper_url": "https://arxiv.org/abs/2608.12990", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "成本收益明确，对本地个人Agent有迁移价值，但论文未报告设备端实现。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆", "模型:GPT", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Dongfang Li; Zixuan Liu; Junmai Wang; Jiahe Huang; Fuhao Li; Bonian Jia; Baotian Hu; Min Zhang", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13662", "run_id": "run-20260817-103423", "title": "Ontology-Grounded Project Memory for Coding Agents", "title_zh": "MOOSEDev 代码项目记忆", "abstract": "为代码Agent建立带本体关系的项目记忆，能明确处理版本替代、集合完整性和否定条件。", "effects": "在835条类型化记录上，三类关系查询的预期答案召回为0.98至1.00，而向量记忆基线仅为6%至27%。", "mechanism": "把代码项目中的实体与关系存成类型化本体，并按关系语义查询，而不是只依赖相似度Top-k检索。", "paper_url": "https://arxiv.org/abs/2608.13662", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对本地代码Agent和项目记忆很有参考价值，但论文没有证明在PC设备侧部署。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆", "应用:代码", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "James Adam", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13499", "run_id": "run-20260817-103423", "title": "OpScale: Operator-level Provisioning and Autoscaling for LLM Serving", "title_zh": "OpScale 算子级弹性服务", "abstract": "把LLM服务的资源配置细化到算子级，根据请求与服务目标动态扩缩GPU资源。", "effects": "生产负载上最多少用36.3%的GPU、降低28%功耗，或在固定成本下提高44%吞吐。", "mechanism": "以首令牌时间等服务目标为约束，对不同算子做资源配置与弹性伸缩，而不是整模型统一扩容。", "paper_url": "https://arxiv.org/abs/2608.13499", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "云端GPU服务优化较成熟，但与终端侧部署和端侧Agent没有直接关系。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:评测基准", "方向:云端serving", "硬件:GPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Xingqi Cui; Chieh-Jan Mike Liang; Ziang Tang; Jiarong Xing; Haoran Qiu", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13127", "run_id": "run-20260817-103423", "title": "Potential Applications of HBF in LLM Serving Systems", "title_zh": "HBF 扩容LLM服务", "abstract": "讨论把高带宽闪存接入GPU内存层次，用更低成本容量容纳更多MoE专家和模型副本。", "effects": "论文提出可增加专家副本、减少模型装载并支持热门模型复制，但摘要没有报告定量实验。", "mechanism": "在不破坏GPU计算芯片带宽预期的前提下，把HBF作为HBM之外的容量层。", "paper_url": "https://arxiv.org/abs/2608.13127", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "属于数据中心LLM服务架构设想，缺少实测结果，也没有端侧或Agent闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:KV cache", "方向:记忆", "方向:MoE", "方向:云端serving", "硬件:GPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Yihan Yin; Yinlun Zhao; Zhixin Yun; Guanying Wu; Feng Zhu; Kai Tao; Shu Li; Fei Huang", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13334", "run_id": "run-20260817-103423", "title": "RippleMem: From Isolated Retrieval to Associative Recollection for Long-Term Agent Memory", "title_zh": "RippleMem 关联式长期记忆", "abstract": "把Agent交互历史组织成带丰富线索的情景记忆图，先找到关键记忆，再沿语义和结构关联补齐证据。", "effects": "LoCoMo准确率提升3.95%，LongMemEval-S最多提升11.87%，记忆图构建成本约降低30倍。", "mechanism": "以事件为中心存储情景记忆单元，查询时混合召回锚点，再从锚点沿关联关系扩展。", "paper_url": "https://arxiv.org/abs/2608.13334", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "长期记忆效果和构建成本都较有价值，但没有端侧存储、功耗或设备运行实验。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆", "方向:评测基准", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Jingbo Ji; Lingyi Li; Xilong Cheng; Yuhao Zhou; Wenji Zhang; Yuting Tan; Yunxiao Qin", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13076", "run_id": "run-20260817-103423", "title": "SPADE: Speculative Decoding for Precise and Low Cost Distributed Edge Cloud Inference", "title_zh": "SPADE 端云投机解码", "abstract": "让边缘小模型承担大部分生成，只在必要时调用云端大模型校正，在保持大模型准确率的同时减少云调用。", "effects": "多项NLP任务上，云端大模型调用次数降低76%，相对全程大模型推理没有准确率损失。", "mechanism": "采用即插即用的端云投机解码，小模型在边缘提出候选，云端大模型按需验证或修正，无需重新训练。", "paper_url": "https://arxiv.org/abs/2608.13076", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "端云推理机制和节省比例都很清晰，是有产品落地价值的Agent基础推理方案，但本身没有Agent闭环。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:投机解码", "方向:端云协同"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Divya Jyoti Bajpai; Kishan Kumar Upadhyay; Manjesh Kumar Hanawal", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "边缘小模型加云端大模型的分工方式很实用，76%的云调用削减且无精度损失，适合端侧Agent底座评估。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13756", "run_id": "run-20260817-103423", "title": "The Integer Alibi: Localizing Cross-Kernel Divergence in INT8-Quantized LLM Inference", "title_zh": "INT8内核分歧定位", "abstract": "追踪两个声称等价的INT8矩阵乘内核为何会让LLM生成结果分叉，并定位误差从算子传播到令牌的路径。", "effects": "干预后恢复8/8和16/16序列的逐比特一致；小logit间隔对翻转风险的预测ROC-AUC达到0.94。", "mechanism": "用探针检查点、教师强制回放和跨实现对比，把INT8微小数值差异关联到具体层和令牌翻转。", "paper_url": "https://arxiv.org/abs/2608.13756", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对量化推理可复现性和内核验证有工程价值，但实验面向GPU内核而非端侧Agent。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:量化", "方向:评测基准", "硬件:GPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Teng-Ruei Chen", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.13831", "run_id": "run-20260817-103423", "title": "VoiceChat-TTS: A Low-Latency Continuous Speech Synthesis Model for Interactive Agents", "title_zh": "VoiceChat-TTS 连续对话语音", "abstract": "为交互式Agent提供低延迟、可连续流式输出的文本转语音，使对话过程中可以更快开始并持续合成。", "effects": "论文宣称兼顾低延迟、连续流式输出和语音质量，但摘要未报告具体速度或质量数值。", "mechanism": "把面向交互的连续语音合成独立出来，避免全双工语音系统同时优化识别、中断处理和高保真生成造成的折中。", "paper_url": "https://arxiv.org/abs/2608.13831", "date": "2026-08-13", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "是Agent语音前端组件，没有明确手机、PC或其他设备的本地运行证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["应用:语音"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Edresson Casanova; Jaehyeon Kim; Mariana Graterol Fuenmayor; Shehzeen Hussain; Viacheslav Klimkov; Valentin Mendelev; Mikyas Desta; Paarth Neekhara", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12629", "run_id": "run-20260817-103423", "title": "CAKE: Compiler-Agent Co-Design for Frontier Kernel Evolution", "title_zh": "CAKE 编译器与内核Agent协同", "abstract": "让内核生成Agent不再直接硬写CUDA，而是与可搜索、可调度的编译器中间表示共同演化高性能GPU内核。", "effects": "B200上的最佳KMeans内核达到调优基线的1.144倍；Kimi Delta Attention相对官方实现几何平均提速2.05倍。", "mechanism": "Agent搜索编译器IR候选，由调度器在多种形状上评测与选择，并把有效改动沉淀为可上游合并的实现。", "paper_url": "https://arxiv.org/abs/2608.12629", "date": "2026-08-12", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "Agent与编译器协同的贡献和实测速度都较强，但服务的是GPU内核开发，不是端侧Agent运行。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:评测基准", "硬件:GPU"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Zihao Ye; Yingyi Huang; Hongyi Jin; Bohan Hou; Junru Shao; Zhongming Yu; Jinqi Chen; Meghan Cowan", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "这是Agent基础设施里技术含量较高的一项：Agent负责搜索，编译器负责表达和落地，且已有真实内核与上游PR结果。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12273", "run_id": "run-20260817-103423", "title": "Convergent Detour Hijacking: Task-Preserving Resource Amplification in Skill-Based LLM Agents", "title_zh": "技能Agent资源放大攻击", "abstract": "展示一种不破坏任务结果、却诱导技能型Agent走更长执行路径的攻击，让消耗和等待时间明显上升。", "effects": "在DeepSeek-V4-Pro上，恶意协调技能被选中的比例为80.02%；成功任务的令牌消耗增加66.91%，耗时增加92.45%。", "mechanism": "构造表面上与目标任务匹配、最终仍能收敛到正确结果的绕路技能，利用Agent按自然语言描述选择技能的机制。", "paper_url": "https://arxiv.org/abs/2608.12273", "date": "2026-08-12", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对技能市场和Agent安全很重要，但测试对象是通用云端Agent，没有端侧执行证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:评测基准", "模型:DeepSeek"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Junliang Liu; Ruoyu Li; Wenxin Tang; Jingyu Xiao; Zhenyu Liu; Jingheng Xu; Laizhong Cui", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12097", "run_id": "run-20260817-103423", "title": "Graph-Structured Rubrics: Compiling Rubrics into Typed Evaluation Graphs for LLM Judges", "title_zh": "GSR 图结构评分规则", "abstract": "把自然语言评分规则编译成带类型的评估图，让LLM裁判显式处理条件、依赖和组合关系。", "effects": "使用GPT-OSS-120B时，四个逐点评测集的精确分数一致率提升0.62至6.75个百分点。", "mechanism": "将平面规则拆成类型化节点和边，按图执行评分并保留原生平局与弃权策略。", "paper_url": "https://arxiv.org/abs/2608.12097", "date": "2026-08-12", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "属于通用LLM评测基础设施，与端侧部署和端侧Agent关系较弱。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:评测基准", "模型:GPT"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Xi Chen; Jie Mu; Mo Xuan; Qun Shao", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.11967", "run_id": "run-20260817-103423", "title": "LoongReflect: Boosting Long-Horizon Reflection in Search Agents via Global Perspective Distillation", "title_zh": "LoongReflect 长程搜索反思", "abstract": "把搜索Agent的反思变成工作记忆控制策略：保留已验证事实、缺失证据和分支风险，并在回退时留下纠错经验。", "effects": "在多跳检索增强生成和数学推理上持续优于只用结果奖励与常规自蒸馏基线；摘要未给具体幅度。", "mechanism": "通过全局视角蒸馏训练反思与回退，反思压缩可靠信息，回退删除错误分支但保留简洁教训。", "paper_url": "https://arxiv.org/abs/2608.11967", "date": "2026-08-12", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "Agent长期推理机制较有价值，但没有设备侧执行或资源约束证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:蒸馏", "方向:记忆", "方向:工具调用", "方向:评测基准", "应用:RAG", "应用:长上下文推理"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Zhixin Zhang; Xinke Jiang; Zhibang Yang; Weixuan Xu; Guohong Qiu; Xu Chu; Junfeng Zhao; Yasha Wang", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.12428", "run_id": "run-20260817-103423", "title": "MindMemOS: A Portable and Self-Evolving Memory Operating Layer for AI Agents", "title_zh": "MindMemOS 自演化记忆层", "abstract": "为不同Agent提供可移植的记忆操作层，并通过验证驱动搜索和离线整理让记忆结构随任务演进。", "effects": "LOCOMO准确率94.03%、PersonaMem为70.63%；技能演化让SpreadsheetBench成功率提升9.2个百分点。", "mechanism": "MindMemEvolve搜索适合目标场景的记忆模式，dreaming过程合并重复记录并解决冲突。", "paper_url": "https://arxiv.org/abs/2608.12428", "date": "2026-08-12", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "是值得关注的Agent记忆基础设施，但没有手机、PC或其他设备的本地部署证据。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Kaichao Liang; Yuqi Cui; Hao Kong; Xinyuan Huang; Guohaotian Hou; Qingcan Kang; Liang Chen; Yiyang Yin", "vendors": "", "venue": "arXiv", "recommendation": "推荐", "recommendation_reason": "记忆结构可演化且给出了准确率和任务成功率，适合关注个人Agent长期记忆底座的人优先阅读。", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}, {"id": "arxiv-2608.11654", "run_id": "run-20260817-103423", "title": "Towards a Formal Definition of Agent Memory: Basis, Span, Optimality, and the Sequential Memory Problem", "title_zh": "智能体记忆形式化框架", "abstract": "这项工作尝试给大模型智能体的记忆建立统一数学定义，把记忆看作信息基、把可回答知识看作其张成空间，并讨论容量受限下的最优写入。", "effects": "论文在《奥德赛》实例上给出了容量与覆盖率前沿，并展示噪声下覆盖率和准确率可能分离。", "mechanism": "将持续记忆建模为序列决策问题，以记忆状态、写入动作和查询时延迟收益构成马尔可夫决策过程。", "paper_url": "https://arxiv.org/abs/2608.11654", "date": "2026-08-12", "score": 10, "score_relevance": 5, "score_contribution": 5, "score_reason": "对智能体记忆的评价与学习有基础研究价值，但没有设备端运行、资源消耗或端侧部署实验。", "source_tier": "学校预印本", "open_source": false, "tags": ["方向:记忆"], "edge_agent_scope": "非端侧Agent", "edge_agent_evidence": "", "arxiv_date_basis": "submitted", "arxiv_revision_note": "", "insight_person": "", "wiki_url": "", "authors": "Hongyao Tang", "vendors": "", "venue": "arXiv", "recommendation": "纳入", "recommendation_reason": "", "detail": null, "updated_at": "2026-08-17T02:41:43.357916+00:00"}]};window.__WEEKLY__={"overview": "本周端侧 AI 动态（08-12~08-17）：手机与穿戴设备终于重新成为主角。最值得看的是荣耀 Robot Phone，它不只在手机上做多模态理解，还把云台物理动作和跨应用多步执行接进 YOYO，是本周最接近真正手机端 Agent 产品的发布。Google 同期把设备端 Gemini Nano、主动建议和健康感知闭环铺到 Pixel 11 与 Pixel Watch 5；三星则给出手表级 CPU 上低于 1 毫秒的健康基础模型结果。社区层的关键信号是：模型已经能在手机和消费级 PC 本地跑，但 Agent 体验仍卡在工具调用可靠性、长上下文、功耗和运行时兼容性。", "highlights": [{"url": "https://www.honor.com/global/news/honor-robot-phone-launch/", "topic": "荣耀 Robot Phone", "why": "本周最重要的手机端 Agent 产品：YOYO 同时连接多模态感知、4 自由度机械云台和跨应用多步执行，已经超出普通手机助手或影像功能。"}, {"url": "https://blog.google/products-and-platforms/devices/pixel/pixel-watch-5/", "topic": "Pixel Watch 5 主动式助理", "why": "核心动作可在设备端低延迟、离线处理，Gemini 还会结合日历上下文主动提出一步可确认的操作建议，代表穿戴 Agent 从被动问答向主动行动靠近。"}, {"url": "https://blog.google/products-and-platforms/devices/pixel/pixel-watch-breathing-emergency-detection/", "topic": "Pixel Watch 呼吸急症闭环", "why": "把心率、动作、海拔和睡眠信号转成提醒、倒计时、急救呼叫、联系人通知与位置共享，是可穿戴设备上完整的感知—判断—行动链。"}, {"url": "https://blog.google/products-and-platforms/devices/pixel/google-pixel-11-pro-xl/", "topic": "Pixel 11 与 Tensor G6", "why": "最新 Gemini Nano 在 Tensor G6 上直接运行，说明 Google 继续把个人化和多模态能力下沉到手机本地；官方页尚未给出完整 Agent 工具闭环。"}, {"url": "https://news.samsung.com/global/from-biosignals-to-health-insights-samsung-researchs-work-on-health-foundation-models", "topic": "三星手表端健康基础模型", "why": "HiMAE 在智能手表级 CPU 上报告低于 1 毫秒的输出，为连续、低功耗的设备端健康感知提供了比大模型演示更扎实的底层能力。"}, {"url": "https://about.fb.com/news/2026/08/the-future-is-for-everyone-free-ai-glasses-for-every-blind-and-visually-impaired-adult-vision-ireland-supports/", "topic": "Meta AI 眼镜规模化落地", "why": "Meta 向 Vision Ireland 支持的人群提供 1.5 万副 AI 眼镜，用于读标识、读文档、识别物体和语音问答；这是本周最明确的可穿戴 AI 规模化应用信号。"}, {"url": "https://blog.google/products-and-platforms/devices/pixel/pixel-11-magic-capture/", "topic": "Pixel 11 Magic Capture", "why": "单次拍摄分析接近 400 帧，并自动完成选帧、裁切、拉直和去模糊；它不是通用 Agent，但展示了手机端多阶段视觉处理已经能成为稳定产品功能。"}]};window.__TRENDING__={"items": [{"rank": 1, "repo": "PrimeIntellect-ai/prime-agent", "url": "https://github.com/PrimeIntellect-ai/prime-agent", "total": "16,581★", "week": "6,435", "desc": "面向长时间编码任务的自改进智能体；属于 PC Agent 热点，不代表端侧推理。"}, {"rank": 2, "repo": "stablyai/orca", "url": "https://github.com/stablyai/orca", "total": "46,613★", "week": "5,964", "desc": "用于调度多种编码智能体的桌面、移动端和 VPS 管理工具。"}, {"rank": 3, "repo": "earendil-works/pi", "url": "https://github.com/earendil-works/pi", "total": "91,525★", "week": "5,575", "desc": "整合统一模型接口、Agent 循环、终端界面和编码 CLI 的智能体工具箱。"}, {"rank": 4, "repo": "TencentCloud/TencentDB-Agent-Memory", "url": "https://github.com/TencentCloud/TencentDB-Agent-Memory", "total": "22,245★", "week": "3,637", "desc": "为团队级智能体集中管理会话、技能、知识库和代码图记忆资产。"}, {"rank": 5, "repo": "cactus-compute/needle", "url": "https://github.com/cactus-compute/needle", "total": "6,596★", "week": "2,950", "desc": "14MB 小模型，面向手机、穿戴、智能家居和机器人上的工具调用。"}, {"rank": 6, "repo": "unslothai/unsloth", "url": "https://github.com/unslothai/unsloth", "total": "72,604★", "week": "2,645", "desc": "在本地运行和训练主流大模型与扩散模型的界面和优化工具。"}, {"rank": 7, "repo": "MakazhanAlpamys/Soup", "url": "https://github.com/MakazhanAlpamys/Soup", "total": "2,001★", "week": "1,512", "desc": "通过分层流式加载，让 4GB 笔记本显存也能训练 8B 模型。"}, {"rank": 8, "repo": "NVIDIA-NeMo/Switchyard", "url": "https://github.com/NVIDIA-NeMo/Switchyard", "total": "1,694★", "week": "1,435", "desc": "在多个模型和服务商之间路由请求，用于评测成本与性能取舍。"}, {"rank": 9, "repo": "huangruiteng/loopx", "url": "https://github.com/huangruiteng/loopx", "total": "4,816★", "week": "1,130", "desc": "面向 Codex、Claude Code 等长任务智能体的持久化与治理控制平面。"}, {"rank": 10, "repo": "ggml-org/llama.cpp", "url": "https://github.com/ggml-org/llama.cpp", "total": "124,219★", "week": "1,094", "desc": "跨 CPU、GPU 和移动平台运行 GGUF 大模型的主流本地推理引擎。"}, {"rank": 11, "repo": "altic-dev/FluidVoice", "url": "https://github.com/altic-dev/FluidVoice", "total": "10,507★", "week": "1,065", "desc": "macOS 端侧语音转写与文本增强工具，并提供 Windows 预览版本。"}, {"rank": 12, "repo": "AlexsJones/llmfit", "url": "https://github.com/AlexsJones/llmfit", "total": "31,923★", "week": "610", "desc": "检测本机硬件并判断哪些本地模型和运行方式真正能够跑起来。"}, {"rank": 13, "repo": "cactus-compute/cactus", "url": "https://github.com/cactus-compute/cactus", "total": "5,783★", "week": "214", "desc": "为手机、穿戴、智能家居和机器人提供量化、内核与推理运行时。"}, {"rank": 14, "repo": "microsoft/BitNet", "url": "https://github.com/microsoft/BitNet", "total": "40,093★", "week": "183", "desc": "微软官方 1-bit 大模型推理框架，重点降低本地推理的算力与内存开销。"}, {"rank": 15, "repo": "ml-explore/mlx", "url": "https://github.com/ml-explore/mlx", "total": "27,997★", "week": "111", "desc": "面向 Apple Silicon 统一内存架构的本地机器学习计算框架。"}, {"rank": 16, "repo": "memovai/mimiclaw", "url": "https://github.com/memovai/mimiclaw", "total": "5,702★", "week": "106", "desc": "尝试在低成本芯片上直接运行硬件智能体执行框架，尚需核验闭环。"}, {"rank": 17, "repo": "orailnoor/cross-platform-llm-client", "url": "https://github.com/orailnoor/cross-platform-llm-client", "total": "1,009★", "week": "104", "desc": "在云端接口和设备端离线模型之间切换的跨平台大模型客户端。"}, {"rank": 18, "repo": "microsoft/intelligent-terminal", "url": "https://github.com/microsoft/intelligent-terminal", "total": "1,759★", "week": "99", "desc": "把智能体能力直接集成进 Windows Terminal 的微软实验性分支。"}, {"rank": 19, "repo": "microsoft/onnxruntime", "url": "https://github.com/microsoft/onnxruntime", "total": "21,395★", "week": "74", "desc": "覆盖 WebGPU、QNN、Core ML、XNNPACK 等后端的跨平台推理运行时。"}, {"rank": 20, "repo": "ROCm/FastFlowLM", "url": "https://github.com/ROCm/FastFlowLM", "total": "1,745★", "week": "58", "desc": "针对 AMD Ryzen AI NPU 优化的本地大模型运行时和部署工具。"}]};window.__COMMUNITY__={"window": {"start": "2026-08-11", "end": "2026-08-17"}, "coverage": [{"source": "X", "status": "limited", "note": "公开搜索能看到部分转述，但无法同时核验原帖正文与发布时间；本周不拿镜像或论坛转述冒充 X 原帖。"}, {"source": "Bluesky", "status": "limited", "note": "已检查公开搜索索引并尝试 Public AppView 搜索；搜索接口返回 403，未找到可同时核验本周日期和原帖正文的高价值条目。"}, {"source": "Reddit", "status": "found", "note": "已检查 r/LocalLLaMA、r/LocalLLM、r/MachineLearning 与 Android 相关结果；公开 JSON 受限，保留搜索索引可核验日期的本地 Agent 实测。"}, {"source": "Hacker News", "status": "found", "note": "通过 HN Algolia 按 8 月 11 至 17 日时间戳检索 on-device、local LLM、agent、LiteRT、ExecuTorch 等词，发现多条产品和实测。"}, {"source": "Mastodon", "status": "found", "note": "已检查 mastodon.social、fosstodon.org、hachyderm.io 的 #OnDeviceAI、#EdgeAI、#LocalLLM、#AIagents、#LiteRT 等公开时间线。"}, {"source": "GitHub Discussions", "status": "found", "note": "已检查 LiteRT、ExecuTorch、llama.cpp、ONNX Runtime 等项目的本周讨论，保留工具调用可靠性、轻量 Agent 和真机模型转换线索。"}, {"source": "Hugging Face", "status": "found", "note": "已检查本周新增 Models、Spaces 与相关讨论；保留带模型卡和真机数据的手机部署资源，复制模板和日期异常 Space 已排除。"}, {"source": "YouTube / Bilibili", "status": "no_match", "note": "已检索官方频道与端侧 AI、手机 Agent、ExecuTorch、LiteRT 关键词；本窗口未找到日期可核验且能回链一手项目的新增演示，B 站结果以旧课程搬运为主。"}, {"source": "厂商论坛", "status": "no_match", "note": "已检查 NVIDIA、Qualcomm、Arm 等公开论坛及搜索索引，本窗口没有同时满足日期、主题和直达页核验要求的新主题。"}], "items": [{"id": "mastodon-android-local-agent-bottlenecks", "source": "Mastodon", "author": "alexeyw@defcon.social", "url": "https://defcon.social/@alexeyw/117100586506178422", "published_at": "2026-08-15T16:59:08Z", "title_zh": "全本地 Android Agent 的现实瓶颈", "summary_zh": "讨论把 1B–4B、4bit 小模型放到 Android 上完全离线运行，并把问题集中到工具调用可靠性、多步规划和电池消耗，而不是只问模型能否加载。", "why_it_matters": "这正是手机端 Agent 的产品门槛：模型尺寸已经可以下放，真正阻碍体验的是连续行动的稳定性和功耗；该帖是问题清单，不是已完成产品。", "device_scope": "手机", "topic": "Agent / 产品瓶颈", "verification": "仅线索", "evidence_url": ""}, {"id": "hf-litert-qwen35-2b-phone", "source": "Hugging Face", "author": "litert-community", "url": "https://huggingface.co/litert-community/Qwen3.5-2B", "published_at": "2026-08-13T21:18:53Z", "title_zh": "Qwen3.5 2B 手机 LiteRT 模型包", "summary_zh": "新发布的 Qwen3.5-2B LiteRT-LM int8 包约 1.97GB；模型卡报告 iPhone 17 Pro GPU 解码 24.3 token/s、峰值内存 5.33GB，而 Pixel 8a 因内存不足无法创建引擎。", "why_it_matters": "它同时给出能跑与跑不动的手机数据，比只写“支持移动端”更有决策价值，也说明同一模型在 iOS 与中端 Android 上的可用性差距仍很大。", "device_scope": "手机", "topic": "模型 / LiteRT", "verification": "已回链原始材料", "evidence_url": ""}, {"id": "github-executorch-17-models", "source": "GitHub Discussions", "author": "john-rocky", "url": "https://github.com/pytorch/executorch/discussions/21824", "published_at": "2026-08-13T12:00:00Z", "title_zh": "17 个带验证卡的 ExecuTorch 模型", "summary_zh": "开发者提交了 17 个 XNNPACK .pte 转换模型，包含 14 个视觉模型和 3 个小语言模型；每个都附有 PyTorch 一致性、延迟、预处理和许可证说明。", "why_it_matters": "其中 LFM2.5-1.2B 的模型卡给出 iPhone 17 Pro 55–81 token/s，且转换脚本公开；这比单个 Demo 更接近可复用的手机模型资源库。", "device_scope": "手机", "topic": "ExecuTorch / 模型资源", "verification": "已回链原始材料", "evidence_url": "https://github.com/john-rocky/executorch-models"}, {"id": "hf-litert-lfm25-vl-phone", "source": "Hugging Face", "author": "litert-community", "url": "https://huggingface.co/litert-community/LFM2.5-VL-450M", "published_at": "2026-08-13T01:04:56Z", "title_zh": "LFM2.5-VL 450M 手机视觉模型", "summary_zh": "0.41GB 的 int4 视觉语言模型在 Pixel 8a GPU 上报告 33.1 token/s，但模型卡同时警告当前 LiteRT-LM 只会传入图像顶部四分之一。", "why_it_matters": "这是非常实用的部署风险：速度数字看起来漂亮，但位置、计数和枚举任务可能在没有报错的情况下直接答错，适合端侧 VLM 团队优先复现。", "device_scope": "手机", "topic": "多模态 / 部署风险", "verification": "已回链原始材料", "evidence_url": ""}, {"id": "hn-vocalcode-local-dictation", "source": "Hacker News", "author": "wudmaing00", "url": "https://news.ycombinator.com/item?id=49323797", "published_at": "2026-08-16T21:20:54Z", "title_zh": "VocalCode 本地语音编程输入", "summary_zh": "VocalCode 是 Windows 与 Apple Silicon Mac 的按键说话工具，语音在本机 CPU 解码，模型下载后可离线，并把文字直接输入编辑器、终端或代码 Agent。", "why_it_matters": "它不是自主 Agent，却是一个清晰的端侧 AI 产品：以很小的安装包解决 Agent 交互入口问题，并明确说明不上传音频，也不夸大未经验证的延迟。", "device_scope": "PC", "topic": "产品 / 语音", "verification": "已回链原始材料", "evidence_url": "https://vocalcode.app/"}, {"id": "github-llamacpp-tool-position-attention", "source": "GitHub Discussions", "author": "simongonzalezdc", "url": "https://github.com/ggml-org/llama.cpp/discussions/27165", "published_at": "2026-08-16T12:00:00Z", "title_zh": "Qwen3.8 工具列表位置会影响调用", "summary_zh": "开发者在 Strix Halo 上用 llama-server 做了多组对照：靠前且没有描述的工具经常被模型误判为不存在，把工具移到列表末尾或补一行描述后成功率恢复。", "why_it_matters": "这揭示了本地 Agent 常见的“模型不听话”可能其实是模板和工具排列问题；给出的 24 组运行与控制实验可以直接指导 Agent harness 调试。", "device_scope": "PC", "topic": "工具调用 / 可靠性", "verification": "已回链原始材料", "evidence_url": "https://github.com/KyaniteLabs/qwen38-27b-strix-halo"}, {"id": "reddit-small-local-coding-delegation", "source": "Reddit", "author": "r/LocalLLaMA", "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vq128f/making_small_local_models_actually_useful_for/", "published_at": "2026-08-16T12:00:00Z", "title_zh": "小模型接管编码 Agent 的原子任务", "summary_zh": "用户在 RTX 4060 8GB 上把本地 Ollama 小模型作为 MCP 子代理：云端模型只做高层规划，再把小范围补丁交给 2B–7B 本地模型完成。", "why_it_matters": "这条反馈没有假装小模型能独立理解整个代码库，而是用任务拆分避开上下文膨胀和工具 Schema 失败，代表更现实的混合 Agent 架构。", "device_scope": "PC", "topic": "Agent / 混合推理", "verification": "仅线索", "evidence_url": ""}, {"id": "hn-widen-local-text-to-sql", "source": "Hacker News", "author": "thedreammachine", "url": "https://news.ycombinator.com/item?id=49316394", "published_at": "2026-08-16T02:35:51Z", "title_zh": "Widen 本地 Text-to-SQL 数据库工具", "summary_zh": "Widen 是原生 macOS Postgres GUI，可选用 Apple 设备端 Foundation Model 把自然语言转成 SQL；生成结果必须先展示给用户确认，不会自动执行写操作。", "why_it_matters": "项目主动声明“不是自主数据库 Agent”，并公开失败的发布门与安全约束；这种诚实边界比把所有带工具的应用都包装成 Agent 更值得参考。", "device_scope": "PC", "topic": "产品 / 本地模型", "verification": "已回链原始材料", "evidence_url": "https://github.com/betocmn/widen"}, {"id": "github-hax-local-coding-agent", "source": "GitHub Discussions", "author": "OleksandrChekhovskyi", "url": "https://github.com/ggml-org/llama.cpp/discussions/27153", "published_at": "2026-08-15T12:00:00Z", "title_zh": "hax 极简本地编码 Agent", "summary_zh": "hax 是用 C 编写的终端编码 Agent，内置 llama.cpp provider，可自动发现模型、上下文和图像能力；框架本身只占几 MB 内存且不含遥测。", "why_it_matters": "它把更多内存留给本地模型，适合资源紧张的 PC；目前仍是新项目展示，真实任务质量和长期维护情况需要继续观察。", "device_scope": "PC", "topic": "Agent / 轻量框架", "verification": "已回链原始材料", "evidence_url": "https://github.com/OleksandrChekhovskyi/hax"}, {"id": "hn-muse-glimmer-executorch", "source": "Hacker News", "author": "andrewstetsenko", "url": "https://news.ycombinator.com/item?id=49299165", "published_at": "2026-08-14T14:27:07Z", "title_zh": "Muse Glimmer 端侧 Agent 接入 ExecuTorch", "summary_zh": "PyTorch 官方介绍 30B 开放权重 Muse Glimmer，并为 NVIDIA GPU 与 Apple Silicon Mac 增加 ExecuTorch 端到端支持，目标是本地 Agent 工作流和低延迟生成。", "why_it_matters": "这是本周少见的“模型 + 运行时 + Agent 用途”同时落地的 PC 端材料；但 30B 仍要求较强本地硬件，距离普通手机部署还有明显差距。", "device_scope": "PC", "topic": "Agent / ExecuTorch", "verification": "已回链原始材料", "evidence_url": "https://pytorch.org/blog/fast-ondevice-agentic-ai-with-executorch/"}, {"id": "hn-surfil-ondevice-agent-control-plane", "source": "Hacker News", "author": "Samaradam", "url": "https://news.ycombinator.com/item?id=49289133", "published_at": "2026-08-13T17:24:30Z", "title_zh": "Surfil 本地 Agent 控制平面", "summary_zh": "Surfil 运行在 Claude Code、Cursor、Codex 和 Copilot 旁边，通过 MCP 拦截工具调用，提供本地加密记忆、风险阻断、可回放观测和离线可验证回执。", "why_it_matters": "它不是新模型，而是 PC 端 Agent 的安全与状态基础设施产品；“源代码不离机、工具调用先过策略门”比单纯本地推理更接近企业可部署问题。", "device_scope": "PC", "topic": "Agent Infra / 安全", "verification": "已回链原始材料", "evidence_url": "https://surfil.com/"}, {"id": "reddit-pi-agent-4070ti-model-choice", "source": "Reddit", "author": "r/LocalLLM", "url": "https://www.reddit.com/r/LocalLLM/comments/1vm7mpc/best_local_model_for_agentic_coding_pi_agent_on_a/", "published_at": "2026-08-12T12:00:00Z", "title_zh": "4070 Ti 上的本地编码 Agent 取舍", "summary_zh": "用户希望在 12GB 显存的 RTX 4070 Ti 上为 Pi Agent 保留 64K–128K 上下文和 30–40 token/s，讨论重点落在模型大小、量化、KV Cache 与运行时选择。", "why_it_matters": "它给出了消费级 PC 部署 Agent 时真实的资源边界：模型能加载并不代表长上下文和连续工具调用仍可用，可作为模型选型问题清单。", "device_scope": "PC", "topic": "Agent / 本地部署", "verification": "仅线索", "evidence_url": ""}, {"id": "mastodon-raspberrypi-litert-guide", "source": "Mastodon", "author": "alvinashcraft@hachyderm.io", "url": "https://hachyderm.io/@alvinashcraft/117087949377595166", "published_at": "2026-08-13T11:25:21Z", "title_zh": "树莓派 LiteRT 入门资源", "summary_zh": "社区回链 Raspberry Pi 官方的 LiteRT 入门文章，面向树莓派上的本地模型部署与边缘应用，不依赖云端推理。", "why_it_matters": "它不是 Agent 项目，但补足了手机和 PC 之外的低成本端侧入口；适合作为后续把模型、感知和工具闭环放到小型设备上的基础材料。", "device_scope": "其他端侧", "topic": "LiteRT / 树莓派", "verification": "已回链原始材料", "evidence_url": "https://www.raspberrypi.com/news/get-started-with-litert-on-raspberry-pi/"}]};window.__WEEKS__=[{"label": "2026-08-15", "title": "08-15~08-21", "range": {"start": "2026-08-15", "end": "2026-08-21"}, "current": true, "href": "../index.html"}, {"label": "2026-08-12", "title": "08-12~08-17", "range": {"start": "2026-08-12", "end": "2026-08-17"}, "current": false, "href": "../week/2026-08-12.html"}, {"label": "2026-08-07", "title": "08-07~08-12", "range": {"start": "2026-08-07", "end": "2026-08-12"}, "current": false, "href": "../week/2026-08-07.html"}, {"label": "2026-08-01", "title": "08-01~08-07", "range": {"start": "2026-08-01", "end": "2026-08-07"}, "current": false, "href": "../week/2026-08-01.html"}, {"label": "2026-07-31", "title": "07-31~08-03", "range": {"start": "2026-07-31", "end": "2026-08-03"}, "current": false, "href": "../week/2026-07-31.html"}, {"label": "2026-07-25", "title": "07-25~07-30", "range": {"start": "2026-07-25", "end": "2026-07-30"}, "current": false, "href": "../week/2026-07-25.html"}, {"label": "2026-07-17", "title": "07-17~07-24", "range": {"start": "2026-07-17", "end": "2026-07-24"}, "current": false, "href": "../week/2026-07-17.html"}, {"label": "2026-07-10", "title": "07-10~07-17", "range": {"start": "2026-07-10", "end": "2026-07-17"}, "current": false, "href": "../week/2026-07-10.html"}, {"label": "2026-07-02", "title": "07-02~07-09", "range": {"start": "2026-07-02", "end": "2026-07-09"}, "current": false, "href": "../week/2026-07-02.html"}, {"label": "2026-06-26", "title": "06-26~07-03", "range": {"start": "2026-06-26", "end": "2026-07-03"}, "current": false, "href": "../week/2026-06-26.html"}];window.__WEEK_LABEL__="2026-08-12";window.__WEEKS_BASE__="../";</script>
+    <script>
+    let ALL=[], TRENDING_CACHE=[], COMMUNITY_CACHE=[], COMMUNITY_COVERAGE=[], ACTIVE=new Set(), Q="", SORT="score", ACTIVE_SOURCE="", ACTIVE_SCOPE="", COMMUNITY_SOURCE="", COMMUNITY_SCOPE="", SHOW_ALL_RECOMMENDED=false, SHOW_ALL_COMMUNITY=false, SHOW_ALL_TRENDING=false, ADVANCED_OPEN=false, LAST_FOCUS=null;
+    const REC_PREVIEW=6;
+    const WEEKLY_PREVIEW=3;
+    const TRENDING_PREVIEW=8;
+    const COMMUNITY_PREVIEW=8;
+    const TIER=[
+      ["官方动态","--amber","厂商与模型实验室的一手发布"],
+      ["开源大项目","--green","通过白名单审计的重要项目更新"],
+      ["公司项目","--blue","有机构一手证据的公司研究"],
+      ["学校顶会","--purple","高校正式顶会与顶刊工作"],
+      ["学校预印本","--slate","本周最新高校预印本"]
+    ];
+    const EDGE_AGENT_PRIORITY={"手机":0,"PC":1,"其他端侧":2,"非端侧Agent":3};
+    const EDGE_AGENT_LABELS={"手机":"手机端 Agent","PC":"PC 端 Agent","其他端侧":"其他端侧 Agent"};
+    const SCOPE_FILTERS=[["","全部设备"],["手机","手机端 Agent"],["PC","PC 端 Agent"],["其他端侧","其他端侧 Agent"],["非端侧Agent","其他技术"]];
+    const PRIMARY_DIRECTIONS=["方向:端侧agent","方向:高效推理","方向:编译部署","方向:量化","方向:多模态","方向:推理框架","方向:安全隐私","方向:云端serving"];
+    const edgeAgentPriority=p=>EDGE_AGENT_PRIORITY[p.edge_agent_scope]??3;
+    const recommendationDevicePriority=p=>{
+      const edge=edgeAgentPriority(p);
+      if(edge<3)return edge;
+      const tags=p.tags||[];
+      if(tags.includes("硬件:手机"))return 3;
+      const text=`${p.title_zh||''} ${p.title||''} ${p.abstract||''} ${tags.join(' ')}`;
+      if(/PC|笔记本|电脑|桌面|macOS|Windows|Apple[- ]Silicon|RTX/i.test(text))return 4;
+      return 5;
+    };
+    const isRecommended=p=>p.recommendation==='推荐';
+    const hasContent=v=>v&&v!=='未报告';
+    const dim=t=>t.split(":")[0], val=t=>t.split(":")[1]||t;
+
+    async function loadPapers(){
+      let data=window.__PAPERS__||null;
+      if(!data){
+        const res=await fetch("/api/papers");
+        if(!res.ok)throw new Error("HTTP "+res.status);
+        data=await res.json();
+      }
+      ALL=data.papers||[];
+      renderRadar();
+      renderHeaderStats();
+      attachSpy();
+    }
+    async function loadWeekly(){
+      let w=window.__WEEKLY__||null;
+      if(!w){
+        const wr=await fetch("/api/weekly");
+        if(!wr.ok)throw new Error("HTTP "+wr.status);
+        w=await wr.json();
+      }
+      const el=document.querySelector("#weekly");
+      if(!w||!w.highlights||!w.highlights.length){el.hidden=true;return;}
+      el.hidden=false;
+      const rows=(items,start)=>items.map((h,i)=>{
+        const a=h.url
+          ?`<a class="weekly-topic" href="${escapeAttr(h.url)}" target="_blank" rel="noopener">${escapeHtml(h.topic)}</a>`
+          :`<a class="weekly-topic" href="../paper/${escapeAttr(h.paper_id)}.html">${escapeHtml(h.topic)}</a>`;
+        return `<div class="weekly-hl"><span class="weekly-num">${String(start+i+1).padStart(2,'0')}</span>${a}<span class="weekly-why">${escapeHtml(h.why)}</span></div>`;
+      }).join("");
+      const first=w.highlights.slice(0,WEEKLY_PREVIEW);
+      const rest=w.highlights.slice(WEEKLY_PREVIEW);
+      el.innerHTML=`<header class="section-head"><div><p class="eyebrow">本周编辑判断</p><h2>本周判断</h2></div><p class="section-note">编辑综述负责说明变化，外部动态负责提供可核验入口；两者都不替代下方完整资料库。</p></header>`+
+        `<div class="weekly-grid"><article class="weekly-overview"><div class="weekly-label">本周一句话与判断</div><p class="weekly-ov">${escapeHtml(w.overview||'')}</p></article><div class="weekly-stories"><h3>外部动态</h3>`+
+        rows(first,0)+(rest.length?`<details class="weekly-more"><summary>展开其余 ${rest.length} 条热点 ↓</summary>${rows(rest,WEEKLY_PREVIEW)}</details>`:"")+
+        `</div></div>`;
+    }
+    function range(){
+      const ws=window.__WEEKS__||[],mine=window.__WEEK_LABEL__||null;
+      const weekMeta=mine?ws.find(w=>w.label===mine):ws.find(w=>w.current);
+      if(weekMeta&&weekMeta.range&&weekMeta.range.start&&weekMeta.range.end){
+        return `${weekMeta.range.start.slice(5)} → ${weekMeta.range.end.slice(5)}`;
+      }
+      const d=ALL.map(p=>p.date).filter(Boolean).sort();
+      return d.length?`${d[0].slice(5)} → ${d[d.length-1].slice(5)}`:'';
+    }
+    function renderHeaderStats(){
+      const rec=ALL.filter(isRecommended).length;
+      const direct=ALL.filter(p=>edgeAgentPriority(p)<3).length;
+      const sources=new Set(ALL.map(p=>p.source_tier).filter(Boolean)).size;
+      document.querySelector("#summary").innerHTML=
+        `<span><b>${ALL.length}</b><small>本周收录</small></span>`+
+        `<span><b>${rec}</b><small>优先推荐</small></span>`+
+        `<span><b>${direct}</b><small>真正端侧 Agent</small></span>`+
+        `<span><b>${escapeHtml(range())}</b><small>${sources} 类正式来源</small></span>`;
+    }
+
+    function allTags(){
+      const s=new Set();
+      ALL.forEach(p=>(p.tags||[]).forEach(t=>s.add(t)));
+      return [...s];
+    }
+    function tagCounts(){
+      const counts={};
+      ALL.forEach(p=>(p.tags||[]).forEach(t=>counts[t]=(counts[t]||0)+1));
+      return counts;
+    }
+    function filterButton(label,attrs,active,count){
+      return `<button type="button" class="ftag${active?' active':''}" ${attrs} aria-pressed="${active?'true':'false'}">${escapeHtml(label)}${count===undefined?'':` · ${count}`}</button>`;
+    }
+    function renderSourceMap(){
+      const el=document.querySelector("#source-map");
+      el.innerHTML=TIER.map(([tier,color,note])=>{
+        const count=ALL.filter(p=>p.source_tier===tier).length;
+        const active=ACTIVE_SOURCE===tier;
+        return `<button type="button" class="source-card${active?' active':''}" data-source="${escapeAttr(tier)}" aria-pressed="${active?'true':'false'}" style="--source-color:var(${color})"><b>${count}</b><span>${escapeHtml(tier)}</span><small>${escapeHtml(note)}</small></button>`;
+      }).join("");
+    }
+    function renderFilter(){
+      const counts=tagCounts(),tags=allTags();
+      const scopeCounts={};
+      ALL.forEach(p=>scopeCounts[p.edge_agent_scope]=(scopeCounts[p.edge_agent_scope]||0)+1);
+      const device=SCOPE_FILTERS.map(([scope,label])=>filterButton(
+        label,
+        `data-scope="${escapeAttr(scope)}" data-dim="设备"`,
+        ACTIVE_SCOPE===scope,
+        scope?scopeCounts[scope]||0:ALL.length
+      )).join("");
+      const sources=TIER.map(([tier])=>filterButton(
+        tier,
+        `data-source="${escapeAttr(tier)}" data-dim="来源"`,
+        ACTIVE_SOURCE===tier,
+        ALL.filter(p=>p.source_tier===tier).length
+      )).join("");
+      const primaryDirection=PRIMARY_DIRECTIONS.filter(t=>tags.includes(t)).map(t=>filterButton(
+        val(t),
+        `data-tag="${escapeAttr(t)}" data-dim="方向"`,
+        ACTIVE.has(t),
+        counts[t]
+      )).join("");
+      document.querySelector("#primary-filter").innerHTML=
+        `<div class="dim-group"><span class="dim-label">设备</span>${device}</div>`+
+        `<div class="dim-group"><span class="dim-label">来源</span>${sources}</div>`+
+        (primaryDirection?`<div class="dim-group"><span class="dim-label">方向</span>${primaryDirection}</div>`:"");
+
+      const byDim={};
+      tags.filter(t=>!PRIMARY_DIRECTIONS.includes(t)).forEach(t=>{
+        const d=dim(t);(byDim[d]=byDim[d]||[]).push(t);
+      });
+      const advanced=["方向","应用","硬件","模型"].filter(d=>byDim[d]).map(d=>{
+        const buttons=byDim[d].sort((a,b)=>(counts[b]||0)-(counts[a]||0)||a.localeCompare(b)).map(t=>filterButton(
+          val(t),
+          `data-tag="${escapeAttr(t)}" data-dim="${escapeAttr(d)}"`,
+          ACTIVE.has(t),
+          counts[t]
+        )).join("");
+        return `<div class="dim-group"><span class="dim-label">${escapeHtml(d)}</span>${buttons}</div>`;
+      }).join("");
+      const advancedEl=document.querySelector("#advanced-filter");
+      advancedEl.innerHTML=advanced;
+      advancedEl.hidden=!ADVANCED_OPEN;
+      const toggle=document.querySelector("#advanced-toggle");
+      toggle.setAttribute("aria-expanded",ADVANCED_OPEN?"true":"false");
+      const advancedSelected=[...ACTIVE].filter(t=>!PRIMARY_DIRECTIONS.includes(t)).length;
+      toggle.textContent=ADVANCED_OPEN?"收起更多筛选 ↑":`更多筛选${advancedSelected?` · 已选 ${advancedSelected}`:''} ↓`;
+      document.querySelector("#clear-filters").disabled=!hasFilters();
+    }
+    function hasFilters(){return Boolean(ACTIVE.size||ACTIVE_SOURCE||ACTIVE_SCOPE||Q);}
+
+    function visible(){
+      let l=ALL.filter(p=>
+        (ACTIVE_SOURCE===""||p.source_tier===ACTIVE_SOURCE)&&
+        (ACTIVE_SCOPE===""||p.edge_agent_scope===ACTIVE_SCOPE)&&
+        (ACTIVE.size===0||(p.tags||[]).some(t=>ACTIVE.has(t)))
+      );
+      if(Q){
+        const q=Q.toLowerCase();
+        l=l.filter(p=>((p.title_zh||'')+(p.title||'')+(p.abstract||'')+(p.tags||[]).join()+(p.vendors||'')).toLowerCase().includes(q));
+      }
+      l.sort((a,b)=>SORT==="score"?(b.score||0)-(a.score||0)||(b.date||'').localeCompare(a.date||''):(b.date||'').localeCompare(a.date||'')||(b.score||0)-(a.score||0));
+      return l;
+    }
+    function sigBars(s){
+      const n=Math.min(5,Math.max(1,Math.ceil((s||0)/4))),hi=(s||0)>=14;
+      let out="";
+      for(let i=0;i<5;i++)out+=`<i class="${i<n?'on':''} ${hi?'hi':''}"></i>`;
+      return out;
+    }
+
+    function renderRecommendations(){
+      const el=document.querySelector("#recommendations");
+      if(!ALL.length){el.hidden=true;return;}
+      el.hidden=false;
+      const recommended=ALL.filter(isRecommended).sort((a,b)=>{
+        const edgeDiff=recommendationDevicePriority(a)-recommendationDevicePriority(b);
+        const tierDiff=TIER.findIndex(([t])=>t===a.source_tier)-TIER.findIndex(([t])=>t===b.source_tier);
+        return edgeDiff||tierDiff||(b.score||0)-(a.score||0)||(b.date||'').localeCompare(a.date||'');
+      });
+      const countLabel=`${recommended.length}`;
+      const previewLabel=SHOW_ALL_RECOMMENDED?`已展开 ${recommended.length} 条`:`首屏精选 ${Math.min(recommended.length,REC_PREVIEW)} 条`;
+      const shown=SHOW_ALL_RECOMMENDED?recommended:recommended.slice(0,REC_PREVIEW);
+      const items=shown.map((p,i)=>{
+        const titleZh=(p.title_zh||'').trim()||p.title;
+        const summary=(p.abstract||'').trim()||'暂无中文摘要';
+        const tags=(p.tags||[]).map(t=>`<span class="rec-tag">${escapeHtml(val(t))}</span>`).join('');
+        const reason=(p.recommendation_reason||'').trim()||'该条目由 Agent 选为本周优先阅读';
+        const edgeScope=EDGE_AGENT_LABELS[p.edge_agent_scope]||'';
+        return `<a class="rec-item" href="../paper/${escapeAttr(p.id)}.html" onclick="openDetail('${escapeAttr(p.id)}',this);return false;">
+          <span class="rec-rank">${String(i+1).padStart(2,'0')}</span>
+          <span class="rec-main"><span class="rec-meta">${edgeScope?`<span class="rec-edge-scope">${escapeHtml(edgeScope)}</span>`:''}<span class="rec-tier">${escapeHtml(p.source_tier||'')}</span><span>${escapeHtml(p.date||'')}</span><span class="rec-score">${p.score}/20</span>${p.open_source?'<span class="open">OSS</span>':''}</span><span class="rec-title">${escapeHtml(titleZh)}</span><span class="rec-summary">${escapeHtml(summary)}</span><span class="rec-tags"><b>关键词</b>${tags}</span></span>
+          <span class="rec-editorial"><span class="rec-why"><b>值得优先看：</b>${escapeHtml(reason)}</span><span class="rec-original">原标题：${escapeHtml(p.title)}</span></span>
+        </a>`;
+      }).join('');
+      el.innerHTML=`<header class="rec-head"><div><p class="eyebrow">Agent 精选 · 推荐优先</p><h2>Agent 本周推荐 <span class="rec-count">· ${previewLabel} · 共推荐 ${countLabel} 条</span></h2></div><p class="rec-note">完整资料库包含全部 ${ALL.length} 条；推荐只是编辑视图，不会把任何已推荐条目从完整收录中移除。</p></header>`+
+        (items?`<div class="rec-list">${items}</div>`:'<div class="rec-empty">本周没有已完成策展的推荐，完整资料库仍保留全部合格内容。</div>')+
+        (recommended.length>REC_PREVIEW?`<button type="button" class="rec-more" id="rec-toggle">${SHOW_ALL_RECOMMENDED?'收起推荐':'查看其余 '+(recommended.length-REC_PREVIEW)+' 条'}</button>`:'');
+    }
+
+    function renderRadar(){
+      renderSourceMap();
+      renderFilter();
+      renderRecommendations();
+      renderPapers();
+      const matching=visible();
+      const recCount=matching.filter(isRecommended).length;
+      document.querySelector("#all-summary").textContent=`显示 ${matching.length} / ${ALL.length} 条 · 其中推荐 ${recCount} 条 · 完整资料库包含全部正式收录`;
+    }
+    function renderRow(p){
+      const hi=(p.score||0)>=14,rec=isRecommended(p);
+      const tags=(p.tags||[]).map(t=>`<span class="tag" data-dim="${escapeAttr(dim(t))}">${escapeHtml(val(t))}</span>`).join("");
+      const displayTitle=(p.title_zh||'').trim()||p.title;
+      const original=p.title_zh?`<span class="rec-original">原标题：${escapeHtml(p.title)}</span>`:"";
+      return `<a class="signal-row${rec?' rec':''}" href="../paper/${escapeAttr(p.id)}.html" onclick="openDetail('${escapeAttr(p.id)}',this);return false;">
+        <span class="sig"><span class="sig-n${hi?' hi':''}">${p.score}</span><span class="sig-bars">${sigBars(p.score)}</span></span>
+        <span class="row-body"><span class="row-meta"><span class="tier">${escapeHtml(p.source_tier||'')}</span>${rec?'<span class="rec-badge">推荐</span>':''}${p.open_source?'<span class="open">OSS</span>':''}<span class="date">${escapeHtml(p.date||'')}</span></span><span class="ttl">${escapeHtml(displayTitle)}</span>${original}<span class="abs">${escapeHtml(p.abstract||'')}</span>${tags?`<span class="tags">${tags}</span>`:''}</span>
+      </a>`;
+    }
+    function renderPapers(){
+      const l=visible(),el=document.querySelector("#papers");
+      if(!l.length){
+        el.innerHTML=`<div class="empty">当前组合筛选没有结果。<button type="button" onclick="clearFilters()">清除筛选</button></div>`;
+        renderTabs({});
+        return;
+      }
+      const groups={};
+      l.forEach(p=>(groups[p.source_tier]=groups[p.source_tier]||[]).push(p));
+      const COLLAPSE=25;
+      el.innerHTML=TIER.filter(([tier])=>groups[tier]).map(([tier,color])=>{
+        const collapsed=groups[tier].length>COLLAPSE;
+        return `<section class="band${collapsed?' collapsed':''}" id="band-${escapeAttr(tier)}"><button type="button" class="band-head" aria-expanded="${collapsed?'false':'true'}" onclick="toggleBand(this)"><span class="fold">▾</span><span class="band-bar" style="background:var(${color})"></span><span class="band-title">${escapeHtml(tier)}</span><span class="band-count">${groups[tier].length}</span>${collapsed?'<span class="band-meta">点击展开</span>':''}</button><div class="band-body">${groups[tier].map(renderRow).join("")}</div></section>`;
+      }).join("");
+      renderTabs(groups);
+      attachSpy();
+    }
+    function toggleBand(button){
+      const band=button.closest(".band");
+      band.classList.toggle("collapsed");
+      button.setAttribute("aria-expanded",band.classList.contains("collapsed")?"false":"true");
+    }
+    function renderTabs(groups){
+      const tabs=TIER.filter(([tier])=>groups[tier]).map(([tier])=>`<button type="button" class="tab" data-target="band-${escapeAttr(tier)}">${escapeHtml(tier)}<b>${groups[tier].length}</b></button>`);
+      document.querySelector("#tabs").innerHTML=tabs.join("");
+    }
+
+    function openDetail(id,trigger){
+      const p=ALL.find(x=>x.id===id),overlay=document.querySelector("#overlay");
+      LAST_FOCUS=trigger||document.activeElement;
+      if(!p){overlay.classList.add("hidden");return;}
+      const tags=(p.tags||[]).map(t=>`<span class="tag" data-dim="${escapeAttr(dim(t))}">${escapeHtml(val(t))}</span>`).join("");
+      const title=(p.title_zh||'').trim()||p.title;
+      overlay.innerHTML=`<article class="card" role="dialog" aria-modal="true" aria-labelledby="detail-title"><button type="button" class="card-close" aria-label="关闭详情" onclick="closeDetail()">esc · 关闭</button><div class="card-meta"><span class="tier">${escapeHtml(p.source_tier||'')}</span>${p.open_source?'<span class="open">OSS</span>':''}<span class="date">${escapeHtml(p.date||'')}</span><span>score ${p.score}</span><span>(${p.score_relevance||0}+${p.score_contribution||0})</span></div><h2 id="detail-title">${escapeHtml(title)}</h2>${p.title_zh?`<div class="rec-original">原标题：${escapeHtml(p.title)}</div>`:''}${tags?`<div class="tags">${tags}</div>`:''}<div class="abs">${escapeHtml(p.abstract||'')}</div>${hasContent(p.effects)?`<div class="field"><b>有什么结果</b>${escapeHtml(p.effects)}</div>`:''}${hasContent(p.mechanism)?`<div class="field"><b>怎么做到</b>${escapeHtml(p.mechanism)}</div>`:''}${p.score_reason?`<div class="field"><b>评分依据</b>${escapeHtml(p.score_reason)}</div>`:''}${p.edge_agent_evidence?`<div class="field"><b>设备端闭环</b>${escapeHtml(p.edge_agent_evidence)}</div>`:''}${p.authors?`<div class="field"><b>作者</b>${escapeHtml(p.authors)}</div>`:''}${p.vendors?`<div class="field"><b>机构</b>${escapeHtml(p.vendors)}</div>`:''}${p.venue?`<div class="field"><b>来源</b>${escapeHtml(p.venue)}</div>`:''}${p.paper_url?`<a class="src" href="${escapeAttr(p.paper_url)}" target="_blank" rel="noopener">查看原文 ↗ ${escapeHtml(p.paper_url.replace(/^https?:\/\//,'').split('/')[0])}</a>`:''}</article>`;
+      overlay.classList.remove("hidden");
+      document.body.style.overflow="hidden";
+      overlay.querySelector(".card-close").focus();
+    }
+    function closeDetail(){
+      const overlay=document.querySelector("#overlay");
+      overlay.classList.add("hidden");overlay.innerHTML="";document.body.style.overflow="";
+      if(LAST_FOCUS&&LAST_FOCUS.focus)LAST_FOCUS.focus();
+      LAST_FOCUS=null;
+    }
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!document.querySelector("#overlay").classList.contains("hidden"))closeDetail();});
+
+    const COMMUNITY_SCOPE_ORDER=["手机","PC","其他端侧","通用技术"];
+    const COMMUNITY_COVERAGE_LABELS={found:"已覆盖",no_match:"已检索 · 无合格线索",limited:"公开检索受限",unavailable:"暂不可用"};
+    function visibleCommunity(){
+      return COMMUNITY_CACHE.filter(item=>
+        (COMMUNITY_SOURCE===""||item.source===COMMUNITY_SOURCE)&&
+        (COMMUNITY_SCOPE===""||item.device_scope===COMMUNITY_SCOPE)
+      ).sort((a,b)=>COMMUNITY_SCOPE_ORDER.indexOf(a.device_scope)-COMMUNITY_SCOPE_ORDER.indexOf(b.device_scope)||(b.published_at||'').localeCompare(a.published_at||''));
+    }
+    function renderCommunityFilters(){
+      const sources=[...new Set(COMMUNITY_COVERAGE.map(item=>item.source).concat(COMMUNITY_CACHE.map(item=>item.source)))];
+      const sourceOptions=[["","全部来源"],...sources.map(source=>[source,source])];
+      document.querySelector("#community-source-filter").innerHTML='<span class="community-filter-label">来源</span>'+sourceOptions.map(([source,label])=>`<button type="button" data-community-source="${escapeAttr(source)}" class="${COMMUNITY_SOURCE===source?'active':''}">${escapeHtml(label)}</button>`).join("");
+      const scopes=COMMUNITY_SCOPE_ORDER.filter(scope=>COMMUNITY_CACHE.some(item=>item.device_scope===scope));
+      const scopeOptions=[["","全部设备"],...scopes.map(scope=>[scope,scope])];
+      document.querySelector("#community-scope-filter").innerHTML='<span class="community-filter-label">设备</span>'+scopeOptions.map(([scope,label])=>`<button type="button" data-community-scope="${escapeAttr(scope)}" class="${COMMUNITY_SCOPE===scope?'active':''}">${escapeHtml(label)}</button>`).join("");
+    }
+    function renderCommunityCoverage(){
+      const el=document.querySelector("#community-coverage");
+      if(!COMMUNITY_COVERAGE.length){el.innerHTML='<div class="coverage-item"><span class="coverage-note">本周未保存社区来源覆盖记录。</span></div>';return;}
+      el.innerHTML=COMMUNITY_COVERAGE.map(item=>`<div class="coverage-item ${escapeAttr(item.status||'')}"><div class="coverage-top"><span class="coverage-source">${escapeHtml(item.source)}</span><span class="coverage-status">${escapeHtml(COMMUNITY_COVERAGE_LABELS[item.status]||item.status)}</span></div><span class="coverage-note" title="${escapeAttr(item.note||'')}">${escapeHtml(item.note||'')}</span></div>`).join("");
+    }
+    function renderCommunityItem(item){
+      const day=String(item.published_at||'').slice(0,10);
+      const verified=item.verification==='已回链原始材料'||item.verification==='已进入正式周报';
+      return `<article class="community-item"><div class="community-origin"><span class="community-source">${escapeHtml(item.source)}</span><time class="community-date" datetime="${escapeAttr(item.published_at)}">${escapeHtml(day)}</time><span class="community-scope">${escapeHtml(item.device_scope)}</span></div><div class="community-main"><div class="community-meta"><span>${escapeHtml(item.author)}</span><span class="community-topic">${escapeHtml(item.topic)}</span></div><a class="community-title" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.title_zh)} ↗</a><p class="community-summary">${escapeHtml(item.summary_zh)}</p></div><div class="community-judgement"><p class="community-why"><b>为什么值得关注</b>${escapeHtml(item.why_it_matters)}</p><div class="community-links"><span class="verification ${verified?'verified':''}">${escapeHtml(item.verification)}</span><a class="community-link" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">查看讨论</a>${item.evidence_url?`<a class="community-link" href="${escapeAttr(item.evidence_url)}" target="_blank" rel="noopener">一手材料</a>`:''}</div></div></article>`;
+    }
+    function renderCommunity(){
+      renderCommunityFilters();renderCommunityCoverage();
+      const list=visibleCommunity(),el=document.querySelector("#community-list");
+      if(!list.length){el.innerHTML='<div class="empty">当前条件下没有可展示的社区线索；上方覆盖状态仍保留本周检索结果。</div>';return;}
+      const shown=SHOW_ALL_COMMUNITY?list:list.slice(0,COMMUNITY_PREVIEW);
+      el.innerHTML=shown.map(renderCommunityItem).join("")+(list.length>COMMUNITY_PREVIEW?`<button type="button" class="community-more" id="community-toggle">${SHOW_ALL_COMMUNITY?'收起社区线索':'展开全部 '+list.length+' 条社区线索'}</button>`:'');
+    }
+    async function loadCommunity(){
+      let data=window.__COMMUNITY__||null;
+      if(!data){try{const response=await fetch("/api/community");if(!response.ok)throw new Error("HTTP "+response.status);data=await response.json();}catch(error){document.querySelector("#community-list").innerHTML='<div class="empty">社区雷达暂时读取失败；正式周报不受影响。</div>';return;}}
+      COMMUNITY_CACHE=data.items||[];COMMUNITY_COVERAGE=data.coverage||[];
+      renderCommunity();
+    }
+
+    function renderTrendingRow(item){
+      return `<a class="trending-row" href="${escapeAttr(item.url)}" target="_blank" rel="noopener"><span class="trending-rank">${String(item.rank||'').padStart(2,'0')}</span><span class="trending-repo">${escapeHtml(item.repo)}</span><span class="trending-desc">${escapeHtml(item.desc||'')}</span><span class="trending-meta">+${escapeHtml(item.week||'0')}/wk · ${escapeHtml(item.total||'')}</span></a>`;
+    }
+    function renderTrending(list){
+      const el=document.querySelector("#discovery-list");
+      if(!list||!list.length){el.innerHTML='<div class="empty">本周没有可展示的 GitHub 发现线索。</div>';return;}
+      const shown=SHOW_ALL_TRENDING?list:list.slice(0,TRENDING_PREVIEW);
+      el.innerHTML=shown.map(renderTrendingRow).join("")+
+        (list.length>TRENDING_PREVIEW?`<button type="button" class="trending-more" id="trending-toggle">${SHOW_ALL_TRENDING?'收起线索':'展开全部 '+list.length+' 条线索'}</button>`:"");
+    }
+    async function loadTrending(){
+      let data=window.__TRENDING__||null;
+      if(!data){try{const response=await fetch("/api/trending");data=await response.json();}catch(error){document.querySelector("#discovery-list").innerHTML='<div class="empty">GitHub 线索暂时读取失败。</div>';return;}}
+      TRENDING_CACHE=data.items||data||[];
+      renderTrending(TRENDING_CACHE);
+    }
+
+    function handleFilterClick(event){
+      const button=event.target.closest(".ftag");
+      if(!button)return;
+      if(button.dataset.scope!==undefined){ACTIVE_SCOPE=button.dataset.scope===ACTIVE_SCOPE?"":button.dataset.scope;}
+      if(button.dataset.source!==undefined){ACTIVE_SOURCE=button.dataset.source===ACTIVE_SOURCE?"":button.dataset.source;}
+      if(button.dataset.tag){const tag=button.dataset.tag;ACTIVE.has(tag)?ACTIVE.delete(tag):ACTIVE.add(tag);}
+      renderRadar();
+    }
+    function clearFilters(){
+      ACTIVE.clear();ACTIVE_SOURCE="";ACTIVE_SCOPE="";Q="";
+      document.querySelector("#search").value="";
+      renderRadar();
+    }
+    function showLoadError(error){
+      document.querySelector("#summary").innerHTML='<span><b>—</b><small>读取失败</small></span>';
+      document.querySelector("#papers").innerHTML=`<div class="empty">本周资料读取失败：${escapeHtml(error&&error.message||'未知错误')}<button type="button" onclick="loadPapers().catch(showLoadError)">重新读取</button></div>`;
+    }
+    document.querySelector("#recommendations").addEventListener("click",event=>{
+      const button=event.target.closest("#rec-toggle");if(!button)return;
+      SHOW_ALL_RECOMMENDED=!SHOW_ALL_RECOMMENDED;renderRecommendations();
+    });
+    document.querySelector("#discovery-list").addEventListener("click",event=>{
+      const button=event.target.closest("#trending-toggle");if(!button)return;
+      SHOW_ALL_TRENDING=!SHOW_ALL_TRENDING;renderTrending(TRENDING_CACHE);
+    });
+    document.querySelector("#community-source-filter").addEventListener("click",event=>{
+      const button=event.target.closest("[data-community-source]");if(!button)return;
+      COMMUNITY_SOURCE=button.dataset.communitySource;SHOW_ALL_COMMUNITY=false;renderCommunity();
+    });
+    document.querySelector("#community-scope-filter").addEventListener("click",event=>{
+      const button=event.target.closest("[data-community-scope]");if(!button)return;
+      COMMUNITY_SCOPE=button.dataset.communityScope;SHOW_ALL_COMMUNITY=false;renderCommunity();
+    });
+    document.querySelector("#community-list").addEventListener("click",event=>{
+      const button=event.target.closest("#community-toggle");if(!button)return;
+      SHOW_ALL_COMMUNITY=!SHOW_ALL_COMMUNITY;renderCommunity();
+    });
+    document.querySelector("#primary-filter").addEventListener("click",handleFilterClick);
+    document.querySelector("#advanced-filter").addEventListener("click",handleFilterClick);
+    document.querySelector("#source-map").addEventListener("click",event=>{
+      const button=event.target.closest(".source-card");if(!button)return;
+      ACTIVE_SOURCE=button.dataset.source===ACTIVE_SOURCE?"":button.dataset.source;
+      renderRadar();
+      document.querySelector("#primary-filter").scrollIntoView({behavior:"smooth",block:"start"});
+    });
+    document.querySelector("#advanced-toggle").addEventListener("click",()=>{
+      ADVANCED_OPEN=!ADVANCED_OPEN;renderFilter();
+    });
+    document.querySelector("#clear-filters").addEventListener("click",clearFilters);
+    document.querySelector("#search").addEventListener("input",event=>{Q=event.target.value.trim();renderRadar();});
+    document.querySelector("#sort-score").addEventListener("click",()=>{
+      SORT="score";document.querySelector("#sort-score").classList.add("on");document.querySelector("#sort-date").classList.remove("on");
+      document.querySelector("#sort-score").setAttribute("aria-pressed","true");document.querySelector("#sort-date").setAttribute("aria-pressed","false");renderRadar();
+    });
+    document.querySelector("#sort-date").addEventListener("click",()=>{
+      SORT="date";document.querySelector("#sort-date").classList.add("on");document.querySelector("#sort-score").classList.remove("on");
+      document.querySelector("#sort-date").setAttribute("aria-pressed","true");document.querySelector("#sort-score").setAttribute("aria-pressed","false");renderRadar();
+    });
+    document.querySelector("#tabs").addEventListener("click",event=>{
+      const button=event.target.closest(".tab");if(!button)return;
+      const target=document.getElementById(button.dataset.target);if(!target)return;
+      target.classList.remove("collapsed");
+      const head=target.querySelector(".band-head");if(head)head.setAttribute("aria-expanded","true");
+      target.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+
+    const spy=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{if(entry.isIntersecting){document.querySelectorAll(".tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.target===entry.target.id));}});
+    },{rootMargin:"-42% 0px -52% 0px"});
+    function attachSpy(){
+      spy.disconnect();
+      document.querySelectorAll("section.band[id]").forEach(section=>spy.observe(section));
+    }
+    function escapeHtml(value){return String(value||"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
+    function escapeAttr(value){return escapeHtml(value).replace(/`/g,"&#96;");}
+    function renderWeekSwitch(){
+      const weeks=window.__WEEKS__||[],select=document.querySelector("#week-switch");
+      if(!weeks.length){select.style.display="none";return;}
+      const mine=window.__WEEK_LABEL__||null;
+      select.innerHTML=weeks.map(week=>{
+        const isMine=(week.current&&mine===null)||(week.label===mine);
+        return `<option value="${escapeAttr(week.href)}"${isMine?' selected':''}>${week.current?'本周 · ':''}${escapeHtml(week.title)}</option>`;
+      }).join("");
+    }
+    document.querySelector("#week-switch").addEventListener("change",event=>{if(event.target.value&&event.target.value!==location.pathname)location.href=event.target.value;});
+    window.addEventListener("pageshow",renderWeekSwitch);
+    renderWeekSwitch();
+    loadPapers().catch(showLoadError);
+    loadWeekly().catch(()=>{document.querySelector("#weekly").hidden=true;});
+    loadCommunity().catch(()=>{});
+    loadTrending().catch(()=>{});
+  </script>
+</body>
+</html>
