@@ -141,6 +141,9 @@
     .band-title{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:600;letter-spacing:.45px}
     .band-count{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;color:var(--faint)}
     .band-meta{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;color:var(--faint);margin-left:auto}
+    .pinned-band{padding:10px 10px 4px;border:1px solid color-mix(in srgb,var(--rust) 38%,var(--rule));background:color-mix(in srgb,var(--rust-soft) 42%,var(--paper))}
+    .pinned-band .band-title{color:var(--rust)}
+    .pinned-band .band-head{border-bottom-color:color-mix(in srgb,var(--rust) 30%,var(--rule))}
     .signal-row{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;padding:11px 13px;background:var(--panel);border:1px solid var(--hair);margin-bottom:6px;text-decoration:none;color:var(--ink);transition:border-color .12s,transform .08s;content-visibility:auto;contain-intrinsic-size:106px}
     .signal-row:hover{border-color:var(--rule);transform:translateX(2px)}
     .signal-row.rec{border-left:3px solid var(--rust);padding-left:11px}
@@ -355,6 +358,12 @@
       return 5;
     };
     const isRecommended=p=>p.recommendation==='推荐';
+    function compareRecommendations(a,b){
+      const edgeDiff=recommendationDevicePriority(a)-recommendationDevicePriority(b);
+      const tierA=TIER.findIndex(([t])=>t===a.source_tier),tierB=TIER.findIndex(([t])=>t===b.source_tier);
+      const tierDiff=(tierA<0?TIER.length:tierA)-(tierB<0?TIER.length:tierB);
+      return edgeDiff||tierDiff||(b.score||0)-(a.score||0)||(b.date||'').localeCompare(a.date||'');
+    }
     const hasContent=v=>v&&v!=='未报告';
     const dim=t=>t.split(":")[0], val=t=>t.split(":")[1]||t;
 
@@ -509,11 +518,7 @@
       const el=document.querySelector("#recommendations");
       if(!ALL.length){el.hidden=true;return;}
       el.hidden=false;
-      const recommended=ALL.filter(isRecommended).sort((a,b)=>{
-        const edgeDiff=recommendationDevicePriority(a)-recommendationDevicePriority(b);
-        const tierDiff=TIER.findIndex(([t])=>t===a.source_tier)-TIER.findIndex(([t])=>t===b.source_tier);
-        return edgeDiff||tierDiff||(b.score||0)-(a.score||0)||(b.date||'').localeCompare(a.date||'');
-      });
+      const recommended=ALL.filter(isRecommended).sort(compareRecommendations);
       const countLabel=`${recommended.length}`;
       const previewLabel=SHOW_ALL_RECOMMENDED?`已展开 ${recommended.length} 条`:`首屏精选 ${Math.min(recommended.length,REC_PREVIEW)} 条`;
       const shown=SHOW_ALL_RECOMMENDED?recommended:recommended.slice(0,REC_PREVIEW);
@@ -557,17 +562,21 @@
       const l=visible(),el=document.querySelector("#papers");
       if(!l.length){
         el.innerHTML=`<div class="empty">当前组合筛选没有结果。<button type="button" onclick="clearFilters()">清除筛选</button></div>`;
-        renderTabs({});
+        renderTabs({},0);
         return;
       }
+      const pinned=hasFilters()?l.filter(isRecommended).sort(compareRecommendations):[];
+      const remaining=pinned.length?l.filter(p=>!isRecommended(p)):l;
       const groups={};
-      l.forEach(p=>(groups[p.source_tier]=groups[p.source_tier]||[]).push(p));
+      remaining.forEach(p=>(groups[p.source_tier]=groups[p.source_tier]||[]).push(p));
       const COLLAPSE=25;
-      el.innerHTML=TIER.filter(([tier])=>groups[tier]).map(([tier,color])=>{
+      const pinnedHtml=pinned.length?`<section class="band pinned-band" id="band-recommended"><button type="button" class="band-head" aria-expanded="true" onclick="toggleBand(this)"><span class="fold">▾</span><span class="band-bar" style="background:var(--rust)"></span><span class="band-title">推荐置顶</span><span class="band-count">${pinned.length}</span><span class="band-meta">按推荐程度排序</span></button><div class="band-body">${pinned.map(renderRow).join("")}</div></section>`:"";
+      const groupedHtml=TIER.filter(([tier])=>groups[tier]).map(([tier,color])=>{
         const collapsed=groups[tier].length>COLLAPSE;
         return `<section class="band${collapsed?' collapsed':''}" id="band-${escapeAttr(tier)}"><button type="button" class="band-head" aria-expanded="${collapsed?'false':'true'}" onclick="toggleBand(this)"><span class="fold">▾</span><span class="band-bar" style="background:var(${color})"></span><span class="band-title">${escapeHtml(tier)}</span><span class="band-count">${groups[tier].length}</span>${collapsed?'<span class="band-meta">点击展开</span>':''}</button><div class="band-body">${groups[tier].map(renderRow).join("")}</div></section>`;
       }).join("");
-      renderTabs(groups);
+      el.innerHTML=pinnedHtml+groupedHtml;
+      renderTabs(groups,pinned.length);
       attachSpy();
     }
     function toggleBand(button){
@@ -575,8 +584,9 @@
       band.classList.toggle("collapsed");
       button.setAttribute("aria-expanded",band.classList.contains("collapsed")?"false":"true");
     }
-    function renderTabs(groups){
-      const tabs=TIER.filter(([tier])=>groups[tier]).map(([tier])=>`<button type="button" class="tab" data-target="band-${escapeAttr(tier)}">${escapeHtml(tier)}<b>${groups[tier].length}</b></button>`);
+    function renderTabs(groups,pinnedCount=0){
+      const pinnedTab=pinnedCount?[`<button type="button" class="tab" data-target="band-recommended">推荐置顶<b>${pinnedCount}</b></button>`]:[];
+      const tabs=pinnedTab.concat(TIER.filter(([tier])=>groups[tier]).map(([tier])=>`<button type="button" class="tab" data-target="band-${escapeAttr(tier)}">${escapeHtml(tier)}<b>${groups[tier].length}</b></button>`));
       document.querySelector("#tabs").innerHTML=tabs.join("");
     }
 
