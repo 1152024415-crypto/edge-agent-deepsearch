@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Illusion of Equivalency: Statistical Characterization of Quantization Effects in LLMs</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",Arial,sans-serif;background:#f7f3ea;color:#202621} main{max-width:820px;margin:0 auto;padding:20px} a{color:#8d3d30} .back{display:inline-block;margin-bottom:12px;text-decoration:none} h1{font-size:21px;margin:0 0 8px;line-height:1.35} .meta{color:#627066;font-size:13px;margin-bottom:12px} .score{font-weight:700;color:#8d3d30;font-size:17px} .tier{display:inline-block;padding:2px 7px;border:1px solid #8d3d30;color:#8d3d30;font-size:11px;font-weight:700;border-radius:3px} .tier.oss{border-color:#2e7d32;color:#2e7d32} .tier.company{border-color:#5a6b8d;color:#5a6b8d} .tier.school{border-color:#8a6d3b;color:#8a6d3b} .open-badge{display:inline-block;padding:2px 7px;border:1px solid #2e7d32;color:#2e7d32;font-size:11px;font-weight:700;border-radius:3px} .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 14px} .vendor-tag{display:inline-block;padding:3px 10px 3px 8px;background:#fffdf7;border-left:3px solid #8d3d30;border-radius:0 4px 4px 0;font-size:12px;font-weight:600;color:#8d3d30} .tag{display:inline-block;padding:2px 9px;background:#eee7da;border-radius:11px;font-size:12px;color:#596258} .field{display:flex;margin-top:10px;gap:10px} .label{flex-shrink:0;width:78px;color:#627066;font-size:13px;font-weight:600} .text{color:#3f463f;font-size:14px;line-height:1.6} .score-reason{margin-top:12px;color:#4c554e;font-size:12px;line-height:1.5} .source{margin-top:18px} .source a{display:inline-block;padding:6px 14px;border:1px solid #8d3d30;border-radius:4px;text-decoration:none;font-size:13px}
+</style></head><body><main>
+<a class="back" href="../index.html">← 返回雷达</a>
+<h1>The Illusion of Equivalency: Statistical Characterization of Quantization Effects in LLMs</h1>
+<div class="meta"><span class="score">13</span> <span class="tier school">学校预印本</span>  2026-08-21 · Baha Rababah; Shahzeb Qamar; Lorenz Sparrenberg; Rafet Sifa; Murat Kantarcioglu; Cuneyt Gurcan Akcora; Carson K. Leung / arXiv</div>
+<div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:评测基准</span><span class="tag">方向:模型架构</span></div>
+<div class="field"><span class="label">这是什么</span><span class="text">这项工作指出，量化模型即使准确率和困惑度看起来没变，也可能在具体题目上换了一批答对和答错的样本。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">多模型与多位宽实验显示低比特处出现行为断点，Query 和 Key 投影比 Value 和 Output 更敏感；摘要未给统一下降幅度。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">提出 Correctness Agreement 衡量原模型与量化模型答对样本的交集，再用统计分布分析各注意力投影变化。</span></div>
+<div class="score-reason">评分依据：量化部署相关性明确；新指标揭示传统准确率看不到的行为漂移，并定位敏感投影，贡献较强。</div>
+<div class="source"><a href="https://arxiv.org/abs/2607.08734" target="_blank" rel="noopener">查看原文 →</a></div>
+</main></body></html>

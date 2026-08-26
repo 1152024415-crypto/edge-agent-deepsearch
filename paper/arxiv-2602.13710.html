@@ -7,9 +7,9 @@
 <h1>HBVLA: Pushing 1-Bit Post-Training Quantization for Vision-Language-Action Models</h1>
 <div class="meta"><span class="score">17</span> <span class="tier school">学校预印本</span>  2026-08-20 · Xin Yan; Zhenglin Wan; Feiyang Ye; Xingrui Yu; Hangyu Du; Yang You; Ivor Tsang / arXiv</div>
 <div class="tags"><span class="tag">方向:量化</span><span class="tag">方向:多模态</span><span class="tag">方向:编译部署</span><span class="tag">应用:机器人</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">HBVLA 把视觉语言动作模型压到一比特权重，目标是在机器人和边缘硬件内存紧张时仍保住长程动作控制能力。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">量化后的 OpenVLA-OFT 在 LIBERO 保留全精度性能的 92.2%，CogAct 在 SimplerEnv 保留 93.6%，真实场景成功率只小幅下降。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">先用考虑动作策略的二阶信息找出关键权重，再变换其余权重以降低分布复杂度，最后按组完成一比特量化。</span></div>
-<div class="score-reason">评分依据：相关性 9/10，贡献度 8/10。直接解决资源受限机器人上的 VLA 部署，并有闭环任务和真实场景结果；一比特量化仍保留九成以上性能，方法和实验都较强。</div>
+<div class="field"><span class="label">这是什么</span><span class="text">HBVLA 把视觉语言动作模型压到一比特权重，目标是在机器人和边缘硬件内存紧张时仍保住长程动作控制。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">量化 OpenVLA-OFT 在 LIBERO 保留全精度性能的 92.2%，量化 CogAct 在 SimplerEnv 保留 93.6%，现实评测成功率只小幅下降。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">用动作感知的二阶信息找关键权重，对其余权重做稀疏正交变换，再按组完成一比特量化。</span></div>
+<div class="score-reason">评分依据：直接解决资源受限机器人 VLA 部署并有闭环任务结果；一比特量化仍保留九成以上表现，方法和实验都很强。</div>
 <div class="source"><a href="https://arxiv.org/abs/2602.13710" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>

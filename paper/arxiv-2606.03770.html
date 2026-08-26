@@ -5,11 +5,11 @@
 </style></head><body><main>
 <a class="back" href="../index.html">← 返回雷达</a>
 <h1>E2LLM: Towards Efficient LLM Serving in Heterogeneous Edge/Fog Environments</h1>
-<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span>  2026-08-16 · Truong-Thanh Le; Amir Taherkordi; Hoang-Loc La; Frank Eliassen; Phuong Hoai Ha; Peiyuan Guan / arXiv</div>
+<div class="meta"><span class="score">16</span> <span class="tier school">学校预印本</span>  2026-08-23 · Truong-Thanh Le; Amir Taherkordi; Hoang-Loc La; Frank Eliassen; Phuong Hoai Ha; Peiyuan Guan / arXiv</div>
 <div class="tags"><span class="tag">方向:端云协同</span><span class="tag">方向:调度服务</span><span class="tag">方向:高效推理</span></div>
-<div class="field"><span class="label">这是什么</span><span class="text">E2LLM 把一批能力不同的边缘和雾设备分成多个模型副本组，让每组协作承载完整大模型并分别负责输入或输出阶段。</span></div>
-<div class="field"><span class="label">有什么结果</span><span class="text">在高需求负载下，相比 Splitwise 平均等待时间降低超过 50%，并能适应输入与输出长度大幅变化的场景。</span></div>
-<div class="field"><span class="label">怎么做到</span><span class="text">遗传算法先把设备组成性能合适的副本组，再用动态规划切分组内模型，并按设备特点分配 prefill 或 decode 角色。</span></div>
-<div class="score-reason">评分依据：相关性 8/10，贡献度 8/10。明确处理资源受限异构边雾设备上的 LLM 部署，相关性高；多副本分组与阶段专门化有较完整系统贡献。</div>
+<div class="field"><span class="label">这是什么</span><span class="text">E2LLM 把能力不同的边缘和雾设备组成多个模型副本组，让每组协作承载完整 LLM 并专门负责输入或输出阶段。</span></div>
+<div class="field"><span class="label">有什么结果</span><span class="text">高需求负载下，相比 Splitwise 平均等待时间降低超过 50%，并能适应输入和输出长度大幅变化。</span></div>
+<div class="field"><span class="label">怎么做到</span><span class="text">遗传算法先把设备组成合适副本组，动态规划再切分组内模型，并按设备特点分配 prefill 或 decode 角色。</span></div>
+<div class="score-reason">评分依据：直接解决单台边缘设备装不下 LLM 的现实问题；多副本分组、阶段专门化和组内动态规划形成完整系统方法。</div>
 <div class="source"><a href="https://arxiv.org/abs/2606.03770" target="_blank" rel="noopener">查看原文 →</a></div>
 </main></body></html>
